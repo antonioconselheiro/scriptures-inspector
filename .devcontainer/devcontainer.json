@@ -1,0 +1,23 @@
+{
+  "name": "Scriptures Inspector Dev",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "scriptures-inspector-dev",
+  "workspaceFolder": "/scriptures-inspector",
+  "postCreateCommand": "./.devcontainer/auth.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Angular.ng-template",
+        "ms-vscode.vscode-typescript-next",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "ms-azuretools.vscode-docker",
+        "manishsencha.readme-preview",
+        "wix.vscode-import-cost",
+        "j0hnm4r5.laser-theme"
+      ]
+    }
+  }
+}

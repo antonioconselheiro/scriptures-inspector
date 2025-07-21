@@ -1,0 +1,14 @@
+services:
+  scriptures-inspector-dev:
+    image: scriptures-inspector-dev
+    container_name: scriptures-inspector-dev
+    build:
+      context: ../.
+      dockerfile: ./.devcontainer/Dockerfile
+    working_dir: /scriptures-inspector
+    ports:
+      - "4205:4205"
+    volumes:
+      - ..:/scriptures-inspector:cached
+      - /var/run/docker.sock:/var/run/docker.sock
+    tty: true
