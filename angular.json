@@ -61,7 +61,8 @@
               "buildTarget": "scriptures-inspector:build:production"
             },
             "development": {
-              "buildTarget": "scriptures-inspector:build:development"
+              "buildTarget": "scriptures-inspector:build:development",
+              "port": 4205
             }
           },
           "defaultConfiguration": "development"
@@ -87,5 +88,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
