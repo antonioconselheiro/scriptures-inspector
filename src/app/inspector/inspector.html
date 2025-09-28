@@ -1,1 +1,32 @@
-<p>inspector works!</p>
+@let hebraic = hebraics[book][chapter][verse].text.split(' ');
+
+<span>translation</span>
+
+<table border="1">
+  <tr>
+    <th>scripture</th>
+    @for (word of hebraic; track word) {
+      <td>{{word}}</td>
+    }
+  </tr>
+  <tr>
+    <th>iconography</th>
+    @for (word of hebraic; track word) {
+      <td>{{word}}</td>
+    }
+  </tr>
+  <tr>
+    <th>literals</th>
+    @for (word of hebraic; track word) {
+      <td>{{word}}</td>
+    }
+  </tr>
+  <tr>
+    <th>gematrics</th>
+    @for (word of hebraic; track word) {
+      <td>{{word}}</td>
+    }
+  </tr>
+</table>
+
+<span>references</span>
