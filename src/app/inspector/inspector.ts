@@ -2,10 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { hebraics } from './hebraics';
 import { OldBook } from './old-book.enum';
+import { LiteralsPipe } from './literals.pipe';
+import { GematricsPipe } from './gematrics.pipe';
 
 @Component({
   selector: 'app-inspector',
-  imports: [],
+  imports: [
+    LiteralsPipe,
+    GematricsPipe
+  ],
   templateUrl: './inspector.html',
   styleUrl: './inspector.scss'
 })
