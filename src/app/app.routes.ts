@@ -3,7 +3,7 @@ import { Inspector } from './inspector/inspector';
 
 export const routes: Routes = [
   {
-    path: '/base/:translation/book/:book/chapter/:chapter',
+    path: ':translation/book/:book/chapter/:chapter',
     component: Inspector
   }
 ];

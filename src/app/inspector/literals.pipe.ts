@@ -12,7 +12,7 @@ export class LiteralsPipe implements PipeTransform {
 
   transform(value: string): string {
     const literals = this.literalsStorage.getLiteral();
-    return literals[value] || '[NOT FOUND]';
+    return literals[value] || '';
   }
 
 }
