@@ -1,42 +1,47 @@
-@let hebraic = hebraics[book][chapter][1].text.split(' ');
+@let verses = hebraics[book][chapter];
 
-<table border="1">
-  <tr>
-    <th>translation</th>
-    <td [colSpan]="hebraic.length">translate</td>
-  </tr>
-  <tr>
-    <th>scripture</th>
-    @for (word of hebraic; track word) {
-      <td>{{word}}</td>
-    }
-  </tr>
-  <tr>
-    <th>paleo hebrew</th>
-    @for (word of hebraic; track word) {
-      <td>{{word}}</td>
-    }
-  </tr>
-  <tr>
-    <th>iconography</th>
-    @for (word of hebraic; track word) {
-      <td>{{word}}</td>
-    }
-  </tr>
-  <tr>
-    <th>literals</th>
-    @for (word of hebraic; track word) {
-      <td>
-        <input class="literalInput" (keyup)="updateLiteral($event, word)" type="text" [value]="word | literals" />
-      </td>
-    }
-  </tr>
-  <tr>
-    <th>gematrics</th>
-    @for (word of hebraic; track word) {
-      <td>{{word | gematrics}}</td>
-    }
-  </tr>
-</table>
+@for (verse of verses; track verse.verse) {
+  @let hebraic = verse.text.split(' ');
+
+  <strong>Verse {{verse.verse}}</strong>
+  <table border="1">
+    <tr>
+      <th>translation</th>
+      <td [colSpan]="hebraic.length">translate</td>
+    </tr>
+    <tr>
+      <th>scripture</th>
+      @for (word of hebraic; track word) {
+        <td>{{word}}</td>
+      }
+    </tr>
+    <!-- <tr>
+      <th>paleo hebrew</th>
+      @for (word of hebraic; track word) {
+        <td>{{word}}</td>
+      }
+    </tr>
+    <tr>
+      <th>iconography</th>
+      @for (word of hebraic; track word) {
+        <td>{{word}}</td>
+      }
+    </tr> -->
+    <tr>
+      <th>literals</th>
+      @for (word of hebraic; track word) {
+        <td>
+          <input type="text" class="literalInput" (keyup)="updateLiteral($event, word)" [value]="word | literals" />
+        </td>
+      }
+    </tr>
+    <tr>
+      <th>gematrics</th>
+      @for (word of hebraic; track word) {
+        <td>{{word | gematrics}}</td>
+      }
+    </tr>
+  </table>
+}
 
 <span>references</span>
