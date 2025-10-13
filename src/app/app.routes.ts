@@ -5,11 +5,13 @@ import { translationResolver } from './translation.fn-resolver';
 export const routes: Routes = [
   {
     path: 'book/:book/chapter/:chapter',
-    component: Inspector,
+    runGuardsAndResolvers: 'paramsChange',
     children: [
       {
         path: 'language/:language/translation/:translation',
-        resolve: translationResolver,
+        resolve: {
+          translation: translationResolver
+        },
         component: Inspector
       }
     ]

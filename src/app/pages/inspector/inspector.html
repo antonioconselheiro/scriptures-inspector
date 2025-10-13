@@ -1,13 +1,13 @@
 @let verses = hebraics[book][chapter];
 
-@for (verse of verses; track verse.verse) {
+@for (verse of verses; track verse.verse; let verseKey = $index) {
   @let hebraic = verse.text.split(' ');
 
   <strong>Verse {{verse.verse}}</strong>
   <table border="1">
     <tr>
       <th>translation</th>
-      <td [colSpan]="hebraic.length">translate</td>
+      <td [colSpan]="hebraic.length">{{chapterTranslations[verseKey].text}}</td>
     </tr>
     <tr>
       <th>scripture</th>
@@ -15,6 +15,14 @@
         <td>{{word}}</td>
       }
     </tr>
+    <tr>
+      <th>transliteration</th>
+      @for (word of hebraic; track $index) {
+        <td>{{word | transliteration}}</td>
+      }
+    </tr>
+
+    
     <!-- <tr>
       <th>paleo hebrew</th>
       @for (word of hebraic; track word) {
