@@ -1,0 +1,7 @@
+import { TranslationBook } from "./translation-book.model";
+
+export interface Translation {
+  key: string;
+  name: string;
+  content: Array<TranslationBook>
+}

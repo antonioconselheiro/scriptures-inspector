@@ -11,7 +11,7 @@
     </tr>
     <tr>
       <th>scripture</th>
-      @for (word of hebraic; track word) {
+      @for (word of hebraic; track $index) {
         <td>{{word}}</td>
       }
     </tr>
@@ -29,7 +29,7 @@
     </tr> -->
     <tr>
       <th>literals</th>
-      @for (word of hebraic; track word) {
+      @for (word of hebraic; track $index) {
         <td>
           <input type="text" class="literalInput" (keyup)="updateLiteral($event, word)" [value]="word | literals" />
         </td>
@@ -37,7 +37,7 @@
     </tr>
     <tr>
       <th>gematrics</th>
-      @for (word of hebraic; track word) {
+      @for (word of hebraic; track $index) {
         <td>{{word | gematrics}}</td>
       }
     </tr>
