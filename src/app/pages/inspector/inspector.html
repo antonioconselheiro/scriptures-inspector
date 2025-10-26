@@ -1,5 +1,57 @@
 @let verses = hebraics[book][chapter];
 
+<form [formGroup]="form" (ngSubmit)="onPatternFormSubmit()">
+  <fieldset>
+    <legend>Create previous parser</legend>
+
+    <div>
+      <label for="pattern">Pattern</label>
+      <input
+        id="pattern"
+        type="text"
+        formControlName="pattern"
+        placeholder="insert a regex here"
+      />
+      @if (form.get('pattern')?.invalid && form.get('pattern')?.touched) {
+        <small class="error">Pattern is required</small>
+      }
+    </div>
+
+    <div>
+      <label for="value">Value</label>
+      <input
+        id="value"
+        type="text"
+        formControlName="value"
+        placeholder="transliteration"
+      />
+      @if (form.get('value')?.invalid && form.get('value')?.touched) {
+        <small class="error">Value is required</small>
+      }
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Create</button>
+  </fieldset>
+</form>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (pattern of patterns | keyvalue; track $index) {
+      <tr>
+        <td>/{{pattern.key}}/</td>
+        <td>{{pattern.value}}</td>
+        <td><a (click)="deletePattern(pattern.key)">🗙</a></td>
+      </tr>
+    }
+  </tbody>
+</table>
+
 @for (verse of verses; track verse.verse; let verseKey = $index) {
   @let hebraic = verse.text.split(' ');
 
