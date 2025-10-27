@@ -2,31 +2,29 @@
 
 <form [formGroup]="form" (ngSubmit)="onPatternFormSubmit()">
   <fieldset>
-    <legend>Create previous parser</legend>
+    <legend>Create word extrapolation</legend>
 
     <div>
-      <label for="pattern">Pattern</label>
+      <label for="hebraicValue">Hebraic</label>
       <input
-        id="pattern"
+        id="hebraicValue"
         type="text"
-        formControlName="pattern"
-        placeholder="insert a regex here"
+        formControlName="value"
+        placeholder="hebraic char"
       />
-      @if (form.get('pattern')?.invalid && form.get('pattern')?.touched) {
-        <small class="error">Pattern is required</small>
+      @if (form.get('value')?.invalid && form.get('value')?.touched) {
+        <small class="error">Hebraic value is required</small>
       }
     </div>
 
     <div>
-      <label for="value">Value</label>
-      <input
-        id="value"
-        type="text"
-        formControlName="value"
-        placeholder="transliteration"
-      />
-      @if (form.get('value')?.invalid && form.get('value')?.touched) {
-        <small class="error">Value is required</small>
+      <label for="type">Type</label>
+      <select id="type" formControlName="type">
+        <option value="prefix">Prefix</option>
+        <option value="suffix">Suffix</option>
+      </select>
+      @if (form.get('type')?.invalid && form.get('type')?.touched) {
+        <small class="error">Type selection is required</small>
       }
     </div>
 
@@ -38,15 +36,21 @@
   <thead>
     <tr>
       <th>Pattern</th>
-      <th>Value</th>
+      <th>Type</th>
     </tr>
   </thead>
   <tbody>
-    @for (pattern of patterns | keyvalue; track $index) {
+    @for (pattern of patterns.prefix; track $index) {
       <tr>
-        <td>/{{pattern.key}}/</td>
-        <td>{{pattern.value}}</td>
-        <td><a (click)="deletePattern(pattern.key)">🗙</a></td>
+        <td>prefix: {{pattern.word}}</td>
+        <td><a (click)="deletePattern('prefix', $index)">🗙</a></td>
+      </tr>
+    }
+
+    @for (pattern of patterns.suffix; track $index) {
+      <tr>
+        <td>suffix: {{pattern.word}}</td>
+        <td><a (click)="deletePattern('suffix', $index)">🗙</a></td>
       </tr>
     }
   </tbody>
@@ -89,9 +93,11 @@
     </tr> -->
     <tr>
       <th>literals</th>
-      @for (word of hebraic; track $index) {
+      @for (sentence of hebraic; track $index) {
         <td>
-          <input type="text" class="literalInput" (keyup)="updateLiteral($event, word)" [value]="word | literals" />
+          @for (word of splitByPatterns(sentence); track $index) {
+            <input type="text" [name]="'field' + $index" [placeholder]="word" #field [style.width.px]="calcFieldSize(word, word | literals)" (keyup)="updateLiteral(field, word)" [value]="word | literals" />
+          }
         </td>
       }
     </tr>

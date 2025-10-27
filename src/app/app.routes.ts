@@ -5,7 +5,7 @@ import { translationResolver } from './translation.fn-resolver';
 export const routes: Routes = [
   {
     path: 'book/:book/chapter/:chapter',
-    runGuardsAndResolvers: 'paramsChange',
+    runGuardsAndResolvers: 'pathParamsChange',
     children: [
       {
         path: 'language/:language/translation/:translation',

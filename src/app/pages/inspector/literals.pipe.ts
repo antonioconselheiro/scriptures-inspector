@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { LiteralsStorage } from './literals-storage';
 
 @Pipe({
-  name: 'literals'
+  name: 'literals',
+  pure: false
 })
 export class LiteralsPipe implements PipeTransform {
 
