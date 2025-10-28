@@ -1,4 +1,4 @@
-import { OldBook } from "./old-book.enum";
+import { OldBook } from "./old-book-enum";
 
 export const hebraics: {
   [oldBook in OldBook]: Array<Array<{ verse: `${number}`, text: string }>>

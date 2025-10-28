@@ -1,24 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslationBookVerse } from '../../domain/translation-book-verse.model';
 import { Translation } from '../../domain/translation.model';
-import { GematricsPipe } from './gematrics.pipe';
+import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
 import { LiteralsStorage } from './literals-storage';
-import { LiteralsPipe } from './literals.pipe';
-import { OldBook } from './old-book.enum';
+import { LiteralsPipe } from './literals-pipe';
+import { OldBook } from './old-book-enum';
 import { PatternsParsed } from './patterns-parsed';
-import { TranslationService } from './translation.service';
+import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
+import { PaleoPipe } from './paleo-pipe';
+import { LiteralizatePipe } from './literalizate-pipe';
+import { LiteralsPatternsService } from './literals-patterns-service';
 
 @Component({
   selector: 'app-inspector',
   imports: [
     CommonModule,
+    PaleoPipe,
     LiteralsPipe,
     GematricsPipe,
+    LiteralizatePipe,
     TransliterationPipe,
     ReactiveFormsModule
   ],
@@ -48,7 +53,8 @@ export class Inspector implements OnInit {
     private cd: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private literalsStorage: LiteralsStorage,
-    private translationService: TranslationService
+    private translationService: TranslationService,
+    private literalsPatternsService: LiteralsPatternsService
   ) {
     this.form = fb.group({
       value: ['', [Validators.required]],
@@ -69,7 +75,6 @@ export class Inspector implements OnInit {
   private subscribeParams(): void {
     this.activatedRoute.params.subscribe({
       next: params => {
-        debugger;
         this.book = params['book'];
         this.chapter = Number(params['chapter']) - 1;
         this.updateChapterTranslation();
@@ -93,7 +98,7 @@ export class Inspector implements OnInit {
 
   calcFieldSize(placeholder: string, value: string): number {
     if (value.length) {
-      return Math.floor(value.length * 8);
+      return Math.floor(value.length * 8.5);
     } else if (placeholder.length) {
       return Math.floor(placeholder.length * 5);
     }
@@ -101,43 +106,13 @@ export class Inspector implements OnInit {
     return 30;
   }
 
+  splitByPatterns(hebraic: string): string[] {
+    return this.literalsPatternsService.splitByPatterns(this.patterns, hebraic);
+  }
+
   updateLiteral(input: HTMLInputElement, hebraic: string): void {
     this.literalsStorage.addLiteral(hebraic, input.value);
     input.style.width = `${this.calcFieldSize(hebraic, input.value)}px`;
-  }
-
-  splitByPatterns(hebraic: string): string[] {
-    let matchPrefix = '',
-      matchSuffix = '';
-
-    for (let prefix of this.patterns.prefix) {
-      if (prefix.pattern.test(hebraic)) {
-        matchPrefix = prefix.word;
-        hebraic = hebraic.replace(prefix.pattern, '');
-        break;
-      }
-    }
-
-    for (let suffix of this.patterns.suffix) {
-      if (suffix.pattern.test(hebraic)) {
-        matchSuffix = suffix.word;
-        hebraic = hebraic.replace(suffix.pattern, '');
-        break;
-      }
-    }
-
-    let words: string[] = [];
-    if (matchPrefix && matchSuffix) {
-      words = [matchPrefix, ...this.splitByPatterns(hebraic), matchSuffix];
-    } else if (matchPrefix) {
-      words = [matchPrefix, ...this.splitByPatterns(hebraic)];
-    } else if (matchSuffix) {
-      words = [...this.splitByPatterns(hebraic), matchSuffix];
-    } else {
-      words = [hebraic];
-    }
-
-    return words.filter(word => word);
   }
 
   onPatternFormSubmit(): void {

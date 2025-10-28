@@ -1,0 +1,29 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { LiteralsStorage } from './literals-storage';
+import { LiteralsPatternsService } from './literals-patterns-service';
+import { PatternsParsed } from './patterns-parsed';
+
+@Pipe({
+  name: 'literalizate',
+  pure: false
+})
+export class LiteralizatePipe implements PipeTransform {
+
+  constructor(
+    private literalsStorage: LiteralsStorage,
+    private literalsPatternsService: LiteralsPatternsService
+  ) { }
+
+  transform(value: string, patterns: PatternsParsed): string {
+    const literals = this.literalsStorage.getLiteral();
+    return value.split(' ').map(sentence => {
+      let literalWord: string[] = [];
+      for (let word of this.literalsPatternsService.splitByPatterns(patterns, sentence)) {
+        literalWord.push(literals[word]);
+      }
+
+      return literalWord.join(' ');
+    }).join(' ');
+  }
+
+}

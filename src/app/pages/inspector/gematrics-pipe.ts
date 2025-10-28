@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GematriaService } from './gematria.service';
+import { GematriaService } from './gematria-service';
 
 @Pipe({
   name: 'gematrics'

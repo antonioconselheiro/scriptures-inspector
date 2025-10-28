@@ -66,7 +66,12 @@
       <td [colSpan]="hebraic.length">{{chapterTranslations[verseKey].text}}</td>
     </tr>
     <tr>
-      <th>scripture</th>
+      <th rowspan="2">scripture</th>
+      <td [colSpan]="hebraic.length">
+        {{verse.text}}
+      </td>
+    </tr>
+    <tr>
       @for (word of hebraic; track $index) {
         <td>{{word}}</td>
       }
@@ -77,22 +82,8 @@
         <td>{{word | transliteration}}</td>
       }
     </tr>
-
-    
-    <!-- <tr>
-      <th>paleo hebrew</th>
-      @for (word of hebraic; track word) {
-        <td>{{word}}</td>
-      }
-    </tr>
     <tr>
-      <th>iconography</th>
-      @for (word of hebraic; track word) {
-        <td>{{word}}</td>
-      }
-    </tr> -->
-    <tr>
-      <th>literals</th>
+      <th rowspan="2">literals</th>
       @for (sentence of hebraic; track $index) {
         <td>
           @for (word of splitByPatterns(sentence); track $index) {
@@ -102,10 +93,26 @@
       }
     </tr>
     <tr>
+      <td [colSpan]="hebraic.length">
+        {{verse.text | literalizate : patterns}}
+      </td>
+    </tr>
+    <tr>
       <th>gematrics</th>
       @for (word of hebraic; track $index) {
         <td>{{word | gematrics}}</td>
       }
+    </tr>
+    <tr>
+      <th rowspan="2">hypothetical paleo</th>
+      @for (word of hebraic; track word) {
+        <td>{{word | paleo}}</td>
+      }
+    </tr>
+    <tr>
+      <td [colSpan]="hebraic.length">
+        {{verse.text | paleo}}
+      </td>
     </tr>
   </table>
 }

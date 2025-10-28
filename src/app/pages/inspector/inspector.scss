@@ -1,5 +1,11 @@
 .literalInput {
-  min-width: 15px;
+  min-width: 20px;
 }
 
-a {cursor: pointer;}
+a {
+  cursor: pointer;
+}
+
+.flex {
+  display: flex;
+}
