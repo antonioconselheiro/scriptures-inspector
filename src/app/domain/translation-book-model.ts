@@ -1,4 +1,4 @@
-import { TranslationBookVerse } from "./translation-book-verse.model";
+import { TranslationBookVerse } from './translation-book-verse-model';
 
 export interface TranslationBook {
   testament: "old" | "new";

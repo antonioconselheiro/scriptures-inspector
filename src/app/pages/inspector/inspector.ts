@@ -2,8 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslationBookVerse } from '../../domain/translation-book-verse.model';
-import { Translation } from '../../domain/translation.model';
+import { Translation } from '../../domain/translation-model';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
 import { LiteralsStorage } from './literals-storage';
@@ -15,6 +14,7 @@ import { TransliterationPipe } from './transliteration-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
+import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 
 @Component({
   selector: 'app-inspector',

@@ -1,4 +1,4 @@
-import { TranslationBook } from "./translation-book.model";
+import { TranslationBook } from './translation-book-model';
 
 export interface Translation {
   key: string;
