@@ -14,8 +14,9 @@ export class LiteralizatePipe implements PipeTransform {
     private literalsPatternsService: LiteralsPatternsService
   ) { }
 
-  transform(value: string, patterns: PatternsParsed): string {
-    const literals = this.literalsStorage.getLiteral();
+  transform(value: string, patterns: PatternsParsed, lang: 'hebraic' | 'geez' | 'greek'): string {
+    const literals = lang === 'hebraic' ? this.literalsStorage.getHebraicLiteral() : this.literalsStorage.getGeezLiteral();
+
     return value.split(' ').map(sentence => {
       let literalWord: string[] = [];
       for (let word of this.literalsPatternsService.splitByPatterns(patterns, sentence)) {

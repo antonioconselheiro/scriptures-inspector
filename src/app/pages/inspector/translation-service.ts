@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TranslationBookVerse } from '../../domain/translation-book-verse.model';
+import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { Translation } from '../../domain/translation-model';
 
 @Injectable({

@@ -2,27 +2,31 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { ScriptureVerse } from '../../domain/scripture-verse-model';
+import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { Translation } from '../../domain/translation-model';
+import { geezes } from './geezes';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
-import { LiteralsStorage } from './literals-storage';
+import { LiteralizatePipe } from './literalizate-pipe';
+import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
+import { LiteralsStorage } from './literals-storage';
 import { OldBook } from './old-book-enum';
+import { PaleoPipe } from './paleo-pipe';
 import { PatternsParsed } from './patterns-parsed';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
-import { PaleoPipe } from './paleo-pipe';
-import { LiteralizatePipe } from './literalizate-pipe';
-import { LiteralsPatternsService } from './literals-patterns-service';
-import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
+import { VersePipe } from './verse-pipe';
 
 @Component({
   selector: 'app-inspector',
   imports: [
     CommonModule,
     PaleoPipe,
-    LiteralsPipe,
+    VersePipe,
     GematricsPipe,
+    LiteralsPipe,
     LiteralizatePipe,
     TransliterationPipe,
     ReactiveFormsModule
@@ -36,8 +40,14 @@ import { TranslationBookVerse } from '../../domain/translation-book-verse-model'
 export class Inspector implements OnInit {
 
   readonly hebraics = hebraics;
+  readonly geezes = geezes;
 
-  patterns: PatternsParsed = {
+  hebraicPatterns: PatternsParsed = {
+    prefix: [],
+    suffix: []
+  };
+
+  geezPatterns: PatternsParsed = {
     prefix: [],
     suffix: []
   };
@@ -69,7 +79,7 @@ export class Inspector implements OnInit {
   }
 
   private readPatterns(): void {
-    this.patterns = this.literalsStorage.getPattern();
+    this.hebraicPatterns = this.literalsStorage.getHebraicPattern();
   }
 
   private subscribeParams(): void {
@@ -96,6 +106,20 @@ export class Inspector implements OnInit {
     this.cd.detectChanges();
   }
 
+  //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
+  getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): ScriptureVerse {
+    for (let index = 0; index < this.geezes[this.book][this.chapter].length; index++) {
+      if (
+        this.geezes[this.book][this.chapter][index].verse.start === hebraicVerse.verse.start ||
+        hebraicVerse.verse.end === this.geezes[this.book][this.chapter][index].verse.end
+      ) {
+        return this.geezes[this.book][this.chapter][index];
+      }
+    }
+
+    throw new Error('geez corresponding not found');
+  }
+
   calcFieldSize(placeholder: string, value: string): number {
     if (value.length) {
       return Math.floor(value.length * 8.5);
@@ -106,19 +130,22 @@ export class Inspector implements OnInit {
     return 30;
   }
 
-  splitByPatterns(hebraic: string): string[] {
-    return this.literalsPatternsService.splitByPatterns(this.patterns, hebraic);
+  splitByPatterns(word: string, lang: 'hebraic' | 'geez' | 'greek'): string[] {
+    return this.literalsPatternsService.splitByPatterns(lang === 'hebraic' ? this.hebraicPatterns : this.hebraicPatterns, word);
   }
 
-  updateLiteral(input: HTMLInputElement, hebraic: string): void {
-    this.literalsStorage.addLiteral(hebraic, input.value);
-    input.style.width = `${this.calcFieldSize(hebraic, input.value)}px`;
+  updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
+    lang === 'hebraic' ?
+      this.literalsStorage.addHebraicLiteral(word, input.value) :
+      this.literalsStorage.addGeezLiteral(word, input.value);
+
+    input.style.width = `${this.calcFieldSize(word, input.value)}px`;
   }
 
   onPatternFormSubmit(): void {
     if (this.form.valid) {
       const { type, value } = this.form.value;
-      this.patterns = this.literalsStorage.addPattern(value, type);
+      this.hebraicPatterns = this.literalsStorage.addHebraicPattern(value, type);
 
       this.form.reset();
     } else {
@@ -127,7 +154,7 @@ export class Inspector implements OnInit {
   }
 
   deletePattern(type: "prefix" | "suffix", index: number): void {
-    this.literalsStorage.deletePattern(type, index);
-    this.patterns[type].splice(index, 1);
+    this.literalsStorage.deleteHebraicPattern(type, index);
+    this.hebraicPatterns[type].splice(index, 1);
   }
 }

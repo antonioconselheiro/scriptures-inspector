@@ -11,8 +11,11 @@ export class LiteralsPipe implements PipeTransform {
     private literalsStorage: LiteralsStorage
   ) {}
 
-  transform(value: string): string {
-    const literals = this.literalsStorage.getLiteral();
+  transform(value: string, lang: 'hebraic' | 'geez' | 'greek'): string {
+    const literals = lang === 'hebraic' ?
+      this.literalsStorage.getHebraicLiteral() :
+      this.literalsStorage.getGeezLiteral();
+
     return literals[value] || '';
   }
 
