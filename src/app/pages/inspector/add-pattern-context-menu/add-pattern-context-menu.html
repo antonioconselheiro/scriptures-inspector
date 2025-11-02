@@ -1,0 +1,11 @@
+@if (visible) {
+  <div
+    class="context-menu"
+    [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  >
+    <ul>
+      <li (click)="onSelect('prefix', selectedWord)">define {{ selectedWord }} as prefix</li>
+      <li (click)="onSelect('suffix', selectedWord)">define {{ selectedWord }} as suffix</li>
+    </ul>
+  </div>
+}

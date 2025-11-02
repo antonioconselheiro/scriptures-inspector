@@ -10,18 +10,18 @@ export class LiteralsPatternsService {
     let matchPrefix = '',
       matchSuffix = '';
 
-    for (let prefix of patterns.prefix) {
-      if (prefix.pattern.test(hebraic)) {
-        matchPrefix = prefix.word;
-        hebraic = hebraic.replace(prefix.pattern, '');
+    for (let [prefix, pattern] of patterns.prefix) {
+      if (pattern.test(hebraic)) {
+        matchPrefix = prefix;
+        hebraic = hebraic.replace(pattern, '');
         break;
       }
     }
 
-    for (let suffix of patterns.suffix) {
-      if (suffix.pattern.test(hebraic)) {
-        matchSuffix = suffix.word;
-        hebraic = hebraic.replace(suffix.pattern, '');
+    for (let [suffix, pattern] of patterns.suffix) {
+      if (pattern.test(hebraic)) {
+        matchSuffix = suffix;
+        hebraic = hebraic.replace(pattern, '');
         break;
       }
     }

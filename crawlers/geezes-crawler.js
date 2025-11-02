@@ -97,23 +97,25 @@ async function getBookChapter(book, chapter) {
 async function getBook(book) {
   let chapter = 0, result = [], chapters = [];
 
-  do {
+  while (true) {
     chapter++;
     result = await getBookChapter(book, chapter);
+    if (!result || result.length === 0) break;
     chapters.push(result);
-  } while (result.length != 0);
+  }
 
   return chapters;
 }
 
 async function runGeezCrawler() {
   const keys = Object.keys(geezes);
-  for (let i = 0; i < keys[i].length; i++) {
+  for (let i = 0; i < keys.length; i++) {
     let book = await getBook(i + 1);
     geezes[keys[i]].push(book);
   }
 
   console.info('crawling complete');
+  console.info(JSON.stringify(geezes));
 }
 
 runGeezCrawler();

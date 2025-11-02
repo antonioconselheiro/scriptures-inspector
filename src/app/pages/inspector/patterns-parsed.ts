@@ -1,4 +1,4 @@
 export interface PatternsParsed {
-  prefix: Array<{ word: string; pattern: RegExp }>;
-  suffix: Array<{ word: string; pattern: RegExp }>;
+  prefix: Map<string, RegExp>;
+  suffix: Map<string, RegExp>;
 }

@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ScriptureVerse } from '../../domain/scripture-verse-model';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { Translation } from '../../domain/translation-model';
+import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
+import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { geezes } from './geezes';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
@@ -29,7 +31,9 @@ import { VersePipe } from './verse-pipe';
     LiteralsPipe,
     LiteralizatePipe,
     TransliterationPipe,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AddPatternContextMenu,
+    AddPatternContextMenuTrigger
   ],
   providers: [
     LiteralsStorage
@@ -43,13 +47,13 @@ export class Inspector implements OnInit {
   readonly geezes = geezes;
 
   hebraicPatterns: PatternsParsed = {
-    prefix: [],
-    suffix: []
+    prefix: new Map(),
+    suffix: new Map()
   };
 
   geezPatterns: PatternsParsed = {
-    prefix: [],
-    suffix: []
+    prefix: new Map(),
+    suffix: new Map()
   };
 
   translation: Translation | null = null;
@@ -67,7 +71,8 @@ export class Inspector implements OnInit {
     private literalsPatternsService: LiteralsPatternsService
   ) {
     this.form = fb.group({
-      value: ['', [Validators.required]],
+      lang: ['hebraic', [Validators.required]],
+      word: ['', [Validators.required]],
       type: ['prefix', [Validators.required]]
     });
   }
@@ -104,6 +109,18 @@ export class Inspector implements OnInit {
   private updateChapterTranslation(): void {
     this.chapterTranslations = this.translationService.getChapter(this.translation, this.book, this.chapter);
     this.cd.detectChanges();
+  }
+
+  onMenuOption(option: {
+    word: string;
+    type: "prefix" | "suffix";
+    lang: "hebraic" | "geez" | "greek";
+  }) {
+    if (option.lang === 'hebraic') {
+      this.hebraicPatterns = this.literalsStorage.addHebraicPattern(option.word, option.type);
+    } else if (option.lang === 'geez') {
+      this.geezPatterns = this.literalsStorage.addGeezPattern(option.word, option.type);
+    }
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
@@ -153,8 +170,8 @@ export class Inspector implements OnInit {
     }
   }
 
-  deletePattern(type: "prefix" | "suffix", index: number): void {
+  deletePattern(type: "prefix" | "suffix", index: number, key: string): void {
     this.literalsStorage.deleteHebraicPattern(type, index);
-    this.hebraicPatterns[type].splice(index, 1);
+    this.hebraicPatterns[type].delete(key);
   }
 }

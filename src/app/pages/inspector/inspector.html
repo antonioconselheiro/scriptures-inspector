@@ -1,3 +1,8 @@
+<app-add-pattern-context-menu
+  #menuRef
+  (optionSelected)="onMenuOption($event)"
+></app-add-pattern-context-menu>
+
 @let hebraicVerses = hebraics[book][chapter];
 
 <form [formGroup]="form" (ngSubmit)="onPatternFormSubmit()">
@@ -5,26 +10,33 @@
     <legend>Create word extrapolation</legend>
 
     <div>
-      <label for="hebraicValue">Hebraic</label>
-      <input
-        id="hebraicValue"
-        type="text"
-        formControlName="value"
-        placeholder="hebraic char"
-      />
-      @if (form.get('value')?.invalid && form.get('value')?.touched) {
-        <small class="error">Hebraic value is required</small>
+      <label for="lang">Lang</label>
+      <select id="lang" formControlName="lang">
+        <option selected value="hebraic">Hebraic</option>
+        <option value="geez">Geez</option>
+        <option value="greek">Greek</option>
+      </select>
+      @if (form.get('lang')?.invalid && form.get('lang')?.touched) {
+      <small class="error">Lang is required</small>
+      }
+    </div>
+
+    <div>
+      <label for="word">Word</label>
+      <input id="word" type="text" formControlName="word" placeholder="word" />
+      @if (form.get('word')?.invalid && form.get('word')?.touched) {
+      <small class="error">Word value is required</small>
       }
     </div>
 
     <div>
       <label for="type">Type</label>
       <select id="type" formControlName="type">
-        <option value="prefix">Prefix</option>
+        <option selected value="prefix">Prefix</option>
         <option value="suffix">Suffix</option>
       </select>
       @if (form.get('type')?.invalid && form.get('type')?.touched) {
-        <small class="error">Type selection is required</small>
+      <small class="error">Type selection is required</small>
       }
     </div>
 
@@ -40,118 +52,122 @@
     </tr>
   </thead>
   <tbody>
-    @for (pattern of hebraicPatterns.prefix; track $index) {
-      <tr>
-        <td>prefix: {{pattern.word}}</td>
-        <td><a (click)="deletePattern('prefix', $index)">🗙</a></td>
-      </tr>
+    @for (pattern of hebraicPatterns.prefix.keys(); track $index) {
+    <tr>
+      <td>prefix: {{pattern}}</td>
+      <td><a (click)="deletePattern('prefix', $index, pattern)">🗙</a></td>
+    </tr>
     }
 
-    @for (pattern of hebraicPatterns.suffix; track $index) {
-      <tr>
-        <td>suffix: {{pattern.word}}</td>
-        <td><a (click)="deletePattern('suffix', $index)">🗙</a></td>
-      </tr>
+    @for (pattern of hebraicPatterns.suffix.keys(); track $index) {
+    <tr>
+      <td>suffix: {{pattern}}</td>
+      <td><a (click)="deletePattern('suffix', $index, pattern)">🗙</a></td>
+    </tr>
     }
   </tbody>
 </table>
 
 @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
-  @let hebraic = hebraicVerse.text.split(' ');
-  @let geezVerse = getCorrespondingGeezVerse(hebraicVerse);
-  @let geez = geezVerse.text.split(' ');
+@let hebraic = hebraicVerse.text.split(' ');
+@let geezVerse = getCorrespondingGeezVerse(hebraicVerse);
+@let geez = geezVerse.text.split(' ');
 
-  <strong>Verse {{hebraicVerse | verse}}</strong>
-  <table border="1">
-    <tr>
-      <th rowspan="2">scripture</th>
-      <td [colSpan]="hebraic.length">
-        {{hebraicVerse.text}}
-      </td>
-    </tr>
-    <tr>
-      @for (word of hebraic; track $index) {
-        <td>{{word}}</td>
+<strong>Verse {{hebraicVerse | verse}}</strong>
+<table border="1">
+  <tr>
+    <th>translation</th>
+    <td [colSpan]="hebraic.length">{{chapterTranslations[verseKey] && chapterTranslations[verseKey].text}}</td>
+  </tr>
+  <tr>
+    <th rowspan="2">scripture</th>
+    <td [colSpan]="hebraic.length" [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
+      {{hebraicVerse.text}}
+    </td>
+  </tr>
+  <tr [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
+    @for (word of hebraic; track $index) {
+    <td>{{word}}</td>
+    }
+  </tr>
+  <tr>
+    <th>transliteration</th>
+    @for (word of hebraic; track $index) {
+    <td>{{word | transliteration : 'hebraic'}}</td>
+    }
+  </tr>
+  <tr>
+    <th rowspan="2">literals</th>
+    @for (sentence of hebraic; track $index) {
+    <td>
+      @for (word of splitByPatterns(sentence, 'hebraic'); track $index) {
+      <input type="text" [name]="'fieldHebraic' + $index" [placeholder]="word" #field
+        [style.width.px]="calcFieldSize(word, word | literals : 'hebraic')"
+        (keyup)="updateLiteral(field, word, 'hebraic')" [value]="word | literals : 'hebraic'" />
       }
-    </tr>
-    <tr>
-      <th>transliteration</th>
-      @for (word of hebraic; track $index) {
-        <td>{{word | transliteration : 'hebraic'}}</td>
-      }
-    </tr>
-    <tr>
-      <th rowspan="2">literals</th>
-      @for (sentence of hebraic; track $index) {
-        <td>
-          @for (word of splitByPatterns(sentence, 'hebraic'); track $index) {
-            <input type="text" [name]="'fieldHebraic' + $index" [placeholder]="word" #field [style.width.px]="calcFieldSize(word, word | literals : 'hebraic')" (keyup)="updateLiteral(field, word, 'hebraic')" [value]="word | literals : 'hebraic'" />
-          }
-        </td>
-      }
-    </tr>
-    <tr>
-      <td [colSpan]="hebraic.length">
-        {{hebraicVerse.text | literalizate : hebraicPatterns : 'hebraic'}}
-      </td>
-    </tr>
-    <tr>
-      <th>translation</th>
-      <td [colSpan]="hebraic.length">{{chapterTranslations[verseKey].text}}</td>
-    </tr>
-    <tr>
-      <th>gematrics</th>
-      @for (word of hebraic; track $index) {
-        <td>{{word | gematrics}}</td>
-      }
-    </tr>
-    <tr>
-      <th rowspan="2">hypothetical paleo</th>
-      @for (word of hebraic; track word) {
-        <td>{{word | paleo}}</td>
-      }
-    </tr>
-    <tr>
-      <td [colSpan]="hebraic.length">
-        {{hebraicVerse.text | paleo}}
-      </td>
-    </tr>
-  </table>
+    </td>
+    }
+  </tr>
+  <tr>
+    <td [colSpan]="hebraic.length">
+      {{hebraicVerse.text | literalizate : hebraicPatterns : 'hebraic'}}
+    </td>
+  </tr>
+  <tr>
+    <th>gematrics</th>
+    @for (word of hebraic; track $index) {
+    <td>{{word | gematrics}}</td>
+    }
+  </tr>
+  <tr>
+    <th rowspan="2">hypothetical paleo</th>
+    @for (word of hebraic; track word) {
+    <td>{{word | paleo}}</td>
+    }
+  </tr>
+  <tr>
+    <td [colSpan]="hebraic.length">
+      {{hebraicVerse.text | paleo}}
+    </td>
+  </tr>
+</table>
 
-  <table border="1">
-    <tr>
-      <th rowspan="2">ge'əz</th>
-      <td [colSpan]="geez.length">
-        {{geezVerse.text}}
-      </td>
-    </tr>
-    <tr>
-      @for (word of geez; track $index) {
-        <td>{{word}}</td>
+<table border="1">
+  <tr>
+    <th rowspan="2">ge'əz</th>
+    <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
+      {{geezVerse.text}}
+    </td>
+  </tr>
+  <tr [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
+    @for (word of geez; track $index) {
+    <td>{{word}}</td>
+    }
+  </tr>
+  <tr>
+    <th>transliteration</th>
+    @for (word of geez; track $index) {
+    <td>{{word | transliteration : 'geez'}}</td>
+    }
+  </tr>
+  <tr>
+    <th rowspan="2">literals</th>
+    @for (sentence of geez; track $index) {
+    <td>
+      @for (word of splitByPatterns(sentence, 'geez'); track $index) {
+      <input type="text" [name]="'fieldGeez' + $index" [placeholder]="word" #field
+        [style.width.px]="calcFieldSize(word, word | literals : 'geez')" (keyup)="updateLiteral(field, word, 'geez')"
+        [value]="word | literals : 'geez'" />
       }
-    </tr>
-    <tr>
-      <th>transliteration</th>
-      @for (word of geez; track $index) {
-        <td>{{word | transliteration : 'geez'}}</td>
-      }
-    </tr>
-    <tr>
-      <th rowspan="2">literals</th>
-      @for (sentence of geez; track $index) {
-        <td>
-          @for (word of splitByPatterns(sentence, 'geez'); track $index) {
-            <input type="text" [name]="'fieldGeez' + $index" [placeholder]="word" #field [style.width.px]="calcFieldSize(word, word | literals : 'geez')" (keyup)="updateLiteral(field, word, 'geez')" [value]="word | literals : 'geez'" />
-          }
-        </td>
-      }
-    </tr>
-    <tr>
-      <td [colSpan]="geez.length">
-        {{geezVerse.text | literalizate : geezPatterns : 'geez'}}
-      </td>
-    </tr>
-  </table>
+    </td>
+    }
+  </tr>
+  <tr>
+    <td [colSpan]="geez.length">
+      {{geezVerse.text | literalizate : geezPatterns : 'geez'}}
+    </td>
+  </tr>
+</table>
 }
 
 <span>references</span>

@@ -119,15 +119,19 @@ export class PaleoPipe implements PipeTransform {
     {
       name: "separator",
       matcher: /[\u05BE\u05C0\u05C3\u05C6]$/g,
-      paleo: "𐤟"
+      paleo: "\u202E𐤟"
     }
   ];
 
   transform(value: string): string {
-    for (let index = 0; index < this.iconography.length; index++) {
-      value = value.replace(this.iconography[index].matcher, this.iconography[index].paleo);
-    }
+    const paleo = value.split(' ').map(word => {
+      for (let index = 0; index < this.iconography.length; index++) {
+        word = word.replace(this.iconography[index].matcher, this.iconography[index].paleo);
+      }
 
-    return Array.from(value).reverse().join("");
+      return word;
+    });
+
+    return paleo.join(' ');
   }
 }
