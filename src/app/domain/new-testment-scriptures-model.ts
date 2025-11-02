@@ -1,4 +1,4 @@
-import { NewBook } from '../pages/inspector/new-book-enum';
+import { NewBook } from './new-book-enum';
 import { ScriptureBook } from './scripture-book-model';
 
 export type NewTestmentScriptures = {

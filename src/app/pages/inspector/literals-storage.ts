@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PatternsParsed } from './patterns-parsed';
 import { PatternsSerialized } from './patterns-serialized';
+import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
+import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +15,9 @@ export class LiteralsStorage {
   private geezLiterals: Record<string, string> = {};
   private geezPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
+  private alignmentGeezHebraic: AlignmentGeezHebraic = ({} as any);
+  private alignmentGeezGreek: AlignmentGeezGreek = ({} as any);
+
   constructor() {
     try {
       this.hebraicLiterals = JSON.parse(localStorage.getItem('hebraicLiterals') || '{}');
@@ -20,6 +25,9 @@ export class LiteralsStorage {
 
       this.geezLiterals = JSON.parse(localStorage.getItem('geezLiterals') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
+
+      this.alignmentGeezHebraic = JSON.parse(localStorage.getItem('alignmentGeezHebraic') || JSON.stringify(this.alignmentGeezHebraic));
+      this.alignmentGeezGreek = JSON.parse(localStorage.getItem('alignmentGeezGreek') || JSON.stringify(this.alignmentGeezGreek));
     } catch (e) {
       console.error(e);
     }

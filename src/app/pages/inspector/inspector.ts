@@ -14,7 +14,9 @@ import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
 import { LiteralsStorage } from './literals-storage';
-import { OldBook } from './old-book-enum';
+import { OldBook } from '../../domain/old-book-enum';
+import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
+import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
 import { PaleoPipe } from './paleo-pipe';
 import { PatternsParsed } from './patterns-parsed';
 import { TranslationService } from './translation-service';
@@ -54,6 +56,78 @@ export class Inspector implements OnInit {
   geezPatterns: PatternsParsed = {
     prefix: new Map(),
     suffix: new Map()
+  };
+
+  alignmentGeezHebraic: AlignmentGeezHebraic = {
+    'gn': [],
+    'ex': [],
+    'lv': [],
+    'nm': [],
+    'dt': [],
+    'js': [],
+    'jz': [],
+    'rt': [],
+    '1sm': [],
+    '2sm': [],
+    '1rs': [],
+    '2rs': [],
+    '1cr': [],
+    '2cr': [],
+    'ed': [],
+    'ne': [],
+    'et': [],
+    'jo': [],
+    'sl': [],
+    'pv': [],
+    'ec': [],
+    'ct': [],
+    'is': [],
+    'jr': [],
+    'lm': [],
+    'ez': [],
+    'dn': [],
+    'os': [],
+    'jl': [],
+    'am': [],
+    'ob': [],
+    'jn': [],
+    'mq': [],
+    'na': [],
+    'hc': [],
+    'sf': [],
+    'ag': [],
+    'zc': [],
+    'ml': []
+  };
+
+  alignmentGeezGreek: AlignmentGeezGreek = {
+    'mt': [],
+    'mc': [],
+    'lc': [],
+    'joao': [],
+    'atos': [],
+    'rm': [],
+    '1co': [],
+    '2co': [],
+    'gl': [],
+    'ef': [],
+    'fp': [],
+    'cl': [],
+    '1ts': [],
+    '2ts': [],
+    '1tm': [],
+    '2tm': [],
+    'tt': [],
+    'fm': [],
+    'hb': [],
+    'tg': [],
+    '1pe': [],
+    '2pe': [],
+    '1jo': [],
+    '2jo': [],
+    '3jo': [],
+    'jd': [],
+    'ap': []
   };
 
   translation: Translation | null = null;
@@ -149,11 +223,43 @@ export class Inspector implements OnInit {
   }
 
   splitByPatterns(word: string, lang: 'hebraic' | 'geez' | 'greek'): string[] {
-if (lang === 'geez') {
-debugger;
-}
+    const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
+    return this.literalsPatternsService.splitByPatterns(patterns, word);
+  }
 
-    return this.literalsPatternsService.splitByPatterns(lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns, word);
+  onSelectAlignmentGeezToHebraic(
+    hebraicVerseString: string,
+    geezVerseString: string,
+    geezIndex: number,
+    geezWord: string,
+    alignment: string
+  ): void {
+    const [hIndex, hebraicWord] = alignment.split('-');
+    const hebraicIndex = Number(hIndex);
+    const hebraicVerse = Number(hebraicVerseString);
+    const geezVerse = Number(geezVerseString);
+
+    if (!this.alignmentGeezHebraic[this.book][this.chapter]) {
+      this.alignmentGeezHebraic[this.book][this.chapter] = [];
+    }
+
+    if (!this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse]) {
+      this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse] = [];
+    }
+
+    this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse][hebraicIndex] = {
+      origin: {
+        verse: hebraicVerse,
+        index: hebraicIndex,
+        word: hebraicWord
+      },
+
+      translation: {
+        verse: geezVerse,
+        index: geezIndex,
+        word: geezWord
+      }
+    };
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {

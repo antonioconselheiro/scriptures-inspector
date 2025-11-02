@@ -190,6 +190,21 @@
       {{geezVerse.text | literalizate : geezPatterns : 'geez'}}
     </td>
   </tr>
+  <tr>
+    <th>scriptures</th>
+    @for (sentence of geez; track $index) {
+    <td>
+      @for (word of splitByPatterns(sentence, 'geez'); track $index) {
+        <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse.verse.start, geezVerse.verse.start, word, alignment.value)" [name]="$index + '-' + word">
+          <option value=""></option>
+          @for (word of splitByPatterns(hebraicVerse.text, 'hebraic'); track $index) {
+            <option [value]="$index+'-'+word">({{$index}} - {{word}} )</option>
+          }
+        </select>
+      }
+    </td>
+    }
+  </tr>
 </table>
 }
 

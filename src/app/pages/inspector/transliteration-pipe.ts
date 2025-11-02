@@ -40,7 +40,7 @@ export class TransliterationPipe implements PipeTransform {
     'ጸ': 'ṣe', 'ጹ': 'ṣu', 'ጺ': 'ṣi', 'ጻ': 'ṣa', 'ጼ': 'ṣe', 'ጽ': 'ṣə', 'ጾ': 'ṣo',
     'ፀ': 'tse', 'ፁ': 'tsu', 'ፂ': 'tsi', 'ፃ': 'tsa', 'ፄ': 'tse', 'ፅ': 'tsə', 'ፆ': 'tso',
     'ፈ': 'fe', 'ፉ': 'fu', 'ፊ': 'fi', 'ፋ': 'fa', 'ፌ': 'fe', 'ፍ': 'fə', 'ፎ': 'fo',
-    'ፐ': 'pe', 'ፑ': 'pu', 'ፒ': 'pi', 'ፓ': 'pa', 'ፔ': 'pe', 'ፕ': 'pə', 'ፖ': 'po'
+    'ፐ': 'pe', 'ፑ': 'pu', 'ፒ': 'pi', 'ፓ': 'pa', 'ፔ': 'pe', 'ፕ': 'pə', 'ፖ': 'po', 'ቕ': 'x̣ə'
   };
 
   readonly geezRegex = new RegExp(Object.keys(this.geezToLatin).join('|'), 'g');
