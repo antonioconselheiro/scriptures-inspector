@@ -1,7 +1,4 @@
-<app-add-pattern-context-menu
-  #menuRef
-  (optionSelected)="onMenuOption($event)"
-></app-add-pattern-context-menu>
+<app-add-pattern-context-menu #menuRef (optionSelected)="onMenuOption($event)"></app-add-pattern-context-menu>
 
 @let hebraicVerses = hebraics[book][chapter];
 
@@ -44,25 +41,51 @@
   </fieldset>
 </form>
 
-<table border="1">
+<table class="textCenter" border="1">
   <thead>
     <tr>
-      <th>Pattern</th>
       <th>Type</th>
+      <th>Pattern</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th colspan="3">Hebraic</th>
+    </tr>
     @for (pattern of hebraicPatterns.prefix.keys(); track $index) {
     <tr>
-      <td>prefix: {{pattern}}</td>
-      <td><a (click)="deletePattern('prefix', $index, pattern)">🗙</a></td>
+      <td>prefix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('hebraic', 'prefix', $index, pattern)">🗙</a></td>
     </tr>
     }
 
     @for (pattern of hebraicPatterns.suffix.keys(); track $index) {
     <tr>
-      <td>suffix: {{pattern}}</td>
-      <td><a (click)="deletePattern('suffix', $index, pattern)">🗙</a></td>
+      <td>suffix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('hebraic', 'suffix', $index, pattern)">🗙</a></td>
+    </tr>
+    }
+
+    <tr>
+      <th colspan="3">Ge'əz</th>
+    </tr>
+
+    @for (pattern of geezPatterns.prefix.keys(); track $index) {
+    <tr>
+      <td>prefix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('geez', 'prefix', $index, pattern)">🗙</a></td>
+    </tr>
+    }
+
+    @for (pattern of geezPatterns.suffix.keys(); track $index) {
+    <tr>
+      <td>suffix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('geez', 'suffix', $index, pattern)">🗙</a></td>
     </tr>
     }
   </tbody>
@@ -97,7 +120,7 @@
     }
   </tr>
   <tr>
-    <th rowspan="2">literals</th>
+    <th rowspan="2">literalization</th>
     @for (sentence of hebraic; track $index) {
     <td>
       @for (word of splitByPatterns(sentence, 'hebraic'); track $index) {
@@ -151,7 +174,7 @@
     }
   </tr>
   <tr>
-    <th rowspan="2">literals</th>
+    <th rowspan="2">literalization</th>
     @for (sentence of geez; track $index) {
     <td>
       @for (word of splitByPatterns(sentence, 'geez'); track $index) {

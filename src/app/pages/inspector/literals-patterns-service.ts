@@ -6,35 +6,35 @@ import { PatternsParsed } from './patterns-parsed';
 })
 export class LiteralsPatternsService {
   
-  splitByPatterns(patterns: PatternsParsed, hebraic: string): string[] {
+  splitByPatterns(patterns: PatternsParsed, word: string): string[] {
     let matchPrefix = '',
       matchSuffix = '';
 
     for (let [prefix, pattern] of patterns.prefix) {
-      if (pattern.test(hebraic)) {
+      if (pattern.test(word)) {
         matchPrefix = prefix;
-        hebraic = hebraic.replace(pattern, '');
+        word = word.replace(pattern, '');
         break;
       }
     }
 
     for (let [suffix, pattern] of patterns.suffix) {
-      if (pattern.test(hebraic)) {
+      if (pattern.test(word)) {
         matchSuffix = suffix;
-        hebraic = hebraic.replace(pattern, '');
+        word = word.replace(pattern, '');
         break;
       }
     }
 
     let words: string[] = [];
     if (matchPrefix && matchSuffix) {
-      words = [matchPrefix, ...this.splitByPatterns(patterns, hebraic), matchSuffix];
+      words = [matchPrefix, ...this.splitByPatterns(patterns, word), matchSuffix];
     } else if (matchPrefix) {
-      words = [matchPrefix, ...this.splitByPatterns(patterns, hebraic)];
+      words = [matchPrefix, ...this.splitByPatterns(patterns, word)];
     } else if (matchSuffix) {
-      words = [...this.splitByPatterns(patterns, hebraic), matchSuffix];
+      words = [...this.splitByPatterns(patterns, word), matchSuffix];
     } else {
-      words = [hebraic];
+      words = [word];
     }
 
     return words.filter(word => word);

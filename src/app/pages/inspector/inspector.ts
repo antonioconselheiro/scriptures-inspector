@@ -85,6 +85,7 @@ export class Inspector implements OnInit {
 
   private readPatterns(): void {
     this.hebraicPatterns = this.literalsStorage.getHebraicPattern();
+    this.geezPatterns = this.literalsStorage.getGeezPattern();
   }
 
   private subscribeParams(): void {
@@ -148,7 +149,11 @@ export class Inspector implements OnInit {
   }
 
   splitByPatterns(word: string, lang: 'hebraic' | 'geez' | 'greek'): string[] {
-    return this.literalsPatternsService.splitByPatterns(lang === 'hebraic' ? this.hebraicPatterns : this.hebraicPatterns, word);
+if (lang === 'geez') {
+debugger;
+}
+
+    return this.literalsPatternsService.splitByPatterns(lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns, word);
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
@@ -170,8 +175,13 @@ export class Inspector implements OnInit {
     }
   }
 
-  deletePattern(type: "prefix" | "suffix", index: number, key: string): void {
-    this.literalsStorage.deleteHebraicPattern(type, index);
-    this.hebraicPatterns[type].delete(key);
+  deletePattern(lang: 'hebraic' | 'geez' | 'greek', type: "prefix" | "suffix", index: number, key: string): void {
+    if (lang === 'hebraic') {
+      this.literalsStorage.deleteHebraicPattern(type, index);
+      this.hebraicPatterns[type].delete(key);
+    } else if (lang === 'geez') {
+      this.literalsStorage.deleteGeezPattern(type, index);
+      this.geezPatterns[type].delete(key);
+    }
   }
 }

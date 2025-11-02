@@ -53,7 +53,7 @@ export class LiteralsStorage {
 
   private getPattern(fromPatterns: PatternsSerialized) {
     let prefix = new Map<string, RegExp>(fromPatterns.prefix.map(pattern => [pattern, new RegExp(`^${pattern}`)]));
-    let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`^${pattern}`)]));
+    let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`${pattern}$`)]));
 
     return { prefix, suffix }
   }
@@ -67,11 +67,16 @@ export class LiteralsStorage {
   }
 
   private addPattern(serialized: PatternsSerialized, storageKey: string, word: string, type: 'prefix' | 'suffix'): PatternsParsed {
+    const empty = -1;
+    if (serialized[type].indexOf(word) !== empty) {
+      return this.getPattern(serialized);
+    }
+
     const index = serialized[type].findIndex(pattern => pattern.length <= word.length);
     serialized[type].splice(index, 0, word);
     localStorage.setItem(storageKey, JSON.stringify(serialized));
 
-    return this.getHebraicPattern();
+    return this.getPattern(serialized);
   }
 
   deleteHebraicPattern(type: 'prefix' | 'suffix', index: number): PatternsParsed {
