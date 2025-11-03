@@ -199,17 +199,21 @@ export class Inspector implements OnInit {
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
-  getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): ScriptureVerse {
+  getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): Array<ScriptureVerse> {
+    const verses = new Array<ScriptureVerse>();
     for (let index = 0; index < this.geezes[this.book][this.chapter].length; index++) {
+      const geezVerse = this.geezes[this.book][this.chapter][index];
+
+      //  FIXME: não fiz todas validações para ter certeza que esta lógica cobre todos cenários
       if (
-        this.geezes[this.book][this.chapter][index].verse.start === hebraicVerse.verse.start ||
-        hebraicVerse.verse.end === this.geezes[this.book][this.chapter][index].verse.end
+        Number(geezVerse.verse.start) >= Number(hebraicVerse.verse.start) ||
+        Number(hebraicVerse.verse.end) <= Number(geezVerse.verse.end)
       ) {
-        return this.geezes[this.book][this.chapter][index];
+        verses.push(geezVerse);
       }
     }
 
-    throw new Error('geez corresponding not found');
+    return verses;
   }
 
   calcFieldSize(placeholder: string, value: string): number {
@@ -228,34 +232,34 @@ export class Inspector implements OnInit {
   }
 
   onSelectAlignmentGeezToHebraic(
-    hebraicVerseString: string,
-    geezVerseString: string,
+    hebraicVerse: ScriptureVerse,
+    geezVerse: ScriptureVerse,
     geezIndex: number,
     geezWord: string,
     alignment: string
   ): void {
     const [hIndex, hebraicWord] = alignment.split('-');
     const hebraicIndex = Number(hIndex);
-    const hebraicVerse = Number(hebraicVerseString);
-    const geezVerse = Number(geezVerseString);
+    const hebraicVerseNumber = Number(hebraicVerse.verse.start);
+    const geezVerseNumber = Number(geezVerse.verse.start);
 
     if (!this.alignmentGeezHebraic[this.book][this.chapter]) {
       this.alignmentGeezHebraic[this.book][this.chapter] = [];
     }
 
-    if (!this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse]) {
-      this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse] = [];
+    if (!this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber]) {
+      this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber] = [];
     }
 
-    this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerse][hebraicIndex] = {
+    this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber][hebraicIndex] = {
       origin: {
-        verse: hebraicVerse,
+        verse: hebraicVerseNumber,
         index: hebraicIndex,
         word: hebraicWord
       },
 
       translation: {
-        verse: geezVerse,
+        verse: geezVerseNumber,
         index: geezIndex,
         word: geezWord
       }
