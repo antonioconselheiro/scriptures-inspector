@@ -94,8 +94,7 @@
 @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
 @let hebraic = hebraicVerse.text.split(' ');
 @let eachHebraicWord = splitByPatterns(hebraicVerse.text, 'hebraic');
-@let geezVerse = getCorrespondingGeezVerse(hebraicVerse);
-@let geez = geezVerse.text.split(' ');
+@let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
 <strong>Verse {{hebraicVerse | verse}}</strong>
 <table border="1">
@@ -156,6 +155,9 @@
   </tr>
 </table>
 
+@for (geezVerse of geezVerses; track geezVerse.verse.start; let geezVerseKey = $index) {
+@let geez = geezVerse.text.split(' ');
+@let geezMatriz = splitIntoMatrix(geezVerse.text, 'geez');
 <table border="1">
   <tr>
     <th rowspan="2">ge'əz</th>
@@ -193,20 +195,22 @@
   </tr>
   <tr>
     <th>scriptures</th>
-    @for (sentence of geez; track $index) {
+    @for (sentence of geezMatriz; track $index) {
     <td>
-      @for (word of splitByPatterns(sentence, 'geez'); track $index) {
-        <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, word, alignment.value)" [name]="$index + '-' + word">
-          <option value=""></option>
-          @for (word of eachHebraicWord; track $index) {
-            <option [value]="$index+'-'+word">({{$index}} - {{word}} )</option>
-          }
-        </select>
+      @for (word of sentence; track $index) {
+      <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, word.index, word.word, alignment.value)"
+        [name]="$index + '-' + word">
+        <option value=""></option>
+        @for (word of eachHebraicWord; track $index) {
+        <option [value]="$index+'-'+word">({{$index}} - {{word}} )</option>
+        }
+      </select>
       }
     </td>
     }
   </tr>
 </table>
+}
 }
 
 <span>references</span>

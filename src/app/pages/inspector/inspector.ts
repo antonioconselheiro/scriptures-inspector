@@ -231,6 +231,14 @@ export class Inspector implements OnInit {
     return this.literalsPatternsService.splitByPatterns(patterns, word);
   }
 
+  splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string}[][] {
+    const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
+    let index = 0;
+    return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
+      return { index, word };
+    }));
+  }
+
   onSelectAlignmentGeezToHebraic(
     hebraicVerse: ScriptureVerse,
     geezVerse: ScriptureVerse,
