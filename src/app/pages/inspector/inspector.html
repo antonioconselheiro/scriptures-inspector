@@ -41,8 +41,6 @@
   </fieldset>
 </form>
 
-<span class="prisma-1">no </span><span class="prisma-2">começo </span><span class="prisma-3">criou </span><span class="prisma-4">Elohim </span><span class="prisma-5">Alef Tav </span><span class="prisma-6">o </span><span class="prisma-7">Céu </span><span class="prisma-1">e </span><span class="prisma-2">Alef Tav </span><span class="prisma-3">a </span><span class="prisma-4">Terra</span>
-
 <table class="textCenter" border="1">
   <thead>
     <tr>
@@ -107,36 +105,55 @@
   <tr>
     <th rowspan="2">scripture</th>
     <td [colSpan]="hebraic.length" [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
-      {{hebraicVerse.text}}
+      @for (sentence of eachHebraicWord; track $index) {
+      <span>&nbsp;</span>
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word}}</span>
+      }
+      }
     </td>
   </tr>
   <tr [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
-    @for (word of hebraic; track $index) {
-    <td>{{word}}</td>
+    @for (sentence of eachHebraicWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word}}</span>
+      }
+    </td>
     }
   </tr>
   <tr>
     <th>transliteration</th>
-    @for (word of hebraic; track $index) {
-    <td>{{word | transliteration : 'hebraic'}}</td>
+    @for (sentence of eachHebraicWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | transliteration : 'hebraic'}}</span>
+      }
+    </td>
     }
+
   </tr>
   <tr>
     <th rowspan="2">literalization</th>
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-        @let literal = word.word | literals : 'hebraic' : pipeUpdaterController;
-        <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #field
-          [style.width.px]="calcFieldSize(word.word, literal)"
-          (input)="updateLiteral(field, word.word, 'hebraic')" [value]="literal" />
+      @let literal = word.word | literals : 'hebraic' : pipeUpdaterController;
+      <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #field
+        [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLiteral(field, word.word, 'hebraic')"
+        [value]="literal" />
       }
     </td>
     }
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
-      {{hebraicVerse.text | literalizate : hebraicPatterns : 'hebraic' : pipeUpdaterController}}
+      @for (sentence of eachHebraicWord; track $index) {
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | literalizate : hebraicPatterns : 'hebraic' :
+        pipeUpdaterController}}&nbsp;</span>
+      }
+      }
     </td>
   </tr>
   <tr>
@@ -147,13 +164,23 @@
   </tr>
   <tr>
     <th rowspan="2">hypothetical paleo</th>
-    @for (word of hebraic; track $index) {
-    <td>{{word | paleo}}</td>
+
+    @for (sentence of eachHebraicWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
+      }
+    </td>
     }
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
-      {{hebraicVerse.text | paleo}}
+      @for (sentence of eachHebraicWord; track $index) {
+        <span>&nbsp;</span>
+        @for (word of sentence; track $index) {
+        <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
+        }
+      }
     </td>
   </tr>
 </table>
@@ -166,18 +193,30 @@
   <tr>
     <th rowspan="2">ge'əz</th>
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
-      {{geezVerse.text}}
+      @for (sentence of geezMatriz; track $index) {
+        @for (word of sentence; track word.index) {
+          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+        }
+      }
     </td>
   </tr>
   <tr [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
-    @for (word of geez; track $index) {
-    <td>{{word}}</td>
+    @for (sentence of geezMatriz; track $index) {
+      <td>
+        @for (word of sentence; track word.index) {
+          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+        }
+      </td>
     }
   </tr>
   <tr>
     <th>transliteration</th>
-    @for (word of geez; track $index) {
-    <td>{{word | transliteration : 'geez'}}</td>
+    @for (sentence of geezMatriz; track $index) {
+      <td>
+        @for (word of sentence; track word.index) {
+          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
+        }
+      </td>
     }
   </tr>
   <tr>
@@ -185,7 +224,7 @@
     @for (sentence of geezMatriz; track $index) {
     <td>
       @for (word of sentence; track $index) {
-        @let literal = word.word | literals : 'geez' : pipeUpdaterController;
+      @let literal = word.word | literals : 'geez' : pipeUpdaterController;
       <input type="text" [name]="'fieldGeez' + word.index" [placeholder]="word.word" #field
         [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLiteral(field, word.word, 'geez')"
         [value]="literal" />
@@ -195,7 +234,11 @@
   </tr>
   <tr>
     <td [colSpan]="geez.length">
-      {{geezVerse.text | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}
+      @for (sentence of geezMatriz; track $index) {
+        @for (word of sentence; track word.index) {
+          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}&nbsp;</span>
+        }
+      }
     </td>
   </tr>
   <tr>
@@ -203,12 +246,14 @@
     @for (sentence of geezMatriz; track $index) {
     <td>
       @for (geezWord of sentence; track $index) {
-      <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, alignment.value)"
+      <select #alignment
+        (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, alignment.value)"
         [name]="$index + '-' + geezWord.word">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
           @for (hebraicWord of hebraicsWord; track $index) {
-            <option [value]="hebraicWord.index+'-'+hebraicWord.word">({{hebraicWord.index}} - {{hebraicWord.word}} )</option>
+          <option [value]="hebraicWord.index+'-'+hebraicWord.word">({{hebraicWord.index}} - {{hebraicWord.word}} )
+          </option>
           }
         }
       </select>

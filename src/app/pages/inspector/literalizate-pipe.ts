@@ -24,7 +24,7 @@ export class LiteralizatePipe implements PipeTransform {
       }
 
       return literalWord.join(' ');
-    }).join(' ').replace(/( ')/g, '\'');
+    }).join(' ');
   }
 
 }

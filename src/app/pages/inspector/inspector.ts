@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
+import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
+import { OldBook } from '../../domain/old-book-enum';
 import { ScriptureVerse } from '../../domain/scripture-verse-model';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { Translation } from '../../domain/translation-model';
@@ -14,9 +17,6 @@ import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
 import { LiteralsStorage } from './literals-storage';
-import { OldBook } from '../../domain/old-book-enum';
-import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
-import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
 import { PaleoPipe } from './paleo-pipe';
 import { PatternsParsed } from './patterns-parsed';
 import { TranslationService } from './translation-service';
@@ -256,11 +256,11 @@ export class Inspector implements OnInit {
       this.alignmentGeezHebraic[this.book][this.chapter] = [];
     }
 
-    if (!this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber]) {
-      this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber] = [];
+    if (!this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber]) {
+      this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber] = [];
     }
 
-    this.alignmentGeezHebraic[this.book][this.chapter][hebraicVerseNumber][hebraicIndex] = {
+    this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber][geezIndex] = {
       origin: {
         verse: hebraicVerseNumber,
         index: hebraicIndex,
@@ -273,6 +273,21 @@ export class Inspector implements OnInit {
         word: geezWord
       }
     };
+  }
+
+  getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
+    const verseNumber = Number(geezVerse.verse.start);
+    if (
+      !this.alignmentGeezHebraic[this.book] ||
+      !this.alignmentGeezHebraic[this.book][this.chapter] ||
+      !this.alignmentGeezHebraic[this.book][this.chapter][verseNumber] ||
+      !this.alignmentGeezHebraic[this.book][this.chapter][verseNumber][wordIndex]
+    ) {
+      return '';
+    }
+    
+    const map = this.alignmentGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
+    return String(map.origin.index % 7 + 1);
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
