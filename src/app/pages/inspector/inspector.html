@@ -93,7 +93,7 @@
 
 @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
 @let hebraic = hebraicVerse.text.split(' ');
-@let eachHebraicWord = splitByPatterns(hebraicVerse.text, 'hebraic');
+@let eachHebraicWord = splitIntoMatrix(hebraicVerse.text, 'hebraic');
 @let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
 <strong>Verse {{hebraicVerse | verse}}</strong>
@@ -121,19 +121,20 @@
   </tr>
   <tr>
     <th rowspan="2">literalization</th>
-    @for (sentence of hebraic; track $index) {
+    @for (sentence of eachHebraicWord; track $index) {
     <td>
-      @for (word of splitByPatterns(sentence, 'hebraic'); track $index) {
-      <input type="text" [name]="'fieldHebraic' + $index" [placeholder]="word" #field
-        [style.width.px]="calcFieldSize(word, word | literals : 'hebraic')"
-        (keyup)="updateLiteral(field, word, 'hebraic')" [value]="word | literals : 'hebraic'" />
+      @for (word of sentence; track $index) {
+        @let literal = word.word | literals : 'hebraic' : pipeUpdaterController;
+        <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #field
+          [style.width.px]="calcFieldSize(word.word, literal)"
+          (input)="updateLiteral(field, word.word, 'hebraic')" [value]="literal" />
       }
     </td>
     }
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
-      {{hebraicVerse.text | literalizate : hebraicPatterns : 'hebraic'}}
+      {{hebraicVerse.text | literalizate : hebraicPatterns : 'hebraic' : pipeUpdaterController}}
     </td>
   </tr>
   <tr>
@@ -144,7 +145,7 @@
   </tr>
   <tr>
     <th rowspan="2">hypothetical paleo</th>
-    @for (word of hebraic; track word) {
+    @for (word of hebraic; track $index) {
     <td>{{word | paleo}}</td>
     }
   </tr>
@@ -158,6 +159,7 @@
 @for (geezVerse of geezVerses; track geezVerse.verse.start; let geezVerseKey = $index) {
 @let geez = geezVerse.text.split(' ');
 @let geezMatriz = splitIntoMatrix(geezVerse.text, 'geez');
+
 <table border="1">
   <tr>
     <th rowspan="2">ge'əz</th>
@@ -178,31 +180,34 @@
   </tr>
   <tr>
     <th rowspan="2">literalization</th>
-    @for (sentence of geez; track $index) {
+    @for (sentence of geezMatriz; track $index) {
     <td>
-      @for (word of splitByPatterns(sentence, 'geez'); track $index) {
-      <input type="text" [name]="'fieldGeez' + $index" [placeholder]="word" #field
-        [style.width.px]="calcFieldSize(word, word | literals : 'geez')" (keyup)="updateLiteral(field, word, 'geez')"
-        [value]="word | literals : 'geez'" />
+      @for (word of sentence; track $index) {
+        @let literal = word.word | literals : 'geez' : pipeUpdaterController;
+      <input type="text" [name]="'fieldGeez' + word.index" [placeholder]="word.word" #field
+        [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLiteral(field, word.word, 'geez')"
+        [value]="literal" />
       }
     </td>
     }
   </tr>
   <tr>
     <td [colSpan]="geez.length">
-      {{geezVerse.text | literalizate : geezPatterns : 'geez'}}
+      {{geezVerse.text | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}
     </td>
   </tr>
   <tr>
     <th>scriptures</th>
     @for (sentence of geezMatriz; track $index) {
     <td>
-      @for (word of sentence; track $index) {
-      <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, word.index, word.word, alignment.value)"
-        [name]="$index + '-' + word">
+      @for (geezWord of sentence; track $index) {
+      <select #alignment (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, alignment.value)"
+        [name]="$index + '-' + geezWord.word">
         <option value=""></option>
-        @for (word of eachHebraicWord; track $index) {
-        <option [value]="$index+'-'+word">({{$index}} - {{word}} )</option>
+        @for (hebraicsWord of eachHebraicWord; track $index) {
+          @for (hebraicWord of hebraicsWord; track $index) {
+            <option [value]="hebraicWord.index+'-'+hebraicWord.word">({{hebraicWord.index}} - {{hebraicWord.word}} )</option>
+          }
         }
       </select>
       }

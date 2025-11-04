@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ScriptureVerse } from '../../domain/scripture-verse-model';
@@ -136,6 +136,8 @@ export class Inspector implements OnInit {
   chapter = 0;
   form: any;
 
+  pipeUpdaterController = 1;
+
   constructor(
     fb: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -235,7 +237,7 @@ export class Inspector implements OnInit {
     const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
     let index = 0;
     return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
-      return { index, word };
+      return { index: index++, word };
     }));
   }
 
@@ -280,6 +282,7 @@ export class Inspector implements OnInit {
       this.literalsStorage.addGeezLiteral(word, input.value);
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
+    this.pipeUpdaterController++;
   }
 
   onPatternFormSubmit(): void {

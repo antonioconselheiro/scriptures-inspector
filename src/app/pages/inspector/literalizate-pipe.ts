@@ -4,8 +4,7 @@ import { LiteralsPatternsService } from './literals-patterns-service';
 import { PatternsParsed } from './patterns-parsed';
 
 @Pipe({
-  name: 'literalizate',
-  pure: false
+  name: 'literalizate'
 })
 export class LiteralizatePipe implements PipeTransform {
 
@@ -14,7 +13,8 @@ export class LiteralizatePipe implements PipeTransform {
     private literalsPatternsService: LiteralsPatternsService
   ) { }
 
-  transform(value: string, patterns: PatternsParsed, lang: 'hebraic' | 'geez' | 'greek'): string {
+  transform(value: string, patterns: PatternsParsed, lang: 'hebraic' | 'geez' | 'greek', listenUpdate: number): string {
+    listenUpdate;
     const literals = lang === 'hebraic' ? this.literalsStorage.getHebraicLiteral() : this.literalsStorage.getGeezLiteral();
 
     return value.split(' ').map(sentence => {

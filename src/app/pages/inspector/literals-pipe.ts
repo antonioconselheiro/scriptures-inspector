@@ -2,8 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { LiteralsStorage } from './literals-storage';
 
 @Pipe({
-  name: 'literals',
-  pure: false
+  name: 'literals'
 })
 export class LiteralsPipe implements PipeTransform {
 
@@ -11,7 +10,8 @@ export class LiteralsPipe implements PipeTransform {
     private literalsStorage: LiteralsStorage
   ) {}
 
-  transform(value: string, lang: 'hebraic' | 'geez' | 'greek'): string {
+  transform(value: string, lang: 'hebraic' | 'geez' | 'greek', listenUpdate: number): string {
+    listenUpdate;
     const literals = lang === 'hebraic' ?
       this.literalsStorage.getHebraicLiteral() :
       this.literalsStorage.getGeezLiteral();
