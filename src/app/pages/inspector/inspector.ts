@@ -206,10 +206,9 @@ export class Inspector implements OnInit {
     for (let index = 0; index < this.geezes[this.book][this.chapter].length; index++) {
       const geezVerse = this.geezes[this.book][this.chapter][index];
 
-      //  FIXME: não fiz todas validações para ter certeza que esta lógica cobre todos cenários
       if (
-        Number(geezVerse.verse.start) >= Number(hebraicVerse.verse.start) ||
-        Number(hebraicVerse.verse.end) <= Number(geezVerse.verse.end)
+        Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.start) && Number(hebraicVerse.verse.start) <= Number(geezVerse.verse.end) ||
+        Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.end) && Number(hebraicVerse.verse.end) <= Number(geezVerse.verse.end)
       ) {
         verses.push(geezVerse);
       }
