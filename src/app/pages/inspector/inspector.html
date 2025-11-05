@@ -248,6 +248,7 @@
       @for (geezWord of sentence; track $index) {
       <select #alignment
         (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, alignment.value)"
+        [ngModel]="getGeezAlignment(geezVerse.verse.start, geezWord.index)"
         [name]="$index + '-' + geezWord.word">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {

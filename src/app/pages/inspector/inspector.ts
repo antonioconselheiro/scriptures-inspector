@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
 import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
@@ -27,6 +27,7 @@ import { VersePipe } from './verse-pipe';
   selector: 'app-inspector',
   imports: [
     CommonModule,
+    FormsModule,
     PaleoPipe,
     VersePipe,
     GematricsPipe,
@@ -155,6 +156,7 @@ export class Inspector implements OnInit {
 
   ngOnInit(): void {
     this.readPatterns();
+    this.readAlignments();
     this.subscribeParams();
     this.subscribeTranslation();
   }
@@ -162,6 +164,26 @@ export class Inspector implements OnInit {
   private readPatterns(): void {
     this.hebraicPatterns = this.literalsStorage.getHebraicPattern();
     this.geezPatterns = this.literalsStorage.getGeezPattern();
+  }
+
+  private readAlignments(): void {
+    const storedAlignmentGeezHebraic = localStorage.getItem('alignmentGeezHebraic');
+    if (storedAlignmentGeezHebraic) {
+      try {
+        this.alignmentGeezHebraic = JSON.parse(storedAlignmentGeezHebraic);
+      } catch {
+
+      }
+    }
+
+    const storedAlignmentGeezGreek = localStorage.getItem('alignmentGeezGreek');
+    if (storedAlignmentGeezGreek) {
+      try {
+        this.alignmentGeezGreek = JSON.parse(storedAlignmentGeezGreek);
+      } catch {
+
+      }
+    }
   }
 
   private subscribeParams(): void {
@@ -232,12 +254,25 @@ export class Inspector implements OnInit {
     return this.literalsPatternsService.splitByPatterns(patterns, word);
   }
 
-  splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string}[][] {
+  splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string }[][] {
     const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
     let index = 0;
     return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
       return { index: index++, word };
     }));
+  }
+
+  getGeezAlignment(geezVerse: string, geezWordIndex: number): string {
+    try {
+      const alignment = this.alignmentGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
+      if (alignment) {
+        return `${alignment.origin.index}-${alignment.origin.word}`;
+      }
+    } catch {
+
+    }
+
+    return '';
   }
 
   onSelectAlignmentGeezToHebraic(
@@ -273,6 +308,8 @@ export class Inspector implements OnInit {
         word: geezWord
       }
     };
+
+    localStorage.setItem('alignmentGeezHebraic', JSON.stringify(this.alignmentGeezHebraic));
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
@@ -285,7 +322,7 @@ export class Inspector implements OnInit {
     ) {
       return '';
     }
-    
+
     const map = this.alignmentGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
