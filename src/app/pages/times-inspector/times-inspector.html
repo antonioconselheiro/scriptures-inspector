@@ -1,0 +1,24 @@
+<button (click)="mostrarForm = true">Cadastrar Evento</button>
+
+<app-event-form 
+  *ngIf="mostrarForm"
+  (salvar)="adicionarEvento($event)"
+  (cancelar)="mostrarForm = false">
+</app-event-form>
+
+<div class="timeline-container">
+
+  <div class="linha" *ngFor="let dim of (dimensoes | keyvalue)">
+    <h3>{{ dim.key }}</h3>
+    <div class="eventos">
+      <div 
+        class="evento" 
+        *ngFor="let ev of eventos.filter(e => e.dimensao === dim.value)"
+      >
+        {{ ev.titulo }}<br>
+        {{ ev.dataInicioHebraica.dia }}/{{ ev.dataInicioHebraica.mes }}/{{ ev.dataInicioHebraica.ano }}
+      </div>
+    </div>
+  </div>
+
+</div>

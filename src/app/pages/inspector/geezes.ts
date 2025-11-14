@@ -1,4 +1,4 @@
-import { HolyScriptureModel } from '../../domain/holy-scripture-model';
+import { HolyScriptureModel } from './domain/holy-scripture-model';
 
 export const geezes: HolyScriptureModel = {
   "gn": [

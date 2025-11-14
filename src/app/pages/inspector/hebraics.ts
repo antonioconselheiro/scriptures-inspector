@@ -1,4 +1,4 @@
-import { OldTestmentScriptures } from "../../domain/old-testment-scriptures-model";
+import { OldTestmentScriptures } from "./domain/old-testment-scriptures-model";
 
 export const hebraics: OldTestmentScriptures = {
   "gn": [

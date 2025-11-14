@@ -1,5 +1,5 @@
 import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
-import { Translation } from "./domain/translation-model";
+import { Translation } from "./pages/inspector/domain/translation-model";
 
 export const translationResolver: ResolveFn<Translation> = (route: ActivatedRouteSnapshot) => {
   const language = route.params['language'];

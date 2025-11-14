@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PatternsParsed } from './patterns-parsed';
 import { PatternsSerialized } from './patterns-serialized';
-import { AlignmentGeezGreek } from '../../domain/alignment-geez-greek-model';
-import { AlignmentGeezHebraic } from '../../domain/alignment-geez-hebraic-model';
+import { AlignmentGeezGreek } from './domain/alignment-geez-greek-model';
+import { AlignmentGeezHebraic } from './domain/alignment-geez-hebraic-model';
 
 @Injectable({
   providedIn: 'root'

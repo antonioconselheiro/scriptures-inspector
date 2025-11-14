@@ -1,0 +1,21 @@
+.timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.linha {
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.eventos {
+  display: flex;
+  gap: 10px;
+}
+
+.evento {
+  padding: 5px 10px;
+  background: #e6e6e6;
+  border-radius: 4px;
+}
