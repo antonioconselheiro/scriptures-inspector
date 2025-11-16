@@ -1,6 +1,0 @@
-export enum Dimensao {
-  MATERIAL = 'MATERIAL',
-  PROFETICA_BOA = 'PROFETICA_BOA',
-  PROFETICA_RUIM = 'PROFETICA_RUIM',
-  EDEN = 'EDEN'
-}

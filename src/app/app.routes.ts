@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Inspector } from './pages/inspector/inspector';
 import { translationResolver } from './translation.fn-resolver';
+import { TimesInspector } from './pages/times-inspector/times-inspector';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,11 @@ export const routes: Routes = [
         component: Inspector
       }
     ]
+  },
+
+  {
+    path: 'times',
+    component: TimesInspector
   },
 
   {
