@@ -4,8 +4,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
-import { AlignmentGeezGreek } from './domain/alignment-geez-greek-model';
-import { AlignmentGeezHebraic } from './domain/alignment-geez-hebraic-model';
+import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
+import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { OldBook } from './domain/old-book-enum';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
@@ -59,7 +59,7 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  alignmentGeezHebraic: AlignmentGeezHebraic = {
+  interlinearGeezHebraic: InterlinearGeezHebraic = {
     'gn': [],
     'ex': [],
     'lv': [],
@@ -101,7 +101,7 @@ export class Inspector implements OnInit {
     'ml': []
   };
 
-  alignmentGeezGreek: AlignmentGeezGreek = {
+  interlinearGeezGreek: InterlinearGeezGreek = {
     'mt': [],
     'mc': [],
     'lc': [],
@@ -156,7 +156,7 @@ export class Inspector implements OnInit {
 
   ngOnInit(): void {
     this.readPatterns();
-    this.readAlignments();
+    this.readInterlineares();
     this.subscribeParams();
     this.subscribeTranslation();
   }
@@ -166,20 +166,20 @@ export class Inspector implements OnInit {
     this.geezPatterns = this.literalsStorage.getGeezPattern();
   }
 
-  private readAlignments(): void {
-    const storedAlignmentGeezHebraic = localStorage.getItem('alignmentGeezHebraic');
-    if (storedAlignmentGeezHebraic) {
+  private readInterlineares(): void {
+    const storedInterlinearGeezHebraic = localStorage.getItem('interlinearGeezHebraic');
+    if (storedInterlinearGeezHebraic) {
       try {
-        this.alignmentGeezHebraic = JSON.parse(storedAlignmentGeezHebraic);
+        this.interlinearGeezHebraic = JSON.parse(storedInterlinearGeezHebraic);
       } catch {
 
       }
     }
 
-    const storedAlignmentGeezGreek = localStorage.getItem('alignmentGeezGreek');
+    const storedAlignmentGeezGreek = localStorage.getItem('interlinearGeezGreek');
     if (storedAlignmentGeezGreek) {
       try {
-        this.alignmentGeezGreek = JSON.parse(storedAlignmentGeezGreek);
+        this.interlinearGeezGreek = JSON.parse(storedAlignmentGeezGreek);
       } catch {
 
       }
@@ -264,7 +264,7 @@ export class Inspector implements OnInit {
 
   getGeezAlignment(geezVerse: string, geezWordIndex: number): string {
     try {
-      const alignment = this.alignmentGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
+      const alignment = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
       if (alignment) {
         return `${alignment.origin.index}-${alignment.origin.word}`;
       }
@@ -287,15 +287,15 @@ export class Inspector implements OnInit {
     const hebraicVerseNumber = Number(hebraicVerse.verse.start);
     const geezVerseNumber = Number(geezVerse.verse.start);
 
-    if (!this.alignmentGeezHebraic[this.book][this.chapter]) {
-      this.alignmentGeezHebraic[this.book][this.chapter] = [];
+    if (!this.interlinearGeezHebraic[this.book][this.chapter]) {
+      this.interlinearGeezHebraic[this.book][this.chapter] = [];
     }
 
-    if (!this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber]) {
-      this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber] = [];
+    if (!this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber]) {
+      this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber] = [];
     }
 
-    this.alignmentGeezHebraic[this.book][this.chapter][geezVerseNumber][geezIndex] = {
+    this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber][geezIndex] = {
       origin: {
         verse: hebraicVerseNumber,
         index: hebraicIndex,
@@ -309,21 +309,21 @@ export class Inspector implements OnInit {
       }
     };
 
-    localStorage.setItem('alignmentGeezHebraic', JSON.stringify(this.alignmentGeezHebraic));
+    localStorage.setItem('interlinearGeezHebraic', JSON.stringify(this.interlinearGeezHebraic));
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
     const verseNumber = Number(geezVerse.verse.start);
     if (
-      !this.alignmentGeezHebraic[this.book] ||
-      !this.alignmentGeezHebraic[this.book][this.chapter] ||
-      !this.alignmentGeezHebraic[this.book][this.chapter][verseNumber] ||
-      !this.alignmentGeezHebraic[this.book][this.chapter][verseNumber][wordIndex]
+      !this.interlinearGeezHebraic[this.book] ||
+      !this.interlinearGeezHebraic[this.book][this.chapter] ||
+      !this.interlinearGeezHebraic[this.book][this.chapter][verseNumber] ||
+      !this.interlinearGeezHebraic[this.book][this.chapter][verseNumber][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.alignmentGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
+    const map = this.interlinearGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 

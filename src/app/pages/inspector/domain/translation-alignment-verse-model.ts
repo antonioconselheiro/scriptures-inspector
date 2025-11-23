@@ -1,4 +1,4 @@
-export interface TranslationAlignmentVerse {
+export interface TranslationInterlinearVerse {
   origin: {
     verse: number;
     index: number;
