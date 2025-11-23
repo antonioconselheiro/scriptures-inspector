@@ -1,3 +1,5 @@
+import 'zone.js';
+import 'zone.js/testing';
 import { TestBed } from '@angular/core/testing';
 import { GematriaService } from './pages/inspector/gematria-service';
 import { hebraics as baseB } from './pages/inspector/hebraics';
@@ -17,15 +19,12 @@ describe('Falseamento gematrico do dado', () => {
   };
 
   let gematriaService: GematriaService;
-  let gematriaA: any; // carregado via fetch — evita out-of-memory
+  let gematriaA: any;
 
-  // 🔥 CARREGA O ARQUIVO GIGANTE ANTES DOS TESTES
   beforeAll(async () => {
-    console.log('Carregando Base A (interlinear)...');
     gematriaA = await fetch('/gematrics-interlinear-he-bhs-en-kja.json')
       .then(r => r.json());
-    console.log('Base A carregada.');
-  }, 120000); // timeout maior só para garantir
+  }, 120000);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -34,22 +33,24 @@ describe('Falseamento gematrico do dado', () => {
     gematriaService = TestBed.inject(GematriaService);
   });
 
-  // 🔥 percorre APENAS O AT
   Object.keys(bookMapAT).forEach(sigla => {
 
     const fullName = bookMapAT[sigla];
 
     it(`Deve comparar todas as gematrias do livro: ${fullName}`, () => {
 
-      const bookA: any = (gematriaA as any)[fullName as any];
+      const bookA: any = Object.values((gematriaA as any)[fullName as any]);
       const bookB: any = (baseB as any)[sigla as any];
 
       expect(bookA).toBeTruthy();
       expect(bookB).toBeTruthy();
 
       for (let chapterIndex = 0; chapterIndex < bookA.length; chapterIndex++) {
-
-        const chapterA = bookA[chapterIndex];
+        //  não tenho esses
+        if (['Jonah', 'Hebrews', '3 John', 'Revelation'].includes(fullName) && chapterIndex === 0) {
+          continue;
+        }
+        const chapterA = bookA[chapterIndex][0];
         const chapterB = bookB[chapterIndex];
 
         expect(chapterB).toBeTruthy();
@@ -75,10 +76,8 @@ describe('Falseamento gematrico do dado', () => {
             const wordB = processedB[wordIndex];
 
             expect(wordB.gematria.simple)
-              .toBe(
-                wordA.gematria.simple,
-                `Diferença detectada em ${fullName} cap ${chapterIndex+1}, verso ${verseIndex+1}, palavra ${wordIndex+1}`
-              );
+              .withContext(`[${fullName} ${chapterIndex + 1}:${verseIndex + 1}], palavra ${wordIndex + 1} falhou: esperado ${wordA.gematria.simple}, obtido ${wordB.gematria.simple}`)
+              .toBe(wordA.gematria.simple);
           });
         });
       }

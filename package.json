@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "ng serve --host 0.0.0.0",
     "build": "rm -rf docs; ng build; mv docs/browser/** docs; rm -rf docs/browser",
-    "test": "ng test"
+    "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox"
   },
   "prettier": {
     "overrides": [
@@ -26,7 +26,8 @@
     "@hebcal/core": "^6.0.5",
     "hebrew-transliteration": "^2.9.1",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zone.js": "^0.15.1"
   },
   "devDependencies": {
     "@angular/build": "^20.1.1",
