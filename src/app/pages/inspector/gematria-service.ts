@@ -39,7 +39,7 @@ export class GematriaService {
 	}
 
   toNumbers(hebrew: string): number {
-		var letter = hebrew.replace(/\s/g, '').split('');
+		var letter = hebrew.replace(/[\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\s]/g, "").split('');
 		var totalWeight = 0;
 		for (let l in letter) {
 			totalWeight += this.getLetterWeight(letter[l]);
