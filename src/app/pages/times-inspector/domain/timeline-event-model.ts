@@ -10,7 +10,7 @@ export interface TimelineEvent {
   timeline: string;
   type: TimelineType;
   dimension: TimelineDimension;
-  place: TimelinePlace;
+  place?: TimelinePlace;
 
 // -> data de inicio;
 // -> data de termino (opcional);

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Inspector } from './pages/inspector/inspector';
 import { translationResolver } from './translation.fn-resolver';
 import { TimesInspector } from './pages/times-inspector/times-inspector';
+import { ExportableDocument } from './pages/exportable-document/exportable-document';
 
 export const routes: Routes = [
   {
@@ -16,6 +17,11 @@ export const routes: Routes = [
         component: Inspector
       }
     ]
+  },
+
+  {
+    path: 'document',
+    component: ExportableDocument
   },
 
   {

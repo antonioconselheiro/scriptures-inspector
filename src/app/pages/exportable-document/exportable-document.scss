@@ -1,0 +1,24 @@
+:host {
+  background: #e5e5e5;
+  padding: 20px;
+  font-family: "Calibri", "Arial", sans-serif;
+}
+
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 2.5cm;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.page p {
+  line-height: 1.5;
+  font-size: 12pt;
+}
+
+.page + .page {
+  margin-top: 20px;
+}

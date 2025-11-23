@@ -1,6 +1,8 @@
 /**
  * https://cafetorah.com/lista-de-textos-biblicos-e-apocrifos-encontrados-nos-manuscritos-do-mar-morto/
  * https://www.deadseascrolls.org.il/
+ * https://www.deadseascrolls.org.il/explore-the-archive/manuscript/4Q505-1
+ * https://maagarim.hebrew-academy.org.il/Pages/PMain.aspx?misyzira=39504
  */
 export enum EsseneQmranHaYahad {
   COPPER_SCROLL_3QCOPSCR,
@@ -26,12 +28,12 @@ export enum EsseneQmranHaYahad {
   JUBILEES_QJUB,
   ENOCH_QEN,
   NOAH_QNOAH,
-  BOOK_OF_GIANTS_QENGIANTS,
+  BOOK_OF_GIANTS_QENGIANTS, // 2QEnGiants, 
 
   TESTAMENT_OF_LEVI_ANCIENT_QLEVI_QPALEOLEV,
   TESTAMENT_OF_LEVI_QLEVI,
   TESTAMENT_OF_NAPHTALI_QTNAPH,
-  TESTAMENT_OF_JUDAH,
+  TESTAMENT_OF_JUDAH, // 3Q7
   TESTAMENT_OF_JOSEPH_TJOSEPH,
   TESTAMENT_OF_QAHAT_4QTKOHATH,
 
@@ -39,6 +41,8 @@ export enum EsseneQmranHaYahad {
   FORGOTTEN_JOSHUA_4QAPOCRJOSH,
   FORGOTTEN_KINGS_PAP6QAPOCRSAMKGS,
   FORGOTTEN_PSALMS,
+  FORGOTTEN_DAVID_2QAPOCRDAVID,
+  FORGOTTEN_SAMUEL_KINGS_6Q9,
   FORGOTTEN_DANIEL_4Q246,
   FORGOTTEN_APOCALYPSE_QAPOCRDAN,
   FORGOTTEN_PROPHECIES_QAPPROPH,

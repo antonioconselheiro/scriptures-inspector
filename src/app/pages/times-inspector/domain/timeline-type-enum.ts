@@ -1,5 +1,6 @@
 export enum TimelineType {
-  SOLAR,
-  LUNAR,
-  BLOCKCHAIN
+  SOLAR = 'SOLAR',
+  LUNAR = 'LUNAR',
+  LUNISOLAR = 'LUNISOLAR',
+  BLOCKCHAIN = 'BLOCKCHAIN'
 }
