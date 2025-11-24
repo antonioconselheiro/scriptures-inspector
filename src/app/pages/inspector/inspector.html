@@ -1,4 +1,5 @@
-<app-add-pattern-context-menu #menuRef (optionSelected)="onMenuOption($event)"></app-add-pattern-context-menu>
+<app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
+<app-word-of-god-delimiter-context-menu #wordOfGodMenuRef (optionSelected)="onWordOfGodDefined($event)"></app-word-of-god-delimiter-context-menu>
 
 @let hebraicVerses = hebraics[book][chapter];
 
@@ -104,7 +105,7 @@
   </tr>
   <tr>
     <th rowspan="2">scripture</th>
-    <td [colSpan]="hebraic.length" [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
+    <td [colSpan]="hebraic.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="hebraic">
       @for (sentence of eachHebraicWord; track $index) {
       <span>&nbsp;</span>
       @for (word of sentence; track $index) {
@@ -113,7 +114,7 @@
       }
     </td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="menuRef" lang="hebraic">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="hebraic">
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -191,7 +192,7 @@
     </td>
   </tr>
   <tr>
-    <td [colSpan]="hebraic.length">
+    <td [colSpan]="hebraic.length" [appWordOfGodDelimiterContextMenuTrigger]="wordOfGodMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
       <span>&nbsp;</span>
     </td>
   </tr>
@@ -204,7 +205,7 @@
 <table border="1">
   <tr>
     <th rowspan="2">ge'əz</th>
-    <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
+    <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
       @for (sentence of geezMatriz; track $index) {
         @for (word of sentence; track word.index) {
           <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
@@ -212,7 +213,7 @@
       }
     </td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
     @for (sentence of geezMatriz; track $index) {
       <td>
         @for (word of sentence; track word.index) {

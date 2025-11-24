@@ -24,6 +24,8 @@ import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
+import { WordOfGodDelimiterContextMenu } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu';
+import { WordOfGodDelimiterContextMenuTrigger } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu-trigger';
 
 @Component({
   selector: 'app-inspector',
@@ -38,7 +40,9 @@ import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
     TransliterationPipe,
     ReactiveFormsModule,
     AddPatternContextMenu,
-    AddPatternContextMenuTrigger
+    AddPatternContextMenuTrigger,
+    WordOfGodDelimiterContextMenu,
+    WordOfGodDelimiterContextMenuTrigger
   ],
   providers: [
     LiteralsStorage
@@ -215,16 +219,24 @@ export class Inspector implements OnInit {
     this.cd.detectChanges();
   }
 
-  onMenuOption(option: {
+  onAddPattern(option: {
     word: string;
     type: "prefix" | "suffix";
     lang: "hebraic" | "geez" | "greek";
-  }) {
+  }): void {
     if (option.lang === 'hebraic') {
       this.hebraicPatterns = this.literalsStorage.addHebraicPattern(option.word, option.type);
     } else if (option.lang === 'geez') {
       this.geezPatterns = this.literalsStorage.addGeezPattern(option.word, option.type);
     }
+  }
+
+  onWordOfGodDefined(option: {
+    start: number,
+    end: number,
+    lang: 'hebraic' | 'geez' | 'greek'
+  }): void {
+    
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
