@@ -96,7 +96,7 @@
 @let eachHebraicWord = splitIntoMatrix(hebraicVerse.text, 'hebraic');
 @let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
-<strong>Verse {{hebraicVerse | verse}}</strong>
+<strong>{{book}}, {{chapter + 1}}:{{hebraicVerse | verse}}</strong>
 <table border="1">
   <tr>
     <th>translation</th>
@@ -108,7 +108,7 @@
       @for (sentence of eachHebraicWord; track $index) {
       <span>&nbsp;</span>
       @for (word of sentence; track $index) {
-      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
       }
       }
     </td>
@@ -117,7 +117,7 @@
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
       }
     </td>
     }
@@ -127,7 +127,7 @@
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | transliteration : 'hebraic'}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | transliteration : 'hebraic'}}</span>
       }
     </td>
     }
@@ -150,7 +150,7 @@
     <td [colSpan]="hebraic.length">
       @for (sentence of eachHebraicWord; track $index) {
       @for (word of sentence; track $index) {
-      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | literalizate : hebraicPatterns : 'hebraic' :
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : hebraicPatterns : 'hebraic' :
         pipeUpdaterController}}&nbsp;</span>
       }
       }
@@ -168,7 +168,7 @@
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
       }
     </td>
     }
@@ -178,9 +178,21 @@
       @for (sentence of eachHebraicWord; track $index) {
         <span>&nbsp;</span>
         @for (word of sentence; track $index) {
-        <span [class]="'prisma-'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
         }
       }
+    </td>
+  </tr>
+  <tr>
+    <th rowspan="2">custom</th>
+
+    <td [colSpan]="hebraic.length">
+      <input type="text" #customHebraicTranslation class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslation, book, chapter, hebraicVerse, 'hebraic')" />
+    </td>
+  </tr>
+  <tr>
+    <td [colSpan]="hebraic.length">
+      <span>&nbsp;</span>
     </td>
   </tr>
 </table>
@@ -195,7 +207,7 @@
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="menuRef" lang="geez">
       @for (sentence of geezMatriz; track $index) {
         @for (word of sentence; track word.index) {
-          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+          <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
         }
       }
     </td>
@@ -204,7 +216,7 @@
     @for (sentence of geezMatriz; track $index) {
       <td>
         @for (word of sentence; track word.index) {
-          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+          <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
         }
       </td>
     }
@@ -214,7 +226,7 @@
     @for (sentence of geezMatriz; track $index) {
       <td>
         @for (word of sentence; track word.index) {
-          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
+          <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
         }
       </td>
     }
@@ -236,7 +248,7 @@
     <td [colSpan]="geez.length">
       @for (sentence of geezMatriz; track $index) {
         @for (word of sentence; track word.index) {
-          <span [class]="'prisma-'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}&nbsp;</span>
+          <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}&nbsp;</span>
         }
       }
     </td>
@@ -246,9 +258,9 @@
     @for (sentence of geezMatriz; track $index) {
     <td>
       @for (geezWord of sentence; track $index) {
-      <select #alignment
-        (change)="onSelectAlignmentGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, alignment.value)"
-        [ngModel]="getGeezAlignment(geezVerse.verse.start, geezWord.index)"
+      <select #interlinear
+        (change)="onSelectInterlinearGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, interlinear.value)"
+        [ngModel]="getGeezInterlinear(geezVerse.verse.start, geezWord.index)"
         [name]="$index + '-' + geezWord.word">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
@@ -261,6 +273,18 @@
       }
     </td>
     }
+  </tr>
+  <tr>
+    <th rowspan="2">custom</th>
+
+    <td [colSpan]="geez.length">
+      <input type="text" class="customTranslation" #customGeezTranslation name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslation, book, chapter, geezVerse, 'geez')" />
+    </td>
+  </tr>
+  <tr>
+    <td [colSpan]="geez.length">
+      <span>&nbsp;</span>
+    </td>
   </tr>
 </table>
 }

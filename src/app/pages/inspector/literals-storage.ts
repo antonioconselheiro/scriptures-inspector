@@ -3,6 +3,7 @@ import { PatternsParsed } from './patterns-parsed';
 import { PatternsSerialized } from './patterns-serialized';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
+import { ScriptureBook } from './domain/scripture-book-model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,14 @@ export class LiteralsStorage {
     localStorage.setItem('geezLiterals', JSON.stringify(this.geezLiterals));
   }
 
+  addHebraicCustomTranslation(customBook: ScriptureBook): void {
+
+  }
+
+  addGeezCustomTranslation(customBook: ScriptureBook): void {
+
+  }
+
   getHebraicPattern(): PatternsParsed {
     return this.getPattern(this.hebraicPatterns);
   }
@@ -88,16 +97,16 @@ export class LiteralsStorage {
   }
 
   deleteHebraicPattern(type: 'prefix' | 'suffix', index: number): PatternsParsed {
-    return this.deletePattern('hebraicPatterns', type, index);
+    return this.deletePattern('hebraicPatterns', type, this.hebraicPatterns, index);
   }
 
   deleteGeezPattern(type: 'prefix' | 'suffix', index: number): PatternsParsed {
-    return this.deletePattern('geezPatterns', type, index);
+    return this.deletePattern('geezPatterns', type, this.geezPatterns, index);
   }
 
-  private deletePattern(storageKey: string, type: 'prefix' | 'suffix', index: number): PatternsParsed {
-    this.hebraicPatterns[type].splice(index, 1);
-    localStorage.setItem(storageKey, JSON.stringify(this.hebraicPatterns));
+  private deletePattern(storageKey: string, type: 'prefix' | 'suffix', patterns: PatternsSerialized, index: number): PatternsParsed {
+    patterns[type].splice(index, 1);
+    localStorage.setItem(storageKey, JSON.stringify(patterns));
     return this.getHebraicPattern();
   }
 }

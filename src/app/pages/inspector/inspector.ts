@@ -22,6 +22,8 @@ import { PatternsParsed } from './patterns-parsed';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { HolyScriptureModel } from './domain/holy-scripture-model';
+import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 
 @Component({
   selector: 'app-inspector',
@@ -132,7 +134,10 @@ export class Inspector implements OnInit {
   };
 
   translation: Translation | null = null;
+  customHebraicTranslation!: OldTestmentScriptures;
+  customGeezTranslation!: HolyScriptureModel;
   chapterTranslations: Array<TranslationBookVerse> = [];
+  
   book: OldBook = OldBook.GN;
   chapter = 0;
   form: any;
@@ -176,10 +181,10 @@ export class Inspector implements OnInit {
       }
     }
 
-    const storedAlignmentGeezGreek = localStorage.getItem('interlinearGeezGreek');
-    if (storedAlignmentGeezGreek) {
+    const storedInterlinearGeezGreek = localStorage.getItem('interlinearGeezGreek');
+    if (storedInterlinearGeezGreek) {
       try {
-        this.interlinearGeezGreek = JSON.parse(storedAlignmentGeezGreek);
+        this.interlinearGeezGreek = JSON.parse(storedInterlinearGeezGreek);
       } catch {
 
       }
@@ -262,11 +267,11 @@ export class Inspector implements OnInit {
     }));
   }
 
-  getGeezAlignment(geezVerse: string, geezWordIndex: number): string {
+  getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {
     try {
-      const alignment = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
-      if (alignment) {
-        return `${alignment.origin.index}-${alignment.origin.word}`;
+      const interlinear = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
+      if (interlinear) {
+        return `${interlinear.origin.index}-${interlinear.origin.word}`;
       }
     } catch {
 
@@ -275,14 +280,14 @@ export class Inspector implements OnInit {
     return '';
   }
 
-  onSelectAlignmentGeezToHebraic(
+  onSelectInterlinearGeezToHebraic(
     hebraicVerse: ScriptureVerse,
     geezVerse: ScriptureVerse,
     geezIndex: number,
     geezWord: string,
-    alignment: string
+    interlinear: string
   ): void {
-    const [hIndex, hebraicWord] = alignment.split('-');
+    const [hIndex, hebraicWord] = interlinear.split('-');
     const hebraicIndex = Number(hIndex);
     const hebraicVerseNumber = Number(hebraicVerse.verse.start);
     const geezVerseNumber = Number(geezVerse.verse.start);
@@ -334,6 +339,20 @@ export class Inspector implements OnInit {
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
+  }
+
+  updateCustomTranslation(input: HTMLInputElement, book: OldBook, chapter: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    const customTranslation = lang === 'hebraic' ? this.customHebraicTranslation : this.customGeezTranslation;
+
+    const customBook = customTranslation[book];
+    customBook[chapter][verse.verse.index] = {
+      ...verse,
+      text: input.value
+    };
+
+    lang === 'hebraic' ?
+      this.literalsStorage.addHebraicCustomTranslation(customBook) :
+      this.literalsStorage.addGeezCustomTranslation(customBook);
   }
 
   onPatternFormSubmit(): void {
