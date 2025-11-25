@@ -26,6 +26,10 @@ import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { WordOfGodDelimiterContextMenu } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu';
 import { WordOfGodDelimiterContextMenuTrigger } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu-trigger';
+import { NewBook } from './domain/new-book-enum';
+import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
+import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
+import { ScriptureBook } from './domain/scripture-book-model';
 
 @Component({
   selector: 'app-inspector',
@@ -65,7 +69,7 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  interlinearGeezHebraic: InterlinearGeezHebraic = {
+  oldTestmentBookList: { [oldBook in OldBook]: Array<any> } = {
     'gn': [],
     'ex': [],
     'lv': [],
@@ -107,7 +111,7 @@ export class Inspector implements OnInit {
     'ml': []
   };
 
-  interlinearGeezGreek: InterlinearGeezGreek = {
+  newTestmentBookList: { [newBook in NewBook]: Array<any> } = {
     'mt': [],
     'mc': [],
     'lc': [],
@@ -137,11 +141,20 @@ export class Inspector implements OnInit {
     'ap': []
   };
 
+  interlinearGeezHebraic: InterlinearGeezHebraic = {
+    ...this.oldTestmentBookList
+  };
+
+  interlinearGeezGreek: InterlinearGeezGreek = {
+    ...this.newTestmentBookList
+  };
+
   translation: Translation | null = null;
   customHebraicTranslation!: OldTestmentScriptures;
+  customGreekTranslation!: NewTestmentScriptures;
   customGeezTranslation!: HolyScriptureModel;
   chapterTranslations: Array<TranslationBookVerse> = [];
-  
+
   book: OldBook = OldBook.GN;
   chapter = 0;
   form: any;
@@ -164,6 +177,7 @@ export class Inspector implements OnInit {
   }
 
   ngOnInit(): void {
+    this.readCustomTranslation();
     this.readPatterns();
     this.readInterlineares();
     this.subscribeParams();
@@ -192,6 +206,30 @@ export class Inspector implements OnInit {
       } catch {
 
       }
+    }
+  }
+
+  private readCustomTranslation(): void {
+    const storedCustomHebraicTranslation = localStorage.getItem('customHebraicTranslation');
+    if (storedCustomHebraicTranslation) {
+      try {
+        this.customHebraicTranslation = JSON.parse(storedCustomHebraicTranslation);
+      } catch {
+        this.customHebraicTranslation = { ...this.oldTestmentBookList };
+      }
+    } else {
+      this.customHebraicTranslation = { ...this.oldTestmentBookList };
+    }
+
+    const storedCustomGeezTranslation = localStorage.getItem('customGeezTranslation');
+    if (storedCustomGeezTranslation) {
+      try {
+        this.customGeezTranslation = JSON.parse(storedCustomGeezTranslation);
+      } catch {
+        this.customGeezTranslation = { ...this.oldTestmentBookList, ...this.newTestmentBookList };
+      }
+    } else {
+      this.customGeezTranslation = { ...this.oldTestmentBookList, ...this.newTestmentBookList };
     }
   }
 
@@ -236,7 +274,7 @@ export class Inspector implements OnInit {
     end: number,
     lang: 'hebraic' | 'geez' | 'greek'
   }): void {
-    
+
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
@@ -345,26 +383,62 @@ export class Inspector implements OnInit {
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
-    lang === 'hebraic' ?
-      this.literalsStorage.addHebraicLiteral(word, input.value) :
+    if (lang === 'hebraic') {
+      this.literalsStorage.addHebraicLiteral(word, input.value);
+    } else if (lang === 'geez') {
       this.literalsStorage.addGeezLiteral(word, input.value);
+    }
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
   }
 
-  updateCustomTranslation(input: HTMLInputElement, book: OldBook, chapter: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const customTranslation = lang === 'hebraic' ? this.customHebraicTranslation : this.customGeezTranslation;
+  isOldBookGuard(book: OldBook | NewBook): book is OldBook {
+    const values: string[] = Object.values(OldBook);
+    return values.includes(book);
+  }
 
-    const customBook = customTranslation[book];
+  isNewBookGuard(book: OldBook | NewBook): book is NewBook {
+    const values: string[] = Object.values(NewBook);
+    return values.includes(book);
+  }
+
+  updateCustomTranslation(input: HTMLInputElement, book: OldBook | NewBook, chapter: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    let customTranslation: AbstractHolyScriptureModel, customBook: ScriptureBook;
+    
+    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
+      customTranslation = this.customHebraicTranslation;
+      customBook = customTranslation[book];
+    } else if (lang === 'geez') {
+      customTranslation = this.customGeezTranslation;
+      customBook = customTranslation[String(book)];
+    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
+      customTranslation = this.customGreekTranslation;
+      customBook = customTranslation[book];
+    } else {
+      throw new Error('language not found');
+    }
+
+    if (!customBook) {
+      customTranslation[book] = customBook = [];
+    }
+
+    if (!customBook[chapter]) {
+      customBook[chapter] = [];
+    }
+
     customBook[chapter][verse.verse.index] = {
       ...verse,
       text: input.value
     };
 
-    lang === 'hebraic' ?
-      this.literalsStorage.addHebraicCustomTranslation(customBook) :
+    if (lang === 'hebraic') {
+      this.literalsStorage.addHebraicCustomTranslation(customBook);
+    } else if (lang === 'geez') {
       this.literalsStorage.addGeezCustomTranslation(customBook);
+    } else if (lang === 'greek') {
+      this.literalsStorage.addGreekCustomTranslation(customBook);
+    }
   }
 
   onPatternFormSubmit(): void {
@@ -378,7 +452,7 @@ export class Inspector implements OnInit {
     }
   }
 
-  deletePattern(lang: 'hebraic' | 'geez' | 'greek', type: "prefix" | "suffix", index: number, key: string): void {
+  deletePattern(lang: 'hebraic' | 'geez' | 'greek', type: 'prefix' | 'suffix', index: number, key: string): void {
     if (lang === 'hebraic') {
       this.literalsStorage.deleteHebraicPattern(type, index);
       this.hebraicPatterns[type].delete(key);

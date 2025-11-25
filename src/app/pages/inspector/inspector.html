@@ -188,12 +188,12 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="hebraic.length">
-      <input type="text" #customHebraicTranslation class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslation, book, chapter, hebraicVerse, 'hebraic')" />
+      <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')" />
     </td>
   </tr>
   <tr>
     <td [colSpan]="hebraic.length" [appWordOfGodDelimiterContextMenuTrigger]="wordOfGodMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
-      <span>&nbsp;</span>
+      <span>{{customHebraicTranslation[book] && customHebraicTranslation[book][chapter] && customHebraicTranslation[book][chapter][hebraicVerse.verse.index].text}}&nbsp;</span>
     </td>
   </tr>
 </table>
@@ -279,12 +279,12 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="geez.length">
-      <input type="text" class="customTranslation" #customGeezTranslation name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslation, book, chapter, geezVerse, 'geez')" />
+      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')" />
     </td>
   </tr>
   <tr>
-    <td [colSpan]="geez.length">
-      <span>&nbsp;</span>
+    <td [colSpan]="geez.length" [appWordOfGodDelimiterContextMenuTrigger]="wordOfGodMenuRef" lang="geez" [book]="book" [chapter]="chapter" [verse]="geezVerse">
+      <span>{{customGeezTranslation[book] && customGeezTranslation[book][chapter] && customGeezTranslation[book][chapter][geezVerse.verse.index].text}}&nbsp;</span>
     </td>
   </tr>
 </table>

@@ -53,11 +53,15 @@ export class LiteralsStorage {
   }
 
   addHebraicCustomTranslation(customBook: ScriptureBook): void {
-
+    localStorage.setItem('customHebraicTranslation', JSON.stringify(customBook));
   }
 
   addGeezCustomTranslation(customBook: ScriptureBook): void {
+    localStorage.setItem('customGeezTranslation', JSON.stringify(customBook));
+  }
 
+  addGreekCustomTranslation(customBook: ScriptureBook): void {
+    localStorage.setItem('customGreekTranslation', JSON.stringify(customBook));
   }
 
   getHebraicPattern(): PatternsParsed {
