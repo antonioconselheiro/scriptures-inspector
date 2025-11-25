@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { PatternsParsed } from './patterns-parsed';
-import { PatternsSerialized } from './patterns-serialized';
+import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
-import { ScriptureBook } from './domain/scripture-book-model';
+import { ParsedPatterns } from './parsed-patterns';
+import { PatternsSerialized } from './patterns-serialized';
 
 @Injectable({
   providedIn: 'root'
@@ -52,23 +52,23 @@ export class LiteralsStorage {
     localStorage.setItem('geezLiterals', JSON.stringify(this.geezLiterals));
   }
 
-  addHebraicCustomTranslation(customBook: ScriptureBook): void {
-    localStorage.setItem('customHebraicTranslation', JSON.stringify(customBook));
+  saveHebraicCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
+    localStorage.setItem('customHebraicTranslation', JSON.stringify(customTranslation));
   }
 
-  addGeezCustomTranslation(customBook: ScriptureBook): void {
-    localStorage.setItem('customGeezTranslation', JSON.stringify(customBook));
+  saveGeezCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
+    localStorage.setItem('customGeezTranslation', JSON.stringify(customTranslation));
   }
 
-  addGreekCustomTranslation(customBook: ScriptureBook): void {
-    localStorage.setItem('customGreekTranslation', JSON.stringify(customBook));
+  saveGreekCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
+    localStorage.setItem('customGreekTranslation', JSON.stringify(customTranslation));
   }
 
-  getHebraicPattern(): PatternsParsed {
+  getHebraicPattern(): ParsedPatterns {
     return this.getPattern(this.hebraicPatterns);
   }
 
-  getGeezPattern(): PatternsParsed {
+  getGeezPattern(): ParsedPatterns {
     return this.getPattern(this.geezPatterns);
   }
 
@@ -79,15 +79,15 @@ export class LiteralsStorage {
     return { prefix, suffix }
   }
 
-  addHebraicPattern(word: string, type: 'prefix' | 'suffix'): PatternsParsed {
+  addHebraicPattern(word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
     return this.addPattern(this.hebraicPatterns, 'hebraicPatterns', word, type);
   }
 
-  addGeezPattern(word: string, type: 'prefix' | 'suffix'): PatternsParsed {
+  addGeezPattern(word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
     return this.addPattern(this.geezPatterns, 'geezPatterns', word, type);
   }
 
-  private addPattern(serialized: PatternsSerialized, storageKey: string, word: string, type: 'prefix' | 'suffix'): PatternsParsed {
+  private addPattern(serialized: PatternsSerialized, storageKey: string, word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
     const empty = -1;
     if (serialized[type].indexOf(word) !== empty) {
       return this.getPattern(serialized);
@@ -100,15 +100,15 @@ export class LiteralsStorage {
     return this.getPattern(serialized);
   }
 
-  deleteHebraicPattern(type: 'prefix' | 'suffix', index: number): PatternsParsed {
+  deleteHebraicPattern(type: 'prefix' | 'suffix', index: number): ParsedPatterns {
     return this.deletePattern('hebraicPatterns', type, this.hebraicPatterns, index);
   }
 
-  deleteGeezPattern(type: 'prefix' | 'suffix', index: number): PatternsParsed {
+  deleteGeezPattern(type: 'prefix' | 'suffix', index: number): ParsedPatterns {
     return this.deletePattern('geezPatterns', type, this.geezPatterns, index);
   }
 
-  private deletePattern(storageKey: string, type: 'prefix' | 'suffix', patterns: PatternsSerialized, index: number): PatternsParsed {
+  private deletePattern(storageKey: string, type: 'prefix' | 'suffix', patterns: PatternsSerialized, index: number): ParsedPatterns {
     patterns[type].splice(index, 1);
     localStorage.setItem(storageKey, JSON.stringify(patterns));
     return this.getHebraicPattern();

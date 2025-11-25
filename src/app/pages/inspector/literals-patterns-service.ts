@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { PatternsParsed } from './patterns-parsed';
+import { ParsedPatterns } from './parsed-patterns';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LiteralsPatternsService {
   
-  splitByPatterns(patterns: PatternsParsed, pharse: string): string[] {
+  splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
     return pharse.split(' ').map(word => {
       let matchPrefix = '',
         matchSuffix = '';

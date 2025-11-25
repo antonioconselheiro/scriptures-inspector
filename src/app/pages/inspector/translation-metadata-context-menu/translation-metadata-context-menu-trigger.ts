@@ -2,15 +2,15 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { NewBook } from '../domain/new-book-enum';
 import { OldBook } from '../domain/old-book-enum';
 import { ScriptureVerse } from '../domain/scripture-verse-model';
-import { WordOfGodDelimiterContextMenu } from './word-of-god-delimiter-context-menu';
+import { TranslationMetadataContextMenu } from './translation-metadata-context-menu';
 
 @Directive({
-  selector: '[appWordOfGodDelimiterContextMenuTrigger]'
+  selector: '[appTranslationMetadataContextMenu]'
 })
-export class WordOfGodDelimiterContextMenuTrigger {
+export class TranslationMetadataContextMenuTrigger {
 
-  @Input('appWordOfGodDelimiterContextMenuTrigger')
-  contextMenu!: WordOfGodDelimiterContextMenu;
+  @Input('appTranslationMetadataContextMenu')
+  contextMenu!: TranslationMetadataContextMenu;
 
   @Input('lang')
   lang!: "hebraic" | "geez" | "greek";
@@ -31,16 +31,8 @@ export class WordOfGodDelimiterContextMenuTrigger {
     const range = selectedText?.getRangeAt(0);
 
     if (range) {
-      const startNode = range.startContainer;
       const startOffset = range.startOffset;
-  
-      const endNode = range.endContainer;
       const endOffset = range.endOffset;
-  
-      console.log("startNode:", startNode);
-      console.log("startOffset:", startOffset);
-      console.log("endNode:", endNode);
-      console.log("endOffset:", endOffset);
 
       this.contextMenu.selectionStart = startOffset;
       this.contextMenu.selectionEnd = endOffset;
@@ -48,6 +40,10 @@ export class WordOfGodDelimiterContextMenuTrigger {
       this.contextMenu.y = event.clientY;
       this.contextMenu.visible = true;
       this.contextMenu.lang = this.lang;
+
+      this.contextMenu.book = this.book;
+      this.contextMenu.chapter = this.chapter;
+      this.contextMenu.verse = this.verse;
     } else {
       this.contextMenu.visible = false;
     }

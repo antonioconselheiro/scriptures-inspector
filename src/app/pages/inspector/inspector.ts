@@ -4,9 +4,15 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { ActivatedRoute } from '@angular/router';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
+import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
+import { NewBook } from './domain/new-book-enum';
+import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldBook } from './domain/old-book-enum';
+import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
+import { ScriptureBook } from './domain/scripture-book-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
@@ -18,18 +24,12 @@ import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
 import { LiteralsStorage } from './literals-storage';
 import { PaleoPipe } from './paleo-pipe';
-import { PatternsParsed } from './patterns-parsed';
+import { ParsedPatterns } from './parsed-patterns';
+import { TranslationMetadataContextMenu } from './translation-metadata-context-menu/translation-metadata-context-menu';
+import { TranslationMetadataContextMenuTrigger } from './translation-metadata-context-menu/translation-metadata-context-menu-trigger';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { HolyScriptureModel } from './domain/holy-scripture-model';
-import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { WordOfGodDelimiterContextMenu } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu';
-import { WordOfGodDelimiterContextMenuTrigger } from './word-of-god-delimiter-context-menu/word-of-god-delimiter-context-menu-trigger';
-import { NewBook } from './domain/new-book-enum';
-import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
-import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
-import { ScriptureBook } from './domain/scripture-book-model';
 
 @Component({
   selector: 'app-inspector',
@@ -45,8 +45,8 @@ import { ScriptureBook } from './domain/scripture-book-model';
     ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger,
-    WordOfGodDelimiterContextMenu,
-    WordOfGodDelimiterContextMenuTrigger
+    TranslationMetadataContextMenu,
+    TranslationMetadataContextMenuTrigger
   ],
   providers: [
     LiteralsStorage
@@ -59,94 +59,27 @@ export class Inspector implements OnInit {
   readonly hebraics = hebraics;
   readonly geezes = geezes;
 
-  hebraicPatterns: PatternsParsed = {
+  hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),
     suffix: new Map()
   };
 
-  geezPatterns: PatternsParsed = {
+  geezPatterns: ParsedPatterns = {
     prefix: new Map(),
     suffix: new Map()
   };
 
-  oldTestmentBookList: { [oldBook in OldBook]: Array<any> } = {
-    'gn': [],
-    'ex': [],
-    'lv': [],
-    'nm': [],
-    'dt': [],
-    'js': [],
-    'jz': [],
-    'rt': [],
-    '1sm': [],
-    '2sm': [],
-    '1rs': [],
-    '2rs': [],
-    '1cr': [],
-    '2cr': [],
-    'ed': [],
-    'ne': [],
-    'et': [],
-    'jo': [],
-    'sl': [],
-    'pv': [],
-    'ec': [],
-    'ct': [],
-    'is': [],
-    'jr': [],
-    'lm': [],
-    'ez': [],
-    'dn': [],
-    'os': [],
-    'jl': [],
-    'am': [],
-    'ob': [],
-    'jn': [],
-    'mq': [],
-    'na': [],
-    'hc': [],
-    'sf': [],
-    'ag': [],
-    'zc': [],
-    'ml': []
-  };
-
-  newTestmentBookList: { [newBook in NewBook]: Array<any> } = {
-    'mt': [],
-    'mc': [],
-    'lc': [],
-    'joao': [],
-    'atos': [],
-    'rm': [],
-    '1co': [],
-    '2co': [],
-    'gl': [],
-    'ef': [],
-    'fp': [],
-    'cl': [],
-    '1ts': [],
-    '2ts': [],
-    '1tm': [],
-    '2tm': [],
-    'tt': [],
-    'fm': [],
-    'hb': [],
-    'tg': [],
-    '1pe': [],
-    '2pe': [],
-    '1jo': [],
-    '2jo': [],
-    '3jo': [],
-    'jd': [],
-    'ap': []
+  greekPatterns: ParsedPatterns = {
+    prefix: new Map(),
+    suffix: new Map()
   };
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
-    ...this.oldTestmentBookList
+    ...this.createOldTestmentObjectBase()
   };
 
   interlinearGeezGreek: InterlinearGeezGreek = {
-    ...this.newTestmentBookList
+    ...this.createNewTestmentObjectBase()
   };
 
   translation: Translation | null = null;
@@ -215,10 +148,10 @@ export class Inspector implements OnInit {
       try {
         this.customHebraicTranslation = JSON.parse(storedCustomHebraicTranslation);
       } catch {
-        this.customHebraicTranslation = { ...this.oldTestmentBookList };
+        this.customHebraicTranslation = { ...this.createOldTestmentObjectBase() };
       }
     } else {
-      this.customHebraicTranslation = { ...this.oldTestmentBookList };
+      this.customHebraicTranslation = { ...this.createOldTestmentObjectBase() };
     }
 
     const storedCustomGeezTranslation = localStorage.getItem('customGeezTranslation');
@@ -226,10 +159,21 @@ export class Inspector implements OnInit {
       try {
         this.customGeezTranslation = JSON.parse(storedCustomGeezTranslation);
       } catch {
-        this.customGeezTranslation = { ...this.oldTestmentBookList, ...this.newTestmentBookList };
+        this.customGeezTranslation = { ...this.createOldTestmentObjectBase(), ...this.createNewTestmentObjectBase() };
       }
     } else {
-      this.customGeezTranslation = { ...this.oldTestmentBookList, ...this.newTestmentBookList };
+      this.customGeezTranslation = { ...this.createOldTestmentObjectBase(), ...this.createNewTestmentObjectBase() };
+    }
+
+    const storedCustomGreekTranslation = localStorage.getItem('customGreekTranslation');
+    if (storedCustomGreekTranslation) {
+      try {
+        this.customGreekTranslation = JSON.parse(storedCustomGreekTranslation);
+      } catch {
+        this.customGreekTranslation = { ...this.createNewTestmentObjectBase() };
+      }
+    } else {
+      this.customGreekTranslation = { ...this.createNewTestmentObjectBase() };
     }
   }
 
@@ -257,6 +201,82 @@ export class Inspector implements OnInit {
     this.cd.detectChanges();
   }
 
+  private createNewTestmentObjectBase(): { [newBook in NewBook]: Array<any> } {
+    return {
+      'mt': [],
+      'mc': [],
+      'lc': [],
+      'joao': [],
+      'atos': [],
+      'rm': [],
+      '1co': [],
+      '2co': [],
+      'gl': [],
+      'ef': [],
+      'fp': [],
+      'cl': [],
+      '1ts': [],
+      '2ts': [],
+      '1tm': [],
+      '2tm': [],
+      'tt': [],
+      'fm': [],
+      'hb': [],
+      'tg': [],
+      '1pe': [],
+      '2pe': [],
+      '1jo': [],
+      '2jo': [],
+      '3jo': [],
+      'jd': [],
+      'ap': []
+    };
+  }
+
+  private createOldTestmentObjectBase(): { [oldBook in OldBook]: Array<any> } {
+    return {
+      'gn': [],
+      'ex': [],
+      'lv': [],
+      'nm': [],
+      'dt': [],
+      'js': [],
+      'jz': [],
+      'rt': [],
+      '1sm': [],
+      '2sm': [],
+      '1rs': [],
+      '2rs': [],
+      '1cr': [],
+      '2cr': [],
+      'ed': [],
+      'ne': [],
+      'et': [],
+      'jo': [],
+      'sl': [],
+      'pv': [],
+      'ec': [],
+      'ct': [],
+      'is': [],
+      'jr': [],
+      'lm': [],
+      'ez': [],
+      'dn': [],
+      'os': [],
+      'jl': [],
+      'am': [],
+      'ob': [],
+      'jn': [],
+      'mq': [],
+      'na': [],
+      'hc': [],
+      'sf': [],
+      'ag': [],
+      'zc': [],
+      'ml': []
+    };
+  }
+
   onAddPattern(option: {
     word: string;
     type: "prefix" | "suffix";
@@ -269,12 +289,41 @@ export class Inspector implements OnInit {
     }
   }
 
-  onWordOfGodDefined(option: {
+  onDelimitationDefined(option: {
+    lang: 'hebraic' | 'geez' | 'greek',
+    type: 'godsaid' | 'keyword' | 'measure',
+    book: OldBook | NewBook,
+    chapter: number,
+    verse: ScriptureVerse,
     start: number,
-    end: number,
-    lang: 'hebraic' | 'geez' | 'greek'
+    end: number
   }): void {
+    let custom: AbstractHolyScriptureModel;
+    if (option.lang === 'hebraic') {
+      custom = this.customHebraicTranslation;
+    } else if (option.lang === 'geez') {
+      custom = this.customGeezTranslation;
+    } else if (option.lang === 'greek') {
+      custom = this.customGreekTranslation;
+    } else {
+      throw new Error(`language '${option.lang}' not found`);
+    }
 
+    const metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata || new Array<{
+      type: 'godsaid' | 'keyword' | 'measure',
+      start: number,
+      end: number
+    }>();
+
+    metadata.push({
+      type: option.type,
+      start: option.start,
+      end: option.end
+    });
+  }
+
+  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): string {
+    return custom[book] && custom[book][chapter] && custom[book][chapter][verse.verse.index]?.text || '';
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
@@ -310,7 +359,15 @@ export class Inspector implements OnInit {
   }
 
   splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string }[][] {
-    const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
+    let patterns: ParsedPatterns;
+    if (lang === 'hebraic') {
+      patterns = this.hebraicPatterns;
+    } else if (lang === 'geez') {
+      patterns = this.geezPatterns;
+    } else if (lang === 'greek') {
+      patterns = this.greekPatterns;
+    }
+
     let index = 0;
     return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
       return { index: index++, word };
@@ -405,7 +462,7 @@ export class Inspector implements OnInit {
 
   updateCustomTranslation(input: HTMLInputElement, book: OldBook | NewBook, chapter: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     let customTranslation: AbstractHolyScriptureModel, customBook: ScriptureBook;
-    
+
     if (lang === 'hebraic' && this.isOldBookGuard(book)) {
       customTranslation = this.customHebraicTranslation;
       customBook = customTranslation[book];
@@ -433,11 +490,11 @@ export class Inspector implements OnInit {
     };
 
     if (lang === 'hebraic') {
-      this.literalsStorage.addHebraicCustomTranslation(customBook);
+      this.literalsStorage.saveHebraicCustomTranslation(customTranslation);
     } else if (lang === 'geez') {
-      this.literalsStorage.addGeezCustomTranslation(customBook);
+      this.literalsStorage.saveGeezCustomTranslation(customTranslation);
     } else if (lang === 'greek') {
-      this.literalsStorage.addGreekCustomTranslation(customBook);
+      this.literalsStorage.saveGreekCustomTranslation(customTranslation);
     }
   }
 

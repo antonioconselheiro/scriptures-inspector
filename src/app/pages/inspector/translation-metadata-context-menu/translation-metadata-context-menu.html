@@ -1,0 +1,12 @@
+@if (visible) {
+  <div
+    class="context-menu"
+    [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  >
+    <ul>
+      <li (click)="defineAs('godsaid', selectionStart, selectionEnd)">word of God</li>
+      <li (click)="defineAs('keyword', selectionStart, selectionEnd)">translitered keyword</li>
+      <li (click)="defineAs('measure', selectionStart, selectionEnd)">define value, measure, size</li>
+    </ul>
+  </div>
+}

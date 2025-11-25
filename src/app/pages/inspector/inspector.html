@@ -1,5 +1,5 @@
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
-<app-word-of-god-delimiter-context-menu #wordOfGodMenuRef (optionSelected)="onWordOfGodDefined($event)"></app-word-of-god-delimiter-context-menu>
+<app-translation-metadata-context-menu #translationMetadataMenuRef (optionSelected)="onDelimitationDefined($event)"></app-translation-metadata-context-menu>
 
 @let hebraicVerses = hebraics[book][chapter];
 
@@ -135,7 +135,7 @@
 
   </tr>
   <tr>
-    <th rowspan="2">literalization</th>
+    <th rowspan="2">interlinear</th>
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -188,12 +188,12 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="hebraic.length">
-      <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')" />
+      <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')" [value]="getCustomTranslationVerse(customHebraicTranslation, book, chapter, hebraicVerse)" />
     </td>
   </tr>
   <tr>
-    <td [colSpan]="hebraic.length" [appWordOfGodDelimiterContextMenuTrigger]="wordOfGodMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
-      <span>{{customHebraicTranslation[book] && customHebraicTranslation[book][chapter] && customHebraicTranslation[book][chapter][hebraicVerse.verse.index].text}}&nbsp;</span>
+    <td [colSpan]="hebraic.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
+      <span>{{getCustomTranslationVerse(customHebraicTranslation, book, chapter, hebraicVerse)}}&nbsp;</span>
     </td>
   </tr>
 </table>
@@ -233,7 +233,7 @@
     }
   </tr>
   <tr>
-    <th rowspan="2">literalization</th>
+    <th rowspan="2">interlinear</th>
     @for (sentence of geezMatriz; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -279,16 +279,14 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="geez.length">
-      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')" />
+      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')" [value]="getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)" />
     </td>
   </tr>
   <tr>
-    <td [colSpan]="geez.length" [appWordOfGodDelimiterContextMenuTrigger]="wordOfGodMenuRef" lang="geez" [book]="book" [chapter]="chapter" [verse]="geezVerse">
-      <span>{{customGeezTranslation[book] && customGeezTranslation[book][chapter] && customGeezTranslation[book][chapter][geezVerse.verse.index].text}}&nbsp;</span>
+    <td [colSpan]="geez.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="geez" [book]="book" [chapter]="chapter" [verse]="geezVerse">
+      <span>{{getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)}}&nbsp;</span>
     </td>
   </tr>
 </table>
 }
 }
-
-<span>references</span>

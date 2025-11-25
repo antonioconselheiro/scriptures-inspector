@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { LiteralsStorage } from './literals-storage';
 import { LiteralsPatternsService } from './literals-patterns-service';
-import { PatternsParsed } from './patterns-parsed';
+import { ParsedPatterns } from './parsed-patterns';
 
 @Pipe({
   name: 'literalizate'
@@ -13,7 +13,7 @@ export class LiteralizatePipe implements PipeTransform {
     private literalsPatternsService: LiteralsPatternsService
   ) { }
 
-  transform(value: string, patterns: PatternsParsed, lang: 'hebraic' | 'geez' | 'greek', listenUpdate: number): string {
+  transform(value: string, patterns: ParsedPatterns, lang: 'hebraic' | 'geez' | 'greek', listenUpdate: number): string {
     listenUpdate;
     const literals = lang === 'hebraic' ? this.literalsStorage.getHebraicLiteral() : this.literalsStorage.getGeezLiteral();
 
