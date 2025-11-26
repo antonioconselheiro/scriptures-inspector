@@ -5,7 +5,7 @@ export type ScriptureVerse = {
     end: `${number}`
   },
   metadata?: Array<{
-    type: 'godsaid' | 'keyword' | 'measure',
+    type: 'godsaid' | 'keyword' | 'quantitative',
     start: number,
     end: number
   }>,

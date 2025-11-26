@@ -24,7 +24,7 @@ export class TranslationMetadataContextMenu {
   @Input() verse!: ScriptureVerse;
 
   @Output() optionSelected = new EventEmitter<{
-    type: 'godsaid' | 'keyword' | 'measure',
+    type: 'godsaid' | 'keyword' | 'quantitative',
     lang: 'hebraic' | 'geez' | 'greek',
     start: number,
     end: number,
@@ -33,7 +33,7 @@ export class TranslationMetadataContextMenu {
     verse: ScriptureVerse
   }>();
 
-  defineAs(delimitationType: 'godsaid' | 'keyword' | 'measure', start: number, end: number): void {
+  defineAs(delimitationType: 'godsaid' | 'keyword' | 'quantitative', start: number, end: number): void {
     this.optionSelected.emit({
       type: delimitationType,
       start,

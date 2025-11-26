@@ -292,7 +292,7 @@ export class Inspector implements OnInit {
 
   onDelimitationDefined(option: {
     lang: 'hebraic' | 'geez' | 'greek',
-    type: 'godsaid' | 'keyword' | 'measure',
+    type: 'godsaid' | 'keyword' | 'quantitative',
     book: OldBook | NewBook,
     chapter: number,
     verse: ScriptureVerse,
@@ -311,16 +311,25 @@ export class Inspector implements OnInit {
     }
 
     const metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata || new Array<{
-      type: 'godsaid' | 'keyword' | 'measure',
+      type: 'godsaid' | 'keyword' | 'quantitative',
       start: number,
       end: number
     }>();
 
-    metadata.push({
+    const hasAlready = metadata.find(data => option.start === data.start && option.end === data.end);
+    if (hasAlready) {
+      return;
+    }
+
+    custom[option.book][option.chapter][option.verse.verse.index].metadata = [...metadata, {
       type: option.type,
       start: option.start,
       end: option.end
-    });
+    }];
+
+    this.literalsStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
+    this.literalsStorage.saveGeezCustomTranslation(this.customGreekTranslation);
+    this.literalsStorage.saveGreekCustomTranslation(this.customGeezTranslation);
   }
 
   getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): ScriptureVerse | null {

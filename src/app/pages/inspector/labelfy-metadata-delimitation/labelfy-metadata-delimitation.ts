@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
 import { AbstractHolyScriptureModel } from '../domain/abstract-holy-scripture-model';
 import { OldBook } from '../domain/old-book-enum';
 import { ScriptureVerse } from '../domain/scripture-verse-model';
@@ -11,7 +11,8 @@ import { TranslationMetadataContextMenuTrigger } from '../translation-metadata-c
     TranslationMetadataContextMenuTrigger
   ],
   templateUrl: './labelfy-metadata-delimitation.html',
-  styleUrl: './labelfy-metadata-delimitation.scss'
+  styleUrl: './labelfy-metadata-delimitation.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LabelfyMetadataDelimitation  implements OnChanges {
   @Input() customTranslation!: AbstractHolyScriptureModel;
@@ -23,14 +24,18 @@ export class LabelfyMetadataDelimitation  implements OnChanges {
 
   segments: DelimitationSegment[] = [];
 
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) {}
+
   ngOnChanges(): void {
     this.segments = this.computeSegments();
+    this.cdr.markForCheck();
   }
 
   private computeSegments(): DelimitationSegment[] {
     const verse = this.getCustomTranslationVerse();
     if (!verse) return [{ text: '\u00A0' }];
-    debugger;
 
     if (!verse.metadata || verse.metadata.length === 0) {
       return [{ text: verse.text }];
