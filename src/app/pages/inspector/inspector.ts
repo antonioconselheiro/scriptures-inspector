@@ -30,6 +30,8 @@ import { TranslationMetadataContextMenuTrigger } from './translation-metadata-co
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DelimitationHtmlfierPipe } from './delimitation-htmlfier-pipe';
 
 @Component({
   selector: 'app-inspector',
@@ -42,6 +44,7 @@ import { VersePipe } from './verse-pipe';
     LiteralsPipe,
     LiteralizatePipe,
     TransliterationPipe,
+    DelimitationHtmlfierPipe,
     ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger,
@@ -322,8 +325,8 @@ export class Inspector implements OnInit {
     });
   }
 
-  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): string {
-    return custom[book] && custom[book][chapter] && custom[book][chapter][verse.verse.index]?.text || '';
+  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): ScriptureVerse | null {
+    return custom[book] && custom[book][chapter] && custom[book][chapter][verse.verse.index];
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
@@ -372,6 +375,30 @@ export class Inspector implements OnInit {
     return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
       return { index: index++, word };
     }));
+  }
+
+  onClickCustomTranslation(event: MouseEvent): void {
+    event.stopPropagation();
+
+    const el = (event.target as HTMLElement);
+    if (!el || !el.classList.contains('delimitation')) return;
+
+    const rect = el.getBoundingClientRect();
+    const beforeWidth = 12;
+    const beforeHeight = 12;
+
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+
+    const clickedBefore =
+      clickX <= beforeWidth &&
+      clickY <= beforeHeight;
+
+    if (clickedBefore) {
+      event.preventDefault();
+      el.dataset;
+      debugger;
+    }
   }
 
   getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {

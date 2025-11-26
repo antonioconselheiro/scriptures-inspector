@@ -188,12 +188,13 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="hebraic.length">
-      <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')" [value]="getCustomTranslationVerse(customHebraicTranslation, book, chapter, hebraicVerse)" />
+      <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')" [value]="getCustomTranslationVerse(customHebraicTranslation, book, chapter, hebraicVerse)?.text" />
     </td>
   </tr>
-  <tr>
+  <tr (click)="onClickCustomTranslation($event)">
+    @let html = customHebraicTranslation | delimitationHtmlfier:book:chapter:hebraicVerse;
     <td [colSpan]="hebraic.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
-      <span>{{getCustomTranslationVerse(customHebraicTranslation, book, chapter, hebraicVerse)}}&nbsp;</span>
+      <span [innerHTML]="html"></span>
     </td>
   </tr>
 </table>
@@ -279,12 +280,13 @@
     <th rowspan="2">custom</th>
 
     <td [colSpan]="geez.length">
-      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')" [value]="getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)" />
+      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation" placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')" [value]="getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)?.text" />
     </td>
   </tr>
-  <tr>
+  <tr (click)="onClickCustomTranslation($event)">
+    @let html = customGeezTranslation | delimitationHtmlfier:book:chapter:geezVerse;
     <td [colSpan]="geez.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="geez" [book]="book" [chapter]="chapter" [verse]="geezVerse">
-      <span>{{getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)}}&nbsp;</span>
+      <span [innerHTML]="html"></span>
     </td>
   </tr>
 </table>
