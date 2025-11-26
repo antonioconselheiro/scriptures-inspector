@@ -19,6 +19,7 @@ import { Translation } from './domain/translation-model';
 import { geezes } from './geezes';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
+import { LabelfyMetadataDelimitation } from './labelfy-metadata-delimitation/labelfy-metadata-delimitation';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
@@ -26,12 +27,9 @@ import { LiteralsStorage } from './literals-storage';
 import { PaleoPipe } from './paleo-pipe';
 import { ParsedPatterns } from './parsed-patterns';
 import { TranslationMetadataContextMenu } from './translation-metadata-context-menu/translation-metadata-context-menu';
-import { TranslationMetadataContextMenuTrigger } from './translation-metadata-context-menu/translation-metadata-context-menu-trigger';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DelimitationHtmlfierPipe } from './delimitation-htmlfier-pipe';
 
 @Component({
   selector: 'app-inspector',
@@ -44,12 +42,12 @@ import { DelimitationHtmlfierPipe } from './delimitation-htmlfier-pipe';
     LiteralsPipe,
     LiteralizatePipe,
     TransliterationPipe,
-    DelimitationHtmlfierPipe,
     ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger,
+    LabelfyMetadataDelimitation,
     TranslationMetadataContextMenu,
-    TranslationMetadataContextMenuTrigger
+    LabelfyMetadataDelimitation
   ],
   providers: [
     LiteralsStorage

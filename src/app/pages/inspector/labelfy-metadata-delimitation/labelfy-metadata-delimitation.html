@@ -1,0 +1,21 @@
+<span
+    [appTranslationMetadataContextMenu]="translationMetadataMenuRef"
+    [lang]="lang"
+    [book]="book"
+    [chapter]="chapter"
+    [verse]="verse">
+
+    @for (segment of segments; track $index) {
+      @if (segment.type) {
+        <span class="delimitation {{segment.type}}"
+              [attr.data-start]="segment.start"
+              [attr.data-end]="segment.end">
+          {{ segment.text }}
+        </span>
+
+      } @else {
+        {{ segment.text }}
+      }
+    }
+</span>
+

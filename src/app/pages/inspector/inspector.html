@@ -192,9 +192,8 @@
     </td>
   </tr>
   <tr (click)="onClickCustomTranslation($event)">
-    @let html = customHebraicTranslation | delimitationHtmlfier:book:chapter:hebraicVerse;
-    <td [colSpan]="hebraic.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="hebraic" [book]="book" [chapter]="chapter" [verse]="hebraicVerse">
-      <span [innerHTML]="html"></span>
+    <td [colSpan]="hebraic.length">
+      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="hebraic" [customTranslation]="customHebraicTranslation" [book]="book" [chapter]="chapter" [verse]="hebraicVerse"></app-labelfy-metadata-delimitation>
     </td>
   </tr>
 </table>
@@ -284,9 +283,8 @@
     </td>
   </tr>
   <tr (click)="onClickCustomTranslation($event)">
-    @let html = customGeezTranslation | delimitationHtmlfier:book:chapter:geezVerse;
-    <td [colSpan]="geez.length" [appTranslationMetadataContextMenu]="translationMetadataMenuRef" lang="geez" [book]="book" [chapter]="chapter" [verse]="geezVerse">
-      <span [innerHTML]="html"></span>
+    <td [colSpan]="geez.length">
+      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="geez" [customTranslation]="customGeezTranslation" [book]="book" [chapter]="chapter" [verse]="geezVerse"></app-labelfy-metadata-delimitation>
     </td>
   </tr>
 </table>
