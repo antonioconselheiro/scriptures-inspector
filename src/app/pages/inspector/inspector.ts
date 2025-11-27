@@ -320,11 +320,11 @@ export class Inspector implements OnInit {
       return;
     }
 
-    custom[option.book][option.chapter][option.verse.verse.index].metadata = [...metadata, {
+    metadata.push({
       type: option.type,
       start: option.start,
       end: option.end
-    }];
+    });
 
     this.saveCustomTranslation();
   }
@@ -333,6 +333,12 @@ export class Inspector implements OnInit {
     this.literalsStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
     this.literalsStorage.saveGeezCustomTranslation(this.customGreekTranslation);
     this.literalsStorage.saveGreekCustomTranslation(this.customGeezTranslation);
+
+    this.customHebraicTranslation = { ...this.customHebraicTranslation };
+    this.customGreekTranslation = { ...this.customGreekTranslation };
+    this.customGeezTranslation = { ...this.customGeezTranslation };
+
+    this.cd.detectChanges();
   }
 
   getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): ScriptureVerse | null {
