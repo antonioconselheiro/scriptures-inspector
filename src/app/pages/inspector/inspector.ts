@@ -46,8 +46,7 @@ import { VersePipe } from './verse-pipe';
     AddPatternContextMenu,
     AddPatternContextMenuTrigger,
     LabelfyMetadataDelimitation,
-    TranslationMetadataContextMenu,
-    LabelfyMetadataDelimitation
+    TranslationMetadataContextMenu
   ],
   providers: [
     LiteralsStorage
@@ -327,6 +326,10 @@ export class Inspector implements OnInit {
       end: option.end
     }];
 
+    this.saveCustomTranslation();
+  }
+  
+  saveCustomTranslation(): void {
     this.literalsStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
     this.literalsStorage.saveGeezCustomTranslation(this.customGreekTranslation);
     this.literalsStorage.saveGreekCustomTranslation(this.customGeezTranslation);

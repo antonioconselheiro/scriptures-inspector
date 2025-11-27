@@ -193,7 +193,7 @@
   </tr>
   <tr (click)="onClickCustomTranslation($event)">
     <td [colSpan]="hebraic.length">
-      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="hebraic" [customTranslation]="customHebraicTranslation" [book]="book" [chapter]="chapter" [verse]="hebraicVerse"></app-labelfy-metadata-delimitation>
+      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="hebraic" [customTranslation]="customHebraicTranslation" [book]="book" [chapter]="chapter" [verse]="hebraicVerse" (emitSave)="saveCustomTranslation()"></app-labelfy-metadata-delimitation>
     </td>
   </tr>
 </table>
@@ -284,7 +284,7 @@
   </tr>
   <tr (click)="onClickCustomTranslation($event)">
     <td [colSpan]="geez.length">
-      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="geez" [customTranslation]="customGeezTranslation" [book]="book" [chapter]="chapter" [verse]="geezVerse"></app-labelfy-metadata-delimitation>
+      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="geez" [customTranslation]="customGeezTranslation" [book]="book" [chapter]="chapter" [verse]="geezVerse" (emitSave)="saveCustomTranslation()"></app-labelfy-metadata-delimitation>
     </td>
   </tr>
 </table>

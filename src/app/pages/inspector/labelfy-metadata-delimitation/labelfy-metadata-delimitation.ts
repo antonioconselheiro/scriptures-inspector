@@ -1,13 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
+import { ConfigDelimitationDialog } from '../config-delimitation-dialog/config-delimitation-dialog';
 import { AbstractHolyScriptureModel } from '../domain/abstract-holy-scripture-model';
 import { OldBook } from '../domain/old-book-enum';
 import { ScriptureVerse } from '../domain/scripture-verse-model';
-import { DelimitationSegment } from './delimitation-segment-model';
 import { TranslationMetadataContextMenuTrigger } from '../translation-metadata-context-menu/translation-metadata-context-menu-trigger';
+import { DelimitationSegment } from './delimitation-segment-model';
 
 @Component({
   selector: 'app-labelfy-metadata-delimitation',
   imports: [
+    AsyncModalModule,
     TranslationMetadataContextMenuTrigger
   ],
   templateUrl: './labelfy-metadata-delimitation.html',
@@ -22,10 +25,13 @@ export class LabelfyMetadataDelimitation  implements OnChanges {
   @Input() lang!: 'hebraic' | 'geez' | 'greek';
   @Input() translationMetadataMenuRef!: any;
 
+  @Output() emitSave = new EventEmitter<void>();
+
   segments: DelimitationSegment[] = [];
 
   constructor(
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private modalService: ModalService
   ) {}
 
   ngOnChanges(): void {
@@ -57,6 +63,7 @@ export class LabelfyMetadataDelimitation  implements OnChanges {
         start: m.start,
         end: m.end
       });
+
       currentIndex = m.start;
     });
 
@@ -69,5 +76,34 @@ export class LabelfyMetadataDelimitation  implements OnChanges {
 
   private getCustomTranslationVerse(): ScriptureVerse | null {
     return this.customTranslation?.[this.book]?.[this.chapter]?.[this.verse.verse.index] ?? null;
+  }
+
+  deleteDelimitation(segment: DelimitationSegment): void {
+    const confirmDeletion = confirm('Confirm deletion?');
+
+    if (confirmDeletion) {
+      const indexNotFound = -1;
+      const metadata = this.verse.metadata || [];
+      const index = metadata.findIndex(data => data.start === segment.start && data.end === segment.end);
+      if (index != indexNotFound) {
+        metadata.splice(index, 1);
+      }
+  
+      this.emitSave.emit();
+    }
+  }
+
+  openConfig(verse: ScriptureVerse, segment: DelimitationSegment): void {
+    this.modalService
+      .createModal(ConfigDelimitationDialog)
+      .setOutletName('main')
+      .setData({
+        verse,
+        segment
+      })
+      .build()
+      .subscribe({
+        next: () => this.emitSave.emit()
+      });
   }
 }

@@ -10,8 +10,8 @@
         <span [class]="'delimitation ' + segment.type"
           [attr.data-start]="segment.start"
           [attr.data-end]="segment.end">
-          <span class="delete">×</span>
-          <span class="config">⚙</span>
+          <span class="delete" (click)="deleteDelimitation(segment)">×</span>
+          <span class="config" (click)="openConfig(verse, segment)">⚙</span>
           {{ segment.text }}
         </span>
 

@@ -23,6 +23,7 @@
     "@angular/forms": "^20.1.0",
     "@angular/platform-browser": "^20.1.0",
     "@angular/router": "^20.1.0",
+    "@belomonte/async-modal-ngx": "^18.1.1",
     "@belomonte/iterable-string": "^1.0.2",
     "@hebcal/core": "^6.0.5",
     "hebrew-transliteration": "^2.9.1",

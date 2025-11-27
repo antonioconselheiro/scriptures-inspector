@@ -1,0 +1,16 @@
+<section [class.hidden]="isClosed" class="modal">
+  <header>
+    <button tabindex="1" (click)="close()" type="button">
+      x
+    </button>
+    <h1>{{title}}</h1>
+  </header>
+  <div>
+    <modal-outlet
+      name="main"
+      (closed)="isClosed = true"
+      (opened)="isClosed = false"
+      showingDisplay="flex"
+    ></modal-outlet>
+  </div>
+</section>
