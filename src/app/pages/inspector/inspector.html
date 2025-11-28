@@ -1,6 +1,4 @@
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
-<app-translation-metadata-context-menu #translationMetadataMenuRef
-  (optionSelected)="onDelimitationDefined($event)"></app-translation-metadata-context-menu>
 
 @let hebraicVerses = hebraics[book][chapter];
 
@@ -200,9 +198,10 @@
 </table>
 
 <table border="1">
+  @let splitedCustomTranslation = splitSpacesAndPunctuation(customHebraicTranslationEl.value);
   <tr>
-    <th rowspan="2">custom</th>
-    <td [colSpan]="customHebraicTranslationEl.value.split(' ').length">
+    <th>custom</th>
+    <td [colSpan]="splitedCustomTranslation.length">
       <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation"
         placeholder="custom translation"
         (input)="updateCustomTranslation(customHebraicTranslationEl, book, chapter, hebraicVerse, 'hebraic')"
@@ -210,17 +209,9 @@
     </td>
   </tr>
 
-  <tr (click)="onClickCustomTranslation($event)">
-    <td [colSpan]="customHebraicTranslationEl.value.split(' ').length">
-      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="hebraic"
-        [customTranslation]="customHebraicTranslation" [book]="book" [chapter]="chapter" [verse]="hebraicVerse"
-        (emitSave)="saveCustomTranslation()"></app-labelfy-metadata-delimitation>
-    </td>
-  </tr>
-
   <tr>
     <th>interlinear</th>
-    @for (sentence of customHebraicTranslationEl.value.split(' '); track $index) {
+    @for (sentence of splitedCustomTranslation; track $index) {
     <td>
       {{sentence}}
     </td>
@@ -229,7 +220,7 @@
 
   <tr>
     <th>scriptures</th>
-    @for (sentence of customHebraicTranslationEl.value.split(' '); track $index) {
+    @for (sentence of splitedCustomTranslation; track $index) {
     <td>
       <select #interlinearHebraicCustomTranslation>
         <option value=""></option>
@@ -247,13 +238,13 @@
 
 @for (geezVerse of geezVerses; track geezVerse.verse.start; let geezVerseKey = $index) {
 @let geez = geezVerse.text.split(' ');
-@let geezMatriz = splitIntoMatrix(geezVerse.text, 'geez');
+@let eachGeezMatriz = splitIntoMatrix(geezVerse.text, 'geez');
 
 <table border="1">
   <tr>
     <th rowspan="2">ge'əz</th>
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
-      @for (sentence of geezMatriz; track $index) {
+      @for (sentence of eachGeezMatriz; track $index) {
       @for (word of sentence; track word.index) {
       <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
       }
@@ -261,7 +252,7 @@
     </td>
   </tr>
   <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
-    @for (sentence of geezMatriz; track $index) {
+    @for (sentence of eachGeezMatriz; track $index) {
     <td>
       @for (word of sentence; track word.index) {
       <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
@@ -271,7 +262,7 @@
   </tr>
   <tr>
     <th>transliteration</th>
-    @for (sentence of geezMatriz; track $index) {
+    @for (sentence of eachGeezMatriz; track $index) {
     <td>
       @for (word of sentence; track word.index) {
       <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
@@ -281,7 +272,7 @@
   </tr>
   <tr>
     <th rowspan="2">interlinear</th>
-    @for (sentence of geezMatriz; track $index) {
+    @for (sentence of eachGeezMatriz; track $index) {
     <td>
       @for (word of sentence; track $index) {
       @let literal = word.word | literals : 'geez' : pipeUpdaterController;
@@ -294,7 +285,7 @@
   </tr>
   <tr>
     <td [colSpan]="geez.length">
-      @for (sentence of geezMatriz; track $index) {
+      @for (sentence of eachGeezMatriz; track $index) {
       @for (word of sentence; track word.index) {
       <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' :
         pipeUpdaterController}}&nbsp;</span>
@@ -304,7 +295,7 @@
   </tr>
   <tr>
     <th>scriptures</th>
-    @for (sentence of geezMatriz; track $index) {
+    @for (sentence of eachGeezMatriz; track $index) {
     <td>
       @for (geezWord of sentence; track $index) {
       <select #interlinear
@@ -322,22 +313,44 @@
     </td>
     }
   </tr>
-  <tr>
-    <th rowspan="2">custom</th>
+</table>
 
-    <td [colSpan]="geez.length">
-      <input type="text" class="customTranslation" #customGeezTranslationEl name="customGeezTranslation"
+<table border="1">
+  @let splitedCustomTranslation = splitSpacesAndPunctuation(customGeezTranslationEl.value);
+  <tr>
+    <th>custom</th>
+    <td [colSpan]="splitedCustomTranslation.length">
+      <input type="text" #customGeezTranslationEl class="customTranslation" name="customGreekTranslation"
         placeholder="custom translation"
         (input)="updateCustomTranslation(customGeezTranslationEl, book, chapter, geezVerse, 'geez')"
-        [value]="getCustomTranslationVerse(customGeezTranslation, book, chapter, geezVerse)?.text" />
+        [value]="getCustomTranslationVerse(customGreekTranslation, book, chapter, geezVerse)?.text" />
     </td>
   </tr>
-  <tr (click)="onClickCustomTranslation($event)">
-    <td [colSpan]="geez.length">
-      <app-labelfy-metadata-delimitation [translationMetadataMenuRef]="translationMetadataMenuRef" lang="geez"
-        [customTranslation]="customGeezTranslation" [book]="book" [chapter]="chapter" [verse]="geezVerse"
-        (emitSave)="saveCustomTranslation()"></app-labelfy-metadata-delimitation>
+
+  <tr>
+    <th>interlinear</th>
+    @for (sentence of splitedCustomTranslation; track $index) {
+    <td>
+      {{sentence}}
     </td>
+    }
+  </tr>
+
+  <tr>
+    <th>scriptures</th>
+    @for (sentence of splitedCustomTranslation; track $index) {
+    <td>
+      <select #interlinearHebraicCustomTranslation>
+        <option value=""></option>
+        @for (geezesWord of eachGeezMatriz; track $index) {
+        @for (geezWord of geezesWord; track $index) {
+        <option [value]="geezWord.index+'-'+geezWord.word">({{geezWord.index}} - {{geezWord.word}} )
+        </option>
+        }
+        }
+      </select>
+    </td>
+    }
   </tr>
 </table>
 }

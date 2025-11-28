@@ -26,7 +26,6 @@ import { LiteralsPipe } from './literals-pipe';
 import { LiteralsStorage } from './literals-storage';
 import { PaleoPipe } from './paleo-pipe';
 import { ParsedPatterns } from './parsed-patterns';
-import { TranslationMetadataContextMenu } from './translation-metadata-context-menu/translation-metadata-context-menu';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
@@ -45,8 +44,7 @@ import { VersePipe } from './verse-pipe';
     ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger,
-    LabelfyMetadataDelimitation,
-    TranslationMetadataContextMenu
+    LabelfyMetadataDelimitation
   ],
   providers: [
     LiteralsStorage
@@ -393,30 +391,6 @@ export class Inspector implements OnInit {
     }));
   }
 
-  onClickCustomTranslation(event: MouseEvent): void {
-    event.stopPropagation();
-
-    const el = (event.target as HTMLElement);
-    if (!el || !el.classList.contains('delimitation')) return;
-
-    const rect = el.getBoundingClientRect();
-    const beforeWidth = 12;
-    const beforeHeight = 12;
-
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
-
-    const clickedBefore =
-      clickX <= beforeWidth &&
-      clickY <= beforeHeight;
-
-    if (clickedBefore) {
-      event.preventDefault();
-      el.dataset;
-      debugger;
-    }
-  }
-
   getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {
     try {
       const interlinear = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
@@ -480,6 +454,11 @@ export class Inspector implements OnInit {
 
     const map = this.interlinearGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
+  }
+
+  splitSpacesAndPunctuation(value: string): string[] {
+    return value.split(' ')
+      .flatMap(p => p.match(/(\.{3}|…|[.!?]+)$/) ? [p.replace(/(\.{3}|…|[.!?]+)$/, ''), p.match(/(\.{3}|…|[.!?]+)$/)![0]].filter(x => x) : [p]);
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {

@@ -1,0 +1,22 @@
+TODO
+
+[ ] - encontrar hebraico base com dados mais corretos
+[ ] - header com barra de botões para configurações
+[ ] - completar transliterações geez com todas disponiveis no canone
+[ ] - remover delimitações massoreticas nas associações interlineares
+[ ] - remover componente de delimitadores com menu de contexto
+[ ] - incluir linha no hebraico para identificação de metadados, números que representem pesos e medidas (as palavra correspondente a medida deve ser associado ao número, ex: "10 denários", então o 10 é marcado como denário), só deve se aplicar a valores que sofrem mudança diante da tradução do sistema de valor, medida ou de pesagem;
+[ ] - incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
+[ ] - incluir linha na tradução personalizada para identificação de palavras chaves que foram preservadas do hebraico, de forma que posteriormente possam ser substituídas por palavras personalizadas
+[ ] - baixar tradução geez para comparação
+[ ] - separar versiculos em páginas para evitar muitos ciclos de renderização na interação
+[ ] - listar os patterns do hebraics para associar com a tradução customizada
+[ ] - criar botão "atualizar com interlinear" para que o custom translation seja substituido pelo conteúdo do interlinear incluindo a relação com o original
+[ ] - remover sistema de tags
+[ ] - colocar extrapolação em um dialog
+[ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
+[ ] - desenhar modelagem ideal final para tradução personalizada
+[ ] - salvar tradução personalizada com metadados, manifestar prisma
+[ ] - estruturar para o grego
+[ ] - criar forma de importar e exportar o conteúdo trabalhado como um arquivo json
+[ ] - possibilitar leitura em paralelo de multiplas traduções
