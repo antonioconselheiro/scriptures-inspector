@@ -6,8 +6,11 @@ import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-co
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
+import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
+import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-custom-translation-model';
+import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
 import { NewBook } from './domain/new-book-enum';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldBook } from './domain/old-book-enum';
@@ -80,13 +83,26 @@ export class Inspector implements OnInit {
     ...this.createNewTestmentObjectBase()
   };
 
+  interlinearHebraicCustomTranslation: InterlinearHebraicCustomTranslation = {
+    ...this.createOldTestmentObjectBase()
+  };
+  
+  interlinearGreekCustomTranslation: InterlinearGreekCustomTranslation = {
+    ...this.createNewTestmentObjectBase()
+  };
+
+  interlinearGeezCustomTranslation: InterlinearGeezCustomTranslation = {
+    ...this.createOldTestmentObjectBase(),
+    ...this.createNewTestmentObjectBase()
+  };
+
   translation: Translation | null = null;
   customHebraicTranslation!: OldTestmentScriptures;
   customGreekTranslation!: NewTestmentScriptures;
   customGeezTranslation!: HolyScriptureModel;
   chapterTranslations: Array<TranslationBookVerse> = [];
 
-  book: OldBook = OldBook.GN;
+  book: OldBook | NewBook = OldBook.GN;
   chapter = 0;
   form: any;
 
@@ -287,6 +303,7 @@ export class Inspector implements OnInit {
     }
   }
 
+  //  FIXME: remover
   onDelimitationDefined(option: {
     lang: 'hebraic' | 'geez' | 'greek',
     type: 'godsaid' | 'keyword' | 'quantitative',
@@ -307,26 +324,9 @@ export class Inspector implements OnInit {
       throw new Error(`language '${option.lang}' not found`);
     }
 
-    const metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata = custom[option.book][option.chapter][option.verse.verse.index].metadata || new Array<{
-      type: 'godsaid' | 'keyword' | 'quantitative',
-      start: number,
-      end: number
-    }>();
-
-    const hasAlready = metadata.find(data => option.start === data.start && option.end === data.end);
-    if (hasAlready) {
-      return;
-    }
-
-    metadata.push({
-      type: option.type,
-      start: option.start,
-      end: option.end
-    });
-
     this.saveCustomTranslation();
   }
-  
+
   saveCustomTranslation(): void {
     this.literalsStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
     this.literalsStorage.saveGeezCustomTranslation(this.customGreekTranslation);
@@ -339,8 +339,8 @@ export class Inspector implements OnInit {
     this.cd.detectChanges();
   }
 
-  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, book: OldBook, chapter: number, verse: ScriptureVerse): ScriptureVerse | null {
-    return custom[book] && custom[book][chapter] && custom[book][chapter][verse.verse.index];
+  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: ScriptureVerse): ScriptureVerse | null {
+    return custom[this.book] && custom[this.book][this.chapter] && custom[this.book][this.chapter][verse.verse.index];
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
@@ -392,6 +392,10 @@ export class Inspector implements OnInit {
   }
 
   getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {
+    if (!this.isOldBookGuard(this.book)) {
+      return '';
+    }
+
     try {
       const interlinear = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
       if (interlinear) {
@@ -415,6 +419,10 @@ export class Inspector implements OnInit {
     const hebraicIndex = Number(hIndex);
     const hebraicVerseNumber = Number(hebraicVerse.verse.start);
     const geezVerseNumber = Number(geezVerse.verse.start);
+
+    if (!this.isOldBookGuard(this.book)) {
+      return;
+    }
 
     if (!this.interlinearGeezHebraic[this.book][this.chapter]) {
       this.interlinearGeezHebraic[this.book][this.chapter] = [];
@@ -442,6 +450,11 @@ export class Inspector implements OnInit {
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
+    if (!this.isOldBookGuard(this.book)) {
+      return '';
+    }
+
+    //  FIXME: revisar comportamento para versiculos compostos
     const verseNumber = Number(geezVerse.verse.start);
     if (
       !this.interlinearGeezHebraic[this.book] ||
@@ -456,9 +469,86 @@ export class Inspector implements OnInit {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitSpacesAndPunctuation(value: string): string[] {
-    return value.split(' ')
-      .flatMap(p => p.match(/(\.{3}|…|[.!?]+)$/) ? [p.replace(/(\.{3}|…|[.!?]+)$/, ''), p.match(/(\.{3}|…|[.!?]+)$/)![0]].filter(x => x) : [p]);
+  getCustomTranslationFromHebraicColor(verse: ScriptureVerse, wordIndex: number): string {
+    const verseNumber = Number(verse.verse.start);
+    if (
+      !this.interlinearGeezCustomTranslation[this.book] ||
+      !this.interlinearGeezCustomTranslation[this.book][this.chapter] ||
+      !this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber] ||
+      !this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+    ) {
+      return '';
+    }
+
+    const map = this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    return String(map.origin.index % 7 + 1);
+  }
+
+  getCustomTranslationFromGeezColor(verse: ScriptureVerse, wordIndex: number): string {
+    if (!this.isOldBookGuard(this.book)) {
+      return '';
+    }
+
+    const verseNumber = Number(verse.verse.start);
+    if (
+      !this.interlinearHebraicCustomTranslation[this.book] ||
+      !this.interlinearHebraicCustomTranslation[this.book][this.chapter] ||
+      !this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber] ||
+      !this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+    ) {
+      return '';
+    }
+
+    const map = this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    return String(map.origin.index % 7 + 1);
+  }
+
+  getCustomTranslationFromGreekColor(verse: ScriptureVerse, wordIndex: number): string {
+    if (!this.isNewBookGuard(this.book)) {
+      return '';
+    }
+
+    const verseNumber = Number(verse.verse.start);
+    if (
+      !this.interlinearGreekCustomTranslation[this.book] ||
+      !this.interlinearGreekCustomTranslation[this.book][this.chapter] ||
+      !this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber] ||
+      !this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+    ) {
+      return '';
+    }
+
+    const map = this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    return String(map.origin.index % 7 + 1);
+  }
+
+  getCustomTranslationFromHebraicSacredRule(verse: ScriptureVerse, wordIndex: number): string {
+    return 'GodName';
+  }
+
+  getCustomTranslationFromGreekSacredRule(verse: ScriptureVerse, wordIndex: number): string {
+    return 'GodName';
+  }
+
+  getCustomTranslationFromGeezSacredRule(verse: ScriptureVerse, wordIndex: number): string {
+    return 'GodName';
+  }
+
+  onChangeCustomTranslationHebraicInterlinear(value: string, book: OldBook, chapter: number, hebraicVerse: ScriptureVerse, index: number): void {
+    
+  }
+
+  onChangeCustomTranslationGreekInterlinear(value: string, book: OldBook | NewBook, chapter: number, greekVerse: ScriptureVerse, index: number): void {
+    
+  }
+
+  onChangeCustomTranslationGeezInterlinear(value: string, book: NewBook, chapter: number, geezVerse: ScriptureVerse, index: number): void {
+    
+  }
+
+  splitTextBySpacesAndPunctuation(value: string): string[] {
+    return [...value.matchAll(/(\s*)(\S+?)(\.{3}|…|[.!?]+)?(?=\s|$)/g)]
+      .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`]);
   }
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
@@ -482,8 +572,10 @@ export class Inspector implements OnInit {
     return values.includes(book);
   }
 
-  updateCustomTranslation(input: HTMLInputElement, book: OldBook | NewBook, chapter: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     let customTranslation: AbstractHolyScriptureModel, customBook: ScriptureBook;
+    const book = this.book;
+    const chapter = this.chapter;
 
     if (lang === 'hebraic' && this.isOldBookGuard(book)) {
       customTranslation = this.customHebraicTranslation;

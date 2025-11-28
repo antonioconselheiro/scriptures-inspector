@@ -7,11 +7,7 @@
 
     @for (segment of segments; track $index) {
       @if (segment.type) {
-        <span [class]="'delimitation ' + segment.type"
-          [attr.data-start]="segment.start"
-          [attr.data-end]="segment.end">
-          <span class="delete" (click)="deleteDelimitation(segment)">×</span>
-          <span class="config" (click)="openConfig(verse, segment)">⚙</span>
+        <span [class]="'delimitation ' + segment.type">
           {{ segment.text }}
         </span>
 
