@@ -22,7 +22,6 @@ import { Translation } from './domain/translation-model';
 import { geezes } from './geezes';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
-import { LabelfyMetadataDelimitation } from './labelfy-metadata-delimitation/labelfy-metadata-delimitation';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
@@ -46,8 +45,7 @@ import { VersePipe } from './verse-pipe';
     TransliterationPipe,
     ReactiveFormsModule,
     AddPatternContextMenu,
-    AddPatternContextMenuTrigger,
-    LabelfyMetadataDelimitation
+    AddPatternContextMenuTrigger
   ],
   providers: [
     LiteralsStorage
@@ -300,31 +298,9 @@ export class Inspector implements OnInit {
       this.hebraicPatterns = this.literalsStorage.addHebraicPattern(option.word, option.type);
     } else if (option.lang === 'geez') {
       this.geezPatterns = this.literalsStorage.addGeezPattern(option.word, option.type);
-    }
-  }
-
-  //  FIXME: remover
-  onDelimitationDefined(option: {
-    lang: 'hebraic' | 'geez' | 'greek',
-    type: 'godsaid' | 'keyword' | 'quantitative',
-    book: OldBook | NewBook,
-    chapter: number,
-    verse: ScriptureVerse,
-    start: number,
-    end: number
-  }): void {
-    let custom: AbstractHolyScriptureModel;
-    if (option.lang === 'hebraic') {
-      custom = this.customHebraicTranslation;
-    } else if (option.lang === 'geez') {
-      custom = this.customGeezTranslation;
     } else if (option.lang === 'greek') {
-      custom = this.customGreekTranslation;
-    } else {
-      throw new Error(`language '${option.lang}' not found`);
+      this.greekPatterns = this.literalsStorage.addGreekPattern(option.word, option.type);
     }
-
-    this.saveCustomTranslation();
   }
 
   saveCustomTranslation(): void {

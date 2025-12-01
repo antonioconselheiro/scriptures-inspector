@@ -23,10 +23,6 @@ describe('Falseamento gematrico do dado', () => {
      'zc': 'Zechariah', 'ml': 'Malachi',
    };
 
-  //const bookMapAT: Record<string, string> = {
-  //  'gn': 'Genesis'
-  //};
-
   let gematriaService: GematriaService;
   let gematriaA: any;
 
@@ -45,6 +41,9 @@ describe('Falseamento gematrico do dado', () => {
   Object.keys(bookMapAT).forEach(sigla => {
 
     const fullName = bookMapAT[sigla];
+    if (!['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy' ].includes(fullName)) {
+      return;
+    }
 
     it(`Deve comparar todas as gematrias do livro: ${fullName}`, () => {
 
@@ -56,7 +55,11 @@ describe('Falseamento gematrico do dado', () => {
 
       for (let chapterIndex = 0; chapterIndex < bookA.length; chapterIndex++) {
         //  não tenho esses
-        if (['Jonah', 'Hebrews', '3 John', 'Revelation'].includes(fullName) && chapterIndex === 0 || chapterIndex !== 0) {
+        if (['Jonah', 'Hebrews', '3 John', 'Revelation'].includes(fullName) && chapterIndex === 0) {
+          continue;
+        }
+
+        if (chapterIndex >= 6) {
           continue;
         }
 

@@ -16,6 +16,9 @@ export class LiteralsStorage {
   private geezLiterals: Record<string, string> = {};
   private geezPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
+  private greekLiterals: Record<string, string> = {};
+  private greekPatterns: PatternsSerialized = { prefix: [], suffix: [] };
+
   private interlinearGeezHebraic: InterlinearGeezHebraic = ({} as any);
   private interlinearGeezGreek: InterlinearGeezGreek = ({} as any);
 
@@ -23,6 +26,9 @@ export class LiteralsStorage {
     try {
       this.hebraicLiterals = JSON.parse(localStorage.getItem('hebraicLiterals') || '{}');
       this.hebraicPatterns = JSON.parse(localStorage.getItem('hebraicPatterns') || JSON.stringify(this.hebraicPatterns));
+
+      this.greekLiterals = JSON.parse(localStorage.getItem('greekLiterals') || '{}');
+      this.greekPatterns = JSON.parse(localStorage.getItem('greekPatterns') || JSON.stringify(this.greekPatterns));
 
       this.geezLiterals = JSON.parse(localStorage.getItem('geezLiterals') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
@@ -42,6 +48,10 @@ export class LiteralsStorage {
     return this.geezLiterals;
   }
 
+  getGreekLiteral(): Record<string, string> {
+    return this.greekLiterals;
+  }
+
   addHebraicLiteral(hebrew: string, literal: string): void {
     this.hebraicLiterals[hebrew] = literal;
     localStorage.setItem('hebraicLiterals', JSON.stringify(this.hebraicLiterals));
@@ -50,6 +60,11 @@ export class LiteralsStorage {
   addGeezLiteral(geez: string, literal: string): void {
     this.geezLiterals[geez] = literal;
     localStorage.setItem('geezLiterals', JSON.stringify(this.geezLiterals));
+  }
+
+  addGreekLiteral(greek: string, literal: string): void {
+    this.greekLiterals[greek] = literal;
+    localStorage.setItem('greekLiterals', JSON.stringify(this.greekLiterals));
   }
 
   saveHebraicCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
@@ -72,6 +87,10 @@ export class LiteralsStorage {
     return this.getPattern(this.geezPatterns);
   }
 
+  getGreekPattern(): ParsedPatterns {
+    return this.getPattern(this.greekPatterns);
+  }
+
   private getPattern(fromPatterns: PatternsSerialized) {
     let prefix = new Map<string, RegExp>(fromPatterns.prefix.map(pattern => [pattern, new RegExp(`^${pattern}`)]));
     let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`${pattern}$`)]));
@@ -85,6 +104,10 @@ export class LiteralsStorage {
 
   addGeezPattern(word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
     return this.addPattern(this.geezPatterns, 'geezPatterns', word, type);
+  }
+
+  addGreekPattern(word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
+    return this.addPattern(this.greekPatterns, 'greekPatterns', word, type);
   }
 
   private addPattern(serialized: PatternsSerialized, storageKey: string, word: string, type: 'prefix' | 'suffix'): ParsedPatterns {
@@ -106,6 +129,10 @@ export class LiteralsStorage {
 
   deleteGeezPattern(type: 'prefix' | 'suffix', index: number): ParsedPatterns {
     return this.deletePattern('geezPatterns', type, this.geezPatterns, index);
+  }
+
+  deleteGreekPattern(type: 'prefix' | 'suffix', index: number): ParsedPatterns {
+    return this.deletePattern('greekPatterns', type, this.greekPatterns, index);
   }
 
   private deletePattern(storageKey: string, type: 'prefix' | 'suffix', patterns: PatternsSerialized, index: number): ParsedPatterns {

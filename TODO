@@ -1,6 +1,6 @@
 TODO
 
-[ ] - encontrar hebraico base com dados mais corretos (https://biblebento.com/index.html?bhs&10.1.1)
+[X] - encontrar hebraico base com dados mais corretos
 [ ] - validar gematria com falseamento
 [ ] - incluir gematria ordinal
 [ ] - header com barra de botões para configurações
@@ -19,7 +19,7 @@ TODO
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
 [ ] - salvar tradução personalizada com metadados, manifestar prisma
-[ ] - estruturar para o grego
+[ ] - estruturar para o grego, testar funcionamento com todos idiomas e interlineares
 [ ] - criar forma de importar e exportar o conteúdo trabalhado como um arquivo json
 [ ] - possibilitar leitura em paralelo de multiplas traduções
 [ ] - botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
