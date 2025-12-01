@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
 import { ParsedPatterns } from '../parsed-patterns';
-import { LiteralsStorage } from '../literals-storage';
+import { DocumentStorage } from '../document-storage';
 
 @Component({
   selector: 'app-dialog-patterns',
@@ -24,7 +24,7 @@ export class DialogPatterns extends ModalableDirective<{ lang: 'hebraic' | 'geez
   override response = new Subject<boolean | void>();
 
   constructor(
-    private literalsStorage: LiteralsStorage
+    private literalsStorage: DocumentStorage
   ) {
     super();
   }

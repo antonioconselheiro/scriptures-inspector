@@ -1,9 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
+import { DialogExtrapolations } from './dialog-extrapolations/dialog-extrapolations';
+import { DialogPatterns } from './dialog-patterns/dialog-patterns';
+import { DocumentStorage } from './document-storage';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
@@ -25,16 +30,11 @@ import { hebraics } from './hebraics';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LiteralsPipe } from './literals-pipe';
-import { LiteralsStorage } from './literals-storage';
 import { PaleoPipe } from './paleo-pipe';
 import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { ModalService } from '@belomonte/async-modal-ngx';
-import { DialogExtrapolations } from './dialog-extrapolations/dialog-extrapolations';
-import { DialogPatterns } from './dialog-patterns/dialog-patterns';
-import { DialogDictionary } from './dialog-dictionary/dialog-dictionary';
 
 @Component({
   selector: 'app-inspector',
@@ -46,13 +46,14 @@ import { DialogDictionary } from './dialog-dictionary/dialog-dictionary';
     GematricsPipe,
     LiteralsPipe,
     LiteralizatePipe,
+    AsyncModalModule,
     TransliterationPipe,
     ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger
   ],
   providers: [
-    LiteralsStorage
+    DocumentStorage
   ],
   templateUrl: './inspector.html',
   styleUrl: './inspector.scss'
@@ -88,7 +89,7 @@ export class Inspector implements OnInit {
   interlinearHebraicCustomTranslation: InterlinearHebraicCustomTranslation = {
     ...this.createOldTestmentObjectBase()
   };
-  
+
   interlinearGreekCustomTranslation: InterlinearGreekCustomTranslation = {
     ...this.createNewTestmentObjectBase()
   };
@@ -98,11 +99,11 @@ export class Inspector implements OnInit {
     ...this.createNewTestmentObjectBase()
   };
 
-  translation: Translation | null = null;
+  translations: Array<Translation> = [];
+  chapterTranslations: Array<Array<TranslationBookVerse>> = [];
   customHebraicTranslation!: OldTestmentScriptures;
   customGreekTranslation!: NewTestmentScriptures;
   customGeezTranslation!: HolyScriptureModel;
-  chapterTranslations: Array<TranslationBookVerse> = [];
 
   book: OldBook | NewBook = OldBook.GN;
   chapter = 0;
@@ -113,7 +114,7 @@ export class Inspector implements OnInit {
     private cd: ChangeDetectorRef,
     private modalService: ModalService,
     private activatedRoute: ActivatedRoute,
-    private literalsStorage: LiteralsStorage,
+    private documentStorage: DocumentStorage,
     private translationService: TranslationService,
     private literalsPatternsService: LiteralsPatternsService
   ) { }
@@ -123,12 +124,12 @@ export class Inspector implements OnInit {
     this.readPatterns();
     this.readInterlineares();
     this.subscribeParams();
-    this.subscribeTranslation();
   }
 
   private readPatterns(): void {
-    this.hebraicPatterns = this.literalsStorage.getHebraicPattern();
-    this.geezPatterns = this.literalsStorage.getGeezPattern();
+    this.hebraicPatterns = this.documentStorage.getHebraicPattern();
+    this.geezPatterns = this.documentStorage.getGeezPattern();
+    this.greekPatterns = this.documentStorage.getGreekPattern();
   }
 
   private readInterlineares(): void {
@@ -196,18 +197,25 @@ export class Inspector implements OnInit {
     });
   }
 
-  private subscribeTranslation(): void {
-    this.activatedRoute.data.subscribe({
-      next: params => {
-        this.translation = params['translation'];
-        this.updateChapterTranslation();
-      }
+  private updateChapterTranslation(): void {
+    this.chapterTranslations = this.translations.map(translation => {
+      return this.translationService.getChapter(translation, this.book, this.chapter);
     });
+    this.cd.detectChanges();
   }
 
-  private updateChapterTranslation(): void {
-    this.chapterTranslations = this.translationService.getChapter(this.translation, this.book, this.chapter);
-    this.cd.detectChanges();
+  loadTranslation(bible: string): void {
+    fetch(`https://antonioconselheiro.github.io/bible/src/${bible}`)
+      .then(res => res.json())
+      .then(translation => {
+        this.translations = [ ...this.translations, translation ];
+        this.updateChapterTranslation();
+      });
+  }
+
+  removeTranslationByIndex(index: number): void {
+    this.translations.splice(index, 1);
+    this.updateChapterTranslation();
   }
 
   private createNewTestmentObjectBase(): { [newBook in NewBook]: Array<any> } {
@@ -295,7 +303,7 @@ export class Inspector implements OnInit {
       })
       .build()
       .subscribe({
-        next: () => {}
+        next: () => { }
       });
   }
 
@@ -319,7 +327,7 @@ export class Inspector implements OnInit {
         })
         .build()
         .subscribe({
-          next: () => {}
+          next: () => { }
         });
     }
   }
@@ -333,7 +341,7 @@ export class Inspector implements OnInit {
       })
       .build()
       .subscribe({
-        next: () => {}
+        next: () => { }
       });
   }
 
@@ -343,18 +351,18 @@ export class Inspector implements OnInit {
     lang: "hebraic" | "geez" | "greek";
   }): void {
     if (option.lang === 'hebraic') {
-      this.hebraicPatterns = this.literalsStorage.addHebraicPattern(option.word, option.type);
+      this.hebraicPatterns = this.documentStorage.addHebraicPattern(option.word, option.type);
     } else if (option.lang === 'geez') {
-      this.geezPatterns = this.literalsStorage.addGeezPattern(option.word, option.type);
+      this.geezPatterns = this.documentStorage.addGeezPattern(option.word, option.type);
     } else if (option.lang === 'greek') {
-      this.greekPatterns = this.literalsStorage.addGreekPattern(option.word, option.type);
+      this.greekPatterns = this.documentStorage.addGreekPattern(option.word, option.type);
     }
   }
 
   saveCustomTranslation(): void {
-    this.literalsStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
-    this.literalsStorage.saveGeezCustomTranslation(this.customGreekTranslation);
-    this.literalsStorage.saveGreekCustomTranslation(this.customGeezTranslation);
+    this.documentStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
+    this.documentStorage.saveGeezCustomTranslation(this.customGreekTranslation);
+    this.documentStorage.saveGreekCustomTranslation(this.customGeezTranslation);
 
     this.customHebraicTranslation = { ...this.customHebraicTranslation };
     this.customGreekTranslation = { ...this.customGreekTranslation };
@@ -559,15 +567,15 @@ export class Inspector implements OnInit {
   }
 
   onChangeCustomTranslationHebraicInterlinear(value: string, book: OldBook, chapter: number, hebraicVerse: ScriptureVerse, index: number): void {
-    
+
   }
 
   onChangeCustomTranslationGreekInterlinear(value: string, book: OldBook | NewBook, chapter: number, greekVerse: ScriptureVerse, index: number): void {
-    
+
   }
 
   onChangeCustomTranslationGeezInterlinear(value: string, book: NewBook, chapter: number, geezVerse: ScriptureVerse, index: number): void {
-    
+
   }
 
   splitTextBySpacesAndPunctuation(value: string): string[] {
@@ -577,9 +585,9 @@ export class Inspector implements OnInit {
 
   updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
     if (lang === 'hebraic') {
-      this.literalsStorage.addHebraicLiteral(word, input.value);
+      this.documentStorage.addHebraicLexical(word, input.value);
     } else if (lang === 'geez') {
-      this.literalsStorage.addGeezLiteral(word, input.value);
+      this.documentStorage.addGeezLexical(word, input.value);
     }
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
@@ -628,11 +636,11 @@ export class Inspector implements OnInit {
     };
 
     if (lang === 'hebraic') {
-      this.literalsStorage.saveHebraicCustomTranslation(customTranslation);
+      this.documentStorage.saveHebraicCustomTranslation(customTranslation);
     } else if (lang === 'geez') {
-      this.literalsStorage.saveGeezCustomTranslation(customTranslation);
+      this.documentStorage.saveGeezCustomTranslation(customTranslation);
     } else if (lang === 'greek') {
-      this.literalsStorage.saveGreekCustomTranslation(customTranslation);
+      this.documentStorage.saveGreekCustomTranslation(customTranslation);
     }
   }
 }

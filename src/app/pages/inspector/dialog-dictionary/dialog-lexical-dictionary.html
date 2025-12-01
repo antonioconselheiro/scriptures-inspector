@@ -1,0 +1,16 @@
+<table border="1">
+
+  <tr>
+    <th>Word</th>
+    <th>Lexical</th>
+    <th></th>
+  </tr>
+
+  @for (lexical of getLexicalDictionary(); track $index) {
+    <tr>
+      <td>{{lexical.key}}</td>
+      <td>{{lexical.value}}</td>
+      <td>×</td>
+    </tr>
+  }
+</table>

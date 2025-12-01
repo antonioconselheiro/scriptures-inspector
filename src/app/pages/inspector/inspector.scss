@@ -16,6 +16,16 @@ header.tools > form {
   }
 }
 
+table[border="1"] {
+  margin: 1rem auto;
+}
+
+strong.verse-title {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+}
+
 .literalInput {
   min-width: 20px;
 }

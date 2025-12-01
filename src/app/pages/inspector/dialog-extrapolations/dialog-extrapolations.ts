@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
-import { LiteralsStorage } from '../literals-storage';
+import { DocumentStorage } from '../document-storage';
 import { ParsedPatterns } from '../parsed-patterns';
 
 @Component({
@@ -13,7 +13,7 @@ import { ParsedPatterns } from '../parsed-patterns';
   templateUrl: './dialog-extrapolations.html',
   styleUrl: './dialog-extrapolations.scss'
 })
-export class DialogExtrapolations extends ModalableDirective<object, ParsedPatterns> {
+export class DialogExtrapolations extends ModalableDirective<{ lang: 'hebraic' | 'geez' | 'greek' }, ParsedPatterns> {
   override response = new Subject<ParsedPatterns | void>();
 
   form: any;
@@ -21,11 +21,10 @@ export class DialogExtrapolations extends ModalableDirective<object, ParsedPatte
 
   constructor(
     fb: FormBuilder,
-    private literalsStorage: LiteralsStorage
+    private literalsStorage: DocumentStorage
   ){
     super();
     this.form = fb.group({
-      lang: ['hebraic', [Validators.required]],
       word: ['', [Validators.required]],
       type: ['prefix', [Validators.required]]
     });
