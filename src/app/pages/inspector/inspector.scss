@@ -6,6 +6,16 @@ th {
   min-width: 135px;
 }
 
+header.tools > form {
+  display: flex;
+  border: 1px solid;
+  padding: 10px;
+
+  button {
+    cursor: pointer;
+  }
+}
+
 .literalInput {
   min-width: 20px;
 }

@@ -1,0 +1,29 @@
+<table class="textCenter" border="1">
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Pattern</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="3">{{title[lang]}}</th>
+    </tr>
+    @for (pattern of patterns.prefix.keys(); track $index) {
+    <tr>
+      <td>prefix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('hebraic', 'prefix', $index, pattern)">🗙</a></td>
+    </tr>
+    }
+
+    @for (pattern of patterns.suffix.keys(); track $index) {
+    <tr>
+      <td>suffix</td>
+      <td>{{pattern}}</td>
+      <td><a (click)="deletePattern('hebraic', 'suffix', $index, pattern)">🗙</a></td>
+    </tr>
+    }
+  </tbody>
+</table>

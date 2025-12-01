@@ -31,6 +31,10 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { ModalService } from '@belomonte/async-modal-ngx';
+import { DialogExtrapolations } from './dialog-extrapolations/dialog-extrapolations';
+import { DialogPatterns } from './dialog-patterns/dialog-patterns';
+import { DialogDictionary } from './dialog-dictionary/dialog-dictionary';
 
 @Component({
   selector: 'app-inspector',
@@ -102,24 +106,17 @@ export class Inspector implements OnInit {
 
   book: OldBook | NewBook = OldBook.GN;
   chapter = 0;
-  form: any;
 
   pipeUpdaterController = 1;
 
   constructor(
-    fb: FormBuilder,
     private cd: ChangeDetectorRef,
+    private modalService: ModalService,
     private activatedRoute: ActivatedRoute,
     private literalsStorage: LiteralsStorage,
     private translationService: TranslationService,
     private literalsPatternsService: LiteralsPatternsService
-  ) {
-    this.form = fb.group({
-      lang: ['hebraic', [Validators.required]],
-      word: ['', [Validators.required]],
-      type: ['prefix', [Validators.required]]
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
     this.readCustomTranslation();
@@ -287,6 +284,57 @@ export class Inspector implements OnInit {
       'zc': [],
       'ml': []
     };
+  }
+
+  openDialogExtrapolation(lang: 'hebraic' | 'geez' | 'greek'): void {
+    this.modalService
+      .createModal(DialogExtrapolations)
+      .setOutletName('main')
+      .setData({
+        lang
+      })
+      .build()
+      .subscribe({
+        next: () => {}
+      });
+  }
+
+  openDialogPatterns(lang: 'hebraic' | 'geez' | 'greek'): void {
+    let patterns: ParsedPatterns | null = null;
+    if (lang === 'hebraic') {
+      patterns = this.hebraicPatterns
+    } else if (lang === 'geez') {
+      patterns = this.geezPatterns
+    } else if (lang === 'greek') {
+      patterns = this.greekPatterns
+    }
+
+    if (patterns) {
+      this.modalService
+        .createModal(DialogPatterns)
+        .setOutletName('main')
+        .setData({
+          lang,
+          patterns
+        })
+        .build()
+        .subscribe({
+          next: () => {}
+        });
+    }
+  }
+
+  openDialogDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
+    this.modalService
+      .createModal(DialogDictionary)
+      .setOutletName('main')
+      .setData({
+        lang
+      })
+      .build()
+      .subscribe({
+        next: () => {}
+      });
   }
 
   onAddPattern(option: {
@@ -585,27 +633,6 @@ export class Inspector implements OnInit {
       this.literalsStorage.saveGeezCustomTranslation(customTranslation);
     } else if (lang === 'greek') {
       this.literalsStorage.saveGreekCustomTranslation(customTranslation);
-    }
-  }
-
-  onPatternFormSubmit(): void {
-    if (this.form.valid) {
-      const { type, value } = this.form.value;
-      this.hebraicPatterns = this.literalsStorage.addHebraicPattern(value, type);
-
-      this.form.reset();
-    } else {
-      this.form.markAllAsTouched();
-    }
-  }
-
-  deletePattern(lang: 'hebraic' | 'geez' | 'greek', type: 'prefix' | 'suffix', index: number, key: string): void {
-    if (lang === 'hebraic') {
-      this.literalsStorage.deleteHebraicPattern(type, index);
-      this.hebraicPatterns[type].delete(key);
-    } else if (lang === 'geez') {
-      this.literalsStorage.deleteGeezPattern(type, index);
-      this.geezPatterns[type].delete(key);
     }
   }
 }

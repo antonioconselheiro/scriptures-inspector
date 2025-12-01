@@ -1,97 +1,36 @@
+<header class="tools">
+  <form>
+    <fieldset>
+      <legend>Create word extrapolation</legend>
+
+      <button type="button" (click)="openDialogExtrapolation('hebraic')">Hebraic</button>
+      <button type="button" (click)="openDialogExtrapolation('geez')">Ge'əz</button>
+      <button type="button" (click)="openDialogExtrapolation('greek')">Greek</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Patterns</legend>
+
+      <button type="button" (click)="openDialogPatterns('hebraic')">Hebraic</button>
+      <button type="button" (click)="openDialogPatterns('geez')">Ge'əz</button>
+      <button type="button" (click)="openDialogPatterns('greek')">Greek</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Lexical</legend>
+
+      <button type="button" (click)="openDialogDictionary('hebraic')">Hebraic</button>
+      <button type="button" (click)="openDialogDictionary('geez')">Ge'əz</button>
+      <button type="button" (click)="openDialogDictionary('greek')">Greek</button>
+    </fieldset>
+
+  </form>
+</header>
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
 @if (isOldBookGuard(book)) {
 
   @let hebraicVerses = hebraics[book][chapter];
-  
-  <form [formGroup]="form" (ngSubmit)="onPatternFormSubmit()">
-    <fieldset>
-      <legend>Create word extrapolation</legend>
-  
-      <div>
-        <label for="lang">Lang</label>
-        <select id="lang" formControlName="lang">
-          <option selected value="hebraic">Hebraic</option>
-          <option value="geez">Geez</option>
-          <option value="greek">Greek</option>
-        </select>
-        @if (form.get('lang')?.invalid && form.get('lang')?.touched) {
-        <small class="error">Lang is required</small>
-        }
-      </div>
-  
-      <div>
-        <label for="word">Word</label>
-        <input id="word" type="text" formControlName="word" placeholder="word" />
-        @if (form.get('word')?.invalid && form.get('word')?.touched) {
-        <small class="error">Word value is required</small>
-        }
-      </div>
-  
-      <div>
-        <label for="type">Type</label>
-        <select id="type" formControlName="type">
-          <option selected value="prefix">Prefix</option>
-          <option value="suffix">Suffix</option>
-        </select>
-        @if (form.get('type')?.invalid && form.get('type')?.touched) {
-        <small class="error">Type selection is required</small>
-        }
-      </div>
-  
-      <button type="submit" [disabled]="form.invalid">Create</button>
-    </fieldset>
-  </form>
-  
-  <table class="textCenter" border="1">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Pattern</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th colspan="3">Hebraic</th>
-      </tr>
-      @for (pattern of hebraicPatterns.prefix.keys(); track $index) {
-      <tr>
-        <td>prefix</td>
-        <td>{{pattern}}</td>
-        <td><a (click)="deletePattern('hebraic', 'prefix', $index, pattern)">🗙</a></td>
-      </tr>
-      }
-  
-      @for (pattern of hebraicPatterns.suffix.keys(); track $index) {
-      <tr>
-        <td>suffix</td>
-        <td>{{pattern}}</td>
-        <td><a (click)="deletePattern('hebraic', 'suffix', $index, pattern)">🗙</a></td>
-      </tr>
-      }
-  
-      <tr>
-        <th colspan="3">Ge'əz</th>
-      </tr>
-  
-      @for (pattern of geezPatterns.prefix.keys(); track $index) {
-      <tr>
-        <td>prefix</td>
-        <td>{{pattern}}</td>
-        <td><a (click)="deletePattern('geez', 'prefix', $index, pattern)">🗙</a></td>
-      </tr>
-      }
-  
-      @for (pattern of geezPatterns.suffix.keys(); track $index) {
-      <tr>
-        <td>suffix</td>
-        <td>{{pattern}}</td>
-        <td><a (click)="deletePattern('geez', 'suffix', $index, pattern)">🗙</a></td>
-      </tr>
-      }
-    </tbody>
-  </table>
   
   @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
   @let hebraic = hebraicVerse.text.split(' ');

@@ -1,0 +1,38 @@
+  <form [formGroup]="form" (ngSubmit)="onPatternFormSubmit()">
+    <fieldset>
+      <legend>Create word extrapolation</legend>
+  
+      <div>
+        <label for="lang">Lang</label>
+        <select id="lang" formControlName="lang">
+          <option selected value="hebraic">Hebraic</option>
+          <option value="geez">Geez</option>
+          <option value="greek">Greek</option>
+        </select>
+        @if (form.get('lang')?.invalid && form.get('lang')?.touched) {
+        <small class="error">Lang is required</small>
+        }
+      </div>
+  
+      <div>
+        <label for="word">Word</label>
+        <input id="word" type="text" formControlName="word" placeholder="word" />
+        @if (form.get('word')?.invalid && form.get('word')?.touched) {
+        <small class="error">Word value is required</small>
+        }
+      </div>
+  
+      <div>
+        <label for="type">Type</label>
+        <select id="type" formControlName="type">
+          <option selected value="prefix">Prefix</option>
+          <option value="suffix">Suffix</option>
+        </select>
+        @if (form.get('type')?.invalid && form.get('type')?.touched) {
+        <small class="error">Type selection is required</small>
+        }
+      </div>
+  
+      <button type="submit" [disabled]="form.invalid">Create</button>
+    </fieldset>
+  </form>
