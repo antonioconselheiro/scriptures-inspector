@@ -1,18 +1,27 @@
-a {
-  cursor: pointer;
+:host {
+  margin-top: 5rem;
+  display: block;
 }
 
 th {
   min-width: 135px;
 }
 
-header.tools > form {
-  display: flex;
-  border: 1px solid;
-  padding: 10px;
+header.tools {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  background: #f8f8f8;
+  box-shadow: gray 0 0 15px;
 
-  button {
-    cursor: pointer;
+  > form {
+    display: flex;
+    border: 1px solid;
+    padding: 10px;
+
+    button {
+      cursor: pointer;
+    }
   }
 }
 

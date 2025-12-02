@@ -24,13 +24,13 @@ export class DocumentStorage {
 
   constructor() {
     try {
-      this.hebraicLexical = JSON.parse(localStorage.getItem('hebraicLiterals') || '{}');
+      this.hebraicLexical = JSON.parse(localStorage.getItem('hebraicLexical') || '{}');
       this.hebraicPatterns = JSON.parse(localStorage.getItem('hebraicPatterns') || JSON.stringify(this.hebraicPatterns));
 
-      this.greekLexical = JSON.parse(localStorage.getItem('greekLiterals') || '{}');
+      this.greekLexical = JSON.parse(localStorage.getItem('greekLexical') || '{}');
       this.greekPatterns = JSON.parse(localStorage.getItem('greekPatterns') || JSON.stringify(this.greekPatterns));
 
-      this.geezLexical = JSON.parse(localStorage.getItem('geezLiterals') || '{}');
+      this.geezLexical = JSON.parse(localStorage.getItem('geezLexical') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
 
       this.interlinearGeezHebraic = JSON.parse(localStorage.getItem('interlinearGeezHebraic') || JSON.stringify(this.interlinearGeezHebraic));

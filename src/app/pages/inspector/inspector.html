@@ -207,7 +207,7 @@
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      @let literal = word.word | literals : 'hebraic' : pipeUpdaterController;
+      @let literal = word.word | lexical : 'hebraic' : pipeUpdaterController;
       <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #field
         [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLiteral(field, word.word, 'hebraic')"
         [value]="literal" />
@@ -349,7 +349,7 @@
     @for (sentence of eachGeezMatriz; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      @let literal = word.word | literals : 'geez' : pipeUpdaterController;
+      @let literal = word.word | lexical : 'geez' : pipeUpdaterController;
       <input type="text" [name]="'fieldGeez' + word.index" [placeholder]="word.word" #field
         [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLiteral(field, word.word, 'geez')"
         [value]="literal" />

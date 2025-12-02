@@ -29,7 +29,7 @@ import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
-import { LiteralsPipe } from './literals-pipe';
+import { LexicalPipe } from './literals-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
@@ -45,7 +45,7 @@ import { VersePipe } from './verse-pipe';
     PaleoPipe,
     VersePipe,
     GematricsPipe,
-    LiteralsPipe,
+    LexicalPipe,
     LiteralizatePipe,
     AsyncModalModule,
     TransliterationPipe,
@@ -336,7 +336,11 @@ export class Inspector implements OnInit {
       })
       .build()
       .subscribe({
-        next: () => { }
+        next: patterns => {
+          if (patterns) {
+
+          }
+        }
       });
   }
 
@@ -360,7 +364,7 @@ export class Inspector implements OnInit {
         })
         .build()
         .subscribe({
-          next: () => { }
+          next: () => this.readPatterns()
         });
     }
   }
@@ -374,7 +378,7 @@ export class Inspector implements OnInit {
       })
       .build()
       .subscribe({
-        next: () => { }
+        next: () => this.readInterlineares()
       });
   }
 
