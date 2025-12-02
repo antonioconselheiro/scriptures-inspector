@@ -133,6 +133,7 @@ export class Inspector implements OnInit {
     this.readPatterns();
     this.readInterlineares();
     this.subscribeParams();
+    this.readSelectedParalelTranslation();
   }
 
   private readPatterns(): void {
@@ -159,6 +160,12 @@ export class Inspector implements OnInit {
 
       }
     }
+  }
+
+  private readSelectedParalelTranslation(): void {
+    const paralels: Array<string> = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
+    localStorage.setItem('paralelTranslations', '[]');
+    paralels.forEach(translation => this.loadTranslation(translation));
   }
 
   private readCustomTranslation(): void {
@@ -214,6 +221,12 @@ export class Inspector implements OnInit {
   }
 
   loadTranslation(bible: string): void {
+    const paralels = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
+    if (paralels.includes(bible)) {
+      return;
+    }
+
+    localStorage.setItem('paralelTranslations', JSON.stringify([...paralels, bible]));
     fetch(`https://antonioconselheiro.github.io/bible/src/${bible}`)
       .then(res => res.json())
       .then(translation => {
@@ -223,7 +236,11 @@ export class Inspector implements OnInit {
   }
 
   removeTranslationByIndex(index: number): void {
+    const paralels = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
     this.translations.splice(index, 1);
+    paralels.splice(index, 1);
+
+    localStorage.setItem('paralelTranslations', JSON.stringify(paralels));
     this.updateChapterTranslation();
   }
 
@@ -389,17 +406,16 @@ export class Inspector implements OnInit {
   go(): void {
     if (this.selectedBook && this.selectedChapter) {
       this.router.navigate([
-    '/book',
-    this.selectedBook,
-    'chapter',
-    this.selectedChapter + 1
-  ]);
+        '/book',
+        this.selectedBook,
+        'chapter',
+        this.selectedChapter + 1
+      ]);
 
     }
   }
 
-
-  next() {
+  next(): void {
     const book = this.activatedRoute.snapshot.paramMap.get('book');
     const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
 
