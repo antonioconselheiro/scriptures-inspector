@@ -116,6 +116,7 @@ export class Inspector implements OnInit {
   currentBook: OldBook | NewBook = OldBook.GN;
   currentChapter = 0;
 
+  minimized = true;
   pipeUpdaterController = 1;
 
   constructor(

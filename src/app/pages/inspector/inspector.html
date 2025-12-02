@@ -1,4 +1,4 @@
-<header class="tools">
+<header [class.minimized]="minimized" class="tools">
   <form>
     <fieldset>
       <legend>Translation</legend>
@@ -135,6 +135,9 @@
       <button type="button" (click)="openDialogDictionary('greek')">Greek</button>
     </fieldset>
 
+    <div class="sidebuttons">
+      <button (click)="minimized = !minimized" class="minimize" type="button">▲</button>
+    </div>
   </form>
 </header>
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
