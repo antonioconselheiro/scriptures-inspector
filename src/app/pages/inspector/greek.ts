@@ -1,0 +1,1 @@
+import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';

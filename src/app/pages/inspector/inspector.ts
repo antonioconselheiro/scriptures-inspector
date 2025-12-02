@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
@@ -41,6 +41,7 @@ import { VersePipe } from './verse-pipe';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     PaleoPipe,
     VersePipe,
     GematricsPipe,
@@ -48,7 +49,6 @@ import { VersePipe } from './verse-pipe';
     LiteralizatePipe,
     AsyncModalModule,
     TransliterationPipe,
-    ReactiveFormsModule,
     AddPatternContextMenu,
     AddPatternContextMenuTrigger
   ],
@@ -62,6 +62,11 @@ export class Inspector implements OnInit {
 
   readonly hebraics = hebraics;
   readonly geezes = geezes;
+
+  readonly bibleChaptersAmount: { [abrev: string]: number } = {
+    "gn": 50, "ex": 40, "lv": 27, "nm": 36, "dt": 34, "js": 24, "jz": 21, "rt": 4, "1sm": 31, "2sm": 24, "1rs": 22, "2rs": 25, "1cr": 29, "2cr": 36, "ed": 10, "ne": 13, "et": 10, "jo": 42, "sl": 150, "pv": 31, "ec": 12, "ct": 8, "is": 66, "jr": 52, "lm": 5, "ez": 48, "dn": 12, "os": 14, "jl": 3, "am": 9, "ob": 1, "jn": 4, "mq": 7, "na": 3, "hc": 3, "sf": 3, "ag": 2, "zc": 14, "ml": 4,
+    "mt": 28, "mc": 16, "lc": 24, "joao": 21, "atos": 28, "rm": 16, "1co": 16, "2co": 13, "gl": 6, "ef": 6, "fp": 4, "cl": 4, "1ts": 5, "2ts": 3, "1tm": 6, "2tm": 4, "tt": 3, "fm": 1, "hb": 13, "tg": 5, "1pe": 5, "2pe": 3, "1jo": 5, "2jo": 1, "3jo": 1, "jd": 1, "ap": 22
+  };
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),
@@ -105,12 +110,16 @@ export class Inspector implements OnInit {
   customGreekTranslation!: NewTestmentScriptures;
   customGeezTranslation!: HolyScriptureModel;
 
-  book: OldBook | NewBook = OldBook.GN;
-  chapter = 0;
+  selectedBook: string = '';
+  selectedChapter: number | null = null;
+
+  currentBook: OldBook | NewBook = OldBook.GN;
+  currentChapter = 0;
 
   pipeUpdaterController = 1;
 
   constructor(
+    private router: Router,
     private cd: ChangeDetectorRef,
     private modalService: ModalService,
     private activatedRoute: ActivatedRoute,
@@ -190,8 +199,8 @@ export class Inspector implements OnInit {
   private subscribeParams(): void {
     this.activatedRoute.params.subscribe({
       next: params => {
-        this.book = params['book'];
-        this.chapter = Number(params['chapter']) - 1;
+        this.selectedBook = this.currentBook = params['book'];
+        this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
         this.updateChapterTranslation();
       }
     });
@@ -199,7 +208,7 @@ export class Inspector implements OnInit {
 
   private updateChapterTranslation(): void {
     this.chapterTranslations = this.translations.map(translation => {
-      return this.translationService.getChapter(translation, this.book, this.chapter);
+      return this.translationService.getChapter(translation, this.currentBook, this.currentChapter);
     });
     this.cd.detectChanges();
   }
@@ -208,7 +217,7 @@ export class Inspector implements OnInit {
     fetch(`https://antonioconselheiro.github.io/bible/src/${bible}`)
       .then(res => res.json())
       .then(translation => {
-        this.translations = [ ...this.translations, translation ];
+        this.translations = [...this.translations, translation];
         this.updateChapterTranslation();
       });
   }
@@ -216,6 +225,12 @@ export class Inspector implements OnInit {
   removeTranslationByIndex(index: number): void {
     this.translations.splice(index, 1);
     this.updateChapterTranslation();
+  }
+
+  getChapters(): number[] {
+    if (!this.selectedBook) return [];
+    const count = this.bibleChaptersAmount[this.selectedBook];
+    return Array.from({ length: count }, (_, i) => i + 1);
   }
 
   private createNewTestmentObjectBase(): { [newBook in NewBook]: Array<any> } {
@@ -371,15 +386,44 @@ export class Inspector implements OnInit {
     this.cd.detectChanges();
   }
 
+  go(): void {
+    if (this.selectedBook && this.selectedChapter) {
+      this.router.navigate([
+    '/book',
+    this.selectedBook,
+    'chapter',
+    this.selectedChapter + 1
+  ]);
+
+    }
+  }
+
+
+  next() {
+    const book = this.activatedRoute.snapshot.paramMap.get('book');
+    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
+
+    if (!book || !chapter) return;
+
+    const nextChapter = chapter + 1;
+
+    this.router.navigate([
+      '/book',
+      book,
+      'chapter',
+      nextChapter
+    ]);
+  }
+
   getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: ScriptureVerse): ScriptureVerse | null {
-    return custom[this.book] && custom[this.book][this.chapter] && custom[this.book][this.chapter][verse.verse.index];
+    return custom[this.currentBook] && custom[this.currentBook][this.currentChapter] && custom[this.currentBook][this.currentChapter][verse.verse.index];
   }
 
   //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
   getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): Array<ScriptureVerse> {
     const verses = new Array<ScriptureVerse>();
-    for (let index = 0; index < this.geezes[this.book][this.chapter].length; index++) {
-      const geezVerse = this.geezes[this.book][this.chapter][index];
+    for (let index = 0; index < this.geezes[this.currentBook][this.currentChapter].length; index++) {
+      const geezVerse = this.geezes[this.currentBook][this.currentChapter][index];
 
       if (
         Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.start) && Number(hebraicVerse.verse.start) <= Number(geezVerse.verse.end) ||
@@ -424,12 +468,12 @@ export class Inspector implements OnInit {
   }
 
   getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {
-    if (!this.isOldBookGuard(this.book)) {
+    if (!this.isOldBookGuard(this.currentBook)) {
       return '';
     }
 
     try {
-      const interlinear = this.interlinearGeezHebraic[this.book][this.chapter][Number(geezVerse)][geezWordIndex];
+      const interlinear = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][Number(geezVerse)][geezWordIndex];
       if (interlinear) {
         return `${interlinear.origin.index}-${interlinear.origin.word}`;
       }
@@ -452,19 +496,19 @@ export class Inspector implements OnInit {
     const hebraicVerseNumber = Number(hebraicVerse.verse.start);
     const geezVerseNumber = Number(geezVerse.verse.start);
 
-    if (!this.isOldBookGuard(this.book)) {
+    if (!this.isOldBookGuard(this.currentBook)) {
       return;
     }
 
-    if (!this.interlinearGeezHebraic[this.book][this.chapter]) {
-      this.interlinearGeezHebraic[this.book][this.chapter] = [];
+    if (!this.interlinearGeezHebraic[this.currentBook][this.currentChapter]) {
+      this.interlinearGeezHebraic[this.currentBook][this.currentChapter] = [];
     }
 
-    if (!this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber]) {
-      this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber] = [];
+    if (!this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber]) {
+      this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber] = [];
     }
 
-    this.interlinearGeezHebraic[this.book][this.chapter][geezVerseNumber][geezIndex] = {
+    this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber][geezIndex] = {
       origin: {
         verse: hebraicVerseNumber,
         index: hebraicIndex,
@@ -482,75 +526,75 @@ export class Inspector implements OnInit {
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isOldBookGuard(this.book)) {
+    if (!this.isOldBookGuard(this.currentBook)) {
       return '';
     }
 
     //  FIXME: revisar comportamento para versiculos compostos
     const verseNumber = Number(geezVerse.verse.start);
     if (
-      !this.interlinearGeezHebraic[this.book] ||
-      !this.interlinearGeezHebraic[this.book][this.chapter] ||
-      !this.interlinearGeezHebraic[this.book][this.chapter][verseNumber] ||
-      !this.interlinearGeezHebraic[this.book][this.chapter][verseNumber][wordIndex]
+      !this.interlinearGeezHebraic[this.currentBook] ||
+      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter] ||
+      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber] ||
+      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearGeezHebraic[this.book][this.chapter][verseNumber][wordIndex];
+    const map = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
   getCustomTranslationFromHebraicColor(verse: ScriptureVerse, wordIndex: number): string {
     const verseNumber = Number(verse.verse.start);
     if (
-      !this.interlinearGeezCustomTranslation[this.book] ||
-      !this.interlinearGeezCustomTranslation[this.book][this.chapter] ||
-      !this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber] ||
-      !this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+      !this.interlinearGeezCustomTranslation[this.currentBook] ||
+      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter] ||
+      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
+      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearGeezCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    const map = this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
   getCustomTranslationFromGeezColor(verse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isOldBookGuard(this.book)) {
+    if (!this.isOldBookGuard(this.currentBook)) {
       return '';
     }
 
     const verseNumber = Number(verse.verse.start);
     if (
-      !this.interlinearHebraicCustomTranslation[this.book] ||
-      !this.interlinearHebraicCustomTranslation[this.book][this.chapter] ||
-      !this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber] ||
-      !this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+      !this.interlinearHebraicCustomTranslation[this.currentBook] ||
+      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter] ||
+      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
+      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearHebraicCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    const map = this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
   getCustomTranslationFromGreekColor(verse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isNewBookGuard(this.book)) {
+    if (!this.isNewBookGuard(this.currentBook)) {
       return '';
     }
 
     const verseNumber = Number(verse.verse.start);
     if (
-      !this.interlinearGreekCustomTranslation[this.book] ||
-      !this.interlinearGreekCustomTranslation[this.book][this.chapter] ||
-      !this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber] ||
-      !this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber][wordIndex]
+      !this.interlinearGreekCustomTranslation[this.currentBook] ||
+      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter] ||
+      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
+      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearGreekCustomTranslation[this.book][this.chapter][verseNumber][wordIndex];
+    const map = this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -606,8 +650,8 @@ export class Inspector implements OnInit {
 
   updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     let customTranslation: AbstractHolyScriptureModel, customBook: ScriptureBook;
-    const book = this.book;
-    const chapter = this.chapter;
+    const book = this.currentBook;
+    const chapter = this.currentChapter;
 
     if (lang === 'hebraic' && this.isOldBookGuard(book)) {
       customTranslation = this.customHebraicTranslation;

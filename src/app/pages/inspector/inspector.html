@@ -3,22 +3,32 @@
     <fieldset>
       <legend>Translation</legend>
       <select #bibleTranslation name="bible-translation" placeholder="Translation">
-        <option></option>
-        <option value="bible-pt-aa.json">Almeida Atualizada (AA)</option>
-        <option value="bible-pt-acf.json">Almeida Corrigida Fiel (ACF)</option>
-        <option value="bible-pt-kja.json">King James Atualizada (KJA)</option>
-        <option value="bible-pt-nvi.json">Nova Versão Internacional (NVI)</option>
-        <option value="bible-pt-tb.json">Tradução Brasileira (TB)</option>
-        <option value="bible-pt-vc.json">Versão Católica (VC)</option>
+        <optgroup label="Normal">
+          <option></option>
+          <option value="bible-pt-aa.json">Almeida Atualizada</option>
+          <option value="bible-pt-acf.json">Almeida Corrigida Fiel</option>
+          <option value="bible-pt-kja.json">King James Atualizada</option>
+          <option value="bible-pt-nvi.json">Nova Versão Internacional</option>
+          <option value="bible-pt-tb.json">Tradução Brasileira</option>
+          <option value="bible-pt-vc.json">Versão Católica</option>
+        </optgroup>
+        <optgroup label="Gringo">
+          <option value="bible-la-vulgata.json">Vulgata</option>
+          <option value="bible-en-kjv.json">King James version</option>
+          <option value="bible-el-greek.json">Grego moderno</option>
+          <option value="bible-es-rv.json">Reina Valera</option>
+          <option value="bible-zh-cuv-s.json">中文联盟版简体</option>
+          <option value="bible-zh-cuv.json">中國聯合版</option>
+        </optgroup>
       </select>
 
       <button (click)="loadTranslation(bibleTranslation.value); bibleTranslation.value = ''" type="button">+</button>
     </fieldset>
 
     <fieldset>
-      <legend>Verse</legend>
+      <legend>Change chapter</legend>
 
-      <select placeholder="Book">
+      <select name="selectedBook" placeholder="Book" [(ngModel)]="selectedBook">
         <optgroup label="Old Testament">
           <option value="gn">Genesis</option>
           <option value="ex">Exodus</option>
@@ -91,9 +101,14 @@
         </optgroup>
       </select>
 
-      <select placeholder="Chapter">
-        <option></option>
+      <select name="selectedChapter" [(ngModel)]="selectedChapter">
+        @for (chapter of getChapters(); track $index) {
+        <option [value]="chapter - 1">{{ chapter }}</option>
+        }
       </select>
+
+      <button type="button" (click)="go()">Go</button>
+      <button type="button" (click)="next()">Next</button>
     </fieldset>
 
     <fieldset>
@@ -124,16 +139,16 @@
 </header>
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
-@if (isOldBookGuard(book)) {
+@if (isOldBookGuard(currentBook)) {
 
-@let hebraicVerses = hebraics[book][chapter];
+@let hebraicVerses = hebraics[currentBook][currentChapter];
 
 @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
 @let hebraic = hebraicVerse.text.split(' ');
 @let eachHebraicWord = splitIntoMatrix(hebraicVerse.text, 'hebraic');
 @let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
-<strong class="verse-title">{{book}}, {{chapter + 1}}:{{hebraicVerse | verse}}</strong>
+<strong class="verse-title">{{currentBook}}, {{currentChapter + 1}}:{{hebraicVerse | verse}}</strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>
@@ -278,7 +293,7 @@
     @for (sentence of splitedCustomTranslation; track $index) {
     <td>
       <select #interlinearHebraicCustomTranslationEl
-        (change)="onChangeCustomTranslationHebraicInterlinear(interlinearHebraicCustomTranslationEl.value, book, chapter, hebraicVerse, $index)">
+        (change)="onChangeCustomTranslationHebraicInterlinear(interlinearHebraicCustomTranslationEl.value, currentBook, currentChapter, hebraicVerse, $index)">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {
