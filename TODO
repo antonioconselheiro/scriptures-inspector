@@ -10,7 +10,7 @@ TODO
 [ ] - baixar tradução geez para comparação
 [ ] - separar versiculos em páginas para evitar muitos ciclos de renderização na interação
 [ ] - listar os patterns do hebraics para associar com a tradução customizada
-[ ] - criar botão "atualizar com interlinear" para que o custom translation seja substituido pelo conteúdo do interlinear incluindo a relação com o original
+[ ] - criar botão "completar do lexico interlinear" para que o custom translation seja substituido pelo conteúdo do interlinear incluindo a relação com o original
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
 [ ] - salvar tradução personalizada com metadados, manifestar prisma

@@ -6,7 +6,6 @@ import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
-import { DialogExtrapolations } from './dialog-extrapolations/dialog-extrapolations';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
@@ -325,23 +324,6 @@ export class Inspector implements OnInit {
       'zc': [],
       'ml': []
     };
-  }
-
-  openDialogExtrapolation(lang: 'hebraic' | 'geez' | 'greek'): void {
-    this.modalService
-      .createModal(DialogExtrapolations)
-      .setOutletName('main')
-      .setData({
-        lang
-      })
-      .build()
-      .subscribe({
-        next: patterns => {
-          if (patterns) {
-
-          }
-        }
-      });
   }
 
   openDialogPatterns(lang: 'hebraic' | 'geez' | 'greek'): void {
