@@ -1,6 +1,5 @@
-import { NewBook } from './new-book-enum';
-import { ScriptureBook } from './scripture-book-model';
+import { AbstractCodice } from './abstract-codice-model';
+import { AbstractScriptureVerse } from './abstract-scripture-verse-model';
+import { NewTestamentBooksUnion } from './new-testament-books-union';
 
-export type NewTestmentScriptures = {
-  [newBook in NewBook]: ScriptureBook
-}
+export type NewTestmentScriptures = AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<{ text: string }>>;

@@ -1,5 +1,5 @@
-import { NewBook } from "./new-book-enum";
-import { OldBook } from "./old-book-enum";
+import { NewBook } from "./new-testament-books-union";
+import { OldBook } from "./old-testament-books-union";
 import { TranslationInterlinearVerse } from "./translation-interlinear-verse-model";
 
 export type InterlinearGeezCustomTranslation = {

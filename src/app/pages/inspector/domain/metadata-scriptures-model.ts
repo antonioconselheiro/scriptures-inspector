@@ -1,11 +1,10 @@
 import { ScriptureVerseMetadata } from "./scripture-verse-metadata-model"
 
-export type ScriptureVerse = {
+Array<Array<{
   verse: {
     index: number,
     start: `${number}`,
     end: `${number}`
   },
-  metadata?: Array<ScriptureVerseMetadata>,
-  text: string
-}
+  metadata?: ScriptureVerseMetadata
+}>>

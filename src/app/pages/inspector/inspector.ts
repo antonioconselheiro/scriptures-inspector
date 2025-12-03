@@ -15,16 +15,16 @@ import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-custom-translation-model';
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
-import { NewBook } from './domain/new-book-enum';
+import { NewBook } from './domain/new-testament-books-union';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
-import { OldBook } from './domain/old-book-enum';
+import { OldBook } from './domain/old-testament-books-union';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { ScriptureBook } from './domain/scripture-book-model';
+import { AbstractScriptureBook } from './domain/abstract-scripture-book-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
 import { geezes } from './geezes';
-import { greek } from './greek';
+import { greeks } from './greeks';
 import { GematricsPipe } from './gematrics-pipe';
 import { hebraics } from './hebraics';
 import { LiteralizatePipe } from './literalizate-pipe';
@@ -63,7 +63,7 @@ export class Inspector implements OnInit {
 
   readonly hebraics = hebraics;
   readonly geezes = geezes;
-  readonly greek = greek;
+  readonly greek = greeks;
 
   readonly bibleChaptersAmount = bibleMetadata;
 
@@ -115,6 +115,7 @@ export class Inspector implements OnInit {
   currentBook: OldBook | NewBook = OldBook.GN;
   currentChapter = 0;
 
+  showLegend = false;
   minimized = true;
   pipeUpdaterController = 1;
 
@@ -630,15 +631,21 @@ export class Inspector implements OnInit {
       .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`]);
   }
 
-  updateLiteral(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
+  updateLexical(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
     if (lang === 'hebraic') {
       this.documentStorage.addHebraicLexical(word, input.value);
     } else if (lang === 'geez') {
       this.documentStorage.addGeezLexical(word, input.value);
+    } else if (lang === 'greek') {
+      this.documentStorage.addGreekLexical(word, input.value);
     }
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
+  }
+
+  updateLexicalMetadata(input: HTMLSelectElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
+
   }
 
   isOldBookGuard(book: OldBook | NewBook): book is OldBook {
@@ -652,7 +659,7 @@ export class Inspector implements OnInit {
   }
 
   updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    let customTranslation: AbstractHolyScriptureModel, customBook: ScriptureBook;
+    let customTranslation: AbstractHolyScriptureModel, customBook: AbstractScriptureBook;
     const book = this.currentBook;
     const chapter = this.currentChapter;
 

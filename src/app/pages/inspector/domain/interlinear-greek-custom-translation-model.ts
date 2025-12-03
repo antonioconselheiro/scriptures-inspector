@@ -1,4 +1,4 @@
-import { NewBook } from "./new-book-enum";
+import { NewBook } from "./new-testament-books-union";
 import { TranslationInterlinearVerse } from "./translation-interlinear-verse-model";
 
 export type InterlinearGreekCustomTranslation = {

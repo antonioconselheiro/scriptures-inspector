@@ -35,6 +35,27 @@ strong.verse-title {
   margin-top: 1rem;
 }
 
+.legendBox {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.legendBox table {
+  border-collapse: collapse;
+}
+
+.legendBox table th,
+.legendBox table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
 .sidebuttons {
   display: flex;
   flex: 1 1 0px;
