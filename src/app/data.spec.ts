@@ -13,8 +13,8 @@ describe('Falseamento gematrico do dado', () => {
 
    const bookMapAT: Record<string, string> = {
      'gn': 'Genesis', 'ex': 'Exodus', 'lv': 'Leviticus', 'nm': 'Numbers', 'dt': 'Deuteronomy',
-     'js': 'Joshua', 'jz': 'Judges', 'rt': 'Ruth', '1sm': '1 Samuel', '2sm': '2 Samuel',
-     '1rs': '1 Kings', '2rs': '2 Kings', '1cr': '1 Chronicles', '2cr': '2 Chronicles',
+     'js': 'Joshua', 'jz': 'Judges', 'rt': 'Ruth', '1sm': '1Samuel', '2sm': '2Samuel',
+     '1rs': '1Kings', '2rs': '2Kings', '1cr': '1Chronicles', '2cr': '2Chronicles',
      'ed': 'Ezra', 'ne': 'Nehemiah', 'et': 'Esther', 'jo': 'Job', 'sl': 'Psalms',
      'pv': 'Proverbs', 'ec': 'Ecclesiastes', 'ct': 'Song of Solomon', 'is': 'Isaiah',
      'jr': 'Jeremiah', 'lm': 'Lamentations', 'ez': 'Ezekiel', 'dn': 'Daniel',

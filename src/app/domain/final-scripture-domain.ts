@@ -39,7 +39,8 @@ export type OldTestamentBookList =
   'Zacarias' |
   'Malaquias';
 
-export type NewTestamentBookList = 'Mateus' |
+export type NewTestamentBookList =
+  'Mateus' |
   'Marcos' |
   'Lucas' |
   'Joao' |
