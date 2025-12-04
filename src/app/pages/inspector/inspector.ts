@@ -5,27 +5,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { bookMetadata } from './book-metadata';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
+import { AbstractScriptureBook } from './domain/abstract-scripture-book-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-custom-translation-model';
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
-import { NewBook } from './domain/new-testament-books-union';
+import { newTestamentBookList } from './domain/new-testament-books-list';
+import { NewTestamentBooksUnion } from './domain/new-testament-books-union';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
-import { OldBook } from './domain/old-testament-books-union';
+import { oldTestamentBookList } from './domain/old-testament-books-list';
+import { OldTestamentBooksUnion } from './domain/old-testament-books-union';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { AbstractScriptureBook } from './domain/abstract-scripture-book-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
 import { geezes } from './geezes';
-import { greeks } from './greeks';
 import { GematricsPipe } from './gematrics-pipe';
+import { greeks } from './greeks';
 import { hebraics } from './hebraics';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
@@ -35,7 +38,6 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { bookMetadata } from './book-metadata';
 
 @Component({
   selector: 'app-inspector',
@@ -112,7 +114,7 @@ export class Inspector implements OnInit {
   selectedBook: string = '';
   selectedChapter: number | null = null;
 
-  currentBook: OldBook | NewBook = OldBook.GN;
+  currentBook: OldTestamentBooksUnion | NewTestamentBooksUnion = 'GEN';
   currentChapter = 0;
 
   showLegend = false;
@@ -251,79 +253,79 @@ export class Inspector implements OnInit {
     return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
   }
 
-  private createNewTestmentObjectBase(): { [newBook in NewBook]: Array<any> } {
+  private createOldTestmentObjectBase(): { [oldBook in OldTestamentBooksUnion]: Array<any> } {
     return {
-      'mt': [],
-      'mc': [],
-      'lc': [],
-      'joao': [],
-      'atos': [],
-      'rm': [],
-      '1co': [],
-      '2co': [],
-      'gl': [],
-      'ef': [],
-      'fp': [],
-      'cl': [],
-      '1ts': [],
-      '2ts': [],
-      '1tm': [],
-      '2tm': [],
-      'tt': [],
-      'fm': [],
-      'hb': [],
-      'tg': [],
-      '1pe': [],
-      '2pe': [],
-      '1jo': [],
-      '2jo': [],
-      '3jo': [],
-      'jd': [],
-      'ap': []
+      'GEN': [],
+      'EXO': [],
+      'LEV': [],
+      'NUM': [],
+      'DEU': [],
+      'JOS': [],
+      'JUI': [],
+      'RUT': [],
+      '1SM': [],
+      '2SM': [],
+      '1RS': [],
+      '2RS': [],
+      '1CR': [],
+      '2CR': [],
+      '1ED': [],
+      '2ED': [],
+      '1ET': [],
+      'JOB': [],
+      'SAL': [],
+      'PRO': [],
+      'ECL': [],
+      'CAN': [],
+      'ISA': [],
+      'JE1': [],
+      'JE2': [],
+      'EZE': [],
+      'DA1': [],
+      'OSE': [],
+      'JOE': [],
+      'AMO': [],
+      'OBA': [],
+      'JON': [],
+      'MIQ': [],
+      'NAU': [],
+      'HAB': [],
+      'SOF': [],
+      'AGE': [],
+      'ZAC': [],
+      'MAL': []
     };
   }
 
-  private createOldTestmentObjectBase(): { [oldBook in OldBook]: Array<any> } {
+  private createNewTestmentObjectBase(): { [newBook in NewTestamentBooksUnion]: Array<any> } {
     return {
-      'gn': [],
-      'ex': [],
-      'lv': [],
-      'nm': [],
-      'dt': [],
-      'js': [],
-      'jz': [],
-      'rt': [],
-      '1sm': [],
-      '2sm': [],
-      '1rs': [],
-      '2rs': [],
-      '1cr': [],
-      '2cr': [],
-      'ed': [],
-      'ne': [],
-      'et': [],
-      'jo': [],
-      'sl': [],
-      'pv': [],
-      'ec': [],
-      'ct': [],
-      'is': [],
-      'jr': [],
-      'lm': [],
-      'ez': [],
-      'dn': [],
-      'os': [],
-      'jl': [],
-      'am': [],
-      'ob': [],
-      'jn': [],
-      'mq': [],
-      'na': [],
-      'hc': [],
-      'sf': [],
-      'ag': [],
-      'zc': [],
-      'ml': []
+      'MAT': [],
+      'MAR': [],
+      'LUC': [],
+      'JOA': [],
+      'ATO': [],
+      'ROM': [],
+      '1CO': [],
+      '2CO': [],
+      'GAL': [],
+      'EFE': [],
+      'FIL': [],
+      'COL': [],
+      '1TS': [],
+      '2TS': [],
+      '1TM': [],
+      '2TM': [],
+      'TIT': [],
+      'FLM': [],
+      'HEB': [],
+      'TIA': [],
+      '1PE': [],
+      '2PE': [],
+      '1JO': [],
+      '2JO': [],
+      '3JO': [],
+      'JUD': [],
+      'APO': []
     };
   }
 
@@ -614,15 +616,15 @@ export class Inspector implements OnInit {
     return 'GodName';
   }
 
-  onChangeCustomTranslationHebraicInterlinear(value: string, book: OldBook, chapter: number, hebraicVerse: ScriptureVerse, index: number): void {
+  onChangeCustomTranslationHebraicInterlinear(value: string, book: OldTestamentBooksUnion, chapter: number, hebraicVerse: ScriptureVerse, index: number): void {
 
   }
 
-  onChangeCustomTranslationGreekInterlinear(value: string, book: OldBook | NewBook, chapter: number, greekVerse: ScriptureVerse, index: number): void {
+  onChangeCustomTranslationGreekInterlinear(value: string, book: OldTestamentBooksUnion | NewTestamentBooksUnion, chapter: number, greekVerse: ScriptureVerse, index: number): void {
 
   }
 
-  onChangeCustomTranslationGeezInterlinear(value: string, book: NewBook, chapter: number, geezVerse: ScriptureVerse, index: number): void {
+  onChangeCustomTranslationGeezInterlinear(value: string, book: NewTestamentBooksUnion, chapter: number, geezVerse: ScriptureVerse, index: number): void {
 
   }
 
@@ -648,18 +650,16 @@ export class Inspector implements OnInit {
 
   }
 
-  isOldBookGuard(book: OldBook | NewBook): book is OldBook {
-    const values: string[] = Object.values(OldBook);
-    return values.includes(book);
+  isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {
+    return (oldTestamentBookList as string[]).includes(book);
   }
 
-  isNewBookGuard(book: OldBook | NewBook): book is NewBook {
-    const values: string[] = Object.values(NewBook);
-    return values.includes(book);
+  isNewBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is NewTestamentBooksUnion {
+    return (newTestamentBookList as string[]).includes(book);
   }
 
   updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    let customTranslation: AbstractHolyScriptureModel, customBook: AbstractScriptureBook;
+    let customTranslation: AbstractHolyScriptureModel, customBook: AbstractScriptureBook<ScriptureVerse>;
     const book = this.currentBook;
     const chapter = this.currentChapter;
 

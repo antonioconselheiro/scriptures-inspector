@@ -5,6 +5,7 @@ export const bookMetadata: {
     gringo: string,
     testament: 'global' | 'old' | 'new',
     type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher' | 'treasure'>,
+    oldestLanguageFound?: 'aramaic' | 'hebraic' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'english';
     language: {
       aramaic?: boolean,
       hebraic?: boolean,
@@ -41,7 +42,7 @@ export const bookMetadata: {
     normal: 'Testamento de Adão',
     gringo: 'Testament of Adam',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
       greek: true
@@ -52,7 +53,7 @@ export const bookMetadata: {
       ethiopian: false,
       essenes: false,
       syriac: true,
-      copta: true,
+      copta: false,
       helenism: true
     }
   },
@@ -61,7 +62,7 @@ export const bookMetadata: {
     normal: 'Testamento de Sete',
     gringo: 'Testament of Set',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
       greek: true
@@ -72,15 +73,16 @@ export const bookMetadata: {
       ethiopian: false,
       essenes: false,
       syriac: true,
-      copta: true,
+      copta: false,
       helenism: true
     }
   },
-  '1EN': {
+  'ENO': {
     chapters: 0,
     normal: 'Enoque',
     gringo: 'Enoch',
     testament: 'old',
+    oldestLanguageFound: 'geez',
     type: ['history', 'prophecy'],
     language: {
       hebraic: true,
@@ -99,7 +101,7 @@ export const bookMetadata: {
     normal: 'Testamento de Noé',
     gringo: 'Testament of Noah',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
       greek: true
@@ -110,7 +112,7 @@ export const bookMetadata: {
       ethiopian: false,
       essenes: false,
       syriac: true,
-      copta: true,
+      copta: false,
       helenism: true
     }
   },
@@ -119,7 +121,7 @@ export const bookMetadata: {
     normal: 'Mequisedeque',
     gringo: 'Mechizedek',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'hebraic',
     language: {
       hebraic: true
     },
@@ -130,7 +132,7 @@ export const bookMetadata: {
       essenes: true
     }
   },
-  'GAB': { // 1Q20
+  'GAB': { // 1Q20, pesquisar Gênesis eslavo de Abraão
     chapters: 0,
     normal: 'Gênesis de Abraão',
     gringo: 'Genesis of Abraham',
@@ -146,7 +148,7 @@ export const bookMetadata: {
       essenes: true
     }
   },
-  'AAB': {
+  'AAB': { // parece que a versão original é em eslavo e não em syriaco
     chapters: 0,
     normal: 'Apocalipse de Abraão',
     gringo: 'Apocalipse of Abraham',
@@ -168,9 +170,10 @@ export const bookMetadata: {
     normal: 'Testamento de Abraão',
     gringo: 'Testament of Abraham',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'greek',
     language: {
-      copta: true
+      copta: true,
+      greek: true
     },
     codice: {
       ocidental: false,
@@ -181,7 +184,6 @@ export const bookMetadata: {
       helenism: true
     }
   },
-
   'TIS': {
     chapters: 0,
     normal: 'Testamento de Isaque',
@@ -226,6 +228,7 @@ export const bookMetadata: {
     gringo: 'Testament of Levi',
     testament: 'old',
     type: [],
+    oldestLanguageFound: 'greek',
     language: {
       greek: true
     },
@@ -243,7 +246,7 @@ export const bookMetadata: {
     normal: 'Testamento de José',
     gringo: 'Testament of Joseph',
     testament: 'old',
-    type: [],
+    oldestLanguageFound: 'greek',
     language: {
       greek: true
     },
@@ -759,8 +762,9 @@ export const bookMetadata: {
     normal: 'Salmos de Salomão',
     gringo: 'Psalms of Solomon',
     testament: 'old',
+    oldestLanguageFound: 'greek',
     language: {
-      hebraic: true
+      greek: true
     },
     codice: {
       ethiopian: false,
@@ -791,6 +795,7 @@ export const bookMetadata: {
     normal: 'Odes de Salomão',
     gringo: 'Odes of Solomon',
     testament: 'old',
+    oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
       greek: true,
@@ -801,6 +806,7 @@ export const bookMetadata: {
       ocidental: false,
       septuaginta: false,
       essenes: false,
+      copta: false,
       syriac: true
     }
   },
@@ -892,7 +898,9 @@ export const bookMetadata: {
     normal: 'Eclesiástico - Sirácida',
     gringo: 'Ecclesiasticus - Sirach',
     testament: 'old',
+    oldestLanguageFound: 'hebraic',
     language: {
+      hebraic: true,
       geez: true,
       greek: true
     },
@@ -982,6 +990,7 @@ export const bookMetadata: {
       greek: true
     },
     codice: {
+      essenes: false,
       ethiopian: true,
       ocidental: false,
       septuaginta: true,
@@ -999,6 +1008,7 @@ export const bookMetadata: {
       greek: true
     },
     codice: {
+      essenes: false,
       ethiopian: false,
       ocidental: false,
       septuaginta: false,
@@ -1025,7 +1035,7 @@ export const bookMetadata: {
     }
   },
   'JE2': {
-    chapters: 5,
+    chapters: 0,
     normal: 'Lamentações de Jeremias',
     gringo: 'Lamentations of Jeremiah',
     testament: 'old',
@@ -1042,7 +1052,7 @@ export const bookMetadata: {
     }
   },
   'JE3': {
-    chapters: 5,
+    chapters: 0,
     normal: 'Carta de Jeremias',
     gringo: 'Letter of Jeremiah',
     testament: 'old',
@@ -1128,22 +1138,22 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'ZED': { // 4Q 256–260
-    chapters: 0,
-    normal: 'Apocalipse de Zedequias',
-    gringo: 'Apocalipse of Zedekiah',
-    testament: 'old',
-    type: [],
-    language: {
-      hebraic: true
-    },
-    codice: {
-      ocidental: false,
-      septuaginta: false,
-      ethiopian: false,
-      essenes: true
-    }
-  },
+  // 'ZED': { // 4Q 256–260?
+  //   chapters: 0,
+  //   normal: 'Apocalipse de Zedequias',
+  //   gringo: 'Apocalipse of Zedekiah',
+  //   testament: 'old',
+  //   type: [],
+  //   language: {
+  //     hebraic: true
+  //   },
+  //   codice: {
+  //     ocidental: false,
+  //     septuaginta: false,
+  //     ethiopian: false,
+  //     essenes: true
+  //   }
+  // },
   'OSE': {
     chapters: 14,
     normal: 'Oseias',
@@ -1643,9 +1653,9 @@ export const bookMetadata: {
     gringo: 'Corpus Hermeticum',
     testament: 'global',
     type: ['sapiential'],
+    oldestLanguageFound: 'greek',
     language: {
-      greek: true,
-      copta: true
+      greek: true
     },
     codice: {
       essenes: false,
@@ -2083,7 +2093,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'mt': {
+  'MAT': {
     chapters: 28,
     normal: 'Mateus',
     gringo: 'Matthew',
@@ -2100,7 +2110,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'mc': {
+  'MAR': {
     chapters: 16,
     normal: 'Marcos',
     gringo: 'Mark',
@@ -2117,7 +2127,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'lc': {
+  'LUC': {
     chapters: 24,
     normal: 'Lucas',
     gringo: 'Luke',
@@ -2184,7 +2194,7 @@ export const bookMetadata: {
       essenes: false
     }
   },
-  'rm': {
+  'ROM': {
     chapters: 16,
     normal: 'Romanos',
     gringo: 'Romans',
@@ -2244,6 +2254,7 @@ export const bookMetadata: {
     gringo: '3 Corinthians',
     testament: 'new',
     type: ['letter'],
+    oldestLanguageFound: 'greek',
     language: {
       geez: true,
       syriac: true,
@@ -2257,7 +2268,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'gl': {
+  'GAL': {
     chapters: 6,
     normal: 'Galatas',
     gringo: 'Galatians',
@@ -2275,7 +2286,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'ef': {
+  'EFE': {
     chapters: 6,
     normal: 'Efesios',
     gringo: 'Ephesians',
@@ -2293,7 +2304,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'fp': {
+  'FIL': {
     chapters: 4,
     normal: 'Filipenses',
     gringo: 'Philippians',
@@ -2311,7 +2322,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'cl': {
+  'COL': {
     chapters: 4,
     normal: 'Colossenses',
     gringo: 'Colossians',
@@ -2401,7 +2412,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'tt': {
+  'TIT': {
     chapters: 3,
     normal: 'Tito',
     gringo: 'Titus',
@@ -2419,7 +2430,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'fm': {
+  'FLM': {
     chapters: 1,
     normal: 'Filemom',
     gringo: 'Philemon',
@@ -2437,7 +2448,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'hb': {
+  'HEB': {
     chapters: 13,
     normal: 'Hebreus',
     gringo: 'Hebrews',
@@ -2473,7 +2484,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  '1TG': {
+  'TIA': {
     chapters: 5,
     normal: '1 Tiago',
     gringo: '1 James',
@@ -2489,24 +2500,6 @@ export const bookMetadata: {
       septuaginta: false,
       essenes: false,
       copta: true
-    }
-  },
-  '2TG': {
-    chapters: 0,
-    normal: '2 Tiago',
-    gringo: '2 James',
-    testament: 'new',
-    type: ['letter'],
-    language: {
-      copta: true
-    },
-    codice: {
-      ethiopian: false,
-      ocidental: false,
-      septuaginta: false,
-      essenes: false,
-      copta: false,
-      sethian: true
     }
   },
   '1PE': {
@@ -2599,7 +2592,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'jd': {
+  'JUD': {
     chapters: 1,
     normal: 'Judas',
     gringo: 'Jude',
@@ -2791,7 +2784,7 @@ export const bookMetadata: {
       essenes: false
     }
   },
-  'ap': {
+  'APO': {
     chapters: 22,
     normal: 'Apocalipse de João',
     gringo: 'Apocalipse of John',
