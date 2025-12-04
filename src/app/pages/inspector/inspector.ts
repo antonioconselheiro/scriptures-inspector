@@ -367,8 +367,8 @@ export class Inspector implements OnInit {
 
   onAddPattern(option: {
     word: string;
-    type: "prefix" | "suffix";
-    lang: "hebraic" | "geez" | "greek";
+    type: 'prefix' | 'suffix';
+    lang: 'hebraic' | 'geez' | 'greek';
   }): void {
     if (option.lang === 'hebraic') {
       this.hebraicPatterns = this.documentStorage.addHebraicPattern(option.word, option.type);

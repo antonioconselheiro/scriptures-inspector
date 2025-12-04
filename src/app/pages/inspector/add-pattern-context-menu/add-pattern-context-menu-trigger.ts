@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import { Directive, HostListener, Input } from '@angular/core';
 import { AddPatternContextMenu } from './add-pattern-context-menu';
 
 @Directive({
@@ -10,7 +10,7 @@ export class AddPatternContextMenuTrigger {
   contextMenu!: AddPatternContextMenu;
 
   @Input('lang')
-  lang!: "hebraic" | "geez" | "greek";
+  lang!: 'hebraic' | 'geez' | 'greek';
 
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {
