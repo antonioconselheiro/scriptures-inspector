@@ -35,7 +35,7 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { bibleMetadata } from './bible-metadata';
+import { bookMetadata } from './book-metadata';
 
 @Component({
   selector: 'app-inspector',
@@ -65,7 +65,7 @@ export class Inspector implements OnInit {
   readonly geezes = geezes;
   readonly greek = greeks;
 
-  readonly bibleChaptersAmount = bibleMetadata;
+  readonly bibleChaptersAmount = bookMetadata;
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),

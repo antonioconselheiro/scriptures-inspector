@@ -1,15 +1,16 @@
-export const bibleMetadata: {
+export const bookMetadata: {
   [abrev: string]: {
     chapters: number,
     normal: string,
     gringo: string,
     testament: 'global' | 'old' | 'new',
-    type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher'>,
+    type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher' | 'treasure'>,
     language: {
       aramaic?: boolean,
       hebraic?: boolean,
       geez?: boolean,
       syriac?: boolean,
+      arabic?: boolean,
       latim?: boolean,
       greek?: boolean,
       copta?: boolean,
@@ -19,7 +20,6 @@ export const bibleMetadata: {
       pahlavi?: boolean,
       english?: boolean
     },
-
     codice: {
       ocidental: boolean,
       septuaginta: boolean,
@@ -36,13 +36,54 @@ export const bibleMetadata: {
     }
   }
 } = {
-  'ENO': {
+  'TAD': {
+    chapters: 0,
+    normal: 'Testamento de Adão',
+    gringo: 'Testament of Adam',
+    testament: 'old',
+    type: [],
+    language: {
+      syriac: true,
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      syriac: true,
+      copta: true,
+      helenism: true
+    }
+  },
+  'TST': {
+    chapters: 0,
+    normal: 'Testamento de Sete',
+    gringo: 'Testament of Set',
+    testament: 'old',
+    type: [],
+    language: {
+      syriac: true,
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      syriac: true,
+      copta: true,
+      helenism: true
+    }
+  },
+  '1EN': {
     chapters: 0,
     normal: 'Enoque',
     gringo: 'Enoch',
     testament: 'old',
     type: ['history', 'prophecy'],
     language: {
+      hebraic: true,
       aramaic: true,
       geez: true
     },
@@ -51,6 +92,26 @@ export const bibleMetadata: {
       septuaginta: false,
       ethiopian: true,
       essenes: true
+    }
+  },
+  'TNO': {
+    chapters: 0,
+    normal: 'Testamento de Noé',
+    gringo: 'Testament of Noah',
+    testament: 'old',
+    type: [],
+    language: {
+      syriac: true,
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      syriac: true,
+      copta: true,
+      helenism: true
     }
   },
   'MQS': { // 11Q, 11Q13
@@ -109,7 +170,99 @@ export const bibleMetadata: {
     testament: 'old',
     type: [],
     language: {
-      greek: true,
+      copta: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      copta: true,
+      helenism: true
+    }
+  },
+
+  'TIS': {
+    chapters: 0,
+    normal: 'Testamento de Isaque',
+    gringo: 'Testament of Isaac',
+    testament: 'old',
+    type: [],
+    language: {
+      copta: true,
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      copta: true,
+      helenism: true
+    }
+  },
+  'TIR': {
+    chapters: 0,
+    normal: 'Testamento de Israel', // Testamento de Jacó
+    gringo: 'Testament of Israel',
+    testament: 'old',
+    type: [],
+    language: {
+      copta: true,
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      copta: true,
+      helenism: true
+    }
+  },
+  'TLV': {
+    chapters: 0,
+    normal: 'Testamento de Levi',
+    gringo: 'Testament of Levi',
+    testament: 'old',
+    type: [],
+    language: {
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      copta: true,
+      helenism: true
+    }
+  },
+  'TJS': {
+    chapters: 0,
+    normal: 'Testamento de José',
+    gringo: 'Testament of Joseph',
+    testament: 'old',
+    type: [],
+    language: {
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      copta: true,
+      helenism: true
+    }
+  },
+  'TDP': {
+    chapters: 0,
+    normal: 'Testamento dos Doze Patriarcas',
+    gringo: 'Testament of Twelve Patriarchs',
+    testament: 'old',
+    type: [],
+    language: {
       copta: true
     },
     codice: {
@@ -135,6 +288,22 @@ export const bibleMetadata: {
       septuaginta: false,
       ethiopian: true,
       essenes: true
+    }
+  },
+  'AMS': {
+    chapters: 0,
+    normal: 'Assunção de Moisés', // testamento de moisés, apocalipse de moisés
+    gringo: 'Ascension of Moses',
+    testament: 'old',
+    language: {
+      greek: true,
+      syriac: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false
     }
   },
   'GEN': {
@@ -378,6 +547,55 @@ export const bibleMetadata: {
       ethiopian: true
     }
   },
+  '1EL': {
+    chapters: 0,
+    normal: 'Assunção de Elias',
+    gringo: 'Ascension of Elijah',
+    testament: 'old',
+    language: {
+      greek: true,
+      syriac: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      helenism: true
+    }
+  },
+  '2EL': { // 4Q541–545
+    chapters: 0,
+    normal: 'Apocalipse de Elias',
+    gringo: 'Apocalipse of Elijah',
+    testament: 'old',
+    language: {
+      hebraic: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: true
+    }
+  },
+  '3EL': {
+    chapters: 0,
+    normal: 'Testamento de Elias',
+    gringo: 'Testament of Elijah',
+    testament: 'old',
+    language: {
+      greek: true,
+      hebraic: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      helenism: true
+    }
+  },
   '1ED': {
     chapters: 10,
     normal: 'Esdras',
@@ -424,6 +642,14 @@ export const bibleMetadata: {
       septuaginta: true,
       ethiopian: true
     }
+  },
+  'ZOR': { // 4Q371–372
+    chapters: 0,
+    normal: "Zorobabel",
+    gringo: "Zorobabel",
+    testament: "old",
+    language: { hebraic: true },
+    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   '1ET': {
     chapters: 10,
@@ -473,6 +699,25 @@ export const bibleMetadata: {
       ocidental: true,
       septuaginta: true,
       copta: true
+    }
+  },
+  'TDV': {
+    chapters: 0,
+    normal: 'Testamento de Davi',
+    gringo: 'Testament of David',
+    testament: 'old',
+    type: [],
+    language: {
+      greek: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      syriac: false,
+      copta: true,
+      helenism: true
     }
   },
   'SAL': {
@@ -593,7 +838,29 @@ export const bibleMetadata: {
       essenes: false
     }
   },
-
+  'TSL': {
+    chapters: 0,
+    normal: 'Testamento de Salomão',
+    gringo: 'Testament of Solomon',
+    testament: 'old',
+    type: [],
+    language: {
+      greek: true,
+      arabic: true,
+      latim: true,
+      copta: true,
+      syriac: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: false,
+      syriac: true,
+      copta: false,
+      helenism: true
+    }
+  },
   'SES': { // 4Q417, 4Q418, 4Q419, Q4Instructions
     chapters: 0,
     normal: "Sabedoria dos Essênios",
@@ -704,10 +971,10 @@ export const bibleMetadata: {
       ethiopian: false
     }
   },
-  'BAR': {
+  'BA1': {
     chapters: 0,
-    normal: 'Baruque',
-    gringo: 'Baruc',
+    normal: '1 Baruque',
+    gringo: '1 Baruc',
     testament: 'old',
     language: {
       geez: true,
@@ -719,6 +986,23 @@ export const bibleMetadata: {
       ocidental: false,
       septuaginta: true,
       copta: true
+    }
+  },
+  'BA2': {
+    chapters: 0,
+    normal: '2 Baruque',
+    gringo: '2 Baruc',
+    testament: 'old',
+    language: {
+      latim: true,
+      syriac: true,
+      greek: true
+    },
+    codice: {
+      ethiopian: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false
     }
   },
   'JE1': {
@@ -842,6 +1126,22 @@ export const bibleMetadata: {
       ocidental: false,
       septuaginta: true,
       copta: true
+    }
+  },
+  'ZED': { // 4Q 256–260
+    chapters: 0,
+    normal: 'Apocalipse de Zedequias',
+    gringo: 'Apocalipse of Zedekiah',
+    testament: 'old',
+    type: [],
+    language: {
+      hebraic: true
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: false,
+      ethiopian: false,
+      essenes: true
     }
   },
   'OSE': {
@@ -1320,7 +1620,24 @@ export const bibleMetadata: {
       persian: true
     }
   },
-  'HER': {
+  '1HR': {
+    chapters: 0,
+    normal: 'Tábua de Esmeralda',
+    gringo: 'Emerald Tablet',
+    testament: 'global',
+    language: {
+      arabic: true
+    },
+    codice: {
+      essenes: false,
+      ethiopian: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false
+    }
+  },
+  '2HR': {
     chapters: 17,
     normal: 'Corpus Hermeticum',
     gringo: 'Corpus Hermeticum',
@@ -1354,10 +1671,11 @@ export const bibleMetadata: {
       ocidental: false,
       septuaginta: false,
       copta: false,
-      sethian: false
+      sethian: false,
+      helenism: true
     }
   },
-  'NAT': {
+  'HRC': {
     chapters: 0,
     normal: 'Sobre a Natureza de Heráclito',
     gringo: 'On Nature of Heraclitus',
@@ -1375,6 +1693,40 @@ export const bibleMetadata: {
       sethian: false
     }
   },
+
+  'PLT': {
+    chapters: 13,
+    normal: 'Platão',
+    gringo: 'Plato',
+    testament: 'global',
+    type: ['sapiential'],
+    language: {
+      greek: true
+    },
+    codice: {
+      essenes: false,
+      ethiopian: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: true
+    }
+  },
+
+// A República (Politeia)
+// Leis (Nomoi)
+// O Político (Politikos)
+// Sofista (Sophistes)
+// Timeu (Timaeus)
+// Parmênides (Parmenides)
+// Fédon (Phaedo)
+// Sofista (Sophistes) e Teeteto (Theaetetus)
+// Banquete (Symposium)
+// Fedro (Phaedrus)
+// Mênon (Meno)
+// Górgias (Gorgias)
+// Protágoras (Protagoras)
+
   'CRI': {
     chapters: 0,
     normal: 'Sobre o Universo de Crisipo',
@@ -1648,6 +2000,16 @@ export const bibleMetadata: {
     normal: "Halacá",
     gringo: "Halakhah",
     testament: "old",
+    language: { hebraic: true },
+    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+  },
+
+  'PCU': { // 3Q15
+    chapters: 0,
+    normal: "Pergaminho de Cobre",
+    gringo: "Copper Scroll",
+    testament: "old",
+    type: [ "treasure" ],
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
@@ -2414,7 +2776,7 @@ export const bibleMetadata: {
       bizantine: true
     }
   },
-  'dds': {
+  'DDS': {
     chapters: 0,
     normal: 'Didascália',
     gringo: 'Didascalia',
@@ -2480,59 +2842,3 @@ export const bibleMetadata: {
     }
   }
 }
-
-
-/**
- * incluir pergaminho de cobre de quram
- * 
- * 
-
-incluir literatura testamentaria:
-Texto	Personagem / Autor Tradicional	Conteúdo principal	Idioma de preservação	Tradição / Contexto
-Testamento de Abraão	Abraão	Últimas palavras, visão do céu, juízo, recompensa/punição	Grego (fragmentos), Cópcia (códices completos)	Judaísmo apocalíptico / helenístico
-Testamento de Isaque	Isaque	Conselhos morais a Jacó e Esaú, bênçãos e previsões	Grego / Cópcia	Testamental patriarcal, judaísmo helenístico
-Testamento de Jacó	Jacó	Exortações a seus filhos; previsões sobre as tribos de Israel	Grego / Cópcia	Testamental patriarcal, judaísmo helenístico
-Testamento de Levi	Levi	Ênfase sacerdotal; instruções religiosas e éticas aos descendentes	Hebraico (fragmentos), Grego	Testamental patriarcal, judaísmo sacerdotal
-Testamento de Judá / Simeão / Benjamim / Naphtali / Zebulon	Patriarcas menores	Conselhos éticos, instruções religiosas e profecias	Grego / Cópcia	Testamental patriarcal, judaísmo helenístico
-Testamento de José	José do Egito	Conselhos éticos, visão profética do futuro de Israel	Grego / fragmentos	Literatura testamentária patriarcal, judaísmo helenístico
-Testamento de Moisés (ou Assunção de Moisés)	Moisés	Últimas instruções, bênçãos, visões apocalípticas	Grego / fragmentos siríacos	Judaísmo apocalíptico, pós-bíblico
-Testamento de Davi	Rei Davi	Últimos conselhos a Salomão; instruções sobre templo e justiça	Grego / fragmentos copta	Literatura apócrifa judaica / tradição sapiencial
-Testamentos de Adão, Set e Noé	Patriarcas antediluvianos	Exortações éticas, instruções escatológicas, visões celestiais	Hebraico / Grego / Siríaco	Literatura apocalíptica e sapiencial, tradição do Segundo Templo
-
-
-
- * incluir textos platonicos:
- * 1. Filosofia política e ética
-
-A República (Politeia) – Discussão sobre justiça, a natureza da cidade ideal e a teoria das formas; apresenta o mito da caverna.
-
-Leis (Nomoi) – Último diálogo de Platão, sobre a criação de leis e regras para uma sociedade prática.
-
-O Político (Politikos) – Debate sobre a natureza do governante ideal e a organização da cidade.
-
-Sofista (Sophistes) – Explora o conceito de sofista e a distinção entre aparência e realidade.
-
-2. Metafísica e epistemologia
-
-Timeu (Timaeus) – Cosmologia e origem do universo; introduz a ideia de demiurgo (criador divino).
-
-Parmênides (Parmenides) – Críticas à teoria das formas e discussão sobre unidade e multiplicidade.
-
-Fédon (Phaedo) – Imortalidade da alma, vida após a morte e argumentos filosóficos sobre a alma.
-
-Sofista (Sophistes) e Teeteto (Theaetetus) – Teorias do conhecimento e da realidade.
-
-3. Amor e estética
-
-Banquete (Symposium) – Reflexão sobre o amor (eros), beleza e o papel do desejo na filosofia.
-
-Fedro (Phaedrus) – Amor, retórica, alma e a arte de escrever; também discute a imortalidade da alma.
-
-4. Educação e dialética
-
-Mênon (Meno) – A natureza da virtude e o conceito de conhecimento como reminiscência.
-
-Górgias (Gorgias) – Debate sobre retórica, poder e ética.
-
-Protágoras (Protagoras) – Discussão sobre virtude e se ela pode ser ensinada.
- */
