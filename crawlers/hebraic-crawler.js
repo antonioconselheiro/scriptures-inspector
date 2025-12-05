@@ -6,6 +6,12 @@ const livros = [
   { sigla: 'DEU', capitulos: 34 },
   { sigla: 'JOS', capitulos: 24 },
   { sigla: 'JDG', capitulos: 21 },
+  { sigla: '1SA', capitulos: 31 },
+  { sigla: '2SA', capitulos: 24 },
+  { sigla: '1KI', capitulos: 22 },
+  { sigla: '2KI', capitulos: 25 },
+  { sigla: '1CH', capitulos: 29 },
+  { sigla: '2CH', capitulos: 36 },
   { sigla: 'ISA', capitulos: 66 },
   { sigla: 'JER', capitulos: 52 },
   { sigla: 'EZK', capitulos: 48 },
@@ -48,7 +54,6 @@ async function fetchWithRetry(url, delay = 2000) {
           "Accept": "application/json, text/plain, */*",
           "Accept-Language": "pt-BR,pt;q=0.7",
           "Authorization": "Bearer anonymous",
-          "Sec-CH-UA": '"Chromium";v="142", "Brave";v="142", "Not_A Brand";v="99"',
           "Sec-CH-UA-Mobile": "?0",
           "Sec-CH-UA-Platform": '"Linux"',
           "Sec-Fetch-Dest": "empty",
@@ -96,7 +101,7 @@ function convertBibleJson(inputJson) {
                     };
                 } else if (item.type === 'verse-text') {
                     if (verseObj) {
-                        verseObj.text = item.content;
+                        verseObj.text = item.content.trim();
                     }
                 }
             });
@@ -130,7 +135,7 @@ async function fetchBibleContent() {
   }
 
   // Salvar ou exibir o JSON final
-  console.log(JSON.stringify(bibleData, null, 2));
+  console.log(JSON.stringify(bibleData));
   return bibleData;
 }
 
