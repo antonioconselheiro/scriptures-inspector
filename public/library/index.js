@@ -35,7 +35,7 @@ const baseDir = path.dirname(inputPath);
 
 Object.keys(jsonData).forEach(key => {
     const outputFile = path.join(baseDir, `${key}.json`);
-    const data = JSON.stringify(jsonData[key], null, 2);
+    const data = JSON.stringify(jsonData[key]);
 
     fs.writeFileSync(outputFile, data, 'utf8');
     console.log(`Arquivo criado: ${outputFile}`);
