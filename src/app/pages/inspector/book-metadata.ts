@@ -638,6 +638,21 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
+      greek: true,
+    },
+    codice: {
+      ocidental: false,
+      septuaginta: true,
+      ethiopian: true
+    }
+  },
+  '4ED': {
+    chapters: 0,
+    normal: '4 Esdras',
+    gringo: '4 Ezra',
+    testament: 'old',
+    language: {
+      geez: true,
       greek: true
     },
     codice: {
@@ -723,7 +738,7 @@ export const bookMetadata: {
       helenism: true
     }
   },
-  'SAL': {
+  '1SL': {
     chapters: 150,
     normal: '1 Salmos',
     gringo: '1 Psalms',
@@ -741,7 +756,7 @@ export const bookMetadata: {
       copta: true
     }
   },
-  'SL2': { // 4Q448, 11QPs
+  '2SL': { // 4Q448, 11QPs
     chapters: 0,
     normal: '2 Salmos',
     gringo: '2 Psalms',
@@ -757,7 +772,7 @@ export const bookMetadata: {
       copta: false
     }
   },
-  'SL3': {
+  '3SL': {
     chapters: 0,
     normal: 'Salmos de Salomão',
     gringo: 'Psalms of Solomon',
@@ -875,7 +890,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'ECL': {
     chapters: 12,
     normal: 'Eclesiastes',
@@ -1138,22 +1152,6 @@ export const bookMetadata: {
       copta: true
     }
   },
-  // 'ZED': { // 4Q 256–260?
-  //   chapters: 0,
-  //   normal: 'Apocalipse de Zedequias',
-  //   gringo: 'Apocalipse of Zedekiah',
-  //   testament: 'old',
-  //   type: [],
-  //   language: {
-  //     hebraic: true
-  //   },
-  //   codice: {
-  //     ocidental: false,
-  //     septuaginta: false,
-  //     ethiopian: false,
-  //     essenes: true
-  //   }
-  // },
   'OSE': {
     chapters: 14,
     normal: 'Oseias',
@@ -1703,7 +1701,6 @@ export const bookMetadata: {
       sethian: false
     }
   },
-
   'PLT': {
     chapters: 13,
     normal: 'Platão',
@@ -1907,7 +1904,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'RBE': { // 1QSb
     chapters: 0,
     normal: "Regra das Bênçãos",
@@ -1932,7 +1928,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'GLT': { // 1QM
     chapters: 0,
     normal: "A Guerra dos Filhos da Luz contra os Filhos das Trevas",
@@ -1941,7 +1936,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'TMP': { // 11QTemple
     chapters: 0,
     normal: "Rolo do Templo",
@@ -1950,7 +1944,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'CSS': { // 4Q400
     chapters: 0,
     normal: "Cânticos do Sacrifício do Sábado",
@@ -1959,7 +1952,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'BEN': { // 4QBerakhot
     chapters: 0,
     normal: "Bênçãos",
@@ -1968,7 +1960,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'OTO': { // 4QOtot
     chapters: 0,
     normal: "Otot - Sinais e Calendários",
@@ -1977,7 +1968,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'CAD': { // 4Q503
     chapters: 0,
     normal: "Orações Calendáricas",
@@ -1986,7 +1976,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'PSC': { // 4QPesach
     chapters: 0,
     normal: "Páscoa",
@@ -1995,7 +1984,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'HLI': { // 4Q251, 4Q252
     chapters: 0,
     normal: "Haláquico",
@@ -2004,7 +1992,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   'HLA': { // 4Q159
     chapters: 0,
     normal: "Halacá",
@@ -2013,8 +2000,7 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
-  'PCU': { // 3Q15
+  'PCB': { // 3Q15
     chapters: 0,
     normal: "Pergaminho de Cobre",
     gringo: "Copper Scroll",
@@ -2023,7 +2009,6 @@ export const bookMetadata: {
     language: { hebraic: true },
     codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
-
   '1MA': {
     chapters: 0,
     normal: '1 Macabeus',
