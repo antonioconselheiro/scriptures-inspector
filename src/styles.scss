@@ -1,3 +1,9 @@
+@font-face {
+  font-family: 'hebrew';
+  src: url("/public/hebrew.woff2") format("woff2"),
+    url("/public/hebrew.woff") format("woff");
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -11,4 +17,8 @@ a {
 
 .hidden {
   display: none !important;
+}
+
+[lang="hebraic"] [class^="prisma"] {
+  font-family: 'hebrew';
 }
