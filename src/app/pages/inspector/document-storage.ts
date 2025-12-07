@@ -4,12 +4,6 @@ import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { ParsedPatterns } from './parsed-patterns';
 import { PatternsSerialized } from './patterns-serialized';
-import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
-import { HolyScriptureModel } from './domain/holy-scripture-model';
-import { hebraics } from './hebraics';
-import { geezes } from './geezes';
-import { greeks } from './greeks';
 
 @Injectable({
   providedIn: 'root'

@@ -207,7 +207,7 @@ export class Inspector implements OnInit {
   private subscribeParams(): void {
     this.activatedRoute.params.subscribe({
       next: params => {
-        this.selectedBook = this.currentBook = params['book'];
+        this.selectedBook = this.currentBook = params['book'].toUpperCase();
         this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
 
         this.selectedHebraicBook = params['hebraic'];

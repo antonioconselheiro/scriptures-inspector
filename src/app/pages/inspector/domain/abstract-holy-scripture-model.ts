@@ -1,8 +1,6 @@
-import { HolyScriptureModel } from './holy-scripture-model';
-import { NewTestmentScriptures } from './new-testment-scriptures-model';
-import { OldTestmentScriptures } from './old-testment-scriptures-model';
 import { AbstractScriptureBook } from './abstract-scripture-book-model';
+import { AbstractScriptureVerse } from './abstract-scripture-verse-model';
 
 export type AbstractHolyScriptureModel = {
-  [book: string]: AbstractScriptureBook
+  [book: string]: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>>
 };

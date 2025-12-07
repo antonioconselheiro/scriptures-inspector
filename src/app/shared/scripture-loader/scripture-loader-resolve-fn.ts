@@ -11,7 +11,6 @@ export function scriptureLoaderResolveFn(lang: languageUnion) {
     const newList: string[] = newTestamentBookList;
     const http = inject(HttpClient);
     const book = route.paramMap.get('book')!.toUpperCase();
-    const chapter = route.paramMap.get('chapter')!;
     const langMap: { [lang: string]: string } = {
       'hebraic': 'hebrew-stuttgartensia',
       'geez': 'geez-mashafa-qeddus',
@@ -24,6 +23,6 @@ export function scriptureLoaderResolveFn(lang: languageUnion) {
       return Promise.resolve([]);
     }
 
-    return http.get(`/public/library/${langMap[lang]}/${book}/${chapter}`);
+    return http.get(`/library/${langMap[lang]}/${book}.json`);
   };
 }

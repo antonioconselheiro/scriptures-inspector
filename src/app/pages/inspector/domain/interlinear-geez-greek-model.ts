@@ -1,6 +1,6 @@
-import { NewBook } from '../../../domain/new-testament-books-union';
+import { NewTestamentBooksUnion } from '../../../domain/new-testament-books-union';
 import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
 export type InterlinearGeezGreek = {
-  [newBook in NewBook]: Array<Array<Array<TranslationInterlinearVerse>>>
+  [newBook in NewTestamentBooksUnion]: Array<Array<Array<TranslationInterlinearVerse>>>
 }
