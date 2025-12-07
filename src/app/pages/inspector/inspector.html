@@ -28,76 +28,76 @@
     <fieldset>
       <legend>Change chapter</legend>
 
-      <select name="selectedBook" placeholder="Book" [(ngModel)]="selectedBook">
+      <select name="selectedBook" placeholder="Book" [ngModel]="selectedBook.toLocaleLowerCase()">
         <optgroup label="Old Testament">
-          <option value="GEN">Genesis</option>
-          <option value="EXO">Exodus</option>
-          <option value="LEV">Leviticus</option>
-          <option value="NUM">Numbers</option>
-          <option value="DEU">Deuteronomy</option>
-          <option value="JOS">Joshua</option>
-          <option value="JUI">Judges</option>
-          <option value="RUT">Ruth</option>
-          <option value="1SM">1 Samuel</option>
-          <option value="2SM">2 Samuel</option>
-          <option value="1RS">1 Kings</option>
-          <option value="2RS">2 Kings</option>
-          <option value="1CR">1 Chronicles</option>
-          <option value="2CR">2 Chronicles</option>
-          <option value="1ED">Ezra</option>
-          <option value="2ED">Nehemiah</option>
-          <option value="1ET">Esther</option>
-          <option value="JOB">Job</option>
-          <option value="SAL">Psalms</option>
-          <option value="PRO">Proverbs</option>
-          <option value="ECL">Ecclesiastes</option>
-          <option value="CAN">Song of Solomon</option>
-          <option value="ISA">Isaiah</option>
-          <option value="JE1">Jeremiah</option>
-          <option value="JE2">Lamentations</option>
-          <option value="EZE">Ezekiel</option>
-          <option value="DA1">Daniel</option>
-          <option value="OSE">Hosea</option>
-          <option value="JOE">Joel</option>
-          <option value="AMO">Amos</option>
-          <option value="OBA">Obadiah</option>
-          <option value="JON">Jonah</option>
-          <option value="MIQ">Micah</option>
-          <option value="NAU">Nahum</option>
-          <option value="HAB">Habakkuk</option>
-          <option value="SOF">Zephaniah</option>
-          <option value="AGE">Haggai</option>
-          <option value="ZAC">Zechariah</option>
-          <option value="MAL">Malachi</option>
+          <option value="gen">Genesis</option>
+          <option value="exo">Exodus</option>
+          <option value="lev">Leviticus</option>
+          <option value="num">Numbers</option>
+          <option value="deu">Deuteronomy</option>
+          <option value="jos">Joshua</option>
+          <option value="jui">Judges</option>
+          <option value="rut">Ruth</option>
+          <option value="1sm">1 Samuel</option>
+          <option value="2sm">2 Samuel</option>
+          <option value="1rs">1 Kings</option>
+          <option value="2rs">2 Kings</option>
+          <option value="1cr">1 Chronicles</option>
+          <option value="2cr">2 Chronicles</option>
+          <option value="1ed">Ezra</option>
+          <option value="2ed">Nehemiah</option>
+          <option value="1et">Esther</option>
+          <option value="job">Job</option>
+          <option value="sal">Psalms</option>
+          <option value="pro">Proverbs</option>
+          <option value="ecl">Ecclesiastes</option>
+          <option value="can">Song of Solomon</option>
+          <option value="isa">Isaiah</option>
+          <option value="je1">Jeremiah</option>
+          <option value="je2">Lamentations</option>
+          <option value="eze">Ezekiel</option>
+          <option value="da1">Daniel</option>
+          <option value="ose">Hosea</option>
+          <option value="joe">Joel</option>
+          <option value="amo">Amos</option>
+          <option value="oba">Obadiah</option>
+          <option value="jon">Jonah</option>
+          <option value="miq">Micah</option>
+          <option value="nau">Nahum</option>
+          <option value="hab">Habakkuk</option>
+          <option value="sof">Zephaniah</option>
+          <option value="age">Haggai</option>
+          <option value="zac">Zechariah</option>
+          <option value="mal">Malachi</option>
         </optgroup>
         <optgroup label="New Testament">
-          <option value="MAT">Matthew</option>
-          <option value="MAR">Mark</option>
-          <option value="LUC">Luke</option>
-          <option value="JOA">John</option>
-          <option value="ATO">Acts</option>
-          <option value="ROM">Romans</option>
-          <option value="1CO">1 Corinthians</option>
-          <option value="2CO">2 Corinthians</option>
-          <option value="GAL">Galatians</option>
-          <option value="EFE">Ephesians</option>
-          <option value="FIL">Philippians</option>
-          <option value="COL">Colossians</option>
-          <option value="1TS">1 Thessalonians</option>
-          <option value="2TS">2 Thessalonians</option>
-          <option value="1TM">1 Timothy</option>
-          <option value="2TM">2 Timothy</option>
-          <option value="TIT">Titus</option>
-          <option value="FLM">Philemon</option>
-          <option value="HEB">Hebrews</option>
-          <option value="TIA">James</option>
-          <option value="1PE">1 Peter</option>
-          <option value="2PE">2 Peter</option>
-          <option value="1JO">1 John</option>
-          <option value="2JO">2 John</option>
-          <option value="3JO">3 John</option>
-          <option value="JUD">Jude</option>
-          <option value="APO">Revelation</option>
+          <option value="mat">Matthew</option>
+          <option value="mar">Mark</option>
+          <option value="luc">Luke</option>
+          <option value="joa">John</option>
+          <option value="ato">Acts</option>
+          <option value="rom">Romans</option>
+          <option value="1co">1 Corinthians</option>
+          <option value="2co">2 Corinthians</option>
+          <option value="gal">Galatians</option>
+          <option value="efe">Ephesians</option>
+          <option value="fil">Philippians</option>
+          <option value="col">Colossians</option>
+          <option value="1ts">1 Thessalonians</option>
+          <option value="2ts">2 Thessalonians</option>
+          <option value="1tm">1 Timothy</option>
+          <option value="2tm">2 Timothy</option>
+          <option value="tit">Titus</option>
+          <option value="flm">Philemon</option>
+          <option value="heb">Hebrews</option>
+          <option value="tia">James</option>
+          <option value="1pe">1 Peter</option>
+          <option value="2pe">2 Peter</option>
+          <option value="1jo">1 John</option>
+          <option value="2jo">2 John</option>
+          <option value="3jo">3 John</option>
+          <option value="jud">Jude</option>
+          <option value="apo">Revelation</option>
         </optgroup>
       </select>
 
@@ -150,13 +150,12 @@
 @if (selectedHebraicBook && isOldBookGuard(currentBook)) {
 
 @let hebraicVerses = selectedHebraicBook[currentChapter];
-
 @for (hebraicVerse of hebraicVerses; track hebraicVerse.verse.start; let verseKey = $index) {
 @let hebraic = hebraicVerse.text.split(' ');
 @let eachHebraicWord = splitIntoMatrix(hebraicVerse.text, 'hebraic');
 @let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
-<strong class="verse-title">{{currentBook}}, {{currentChapter + 1}}:{{hebraicVerse | verse}}</strong>
+<strong class="verse-title">{{bookMetadata[currentBook].normal}}, {{currentChapter + 1}}:{{hebraicVerse | verse}}</strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>

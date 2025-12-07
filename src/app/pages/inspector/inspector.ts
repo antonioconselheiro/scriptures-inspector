@@ -61,7 +61,7 @@ import { VersePipe } from './verse-pipe';
 })
 export class Inspector implements OnInit {
 
-  readonly bibleChaptersAmount = bookMetadata;
+  readonly bookMetadata = bookMetadata;
 
   selectedHebraicBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
   selectedGeezBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
@@ -133,6 +133,7 @@ export class Inspector implements OnInit {
     this.readCustomTranslation();
     this.readPatterns();
     this.readInterlineares();
+    this.subscribeData();
     this.subscribeParams();
     this.readSelectedParalelTranslation();
   }
@@ -210,9 +211,17 @@ export class Inspector implements OnInit {
         this.selectedBook = this.currentBook = params['book'].toUpperCase();
         this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
 
-        this.selectedHebraicBook = params['hebraic'];
-        this.selectedGeezBook = params['geez'];
-        this.selectedGreekBook = params['greek'];
+        this.updateChapterTranslation();
+      }
+    });
+  }
+
+  private subscribeData(): void {
+    this.activatedRoute.data.subscribe({
+      next: data => {
+        this.selectedHebraicBook = data['hebraic'];
+        this.selectedGeezBook = data['geez'];
+        this.selectedGreekBook = data['greek'];
 
         this.updateChapterTranslation();
       }
@@ -252,7 +261,7 @@ export class Inspector implements OnInit {
 
   getChapters(): number[] {
     if (!this.selectedBook) return [];
-    const metadata = this.bibleChaptersAmount[this.selectedBook];
+    const metadata = this.bookMetadata[this.selectedBook];
     return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
   }
 
@@ -402,7 +411,7 @@ export class Inspector implements OnInit {
         '/book',
         this.selectedBook,
         'chapter',
-        this.selectedChapter + 1
+        (+this.selectedChapter) + 1
       ]);
 
     }
