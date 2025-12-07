@@ -198,7 +198,7 @@
     <th>God said</th>
     @for (word of hebraic; track $index) {
     <td>
-      <input type="checkbox" />
+      <input #hebraicWordOfGod [name]="'isWordOfGod' + word + $index" type="checkbox" (change)="setAsWordOfGod(hebraicWordOfGod, word, $index, hebraicVerse, 'hebraic')" />
     </td>
     }
   </tr>
@@ -208,8 +208,8 @@
     @for (sentence of eachHebraicWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      <select #hebraicMetadata [name]="'fieldHebraicMetadata' + word.index" (change)="updateLexicalMetadata(hebraicMetadata, word.word, 'hebraic')" (focus)="showLegend = true" (blur)="showLegend = false">
-        <option value="default">-</option>
+      <select #hebraicMetadata [name]="'fieldHebraicMetadata' + word.index" (change)="updateScripturesMetadata(hebraicMetadata, $index, hebraicVerse, word, 'hebraic')" (focus)="showLegend = true" (blur)="showLegend = false">
+        <option value="nothing">-</option>
         <option value="elohimname">E</option>
         <option value="name">N</option>
         <option value="keyword">K</option>
@@ -286,6 +286,7 @@
 
   <tr>
     <td [colSpan]="splitedCustomTranslation.length">
+      <span>&nbsp;</span>
       @for (sentence of splitedCustomTranslation; track $index) {
       <span [class]="'prisma'+getCustomTranslationFromHebraicColor(hebraicVerse, $index)">{{sentence}}</span>
       }
@@ -294,6 +295,7 @@
 
   <tr>
     <td [colSpan]="splitedCustomTranslation.length">
+      <span>&nbsp;</span>
       @for (sentence of splitedCustomTranslation; track $index) {
       <span [class]="'sacred'+getCustomTranslationFromHebraicSacredRule(hebraicVerse, $index)">{{sentence}}</span>
       }
@@ -304,6 +306,7 @@
     <th>interlinear</th>
     @for (sentence of splitedCustomTranslation; track $index) {
     <td>
+      <span>&nbsp;</span>
       {{sentence}}
     </td>
     }

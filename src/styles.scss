@@ -22,3 +22,7 @@ a {
 [lang="hebraic"] [class^="prisma"] {
   font-family: 'hebrew';
 }
+
+input[type=checkbox] {
+  cursor: pointer;
+}

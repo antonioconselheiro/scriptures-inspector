@@ -4,18 +4,35 @@ import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { ParsedPatterns } from './parsed-patterns';
 import { PatternsSerialized } from './patterns-serialized';
+import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
+import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
+import { AbstractCodice } from './domain/abstract-codice-model';
+import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
+import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
+import { createNewTestmentObjectBase } from './create-new-testment-fn';
+import { createOldTestmentObjectBase } from './create-old-testment-fn';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentStorage {
 
+  private hebraicMetadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
+    ...createOldTestmentObjectBase()
+  };
   private hebraicLexical: Record<string, string> = {};
   private hebraicPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
+  private greekMetadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
+    ...createNewTestmentObjectBase()
+  };
   private geezLexical: Record<string, string> = {};
   private geezPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
+  private geezMetadata: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
+    ...createOldTestmentObjectBase(),
+    ...createNewTestmentObjectBase()
+  };
   private greekLexical: Record<string, string> = {};
   private greekPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
@@ -24,12 +41,15 @@ export class DocumentStorage {
 
   constructor() {
     try {
+      this.hebraicMetadata = JSON.parse(localStorage.getItem('hebraicMetadata') || '[]');
       this.hebraicLexical = JSON.parse(localStorage.getItem('hebraicLexical') || '{}');
       this.hebraicPatterns = JSON.parse(localStorage.getItem('hebraicPatterns') || JSON.stringify(this.hebraicPatterns));
 
+      this.greekMetadata = JSON.parse(localStorage.getItem('greekMetadata') || '[]');
       this.greekLexical = JSON.parse(localStorage.getItem('greekLexical') || '{}');
       this.greekPatterns = JSON.parse(localStorage.getItem('greekPatterns') || JSON.stringify(this.greekPatterns));
 
+      this.geezMetadata = JSON.parse(localStorage.getItem('geezMetadata') || '[]');
       this.geezLexical = JSON.parse(localStorage.getItem('geezLexical') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
 
@@ -65,6 +85,30 @@ export class DocumentStorage {
   addGreekLexical(greek: string, lexical: string): void {
     this.greekLexical[greek] = lexical;
     localStorage.setItem('greekLexical', JSON.stringify(this.greekLexical));
+  }
+
+  getHebraicMetadata(): AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
+    return this.hebraicMetadata;
+  }
+
+  getGreekMetadata(): AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
+    return this.greekMetadata;
+  }
+
+  getGeezMetadata(): AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
+    return this.geezMetadata;
+  }
+
+  saveHebraicMetadata(metadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
+  }
+
+  saveGreekMetadata(metadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    localStorage.setItem('greekMetadata', JSON.stringify(metadata));
+  }
+
+  saveGeezMetadata(metadata: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    localStorage.setItem('geezMetadata', JSON.stringify(metadata));
   }
 
   saveHebraicCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {

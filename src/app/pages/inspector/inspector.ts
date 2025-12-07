@@ -10,9 +10,12 @@ import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { bookMetadata } from './book-metadata';
+import { createNewTestmentObjectBase } from './create-new-testment-fn';
+import { createOldTestmentObjectBase } from './create-old-testment-fn';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
+import { AbstractCodice } from './domain/abstract-codice-model';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
 import { AbstractScriptureBook } from './domain/abstract-scripture-book-model';
 import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
@@ -24,6 +27,7 @@ import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-cu
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
+import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
@@ -82,25 +86,29 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
+  hebraicMetadata!: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
+  greekMetadata!: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
+  geezMetadata!: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
+
   interlinearGeezHebraic: InterlinearGeezHebraic = {
-    ...this.createOldTestmentObjectBase()
+    ...createOldTestmentObjectBase()
   };
 
   interlinearGeezGreek: InterlinearGeezGreek = {
-    ...this.createNewTestmentObjectBase()
+    ...createNewTestmentObjectBase()
   };
 
   interlinearHebraicCustomTranslation: InterlinearHebraicCustomTranslation = {
-    ...this.createOldTestmentObjectBase()
+    ...createOldTestmentObjectBase()
   };
 
   interlinearGreekCustomTranslation: InterlinearGreekCustomTranslation = {
-    ...this.createNewTestmentObjectBase()
+    ...createNewTestmentObjectBase()
   };
 
   interlinearGeezCustomTranslation: InterlinearGeezCustomTranslation = {
-    ...this.createOldTestmentObjectBase(),
-    ...this.createNewTestmentObjectBase()
+    ...createOldTestmentObjectBase(),
+    ...createNewTestmentObjectBase()
   };
 
   translations: Array<Translation> = [];
@@ -130,12 +138,19 @@ export class Inspector implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.readMetadata();
     this.readCustomTranslation();
     this.readPatterns();
     this.readInterlineares();
     this.subscribeData();
     this.subscribeParams();
     this.readSelectedParalelTranslation();
+  }
+
+  private readMetadata(): void {
+    this.hebraicMetadata = this.documentStorage.getHebraicMetadata();
+    this.greekMetadata = this.documentStorage.getGreekMetadata();
+    this.geezMetadata = this.documentStorage.getGeezMetadata();
   }
 
   private readPatterns(): void {
@@ -176,10 +191,14 @@ export class Inspector implements OnInit {
       try {
         this.customHebraicTranslation = JSON.parse(storedCustomHebraicTranslation);
       } catch {
-        this.customHebraicTranslation = { ...this.createOldTestmentObjectBase() };
+        this.customHebraicTranslation = {
+          ...createOldTestmentObjectBase()
+        };
       }
     } else {
-      this.customHebraicTranslation = { ...this.createOldTestmentObjectBase() };
+      this.customHebraicTranslation = {
+        ...createOldTestmentObjectBase()
+      };
     }
 
     const storedCustomGeezTranslation = localStorage.getItem('customGeezTranslation');
@@ -187,10 +206,16 @@ export class Inspector implements OnInit {
       try {
         this.customGeezTranslation = JSON.parse(storedCustomGeezTranslation);
       } catch {
-        this.customGeezTranslation = { ...this.createOldTestmentObjectBase(), ...this.createNewTestmentObjectBase() };
+        this.customGeezTranslation = {
+          ...createOldTestmentObjectBase(),
+          ...createNewTestmentObjectBase()
+        };
       }
     } else {
-      this.customGeezTranslation = { ...this.createOldTestmentObjectBase(), ...this.createNewTestmentObjectBase() };
+      this.customGeezTranslation = {
+        ...createOldTestmentObjectBase(),
+        ...createNewTestmentObjectBase()
+      };
     }
 
     const storedCustomGreekTranslation = localStorage.getItem('customGreekTranslation');
@@ -198,10 +223,10 @@ export class Inspector implements OnInit {
       try {
         this.customGreekTranslation = JSON.parse(storedCustomGreekTranslation);
       } catch {
-        this.customGreekTranslation = { ...this.createNewTestmentObjectBase() };
+        this.customGreekTranslation = { ...createNewTestmentObjectBase() };
       }
     } else {
-      this.customGreekTranslation = { ...this.createNewTestmentObjectBase() };
+      this.customGreekTranslation = { ...createNewTestmentObjectBase() };
     }
   }
 
@@ -263,82 +288,6 @@ export class Inspector implements OnInit {
     if (!this.selectedBook) return [];
     const metadata = this.bookMetadata[this.selectedBook];
     return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
-  }
-
-  private createOldTestmentObjectBase(): { [oldBook in OldTestamentBooksUnion]: Array<any> } {
-    return {
-      'GEN': [],
-      'EXO': [],
-      'LEV': [],
-      'NUM': [],
-      'DEU': [],
-      'JOS': [],
-      'JUI': [],
-      'RUT': [],
-      '1SM': [],
-      '2SM': [],
-      '1RS': [],
-      '2RS': [],
-      '1CR': [],
-      '2CR': [],
-      '1ED': [],
-      '2ED': [],
-      '1ET': [],
-      'JOB': [],
-      'SAL': [],
-      'PRO': [],
-      'ECL': [],
-      'CAN': [],
-      'ISA': [],
-      'JE1': [],
-      'JE2': [],
-      'EZE': [],
-      'DA1': [],
-      'OSE': [],
-      'JOE': [],
-      'AMO': [],
-      'OBA': [],
-      'JON': [],
-      'MIQ': [],
-      'NAU': [],
-      'HAB': [],
-      'SOF': [],
-      'AGE': [],
-      'ZAC': [],
-      'MAL': []
-    };
-  }
-
-  private createNewTestmentObjectBase(): { [newBook in NewTestamentBooksUnion]: Array<any> } {
-    return {
-      'MAT': [],
-      'MAR': [],
-      'LUC': [],
-      'JOA': [],
-      'ATO': [],
-      'ROM': [],
-      '1CO': [],
-      '2CO': [],
-      'GAL': [],
-      'EFE': [],
-      'FIL': [],
-      'COL': [],
-      '1TS': [],
-      '2TS': [],
-      '1TM': [],
-      '2TM': [],
-      'TIT': [],
-      'FLM': [],
-      'HEB': [],
-      'TIA': [],
-      '1PE': [],
-      '2PE': [],
-      '1JO': [],
-      '2JO': [],
-      '3JO': [],
-      'JUD': [],
-      'APO': []
-    };
   }
 
   openDialogPatterns(lang: 'hebraic' | 'geez' | 'greek'): void {
@@ -661,8 +610,88 @@ export class Inspector implements OnInit {
     this.pipeUpdaterController++;
   }
 
-  updateLexicalMetadata(input: HTMLSelectElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
+  createScripturesMetadataIfEmpty(word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      if (!this.hebraicMetadata[this.currentBook]) {
+        this.hebraicMetadata[this.currentBook] = [];
+      }
 
+      if (!this.hebraicMetadata[this.currentBook][this.currentChapter]) {
+        this.hebraicMetadata[this.currentBook][this.currentChapter] = [];
+      }
+
+      if (!this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex]) {
+        this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+          word,
+          verse: verse.verse
+        };
+      }
+
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      if (!this.greekMetadata[this.currentBook]) {
+        this.greekMetadata[this.currentBook] = [];
+      }
+
+      if (!this.greekMetadata[this.currentBook][this.currentChapter]) {
+        this.greekMetadata[this.currentBook][this.currentChapter] = [];
+      }
+
+      if (!this.greekMetadata[this.currentBook][this.currentChapter][verseIndex]) {
+        this.greekMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+          word,
+          verse: verse.verse
+        };
+      }
+
+    } else if (lang === 'geez') {
+      if (!this.geezMetadata[this.currentBook]) {
+        this.geezMetadata[this.currentBook] = [];
+      }
+
+      if (!this.geezMetadata[this.currentBook][this.currentChapter]) {
+        this.geezMetadata[this.currentBook][this.currentChapter] = [];
+      }
+
+      if (!this.geezMetadata[this.currentBook][this.currentChapter][verseIndex]) {
+        this.geezMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+          word,
+          verse: verse.verse
+        };
+      }
+    }
+  }
+
+  setAsWordOfGod(input: HTMLInputElement, word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    this.createScripturesMetadataIfEmpty(word, verseIndex, verse, lang);
+
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      this.greekMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+    } else if (lang === 'geez') {
+      this.geezMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+    }
+  }
+
+  updateScripturesMetadata(input: HTMLSelectElement, verseIndex: number, verse: ScriptureVerse, word: { index: number; word: string; }, lang: 'hebraic' | 'geez' | 'greek'): void {
+    this.createScripturesMetadataIfEmpty(word.word, verseIndex, verse, lang);
+
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+        ...this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex],
+        metadata: []
+      };
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      this.greekMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+        ...this.greekMetadata[this.currentBook][this.currentChapter][verseIndex],
+        metadata: []
+      };
+    } else if (lang === 'geez') {
+      this.geezMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+        ...this.geezMetadata[this.currentBook][this.currentChapter][verseIndex],
+        metadata: []
+      };
+    }
   }
 
   isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {
