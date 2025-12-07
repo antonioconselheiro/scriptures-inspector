@@ -1,4 +1,4 @@
-import { NewBook } from './new-testament-books-union';
+import { NewBook } from '../../../domain/new-testament-books-union';
 import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
 export type InterlinearGeezGreek = {

@@ -3,6 +3,10 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
+import { newTestamentBookList } from '../../domain/new-testament-books-list';
+import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
+import { oldTestamentBookList } from '../../domain/old-testament-books-list';
+import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { bookMetadata } from './book-metadata';
@@ -11,25 +15,19 @@ import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
 import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
 import { AbstractScriptureBook } from './domain/abstract-scripture-book-model';
+import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-custom-translation-model';
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
-import { newTestamentBookList } from './domain/new-testament-books-list';
-import { NewTestamentBooksUnion } from './domain/new-testament-books-union';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
-import { oldTestamentBookList } from './domain/old-testament-books-list';
-import { OldTestamentBooksUnion } from './domain/old-testament-books-union';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
-import { geezes } from './geezes';
 import { GematricsPipe } from './gematrics-pipe';
-import { greeks } from './greeks';
-import { hebraics } from './hebraics';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LexicalPipe } from './literals-pipe';
@@ -63,11 +61,11 @@ import { VersePipe } from './verse-pipe';
 })
 export class Inspector implements OnInit {
 
-  readonly hebraics = hebraics;
-  readonly geezes = geezes;
-  readonly greek = greeks;
-
   readonly bibleChaptersAmount = bookMetadata;
+
+  selectedHebraicBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
+  selectedGeezBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
+  selectedGreekBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),
@@ -211,6 +209,11 @@ export class Inspector implements OnInit {
       next: params => {
         this.selectedBook = this.currentBook = params['book'];
         this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
+
+        this.selectedHebraicBook = params['hebraic'];
+        this.selectedGeezBook = params['geez'];
+        this.selectedGreekBook = params['greek'];
+
         this.updateChapterTranslation();
       }
     });
@@ -425,11 +428,14 @@ export class Inspector implements OnInit {
     return custom[this.currentBook] && custom[this.currentBook][this.currentChapter] && custom[this.currentBook][this.currentChapter][verse.verse.index];
   }
 
-  //  FIXME: está lógica poderá ser removida quando o JSON de geez, hebraico e grego forem fundidos em um único JSON
   getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): Array<ScriptureVerse> {
+    if (!this.selectedGeezBook) {
+      return [];
+    }
+
     const verses = new Array<ScriptureVerse>();
-    for (let index = 0; index < this.geezes[this.currentBook][this.currentChapter].length; index++) {
-      const geezVerse = this.geezes[this.currentBook][this.currentChapter][index];
+    for (let index = 0; index < this.selectedGeezBook[this.currentChapter].length; index++) {
+      const geezVerse = this.selectedGeezBook[this.currentChapter][index];
 
       if (
         Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.start) && Number(hebraicVerse.verse.start) <= Number(geezVerse.verse.end) ||

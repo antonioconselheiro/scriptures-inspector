@@ -1,5 +1,5 @@
-import { NewTestamentBooksUnion } from "./new-testament-books-union";
-import { OldTestamentBooksUnion } from "./old-testament-books-union";
+import { NewTestamentBooksUnion } from "../../../domain/new-testament-books-union";
+import { OldTestamentBooksUnion } from "../../../domain/old-testament-books-union";
 import { TranslationInterlinearVerse } from "./translation-interlinear-verse-model";
 
 export type InterlinearGeezCustomTranslation = {

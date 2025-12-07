@@ -1,4 +1,4 @@
-import { OldBook } from './old-testament-books-union';
+import { OldBook } from '../../../domain/old-testament-books-union';
 import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
 export type InterlinearGeezHebraic = {
