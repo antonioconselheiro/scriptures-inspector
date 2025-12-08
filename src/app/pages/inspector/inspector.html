@@ -310,7 +310,7 @@
     <td [colSpan]="splitedCustomTranslation.length">
       <span>&nbsp;</span>
       @for (sentence of splitedCustomTranslation; track $index) {
-      <span [class]="'sacred'+getCustomTranslationFromHebraicSacredRule(hebraicVerse, $index)">{{sentence}}</span>
+      <span [class]="'sacred'+getCustomTranslationSacredRule(hebraicVerse, $index, 'hebraic')">{{sentence}}</span>
       }
     </td>
   </tr>
@@ -329,8 +329,11 @@
     <th>scriptures</th>
     @for (sentence of splitedCustomTranslation; track $index) {
     <td>
-      <select #interlinearHebraicCustomTranslationEl
-        (change)="onChangeCustomTranslationHebraicInterlinear(interlinearHebraicCustomTranslationEl.value, currentBook, currentChapter, hebraicVerse, $index)">
+      <select
+        #interlinearHebraicCustomTranslationEl
+        [value]="getCustomTranslationInterlinearMetadata(hebraicVerse, $index, 'hebraic')"
+        (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, hebraicVerse, $index, 'hebraic')"
+        >
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {

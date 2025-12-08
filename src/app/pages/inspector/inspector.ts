@@ -41,6 +41,7 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { ScriptureBook } from './domain/scripture-book-model';
 
 @Component({
   selector: 'app-inspector',
@@ -68,9 +69,9 @@ export class Inspector implements OnInit {
 
   readonly bookMetadata = bookMetadata;
 
-  selectedHebraicBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
-  selectedGeezBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
-  selectedGreekBook: AbstractScriptureBook<AbstractScriptureVerse<{ text: string }>> | null = null;
+  selectedHebraicBook: ScriptureBook | null = null;
+  selectedGeezBook: ScriptureBook | null = null;
+  selectedGreekBook: ScriptureBook | null = null;
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),
@@ -569,27 +570,15 @@ export class Inspector implements OnInit {
     return String(map.origin.index % 7 + 1);
   }
 
-  getCustomTranslationFromHebraicSacredRule(verse: ScriptureVerse, wordIndex: number): string {
+  getCustomTranslationSacredRule(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
     return 'GodName';
   }
 
-  getCustomTranslationFromGreekSacredRule(verse: ScriptureVerse, wordIndex: number): string {
-    return 'GodName';
-  }
-
-  getCustomTranslationFromGeezSacredRule(verse: ScriptureVerse, wordIndex: number): string {
-    return 'GodName';
-  }
-
-  onChangeCustomTranslationHebraicInterlinear(value: string, book: OldTestamentBooksUnion, chapter: number, hebraicVerse: ScriptureVerse, index: number): void {
+  getCustomTranslationInterlinearMetadata(verse: ScriptureVerse, index: number, lang: 'hebraic' | 'geez' | 'greek'): void {
 
   }
 
-  onChangeCustomTranslationGreekInterlinear(value: string, book: OldTestamentBooksUnion | NewTestamentBooksUnion, chapter: number, greekVerse: ScriptureVerse, index: number): void {
-
-  }
-
-  onChangeCustomTranslationGeezInterlinear(value: string, book: NewTestamentBooksUnion, chapter: number, geezVerse: ScriptureVerse, index: number): void {
+  saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, index: number, lang: 'hebraic' | 'geez' | 'greek'): void {
 
   }
 
