@@ -28,6 +28,7 @@ import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebrai
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
+import { ScriptureVerseMetadataWord } from './domain/scripture-verse-metadata-word-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
@@ -40,8 +41,6 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { ScriptureVerseMetadataSegment } from './domain/scripture-verse-metadata-word-segment-model';
-import { ScriptureVerseMetadataWord } from './domain/scripture-verse-metadata-word-model';
 
 @Component({
   selector: 'app-inspector',
@@ -675,11 +674,77 @@ export class Inspector implements OnInit {
     }
   }
 
+  getScriptureMetadataDefinedKind(
+    verseKey: number,
+    wordIndex: number,
+    segmentIndex: number,
+    lang: 'hebraic' | 'geez' | 'greek'
+  ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
+    let codiceMetadata: AbstractCodice<string, AbstractScriptureVerse<ScriptureVerseMetadata>> = {};
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      codiceMetadata = this.hebraicMetadata;
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      codiceMetadata = this.greekMetadata;
+    } else if (lang === 'geez') {
+      codiceMetadata = this.geezMetadata;
+    }
+
+    if (
+      !codiceMetadata[this.currentBook] ||
+      !codiceMetadata[this.currentBook][this.currentChapter] ||
+      !codiceMetadata[this.currentBook][this.currentChapter][verseKey]
+    ) {
+      return '';
+    }
+
+    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
+    if (!metadata) {
+      return '';
+    }
+
+    if (!metadata[wordIndex] || !metadata[wordIndex].segments[segmentIndex]) {
+      return '';
+    }
+
+    return metadata[wordIndex].segments[segmentIndex].kind;
+  }
+
+  getScriptureMetadataWordOfGod(
+    verseKey: number,
+    wordIndex: number,
+    lang: 'hebraic' | 'geez' | 'greek'
+  ): boolean {
+    let codiceMetadata: AbstractCodice<string, AbstractScriptureVerse<ScriptureVerseMetadata>> = {};
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      codiceMetadata = this.hebraicMetadata;
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      codiceMetadata = this.greekMetadata;
+    } else if (lang === 'geez') {
+      codiceMetadata = this.geezMetadata;
+    }
+
+    if (
+      !codiceMetadata[this.currentBook] ||
+      !codiceMetadata[this.currentBook][this.currentChapter] ||
+      !codiceMetadata[this.currentBook][this.currentChapter][verseKey]
+    ) {
+      return false;
+    }
+
+    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
+    if (!metadata || !metadata[wordIndex]) {
+      return false;
+    }
+
+    return metadata[wordIndex].isWordOfGod || false;
+  }
+
   updateScripturesMetadata(
     input: HTMLSelectElement,
     verseIndex: number,
     verse: ScriptureVerse,
     wordIndex: number,
+    segmentIndex: number,
     word: string,
     segment: { index: number; word: string; },
     lang: 'hebraic' | 'geez' | 'greek'
@@ -688,12 +753,12 @@ export class Inspector implements OnInit {
     const kind = input.value;
 
     if (this.isWordSegmentMetadataGuard(kind)) {
-      wordMetadata.segments[segment.index] = {
+      wordMetadata.segments[segmentIndex] = {
         kind,
         segment: segment.word
       }
     } else {
-      wordMetadata.segments[segment.index] = null;
+      wordMetadata.segments[segmentIndex] = null;
     }
 
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {

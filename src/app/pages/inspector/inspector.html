@@ -137,7 +137,7 @@
   <div class="legendBox">
     <table>
       <tr><th>Text</th><th>Meaning</th></tr>
-      <tr><td>E</td><td>Elohim name</td></tr>
+      <tr><td>G</td><td>God name</td></tr>
       <tr><td>N</td><td>Character name</td></tr>
       <tr><td>K</td><td>Keyword</td></tr>
       <tr><td>A</td><td>Amount</td></tr>
@@ -198,7 +198,13 @@
     <th>God said</th>
     @for (word of hebraic; track $index; let wordIndex = $index) {
     <td>
-      <input #hebraicWordOfGodEl [name]="'isWordOfGod' + word + wordIndex" type="checkbox" (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, 'hebraic')" />
+      <input
+        type="checkbox"
+        #hebraicWordOfGodEl
+        [name]="'isWordOfGod' + word + wordIndex"
+        (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, 'hebraic')"
+        [checked]="getScriptureMetadataWordOfGod(verseKey, wordIndex, 'hebraic')"
+      />
     </td>
     }
   </tr>
@@ -207,10 +213,17 @@
     <th>metadata</th>
     @for (word of eachHebraicWord; track $index; let wordIndex = $index) {
     <td>
-      @for (segment of word; track $index) {
-      <select #hebraicMetadataEl [name]="'fieldHebraicMetadata' + segment.index" (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, wordIndex, hebraic[wordIndex], segment, 'hebraic')" (focus)="showLegend = true" (blur)="showLegend = false">
+      @for (segment of word; track $index; let segmentIndex = $index) {
+      <select
+        #hebraicMetadataEl
+        [name]="'fieldHebraicMetadata' + segment.index"
+        [value]="getScriptureMetadataDefinedKind(verseKey, wordIndex, segmentIndex, 'hebraic')"
+        (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, wordIndex, segmentIndex, hebraic[wordIndex], segment, 'hebraic')"
+        (focus)="showLegend = true"
+        (blur)="showLegend = false"
+      >
         <option value="nothing">-</option>
-        <option value="godname">E</option>
+        <option value="godname">G</option>
         <option value="character">N</option>
         <option value="keyword">K</option>
         <option value="amount">A</option>
