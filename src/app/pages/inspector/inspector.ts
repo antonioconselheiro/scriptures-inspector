@@ -40,6 +40,8 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { ScriptureVerseMetadataSegment } from './domain/scripture-verse-metadata-word-segment-model';
+import { ScriptureVerseMetadataWord } from './domain/scripture-verse-metadata-word-model';
 
 @Component({
   selector: 'app-inspector',
@@ -610,88 +612,101 @@ export class Inspector implements OnInit {
     this.pipeUpdaterController++;
   }
 
-  createScripturesMetadataIfEmpty(word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  createIfNotExistsWordMetadata(
+    wordIndex: number, word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'
+  ): ScriptureVerseMetadataWord {
+    let codiceMetadata: AbstractCodice<string, AbstractScriptureVerse<ScriptureVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      if (!this.hebraicMetadata[this.currentBook]) {
-        this.hebraicMetadata[this.currentBook] = [];
-      }
-
-      if (!this.hebraicMetadata[this.currentBook][this.currentChapter]) {
-        this.hebraicMetadata[this.currentBook][this.currentChapter] = [];
-      }
-
-      if (!this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex]) {
-        this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-          word,
-          verse: verse.verse
-        };
-      }
-
+      codiceMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      if (!this.greekMetadata[this.currentBook]) {
-        this.greekMetadata[this.currentBook] = [];
-      }
-
-      if (!this.greekMetadata[this.currentBook][this.currentChapter]) {
-        this.greekMetadata[this.currentBook][this.currentChapter] = [];
-      }
-
-      if (!this.greekMetadata[this.currentBook][this.currentChapter][verseIndex]) {
-        this.greekMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-          word,
-          verse: verse.verse
-        };
-      }
-
+      codiceMetadata = this.greekMetadata;
     } else if (lang === 'geez') {
-      if (!this.geezMetadata[this.currentBook]) {
-        this.geezMetadata[this.currentBook] = [];
-      }
+      codiceMetadata = this.geezMetadata;
+    }
 
-      if (!this.geezMetadata[this.currentBook][this.currentChapter]) {
-        this.geezMetadata[this.currentBook][this.currentChapter] = [];
-      }
+    if (!codiceMetadata[this.currentBook]) {
+      codiceMetadata[this.currentBook] = [];
+    }
 
-      if (!this.geezMetadata[this.currentBook][this.currentChapter][verseIndex]) {
-        this.geezMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-          word,
-          verse: verse.verse
-        };
-      }
+    if (!codiceMetadata[this.currentBook][this.currentChapter]) {
+      codiceMetadata[this.currentBook][this.currentChapter] = [];
+    }
+
+    if (!codiceMetadata[this.currentBook][this.currentChapter][verseIndex]) {
+      codiceMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+        verse: verse.verse,
+        metadata: []
+      };
+    }
+
+    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata || [];
+    codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
+    let wordMetadata: ScriptureVerseMetadataWord = metadata[wordIndex] || {
+      word,
+      segments: []
+    };
+
+    metadata[wordIndex] = wordMetadata;
+
+    return wordMetadata;
+  }
+
+  setAsWordOfGod(
+    input: HTMLInputElement,
+    verseIndex: number,
+    wordIndex: number, 
+    word: string,
+    verse: ScriptureVerse,
+    lang: 'hebraic' | 'geez' | 'greek'
+  ): void {
+    const wordMetadata = this.createIfNotExistsWordMetadata(wordIndex, word, verseIndex, verse, lang);
+    if (input.checked) {
+      wordMetadata.isWordOfGod = true;
+    } else {
+      delete wordMetadata.isWordOfGod;
+    }
+
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      this.documentStorage.saveGreekMetadata(this.greekMetadata);
+    } else if (lang === 'geez') {
+      this.documentStorage.saveGeezMetadata(this.geezMetadata);
     }
   }
 
-  setAsWordOfGod(input: HTMLInputElement, word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    this.createScripturesMetadataIfEmpty(word, verseIndex, verse, lang);
+  updateScripturesMetadata(
+    input: HTMLSelectElement,
+    verseIndex: number,
+    verse: ScriptureVerse,
+    wordIndex: number,
+    word: string,
+    segment: { index: number; word: string; },
+    lang: 'hebraic' | 'geez' | 'greek'
+  ): void {
+    const wordMetadata = this.createIfNotExistsWordMetadata(wordIndex, word, verseIndex, verse, lang);
+    const kind = input.value;
+
+    if (this.isWordSegmentMetadataGuard(kind)) {
+      wordMetadata.segments[segment.index] = {
+        kind,
+        segment: segment.word
+      }
+    } else {
+      wordMetadata.segments[segment.index] = null;
+    }
 
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.greekMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+      this.documentStorage.saveGreekMetadata(this.greekMetadata);
     } else if (lang === 'geez') {
-      this.geezMetadata[this.currentBook][this.currentChapter][verseIndex].isWordOfGod = input.checked;
+      this.documentStorage.saveGeezMetadata(this.geezMetadata);
     }
   }
 
-  updateScripturesMetadata(input: HTMLSelectElement, verseIndex: number, verse: ScriptureVerse, word: { index: number; word: string; }, lang: 'hebraic' | 'geez' | 'greek'): void {
-    this.createScripturesMetadataIfEmpty(word.word, verseIndex, verse, lang);
-
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-        ...this.hebraicMetadata[this.currentBook][this.currentChapter][verseIndex],
-        metadata: []
-      };
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.greekMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-        ...this.greekMetadata[this.currentBook][this.currentChapter][verseIndex],
-        metadata: []
-      };
-    } else if (lang === 'geez') {
-      this.geezMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-        ...this.geezMetadata[this.currentBook][this.currentChapter][verseIndex],
-        metadata: []
-      };
-    }
+  isWordSegmentMetadataGuard(value: string): value is 'godname' | 'keyword' | 'character' | 'amount' {
+    return [ 'godname', 'keyword', 'character', 'amount' ].includes(value);
   }
 
   isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {

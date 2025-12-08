@@ -41,15 +41,15 @@ export class DocumentStorage {
 
   constructor() {
     try {
-      this.hebraicMetadata = JSON.parse(localStorage.getItem('hebraicMetadata') || '[]');
+      this.hebraicMetadata = JSON.parse(localStorage.getItem('hebraicMetadata') || '{}');
       this.hebraicLexical = JSON.parse(localStorage.getItem('hebraicLexical') || '{}');
       this.hebraicPatterns = JSON.parse(localStorage.getItem('hebraicPatterns') || JSON.stringify(this.hebraicPatterns));
 
-      this.greekMetadata = JSON.parse(localStorage.getItem('greekMetadata') || '[]');
+      this.greekMetadata = JSON.parse(localStorage.getItem('greekMetadata') || '{}');
       this.greekLexical = JSON.parse(localStorage.getItem('greekLexical') || '{}');
       this.greekPatterns = JSON.parse(localStorage.getItem('greekPatterns') || JSON.stringify(this.greekPatterns));
 
-      this.geezMetadata = JSON.parse(localStorage.getItem('geezMetadata') || '[]');
+      this.geezMetadata = JSON.parse(localStorage.getItem('geezMetadata') || '{}');
       this.geezLexical = JSON.parse(localStorage.getItem('geezLexical') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
 

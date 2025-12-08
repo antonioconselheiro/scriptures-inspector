@@ -1,8 +1,5 @@
+import { ScriptureVerseMetadataWord } from './scripture-verse-metadata-word-model';
+
 export interface ScriptureVerseMetadata {
-  word: string;
-  isWordOfGod?: boolean;
-  metadata?: Array<{
-    segment: string;
-    kind: '' | 'godsaid' | 'godname' | 'keyword' | 'character' | 'amount'
-  }>
+  metadata?: Array<ScriptureVerseMetadataWord | null>;
 }

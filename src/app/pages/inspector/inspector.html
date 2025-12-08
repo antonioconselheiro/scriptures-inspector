@@ -196,22 +196,22 @@
   </tr>
   <tr>
     <th>God said</th>
-    @for (word of hebraic; track $index) {
+    @for (word of hebraic; track $index; let wordIndex = $index) {
     <td>
-      <input #hebraicWordOfGod [name]="'isWordOfGod' + word + $index" type="checkbox" (change)="setAsWordOfGod(hebraicWordOfGod, word, $index, hebraicVerse, 'hebraic')" />
+      <input #hebraicWordOfGodEl [name]="'isWordOfGod' + word + wordIndex" type="checkbox" (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, 'hebraic')" />
     </td>
     }
   </tr>
 
   <tr>
     <th>metadata</th>
-    @for (sentence of eachHebraicWord; track $index) {
+    @for (word of eachHebraicWord; track $index; let wordIndex = $index) {
     <td>
-      @for (word of sentence; track $index) {
-      <select #hebraicMetadata [name]="'fieldHebraicMetadata' + word.index" (change)="updateScripturesMetadata(hebraicMetadata, $index, hebraicVerse, word, 'hebraic')" (focus)="showLegend = true" (blur)="showLegend = false">
+      @for (segment of word; track $index) {
+      <select #hebraicMetadataEl [name]="'fieldHebraicMetadata' + segment.index" (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, wordIndex, hebraic[wordIndex], segment, 'hebraic')" (focus)="showLegend = true" (blur)="showLegend = false">
         <option value="nothing">-</option>
-        <option value="elohimname">E</option>
-        <option value="name">N</option>
+        <option value="godname">E</option>
+        <option value="character">N</option>
         <option value="keyword">K</option>
         <option value="amount">A</option>
       </select>
