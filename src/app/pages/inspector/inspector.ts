@@ -604,9 +604,14 @@ export class Inspector implements OnInit {
   }
 
   derivateInterlinearToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { metadata } = this.createCustomTranslationStructureIfNotExists(verse, lang);
+    const { metadata, customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
     metadata.splice(0, metadata.length);
-    this.splitIntoMatrix(verse.text, lang).flat().map(word => `${word.index}-${word.word}`).forEach(option => metadata.push(option));
+    const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
+    this.splitIntoMatrix(verse.text, lang).flat().forEach(word => {
+      if (custom[word.index] === this.getLexical(word.word, lang)) {
+        metadata.push(`${word.index}-${word.word}`);
+      }
+    });
     this.saveCustomTranslation(lang);
   }
 
