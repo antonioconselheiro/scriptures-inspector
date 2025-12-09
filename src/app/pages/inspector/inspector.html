@@ -285,6 +285,22 @@
   </tr>
 </table>
 
+<div class="buttonGroup">
+  <button
+    type="button"
+    (click)="derivateTranslationToCustom(hebraicVerse, 'hebraic')"
+  > ▼ Translation </button>
+  <button
+    type="button"
+    [attr.disabled]="customHebraicTranslationEl.value === '' ? true : null"
+    (click)="derivateInterlinearToCustom(hebraicVerse, 'hebraic')"
+  > ▼ Interlinear </button>
+  <button
+    type="button"
+    (click)="derivateAllToCustom(hebraicVerse, 'hebraic')"
+  > ▼ All </button>
+</div>
+
 <table border="1">
   @let splitedCustomTranslation = splitTextBySpacesAndPunctuation(customHebraicTranslationEl.value);
   <tr>
@@ -330,8 +346,9 @@
     @for (sentence of splitedCustomTranslation; track $index) {
     <td>
       <select
+        [name]="'selectInterlinearHebraicCustomTranslationEl' + $index"
         #interlinearHebraicCustomTranslationEl
-        [value]="getCustomTranslationInterlinearMetadata(hebraicVerse, $index, 'hebraic')"
+        [ngModel]="customHebraicTranslation[currentBook][currentChapter]?.[hebraicVerse.verse.index]?.metadata?.[$index] || ''"
         (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, hebraicVerse, $index, 'hebraic')"
         >
         <option value=""></option>

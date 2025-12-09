@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
-import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
-import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
-import { ParsedPatterns } from './parsed-patterns';
-import { PatternsSerialized } from './patterns-serialized';
 import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
 import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
-import { AbstractCodice } from './domain/abstract-codice-model';
-import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
-import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
+import { AbstractCodice } from './domain/abstract-codice-model';
+import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
+import { HolyScriptureModel } from './domain/holy-scripture-model';
+import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
+import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
+import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
+import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
+import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
+import { ParsedPatterns } from './parsed-patterns';
+import { PatternsSerialized } from './patterns-serialized';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +38,10 @@ export class DocumentStorage {
   private greekLexical: Record<string, string> = {};
   private greekPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
+  private customHebraicTranslation!: OldTestmentScriptures<{ metadata?: string[] }>;
+  private customGreekTranslation!: NewTestmentScriptures<{ metadata?: string[] }>;
+  private customGeezTranslation!: HolyScriptureModel<{ metadata?: string[] }>;
+
   private interlinearGeezHebraic: InterlinearGeezHebraic = ({} as any);
   private interlinearGeezGreek: InterlinearGeezGreek = ({} as any);
 
@@ -55,8 +61,61 @@ export class DocumentStorage {
 
       this.interlinearGeezHebraic = JSON.parse(localStorage.getItem('interlinearGeezHebraic') || JSON.stringify(this.interlinearGeezHebraic));
       this.interlinearGeezGreek = JSON.parse(localStorage.getItem('interlinearGeezGreek') || JSON.stringify(this.interlinearGeezGreek));
+
+      this.customHebraicTranslation = this.readCustomHebraicTranslation();
+      this.customGreekTranslation = this.readCustomGreekTranslation();
+      this.customGeezTranslation = this.readCustomGeezTranslation();
     } catch (e) {
       console.error(e);
+    }
+  }
+
+  private readCustomHebraicTranslation(): OldTestmentScriptures {
+    const storedCustomHebraicTranslation = localStorage.getItem('customHebraicTranslation');
+    if (storedCustomHebraicTranslation) {
+      try {
+        return JSON.parse(storedCustomHebraicTranslation);
+      } catch {
+        return {
+          ...createOldTestmentObjectBase()
+        };
+      }
+    } else {
+      return {
+        ...createOldTestmentObjectBase()
+      };
+    }
+  }
+
+  private readCustomGeezTranslation(): HolyScriptureModel {
+    const storedCustomGeezTranslation = localStorage.getItem('customGeezTranslation');
+    if (storedCustomGeezTranslation) {
+      try {
+        return JSON.parse(storedCustomGeezTranslation);
+      } catch {
+        return {
+          ...createOldTestmentObjectBase(),
+          ...createNewTestmentObjectBase()
+        };
+      }
+    } else {
+      return {
+        ...createOldTestmentObjectBase(),
+        ...createNewTestmentObjectBase()
+      };
+    }
+  }
+
+  private readCustomGreekTranslation(): NewTestmentScriptures {
+    const storedCustomGreekTranslation = localStorage.getItem('customGreekTranslation');
+    if (storedCustomGreekTranslation) {
+      try {
+        return JSON.parse(storedCustomGreekTranslation);
+      } catch {
+        return { ...createNewTestmentObjectBase() };
+      }
+    } else {
+      return { ...createNewTestmentObjectBase() };
     }
   }
 
@@ -100,27 +159,45 @@ export class DocumentStorage {
   }
 
   saveHebraicMetadata(metadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    this.hebraicMetadata = metadata;
     localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
   }
 
   saveGreekMetadata(metadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    this.greekMetadata = metadata;
     localStorage.setItem('greekMetadata', JSON.stringify(metadata));
   }
 
   saveGeezMetadata(metadata: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+    this.geezMetadata = metadata;
     localStorage.setItem('geezMetadata', JSON.stringify(metadata));
   }
 
-  saveHebraicCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
-    localStorage.setItem('customHebraicTranslation', JSON.stringify(customTranslation));
+  getCustomHebraicTranslation(): OldTestmentScriptures<{ metadata?: string[] }> {
+    return this.customHebraicTranslation;
   }
 
-  saveGeezCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
-    localStorage.setItem('customGeezTranslation', JSON.stringify(customTranslation));
+  getCustomGreekTranslation(): NewTestmentScriptures<{ metadata?: string[] }> {
+    return this.customGreekTranslation;
   }
 
-  saveGreekCustomTranslation(customTranslation: AbstractHolyScriptureModel): void {
-    localStorage.setItem('customGreekTranslation', JSON.stringify(customTranslation));
+  getCustomGeezTranslation(): HolyScriptureModel<{ metadata?: string[] }> {
+    return this.customGeezTranslation;
+  }
+
+  saveHebraicCustomTranslation(customTranslation: OldTestmentScriptures<{ metadata?: string[] }>): void {
+    this.customHebraicTranslation = customTranslation;
+    localStorage.setItem('customHebraicTranslation', JSON.stringify(this.customHebraicTranslation));
+  }
+
+  saveGreekCustomTranslation(customTranslation: NewTestmentScriptures<{ metadata?: string[] }>): void {
+    this.customGreekTranslation = customTranslation;
+    localStorage.setItem('customGreekTranslation', JSON.stringify(this.customGreekTranslation));
+  }
+
+  saveGeezCustomTranslation(customTranslation: HolyScriptureModel<{ metadata?: string[] }>): void {
+    this.customGeezTranslation = customTranslation;
+    localStorage.setItem('customGeezTranslation', JSON.stringify(this.customGeezTranslation));
   }
 
   getHebraicPattern(): ParsedPatterns {
@@ -183,5 +260,13 @@ export class DocumentStorage {
     patterns[type].splice(index, 1);
     localStorage.setItem(storageKey, JSON.stringify(patterns));
     return this.getHebraicPattern();
+  }
+
+  getInterlinearGeezHebraic(): InterlinearGeezHebraic {
+    return this.interlinearGeezHebraic;
+  }
+
+  getInterlinearGeezGreek(): InterlinearGeezGreek {
+    return this.interlinearGeezGreek;
   }
 }
