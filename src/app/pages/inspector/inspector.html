@@ -326,7 +326,7 @@
     <td [colSpan]="splitedCustomTranslation.length">
       <span>&nbsp;</span>
       @for (sentence of splitedCustomTranslation; track $index) {
-      <span [class]="'sacred'+getCustomTranslationSacredRule(hebraicVerse, $index, 'hebraic')">{{sentence}}</span>
+      <span [class]="getCustomTranslationStyleRole(hebraicVerse, $index, 'hebraic')">{{sentence}}</span>
       }
     </td>
   </tr>

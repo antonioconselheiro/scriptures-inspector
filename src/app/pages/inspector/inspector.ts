@@ -620,8 +620,59 @@ export class Inspector implements OnInit {
     this.derivateInterlinearToCustom(verse, lang);
   }
 
-  getCustomTranslationSacredRule(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
-    return 'GodName';
+  getCustomTranslationStyleRole(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
+    const book = this.currentBook;
+    let verseMetadata: AbstractScriptureVerse<ScriptureVerseMetadata> | null, customTranslationMetadata: [string, string];
+
+    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
+      const scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
+      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
+      const translationChapterMetadata = this.customHebraicTranslation[book][this.currentChapter] || [];
+      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '').split('-') as [string, string];
+    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
+      const scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
+      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
+      const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
+      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '').split('-') as [string, string];
+    } else if (lang === 'geez') {
+      const scriptureChapterMetadata = this.geezMetadata[book] && this.geezMetadata[book][this.currentChapter] || [];
+      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
+      const translationChapterMetadata = this.customGeezTranslation[book][this.currentChapter] || [];
+      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '').split('-') as [string, string];
+    } else {
+      throw new Error('language not found');
+    }
+
+    if (!verseMetadata || customTranslationMetadata.length !== 2) {
+      return '';
+    }
+
+    const metadata = verseMetadata.metadata || [];
+    if (!metadata.length) {
+      return '';
+    }
+
+    const list = metadata.map(data => {
+      if (data) {
+        return data.segments.map(segment => {
+          return { segment, isWordOfGod: data.isWordOfGod }
+        })
+      }
+
+      return null;
+    }).flat();
+
+    const [ index, segment ] = customTranslationMetadata;
+    const data = list[+index];
+
+    if (!data) {
+      return '';
+    } else if (data.segment?.segment !== segment) {
+      console.warn('Metadata not found, translation metadata: ', customTranslationMetadata);
+      return '';
+    }
+
+    return [data.segment.kind, data.isWordOfGod ? 'goidsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
   }
 
   saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, index: number, lang: 'hebraic' | 'geez' | 'greek'): void {
