@@ -126,7 +126,7 @@ strong.verse-title {
   color: rgb(170, 2, 148);
 }
 
-.metagoidsaid {
+.metagodsaid {
   color: red;
 }
 
@@ -136,13 +136,13 @@ strong.verse-title {
 }
 
 .metakeyword {
-  color: blue;
+  font-weight: bold;
 }
 
 .metacharacter {
-  color: green
+  text-decoration: underline;
 }
 
 .metaamount {
-  color: gold
+  background-color: yellow;
 }

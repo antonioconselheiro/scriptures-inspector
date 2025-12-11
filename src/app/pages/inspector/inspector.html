@@ -138,7 +138,7 @@
     <table>
       <tr><th>Text</th><th>Meaning</th></tr>
       <tr><td>G</td><td>God name</td></tr>
-      <tr><td>N</td><td>Character name</td></tr>
+      <tr><td>C</td><td>Character name</td></tr>
       <tr><td>K</td><td>Keyword</td></tr>
       <tr><td>A</td><td>Amount</td></tr>
     </table>
@@ -201,8 +201,8 @@
       <input
         type="checkbox"
         #hebraicWordOfGodEl
-        [name]="'isWordOfGod' + word + wordIndex"
-        (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, 'hebraic')"
+        [name]="'isWordOfGod' + wordIndex"
+        (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, eachHebraicWord[wordIndex], 'hebraic')"
         [checked]="getScriptureMetadataWordOfGod(verseKey, wordIndex, 'hebraic')"
       />
     </td>
@@ -224,7 +224,7 @@
       >
         <option value="nothing">-</option>
         <option value="godname">G</option>
-        <option value="character">N</option>
+        <option value="character">C</option>
         <option value="keyword">K</option>
         <option value="amount">A</option>
       </select>

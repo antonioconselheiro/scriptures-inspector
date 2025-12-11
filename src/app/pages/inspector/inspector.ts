@@ -545,10 +545,15 @@ export class Inspector implements OnInit {
       customBook[chapter] = [];
     }
 
-    customBook[chapter][verse.verse.index] = {
-      ...verse,
-      text: input.value
-    };
+    if (customBook[chapter][verse.verse.index]) {
+      customBook[chapter][verse.verse.index].text = input.value;
+    } else {
+      customBook[chapter][verse.verse.index] = {
+        ...verse,
+        text: input.value
+      };
+    }
+
 
     if (lang === 'hebraic') {
       this.documentStorage.saveHebraicCustomTranslation(customTranslation as OldTestmentScriptures);
@@ -597,27 +602,36 @@ export class Inspector implements OnInit {
     return { metadata, customTranslation };
   }
 
-  derivateTranslationToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text = this.splitIntoMatrix(verse.text, lang).flat().map(word => this.getLexical(word.word, lang)).join(' ');
-    this.saveCustomTranslation(lang);
+  derivateTranslationToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek', overwrite = false): void {
+    const current = overwrite || confirm('overwrite current verse translation?');
+    if (current) {
+      const { customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
+      customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text = this.splitIntoMatrix(verse.text, lang).flat().map(word => this.getLexical(word.word, lang)).join(' ');
+      this.saveCustomTranslation(lang);
+    }
   }
 
-  derivateInterlinearToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { metadata, customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    metadata.splice(0, metadata.length);
-    const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
-    this.splitIntoMatrix(verse.text, lang).flat().forEach(word => {
-      if (custom[word.index] === this.getLexical(word.word, lang)) {
-        metadata.push(`${word.index}-${word.word}`);
-      }
-    });
-    this.saveCustomTranslation(lang);
+  derivateInterlinearToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek', overwrite = false): void {
+    const current = overwrite || confirm('overwrite current verse interlineares?');
+    if (current) {
+      const { metadata, customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
+      metadata.splice(0, metadata.length);
+      const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
+      this.splitIntoMatrix(verse.text, lang).flat().forEach(word => {
+        if (custom[word.index] === this.getLexical(word.word, lang)) {
+          metadata.push(`${word.index}-${word.word}`);
+        }
+      });
+      this.saveCustomTranslation(lang);
+    }
   }
 
   derivateAllToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    this.derivateTranslationToCustom(verse, lang);
-    this.derivateInterlinearToCustom(verse, lang);
+    const current = confirm('overwrite verse translation and interlineares?');
+    if (current) {
+      this.derivateTranslationToCustom(verse, lang, true);
+      setTimeout(() => this.derivateInterlinearToCustom(verse, lang, true));
+    }
   }
 
   getCustomTranslationStyleRole(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
@@ -662,17 +676,25 @@ export class Inspector implements OnInit {
       return null;
     }).flat();
 
-    const [ index, segment ] = customTranslationMetadata;
+    const [index, segment] = customTranslationMetadata;
     const data = list[+index];
 
     if (!data) {
       return '';
-    } else if (data.segment?.segment !== segment) {
-      console.warn('Metadata not found, translation metadata: ', customTranslationMetadata);
-      return '';
     }
 
-    return [data.segment.kind, data.isWordOfGod ? 'goidsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
+    if (data.segment?.segment !== segment) {
+      if (data.isWordOfGod) {
+        return 'metagodsaid';
+      } else {
+        if (!data) {
+          console.warn('Metadata not found, translation metadata: ', customTranslationMetadata);
+        }
+        return '';
+      }
+    }
+
+    return [data.segment.kind, data.isWordOfGod ? 'godsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
   }
 
   saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, index: number, lang: 'hebraic' | 'geez' | 'greek'): void {
@@ -713,7 +735,12 @@ export class Inspector implements OnInit {
   }
 
   createIfNotExistsWordMetadata(
-    wordIndex: number, word: string, verseIndex: number, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'
+    wordIndex: number,
+    word: string,
+    verseIndex: number,
+    verse: ScriptureVerse,
+    lang: 'hebraic' | 'geez' | 'greek',
+    segments: Array<{ index: number; word: string; }> = []
   ): ScriptureVerseMetadataWord {
     let codiceMetadata: AbstractCodice<string, AbstractScriptureVerse<ScriptureVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
@@ -743,7 +770,12 @@ export class Inspector implements OnInit {
     codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
     let wordMetadata: ScriptureVerseMetadataWord = metadata[wordIndex] || {
       word,
-      segments: []
+      segments: segments.map(seg => {
+        return {
+          kind: '',
+          segment: seg.word
+        };
+      })
     };
 
     metadata[wordIndex] = wordMetadata;
@@ -757,9 +789,10 @@ export class Inspector implements OnInit {
     wordIndex: number,
     word: string,
     verse: ScriptureVerse,
+    segments: Array<{ index: number; word: string; }>,
     lang: 'hebraic' | 'geez' | 'greek'
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(wordIndex, word, verseIndex, verse, lang);
+    const wordMetadata = this.createIfNotExistsWordMetadata(wordIndex, word, verseIndex, verse, lang, segments);
     if (input.checked) {
       wordMetadata.isWordOfGod = true;
     } else {
