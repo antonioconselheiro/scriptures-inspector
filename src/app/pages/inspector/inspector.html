@@ -202,7 +202,7 @@
         type="checkbox"
         #hebraicWordOfGodEl
         [name]="'isWordOfGod' + wordIndex"
-        (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, wordIndex, word, hebraicVerse, eachHebraicWord[wordIndex], 'hebraic')"
+        (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, hebraicVerse, eachHebraicWord[wordIndex], 'hebraic')"
         [checked]="getScriptureMetadataWordOfGod(verseKey, wordIndex, 'hebraic')"
       />
     </td>
@@ -217,8 +217,8 @@
       <select
         #hebraicMetadataEl
         [name]="'fieldHebraicMetadata' + segment.index"
-        [value]="getScriptureMetadataDefinedKind(verseKey, wordIndex, segmentIndex, 'hebraic')"
-        (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, wordIndex, segmentIndex, hebraic[wordIndex], segment, 'hebraic')"
+        [value]="getScriptureMetadataDefinedKind(verseKey, segment, 'hebraic')"
+        (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, segment, 'hebraic')"
         (focus)="showLegend = true"
         (blur)="showLegend = false"
       >
@@ -354,7 +354,7 @@
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {
-        <option [value]="hebraicWord.index+'-'+hebraicWord.word">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        <option [value]="getMetadataIndexFromSegment(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
         </option>
         }
         }
@@ -471,7 +471,7 @@
         <option value=""></option>
         @for (geezesWord of eachGeezMatriz; track $index) {
         @for (geezWord of geezesWord; track $index) {
-        <option [value]="geezWord.index+'-'+geezWord.word">({{geezWord.index}} - {{geezWord.word}} )
+        <option [value]="getMetadataIndexFromSegment(geezWord)">({{geezWord.index}} - {{geezWord.word}} )
         </option>
         }
         }
