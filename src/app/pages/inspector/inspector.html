@@ -203,7 +203,7 @@
         #hebraicWordOfGodEl
         [name]="'isWordOfGod' + wordIndex"
         (change)="setAsWordOfGod(hebraicWordOfGodEl, verseKey, hebraicVerse, eachHebraicWord[wordIndex], 'hebraic')"
-        [checked]="getScriptureMetadataWordOfGod(verseKey, wordIndex, 'hebraic')"
+        [checked]="getScriptureMetadataWordOfGod(verseKey, eachHebraicWord[wordIndex], 'hebraic')"
       />
     </td>
     }

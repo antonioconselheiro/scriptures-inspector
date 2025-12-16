@@ -463,18 +463,30 @@ export class Inspector implements OnInit {
   }
 
   getCustomTranslationFromHebraicColor(verse: ScriptureVerse, wordIndex: number): string {
-    const verseNumber = Number(verse.verse.start);
+    const currentBook = this.currentBook;
+    if (!this.isOldBookGuard(currentBook)) {
+      return '';
+    }
+
     if (
-      !this.interlinearGeezCustomTranslation[this.currentBook] ||
-      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter] ||
-      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
-      !this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
+      !this.customHebraicTranslation[currentBook] ||
+      !this.customHebraicTranslation[currentBook][this.currentChapter] ||
+      !this.customHebraicTranslation[currentBook][this.currentChapter][verse.verse.index]
     ) {
       return '';
     }
 
-    const map = this.interlinearGeezCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
-    return String(map.origin.index % 7 + 1);
+    const translationMetadata = this.customHebraicTranslation[currentBook][this.currentChapter][verse.verse.index].metadata;
+    if (!translationMetadata) {
+      return '';
+    }
+
+    const matches = translationMetadata[wordIndex].match(/^\d+/);
+    if (matches) {
+      return String(Number(Array.from(matches)[0]) % 7 + 1);
+    }
+
+    return '';
   }
 
   getCustomTranslationFromGeezColor(verse: ScriptureVerse, wordIndex: number): string {
@@ -546,7 +558,14 @@ export class Inspector implements OnInit {
     }
 
     if (customBook[chapter][verse.verse.index]) {
-      customBook[chapter][verse.verse.index].text = input.value;
+      if (input.value) {
+        customBook[chapter][verse.verse.index].text = input.value;
+      } else {
+        customBook[chapter][verse.verse.index] = {
+          ...verse,
+          text: ''
+        };
+      }
     } else {
       customBook[chapter][verse.verse.index] = {
         ...verse,
@@ -818,7 +837,7 @@ export class Inspector implements OnInit {
 
   getScriptureMetadataWordOfGod(
     verseKey: number,
-    wordIndex: number,
+    segments: Array<{ index: number; word: string; }>,
     lang: 'hebraic' | 'geez' | 'greek'
   ): boolean {
     let codiceMetadata: AbstractCodice<string, AbstractScriptureVerse<ScriptureVerseMetadata>> = {};
@@ -839,11 +858,18 @@ export class Inspector implements OnInit {
     }
 
     const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
-    if (!metadata || !metadata[wordIndex]) {
+    
+    if (!metadata || !segments[0]) {
       return false;
     }
 
-    return metadata[wordIndex].isWordOfGod || false;
+    const segment = this.getMetadataIndexFromSegment(segments[0]);
+    const data = metadata[segment];
+    if (!data) {
+      return false;
+    }
+
+    return data.isWordOfGod || false;
   }
 
   updateScripturesMetadata(
