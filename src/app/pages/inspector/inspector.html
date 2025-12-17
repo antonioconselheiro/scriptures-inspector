@@ -155,7 +155,7 @@
 @let eachHebraicWord = splitIntoMatrix(hebraicVerse.text, 'hebraic');
 @let geezVerses = getCorrespondingGeezVerse(hebraicVerse);
 
-<strong class="verse-title">{{bookMetadata[currentBook].normal}}, {{currentChapter + 1}}:{{hebraicVerse | verse}}</strong>
+<strong class="verseTitle">{{bookMetadata[currentBook].normal}}, {{currentChapter + 1}}:{{hebraicVerse | verse}}</strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>
@@ -167,10 +167,10 @@
     <th rowspan="2">scripture</th>
     <td [colSpan]="hebraic.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="hebraic">
       @for (sentence of eachHebraicWord; track $index) {
-      <span>&nbsp;</span>
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
-      }
+        @for (word of sentence; track $index) {
+          <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+        }
+        <span>&nbsp;</span>
       }
     </td>
   </tr>
@@ -288,7 +288,7 @@
 <div class="buttonGroup">
   <button
     type="button"
-    (click)="derivateTranslationToCustom(hebraicVerse, 'hebraic')"
+    (click)="derivateTranslationToCustom(hebraicVerse, 'hebraic', customHebraicTranslationEl.value === '')"
   > ▼ Translation </button>
   <button
     type="button"
@@ -302,10 +302,10 @@
 </div>
 
 <table border="1">
-  @let splitedCustomTranslation = splitTextBySpacesAndPunctuation(customHebraicTranslationEl.value);
+  @let splittedCustomTranslation = splitTextBySpacesAndPunctuation(customHebraicTranslationEl.value);
   <tr>
     <th rowspan="3">custom</th>
-    <td [colSpan]="splitedCustomTranslation.length">
+    <td [colSpan]="splittedCustomTranslation.length">
       <input type="text" #customHebraicTranslationEl class="customTranslation" name="customHebraicTranslation"
         placeholder="custom translation"
         (input)="updateCustomTranslation(customHebraicTranslationEl, hebraicVerse, 'hebraic')"
@@ -314,18 +314,18 @@
   </tr>
 
   <tr>
-    <td [colSpan]="splitedCustomTranslation.length">
+    <td [colSpan]="splittedCustomTranslation.length">
       <span>&nbsp;</span>
-      @for (sentence of splitedCustomTranslation; track $index) {
+      @for (sentence of splittedCustomTranslation; track $index) {
       <span [class]="'prisma'+getCustomTranslationFromHebraicColor(hebraicVerse, $index)">{{sentence}}</span>
       }
     </td>
   </tr>
 
   <tr>
-    <td [colSpan]="splitedCustomTranslation.length">
+    <td [colSpan]="splittedCustomTranslation.length">
       <span>&nbsp;</span>
-      @for (sentence of splitedCustomTranslation; track $index) {
+      @for (sentence of splittedCustomTranslation; track $index) {
       <span [class]="getCustomTranslationStyleRole(hebraicVerse, $index, 'hebraic')">{{sentence}}</span>
       }
     </td>
@@ -333,7 +333,7 @@
 
   <tr>
     <th>interlinear</th>
-    @for (sentence of splitedCustomTranslation; track $index) {
+    @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       <span>&nbsp;</span>
       {{sentence}}
@@ -343,7 +343,7 @@
 
   <tr>
     <th>scriptures</th>
-    @for (sentence of splitedCustomTranslation; track $index) {
+    @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       <select
         [name]="'selectInterlinearHebraicCustomTranslationEl' + $index"
@@ -373,9 +373,10 @@
     <th rowspan="2">ge'əz</th>
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
       @for (sentence of eachGeezMatriz; track $index) {
-      @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
-      }
+        @for (word of sentence; track word.index) {
+          <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+        }
+        <span>&nbsp;</span>
       }
     </td>
   </tr>
@@ -427,8 +428,8 @@
     <td>
       @for (geezWord of sentence; track $index) {
       <select #interlinear
-        (change)="onSelectInterlinearGeezToHebraic(hebraicVerse, geezVerse, geezWord.index, geezWord.word, interlinear.value)"
-        [ngModel]="getGeezInterlinear(geezVerse.verse.start, geezWord.index)" [name]="$index + '-' + geezWord.word">
+        (change)="onSelectInterlinearGeezToScripture(hebraicVerse, geezVerse, geezWord.index, geezWord.word, interlinear.value, 'hebraic')"
+        [ngModel]="getGeezHebraicInterlinear(geezVerse.verse.start, geezWord.index)" [name]="$index + '-' + geezWord.word">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {
@@ -443,20 +444,55 @@
   </tr>
 </table>
 
+<div class="buttonGroup">
+  <button
+    type="button"
+    (click)="derivateTranslationToCustom(geezVerse, 'geez', customGeezTranslationEl.value === '')"
+  > ▼ Translation </button>
+  <button
+    type="button"
+    [attr.disabled]="customGeezTranslationEl.value === '' ? true : null"
+    (click)="derivateInterlinearToCustom(geezVerse, 'geez')"
+  > ▼ Interlinear </button>
+  <button
+    type="button"
+    (click)="derivateAllToCustom(geezVerse, 'geez')"
+  > ▼ All </button>
+</div>
+
 <table border="1">
-  @let splitedCustomTranslation = splitTextBySpacesAndPunctuation(customGeezTranslationEl.value);
+  @let splittedCustomTranslation = splitTextBySpacesAndPunctuation(customGeezTranslationEl.value);
   <tr>
-    <th>custom</th>
-    <td [colSpan]="splitedCustomTranslation.length">
+    <th rowspan="3">custom</th>
+    <td [colSpan]="splittedCustomTranslation.length">
       <input type="text" #customGeezTranslationEl class="customTranslation" name="customGeezTranslation"
         placeholder="custom translation" (input)="updateCustomTranslation(customGeezTranslationEl, geezVerse, 'geez')"
+        (input)="updateCustomTranslation(customGeezTranslationEl, geezVerse, 'geez')"
         [value]="getCustomTranslationVerse(customGeezTranslation, geezVerse)?.text" />
     </td>
   </tr>
 
   <tr>
+    <td [colSpan]="splittedCustomTranslation.length">
+      <span>&nbsp;</span>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <span [class]="'prisma'+getGeezCustomTranslationColor(geezVerse, $index)">{{sentence}}</span>
+      }
+    </td>
+  </tr>
+
+  <tr>
+    <td [colSpan]="splittedCustomTranslation.length">
+      <span>&nbsp;</span>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <span [class]="getCustomTranslationStyleRole(geezVerse, $index, 'geez')">{{sentence}}</span>
+      }
+    </td>
+  </tr>
+
+  <tr>
     <th>interlinear</th>
-    @for (sentence of splitedCustomTranslation; track $index) {
+    @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       {{sentence}}
     </td>
@@ -465,9 +501,14 @@
 
   <tr>
     <th>scriptures</th>
-    @for (sentence of splitedCustomTranslation; track $index) {
+    @for (sentence of splittedCustomTranslation; track $index) {
     <td>
-      <select #interlinearHebraicCustomTranslation>
+      <select 
+        [name]="'selectInterlinearGeezCustomTranslationEl' + $index"
+        #interlinearGeezCustomTranslationEl
+        [ngModel]="customGeezTranslation[currentBook][currentChapter]?.[geezVerse.verse.index]?.metadata?.[$index] || ''"
+        (change)="saveCustomTranslationInterlinearMetadata(interlinearGeezCustomTranslationEl.value, geezVerse, $index, 'geez')"
+      >
         <option value=""></option>
         @for (geezesWord of eachGeezMatriz; track $index) {
         @for (geezWord of geezesWord; track $index) {

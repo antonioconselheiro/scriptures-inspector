@@ -269,4 +269,16 @@ export class DocumentStorage {
   getInterlinearGeezGreek(): InterlinearGeezGreek {
     return this.interlinearGeezGreek;
   }
+
+  saveInterlinearGeezHebraic(interlinear: InterlinearGeezHebraic): InterlinearGeezHebraic {
+    this.interlinearGeezHebraic = interlinear;
+    localStorage.setItem('interlinearGeezHebraic', JSON.stringify(this.interlinearGeezHebraic));
+    return this.interlinearGeezHebraic;
+  }
+
+  saveInterlinearGeezGreek(interlinear: InterlinearGeezGreek): InterlinearGeezGreek {
+    this.interlinearGeezGreek = interlinear;
+    localStorage.setItem('interlinearGeezGreek', JSON.stringify(this.interlinearGeezGreek));
+    return this.interlinearGeezGreek;
+  }
 }

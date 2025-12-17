@@ -32,6 +32,7 @@ import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model'
 import { ScriptureVerseMetadataWord } from './domain/scripture-verse-metadata-word-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
+import { TranslationInterlinearVerse } from './domain/translation-interlinear-verse-model';
 import { Translation } from './domain/translation-model';
 import { GematricsPipe } from './gematrics-pipe';
 import { LiteralizatePipe } from './literalizate-pipe';
@@ -384,7 +385,7 @@ export class Inspector implements OnInit {
     }));
   }
 
-  getGeezInterlinear(geezVerse: string, geezWordIndex: number): string {
+  getGeezHebraicInterlinear(geezVerse: string, geezWordIndex: number): string {
     if (!this.isOldBookGuard(this.currentBook)) {
       return '';
     }
@@ -401,45 +402,76 @@ export class Inspector implements OnInit {
     return '';
   }
 
-  onSelectInterlinearGeezToHebraic(
-    hebraicVerse: ScriptureVerse,
-    geezVerse: ScriptureVerse,
-    geezIndex: number,
-    geezWord: string,
-    interlinear: string
-  ): void {
-    const [hIndex, hebraicWord] = interlinear.split('-');
-    const hebraicIndex = Number(hIndex);
-    const hebraicVerseNumber = Number(hebraicVerse.verse.start);
-    const geezVerseNumber = Number(geezVerse.verse.start);
+  getGeezGreekInterlinear(geezVerse: string, geezWordIndex: number): string {
+    if (!this.isNewBookGuard(this.currentBook)) {
+      return '';
+    }
 
-    if (!this.isOldBookGuard(this.currentBook)) {
+    try {
+      const interlinear = this.interlinearGeezGreek[this.currentBook][this.currentChapter][Number(geezVerse)][geezWordIndex];
+      if (interlinear) {
+        return this.getMetadataIndexFromSegment(interlinear.origin);
+      }
+    } catch {
+
+    }
+
+    return '';
+  }
+
+  onSelectInterlinearGeezToScripture(
+    scriptureVerse: ScriptureVerse,
+    geezVerse: ScriptureVerse,
+    geezWordIndex: number,
+    geezWord: string,
+    interlinear: string,
+    lang: 'hebraic' | 'geez' | 'greek'
+  ): void {
+    const [scriptureWordIndexString, scriptureWord] = interlinear.split('-');
+    const scriptureWordIndex = Number(scriptureWordIndexString);
+    const scriptureVerseNumber = Number(scriptureVerse.verse.start);
+    const geezVerseNumber = Number(geezVerse.verse.start);
+    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      interlinearMetadata = this.interlinearGeezHebraic;
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      interlinearMetadata = this.interlinearGeezGreek;
+    } else {
       return;
     }
 
-    if (!this.interlinearGeezHebraic[this.currentBook][this.currentChapter]) {
-      this.interlinearGeezHebraic[this.currentBook][this.currentChapter] = [];
+    if (!interlinearMetadata[this.currentBook]) {
+      interlinearMetadata[this.currentBook] = [];
     }
 
-    if (!this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber]) {
-      this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber] = [];
+    if (!interlinearMetadata[this.currentBook][this.currentChapter]) {
+      interlinearMetadata[this.currentBook][this.currentChapter] = [];
     }
 
-    this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerseNumber][geezIndex] = {
+    if (!interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index]) {
+      interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index] = [];
+    }
+
+    interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex] = {
       origin: {
-        verse: hebraicVerseNumber,
-        index: hebraicIndex,
-        word: hebraicWord
+        verse: scriptureVerseNumber,
+        index: scriptureWordIndex,
+        word: scriptureWord
       },
 
       translation: {
         verse: geezVerseNumber,
-        index: geezIndex,
+        index: geezWordIndex,
         word: geezWord
       }
     };
 
-    localStorage.setItem('interlinearGeezHebraic', JSON.stringify(this.interlinearGeezHebraic));
+    if (lang === 'hebraic') {
+      this.interlinearGeezHebraic = this.documentStorage.saveInterlinearGeezHebraic(this.interlinearGeezHebraic);
+    } else if (lang === 'greek') {
+      this.interlinearGeezGreek = this.documentStorage.saveInterlinearGeezGreek(this.interlinearGeezGreek);
+    }
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
@@ -448,17 +480,17 @@ export class Inspector implements OnInit {
     }
 
     //  FIXME: revisar comportamento para versiculos compostos
-    const verseNumber = Number(geezVerse.verse.start);
+    const verseIndex = Number(geezVerse.verse.index);
     if (
       !this.interlinearGeezHebraic[this.currentBook] ||
       !this.interlinearGeezHebraic[this.currentBook][this.currentChapter] ||
-      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber] ||
-      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber][wordIndex]
+      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex] ||
+      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseNumber][wordIndex];
+    const map = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -481,7 +513,7 @@ export class Inspector implements OnInit {
       return '';
     }
 
-    const matches = translationMetadata[wordIndex].match(/^\d+/);
+    const matches = translationMetadata[wordIndex] && translationMetadata[wordIndex].match(/^\d+/);
     if (matches) {
       return String(Number(Array.from(matches)[0]) % 7 + 1);
     }
@@ -489,41 +521,28 @@ export class Inspector implements OnInit {
     return '';
   }
 
-  getCustomTranslationFromGeezColor(verse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isOldBookGuard(this.currentBook)) {
+  getGeezCustomTranslationColor(verse: ScriptureVerse, wordIndex: number): string {
+    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+    const currentBook = this.currentBook;
+    if (this.isOldBookGuard(currentBook)) {
+      interlinearMetadata = this.interlinearGeezHebraic;
+    } else if (this.isNewBookGuard(currentBook)) {
+      interlinearMetadata = this.interlinearGeezGreek;
+    } else {
       return '';
     }
 
-    const verseNumber = Number(verse.verse.start);
+    const verseIndex = Number(verse.verse.index);
     if (
-      !this.interlinearHebraicCustomTranslation[this.currentBook] ||
-      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter] ||
-      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
-      !this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
+      !interlinearMetadata[currentBook] ||
+      !interlinearMetadata[currentBook][this.currentChapter] ||
+      !interlinearMetadata[currentBook][this.currentChapter][verseIndex] ||
+      !interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearHebraicCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
-    return String(map.origin.index % 7 + 1);
-  }
-
-  getCustomTranslationFromGreekColor(verse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isNewBookGuard(this.currentBook)) {
-      return '';
-    }
-
-    const verseNumber = Number(verse.verse.start);
-    if (
-      !this.interlinearGreekCustomTranslation[this.currentBook] ||
-      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter] ||
-      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber] ||
-      !this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex]
-    ) {
-      return '';
-    }
-
-    const map = this.interlinearGreekCustomTranslation[this.currentBook][this.currentChapter][verseNumber][wordIndex];
+    const map = interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -668,6 +687,7 @@ export class Inspector implements OnInit {
       const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
       customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'geez') {
+      debugger;
       const scriptureChapterMetadata = this.geezMetadata[book] && this.geezMetadata[book][this.currentChapter] || [];
       verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
       const translationChapterMetadata = this.customGeezTranslation[book][this.currentChapter] || [];

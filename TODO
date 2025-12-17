@@ -21,3 +21,5 @@ TODO
 [ ] - Após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
 [ ] - Tornar scriptures inspector abstrato para receber todo tipo de texto antigo
 [ ] - Botão para limpar toda associação de metadados da tradução personalizada
+[ ] - Incluir possibilidade de explicar o por que sim e os por que não das palavras escolhidas no lexico
+[ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
