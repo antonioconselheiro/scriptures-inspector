@@ -1,19 +1,14 @@
 TODO
 
 [ ] - validar gematria com falseamento
-[ ] - incluir gematria ordinal
+[ ] - incluir e falsear gematria ordinal
 [ ] - completar transliterações geez com todas disponiveis no canone
 [ ] - remover delimitações massoreticas nas associações interlineares
-[ ] - incluir linha no hebraico para identificação de metadados, nomes dos personagens, keywords, e números que representem pesos e medidas (as palavra correspondente a medida deve ser associado ao número, ex: "10 denários", então o 10 é marcado como denário), só deve se aplicar a valores que sofrem mudança diante da tradução do sistema de valor, medida ou de pesagem;
 [ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
-[ ] - incluir linha na tradução personalizada para identificação de palavras chaves que foram preservadas do hebraico, de forma que posteriormente possam ser substituídas por palavras personalizadas
 [ ] - baixar tradução geez para comparação
 [ ] - separar versiculos em páginas para evitar muitos ciclos de renderização na interação
-[ ] - listar os patterns do hebraics para associar com a tradução customizada
-[ ] - criar botão "completar do lexico interlinear" para que o custom translation seja substituido pelo conteúdo do interlinear incluindo a relação com o original
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
-[ ] - salvar tradução personalizada com metadados, manifestar prisma
 [ ] - estruturar para o grego, testar funcionamento com todos idiomas e interlineares
 [ ] - criar forma de importar e exportar o conteúdo trabalhado como um arquivo json
 [ ] - botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
@@ -21,5 +16,5 @@ TODO
 [ ] - Após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
 [ ] - Tornar scriptures inspector abstrato para receber todo tipo de texto antigo
 [ ] - Botão para limpar toda associação de metadados da tradução personalizada
-[ ] - Incluir possibilidade de explicar o por que sim e os por que não das palavras escolhidas no lexico
+[ ] - Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
 [ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
