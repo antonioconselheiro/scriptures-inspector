@@ -385,13 +385,18 @@ export class Inspector implements OnInit {
     }));
   }
 
-  getGeezHebraicInterlinear(geezVerse: string, geezWordIndex: number): string {
-    if (!this.isOldBookGuard(this.currentBook)) {
-      return '';
-    }
+  getGeezInterlinear(geezVerse: ScriptureVerse, geezWordIndex: number): string {
+    let interlinear: TranslationInterlinearVerse;
 
     try {
-      const interlinear = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][Number(geezVerse)][geezWordIndex];
+      if (this.isOldBookGuard(this.currentBook)) {
+        interlinear = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex];
+      } else if (this.isNewBookGuard(this.currentBook)) {
+        interlinear = this.interlinearGeezGreek[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex];
+      } else {
+        return '';
+      }
+
       if (interlinear) {
         return this.getMetadataIndexFromSegment(interlinear.origin);
       }
@@ -687,7 +692,6 @@ export class Inspector implements OnInit {
       const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
       customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'geez') {
-      debugger;
       const scriptureChapterMetadata = this.geezMetadata[book] && this.geezMetadata[book][this.currentChapter] || [];
       verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
       const translationChapterMetadata = this.customGeezTranslation[book][this.currentChapter] || [];
@@ -709,16 +713,17 @@ export class Inspector implements OnInit {
     return [data.kind, data.isWordOfGod ? 'godsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
   }
 
-  saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, index: number, lang: 'hebraic' | 'geez' | 'greek'): void {
+  saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): void {
     const { metadata } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    metadata[index] = value;
+    metadata[wordIndex] = value;
 
     this.saveCustomTranslation(lang);
   }
 
   splitTextBySpacesAndPunctuation(value: string): string[] {
     return [...value.matchAll(/(\s*)(\S+?)(\.{3}|…|[.!?]+)?(?=\s|$)/g)]
-      .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`]);
+      .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`])
+      .map(m => m.trim());
   }
 
   updateLexical(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
