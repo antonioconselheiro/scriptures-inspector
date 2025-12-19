@@ -31,10 +31,6 @@ export class DocumentStorage {
   private geezLexical: Record<string, string> = {};
   private geezPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
-  private geezMetadata: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
-    ...createOldTestmentObjectBase(),
-    ...createNewTestmentObjectBase()
-  };
   private greekLexical: Record<string, string> = {};
   private greekPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
@@ -55,7 +51,6 @@ export class DocumentStorage {
       this.greekLexical = JSON.parse(localStorage.getItem('greekLexical') || '{}');
       this.greekPatterns = JSON.parse(localStorage.getItem('greekPatterns') || JSON.stringify(this.greekPatterns));
 
-      this.geezMetadata = JSON.parse(localStorage.getItem('geezMetadata') || '{}');
       this.geezLexical = JSON.parse(localStorage.getItem('geezLexical') || '{}');
       this.geezPatterns = JSON.parse(localStorage.getItem('geezPatterns') || JSON.stringify(this.geezPatterns));
 
@@ -154,10 +149,6 @@ export class DocumentStorage {
     return this.greekMetadata;
   }
 
-  getGeezMetadata(): AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
-    return this.geezMetadata;
-  }
-
   saveHebraicMetadata(metadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
     this.hebraicMetadata = metadata;
     localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
@@ -166,11 +157,6 @@ export class DocumentStorage {
   saveGreekMetadata(metadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
     this.greekMetadata = metadata;
     localStorage.setItem('greekMetadata', JSON.stringify(metadata));
-  }
-
-  saveGeezMetadata(metadata: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
-    this.geezMetadata = metadata;
-    localStorage.setItem('geezMetadata', JSON.stringify(metadata));
   }
 
   getCustomHebraicTranslation(): OldTestmentScriptures<{ metadata?: string[] }> {

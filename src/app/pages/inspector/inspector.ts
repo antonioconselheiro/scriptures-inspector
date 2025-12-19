@@ -92,7 +92,6 @@ export class Inspector implements OnInit {
 
   hebraicMetadata!: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
   greekMetadata!: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
-  geezMetadata!: AbstractCodice<OldTestamentBooksUnion | NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>;
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
     ...createOldTestmentObjectBase()
@@ -154,7 +153,6 @@ export class Inspector implements OnInit {
   private readMetadata(): void {
     this.hebraicMetadata = this.documentStorage.getHebraicMetadata();
     this.greekMetadata = this.documentStorage.getGreekMetadata();
-    this.geezMetadata = this.documentStorage.getGeezMetadata();
   }
 
   private readPatterns(): void {
@@ -552,7 +550,9 @@ export class Inspector implements OnInit {
   }
 
   getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: ScriptureVerse): ScriptureVerse | null {
-    return custom[this.currentBook] && custom[this.currentBook][this.currentChapter] && custom[this.currentBook][this.currentChapter][verse.verse.index];
+    return custom[this.currentBook] &&
+      custom[this.currentBook][this.currentChapter] &&
+      custom[this.currentBook][this.currentChapter][verse.verse.index] || null;
   }
 
   updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
@@ -596,7 +596,6 @@ export class Inspector implements OnInit {
         text: input.value
       };
     }
-
 
     if (lang === 'hebraic') {
       this.documentStorage.saveHebraicCustomTranslation(customTranslation as OldTestmentScriptures);
@@ -692,10 +691,23 @@ export class Inspector implements OnInit {
       const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
       customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'geez') {
-      const scriptureChapterMetadata = this.geezMetadata[book] && this.geezMetadata[book][this.currentChapter] || [];
+      let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+      let scriptureChapterMetadata: AbstractScriptureVerse<ScriptureVerseMetadata>[] = []
+      if (this.isOldBookGuard(book)) {
+        scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
+        interlinearMetadata = this.interlinearGeezHebraic;
+      } else if (this.isNewBookGuard(book)) {
+        scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
+        interlinearMetadata = this.interlinearGeezGreek;
+      }
+
+      const scriptureWordIndex = interlinearMetadata[this.currentBook][this.currentChapter][verse.verse.index][wordIndex].origin.index;
+      //  TODOING: ...
+
       verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
       const translationChapterMetadata = this.customGeezTranslation[book][this.currentChapter] || [];
       customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
+
     } else {
       throw new Error('language not found');
     }
@@ -764,8 +776,6 @@ export class Inspector implements OnInit {
       codiceMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
       codiceMetadata = this.greekMetadata;
-    } else if (lang === 'geez') {
-      codiceMetadata = this.geezMetadata;
     }
 
     if (!codiceMetadata[this.currentBook]) {
@@ -820,8 +830,6 @@ export class Inspector implements OnInit {
       this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
       this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    } else if (lang === 'geez') {
-      this.documentStorage.saveGeezMetadata(this.geezMetadata);
     }
   }
 
@@ -835,8 +843,6 @@ export class Inspector implements OnInit {
       codiceMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
       codiceMetadata = this.greekMetadata;
-    } else if (lang === 'geez') {
-      codiceMetadata = this.geezMetadata;
     }
 
     if (
@@ -870,8 +876,6 @@ export class Inspector implements OnInit {
       codiceMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
       codiceMetadata = this.greekMetadata;
-    } else if (lang === 'geez') {
-      codiceMetadata = this.geezMetadata;
     }
 
     if (
@@ -917,8 +921,6 @@ export class Inspector implements OnInit {
       this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
       this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    } else if (lang === 'geez') {
-      this.documentStorage.saveGeezMetadata(this.geezMetadata);
     }
   }
 
