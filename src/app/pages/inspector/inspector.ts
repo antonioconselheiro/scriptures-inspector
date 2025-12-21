@@ -478,22 +478,28 @@ export class Inspector implements OnInit {
   }
 
   getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
-    if (!this.isOldBookGuard(this.currentBook)) {
+    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+    const currentBook = this.currentBook;
+    if (this.isOldBookGuard(currentBook)) {
+      interlinearMetadata = this.interlinearGeezHebraic;
+    } else if (this.isNewBookGuard(currentBook)) {
+      interlinearMetadata = this.interlinearGeezGreek;
+    } else {
       return '';
     }
 
     //  FIXME: revisar comportamento para versiculos compostos
     const verseIndex = Number(geezVerse.verse.index);
     if (
-      !this.interlinearGeezHebraic[this.currentBook] ||
-      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter] ||
-      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex] ||
-      !this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex][wordIndex]
+      !interlinearMetadata[currentBook] ||
+      !interlinearMetadata[currentBook][this.currentChapter] ||
+      !interlinearMetadata[currentBook][this.currentChapter][verseIndex] ||
+      !interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex]
     ) {
       return '';
     }
 
-    const map = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][verseIndex][wordIndex];
+    const map = interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -526,26 +532,35 @@ export class Inspector implements OnInit {
 
   getGeezCustomTranslationColor(verse: ScriptureVerse, wordIndex: number): string {
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-    const currentBook = this.currentBook;
-    if (this.isOldBookGuard(currentBook)) {
+    const book = this.currentBook;
+    if (this.isOldBookGuard(book)) {
       interlinearMetadata = this.interlinearGeezHebraic;
-    } else if (this.isNewBookGuard(currentBook)) {
+    } else if (this.isNewBookGuard(book)) {
       interlinearMetadata = this.interlinearGeezGreek;
     } else {
       return '';
     }
 
+    const geezMetadata = this.customGeezTranslation[book] &&
+      this.customGeezTranslation[book][this.currentChapter] &&
+      this.customGeezTranslation[book][this.currentChapter][verse.verse.index]?.metadata?.[wordIndex] || '';
+
+    const [geezWordIndex] = Array.from(geezMetadata.match(/^\d+/) || ['']);
+    if (!geezWordIndex) {
+      return '';
+    }
+
     const verseIndex = Number(verse.verse.index);
     if (
-      !interlinearMetadata[currentBook] ||
-      !interlinearMetadata[currentBook][this.currentChapter] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex]
+      !interlinearMetadata[book] ||
+      !interlinearMetadata[book][this.currentChapter] ||
+      !interlinearMetadata[book][this.currentChapter][verseIndex] ||
+      !interlinearMetadata[book][this.currentChapter][verseIndex][Number(geezWordIndex)]
     ) {
       return '';
     }
 
-    const map = interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex];
+    const map = interlinearMetadata[book][this.currentChapter][verseIndex][Number(geezWordIndex)];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -697,7 +712,7 @@ export class Inspector implements OnInit {
       const geezMetadata = this.customGeezTranslation[book] &&
         this.customGeezTranslation[book][this.currentChapter] &&
         this.customGeezTranslation[book][this.currentChapter][verse.verse.index]?.metadata?.[wordIndex] || '';
-      
+
       if (this.isOldBookGuard(book)) {
         scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
         interlinearMetadata = this.interlinearGeezHebraic;
@@ -897,7 +912,7 @@ export class Inspector implements OnInit {
     }
 
     const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
-    
+
     if (!metadata || !segments[0]) {
       return false;
     }
@@ -918,7 +933,7 @@ export class Inspector implements OnInit {
     segment: { index: number; word: string; },
     lang: 'hebraic' | 'geez' | 'greek'
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, [ segment ]);
+    const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, [segment]);
     const kind = input.value;
 
     if (this.isWordSegmentMetadataGuard(kind)) {
