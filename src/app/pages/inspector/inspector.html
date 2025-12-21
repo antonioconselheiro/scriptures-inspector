@@ -415,11 +415,9 @@
     <td [colSpan]="geez.length">
       @for (sentence of eachGeezMatriz; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">
-        {{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}
-      </span>
-      }
+      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
+      }
       }
     </td>
   </tr>

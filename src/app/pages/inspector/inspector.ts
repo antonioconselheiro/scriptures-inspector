@@ -678,21 +678,26 @@ export class Inspector implements OnInit {
 
   getCustomTranslationStyleRole(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
     const book = this.currentBook;
-    let verseMetadata: AbstractScriptureVerse<ScriptureVerseMetadata> | null, customTranslationMetadata = '';
+    let verseMetadata: AbstractScriptureVerse<ScriptureVerseMetadata> | null, customTranslationMetadataKey = '';
 
     if (lang === 'hebraic' && this.isOldBookGuard(book)) {
       const scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
       verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
       const translationChapterMetadata = this.customHebraicTranslation[book][this.currentChapter] || [];
-      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
+      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'greek' && this.isNewBookGuard(book)) {
       const scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
       verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
       const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
-      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
+      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'geez') {
       let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-      let scriptureChapterMetadata: AbstractScriptureVerse<ScriptureVerseMetadata>[] = []
+      let scriptureChapterMetadata: AbstractScriptureVerse<ScriptureVerseMetadata>[] = [];
+
+      const geezMetadata = this.customGeezTranslation[book] &&
+        this.customGeezTranslation[book][this.currentChapter] &&
+        this.customGeezTranslation[book][this.currentChapter][verse.verse.index]?.metadata?.[wordIndex] || '';
+      
       if (this.isOldBookGuard(book)) {
         scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
         interlinearMetadata = this.interlinearGeezHebraic;
@@ -701,23 +706,28 @@ export class Inspector implements OnInit {
         interlinearMetadata = this.interlinearGeezGreek;
       }
 
-      const scriptureWordIndex = interlinearMetadata[this.currentBook][this.currentChapter][verse.verse.index][wordIndex].origin.index;
-      //  TODOING: ...
+      const [geezWordIndex] = Array.from(geezMetadata.match(/^\d+/) || ['']);
+      if (!geezWordIndex) {
+        return '';
+      }
 
-      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
-      const translationChapterMetadata = this.customGeezTranslation[book][this.currentChapter] || [];
-      customTranslationMetadata = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
+      const scriptureWordOrigin = interlinearMetadata[this.currentBook][this.currentChapter][verse.verse.index][Number(geezWordIndex)]?.origin || null;
+      if (!scriptureWordOrigin) {
+        return '';
+      }
 
+      customTranslationMetadataKey = this.getMetadataIndexFromSegment(scriptureWordOrigin);
+      verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verse.verse.index];
     } else {
       throw new Error('language not found');
     }
 
-    if (!verseMetadata || !customTranslationMetadata) {
+    if (!verseMetadata || !customTranslationMetadataKey) {
       return '';
     }
 
     const metadata = verseMetadata.metadata || {};
-    const data = metadata[customTranslationMetadata];
+    const data = metadata[customTranslationMetadataKey];
     if (!data) {
       return '';
     }
