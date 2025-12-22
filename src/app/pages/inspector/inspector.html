@@ -2,7 +2,7 @@
   <form>
     <fieldset>
       <legend>Translation</legend>
-      <select #bibleTranslation name="bible-translation" placeholder="Translation">
+      <select #bibleTranslation name="bibleTranslation" placeholder="Translation">
         <option></option>
         <optgroup label="Normal">
           <option value="bible-pt-aa.json">Almeida Atualizada</option>
@@ -97,7 +97,7 @@
           <option value="2jo">2 John</option>
           <option value="3jo">3 John</option>
           <option value="jud">Jude</option>
-          <option value="apo">Revelation</option>
+          <option value="apo">Apocalypse</option>
         </optgroup>
       </select>
 
@@ -284,10 +284,10 @@
   <tr>
     <td [colSpan]="hebraic.length">
       @for (sentence of eachHebraicWord; track $index) {
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
-      <span>&nbsp;</span>
-      }
+        @for (word of sentence; track $index) {
+          <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | paleo}}</span>
+        }
+        <span>&nbsp;</span>
       }
     </td>
   </tr>
@@ -351,7 +351,7 @@
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {
-        <option [value]="getMetadataIndexFromSegment(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        <option [value]="castSegmentIntoMetadataIndex(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
         </option>
         }
         }
@@ -433,7 +433,7 @@
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
         @for (hebraicWord of hebraicsWord; track $index) {
-        <option [value]="getMetadataIndexFromSegment(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        <option [value]="castSegmentIntoMetadataIndex(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
         </option>
         }
         }
@@ -501,7 +501,7 @@
         <option value=""></option>
         @for (geezesWord of eachGeezMatriz; track $index) {
         @for (geezWord of geezesWord; track $index) {
-        <option [value]="getMetadataIndexFromSegment(geezWord)">({{geezWord.index}} - {{geezWord.word}} )
+        <option [value]="castSegmentIntoMetadataIndex(geezWord)">({{geezWord.index}} - {{geezWord.word}} )
         </option>
         }
         }

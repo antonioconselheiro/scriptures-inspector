@@ -43,6 +43,7 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
+import { demassoretifier } from './demassoretifier-fn';
 
 @Component({
   selector: 'app-inspector',
@@ -282,7 +283,7 @@ export class Inspector implements OnInit {
     lang: 'hebraic' | 'geez' | 'greek';
   }): void {
     if (option.lang === 'hebraic') {
-      this.hebraicPatterns = this.documentStorage.addHebraicPattern(option.word, option.type);
+      this.hebraicPatterns = this.documentStorage.addHebraicPattern(demassoretifier(option.word), option.type);
     } else if (option.lang === 'geez') {
       this.geezPatterns = this.documentStorage.addGeezPattern(option.word, option.type);
     } else if (option.lang === 'greek') {
@@ -332,7 +333,7 @@ export class Inspector implements OnInit {
     ]);
   }
 
-  getCorrespondingGeezVerse(hebraicVerse: ScriptureVerse): Array<ScriptureVerse> {
+  getCorrespondingGeezVerse(verse: ScriptureVerse): Array<ScriptureVerse> {
     if (!this.selectedGeezBook) {
       return [];
     }
@@ -342,8 +343,8 @@ export class Inspector implements OnInit {
       const geezVerse = this.selectedGeezBook[this.currentChapter][index];
 
       if (
-        Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.start) && Number(hebraicVerse.verse.start) <= Number(geezVerse.verse.end) ||
-        Number(geezVerse.verse.start) <= Number(hebraicVerse.verse.end) && Number(hebraicVerse.verse.end) <= Number(geezVerse.verse.end)
+        Number(geezVerse.verse.start) <= Number(verse.verse.start) && Number(verse.verse.start) <= Number(geezVerse.verse.end) ||
+        Number(geezVerse.verse.start) <= Number(verse.verse.end) && Number(verse.verse.end) <= Number(geezVerse.verse.end)
       ) {
         verses.push(geezVerse);
       }
@@ -363,18 +364,25 @@ export class Inspector implements OnInit {
   }
 
   splitByPatterns(word: string, lang: 'hebraic' | 'geez' | 'greek'): string[] {
-    const patterns = lang === 'hebraic' ? this.hebraicPatterns : this.geezPatterns;
-    return this.literalsPatternsService.splitByPatterns(patterns, word);
+    if (lang === 'hebraic') {
+      return this.literalsPatternsService.splitByPatterns(this.hebraicPatterns, word);
+    } else if (lang === 'greek') {
+      return this.literalsPatternsService.splitByPatterns(this.greekPatterns, word);
+    } else if (lang === 'geez') {
+      return this.literalsPatternsService.splitByPatterns(this.geezPatterns, word);
+    } else {
+      throw new Error('language not found: ' + lang);
+    }
   }
 
   splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string }[][] {
     let patterns: ParsedPatterns;
     if (lang === 'hebraic') {
       patterns = this.hebraicPatterns;
-    } else if (lang === 'geez') {
-      patterns = this.geezPatterns;
     } else if (lang === 'greek') {
       patterns = this.greekPatterns;
+    } else if (lang === 'geez') {
+      patterns = this.geezPatterns;
     }
 
     let index = 0;
@@ -396,7 +404,7 @@ export class Inspector implements OnInit {
       }
 
       if (interlinear) {
-        return this.getMetadataIndexFromSegment(interlinear.origin);
+        return this.castSegmentIntoMetadataIndex(interlinear.origin);
       }
     } catch {
 
@@ -413,7 +421,7 @@ export class Inspector implements OnInit {
     try {
       const interlinear = this.interlinearGeezGreek[this.currentBook][this.currentChapter][Number(geezVerse)][geezWordIndex];
       if (interlinear) {
-        return this.getMetadataIndexFromSegment(interlinear.origin);
+        return this.castSegmentIntoMetadataIndex(interlinear.origin);
       }
     } catch {
 
@@ -488,7 +496,6 @@ export class Inspector implements OnInit {
       return '';
     }
 
-    //  FIXME: revisar comportamento para versiculos compostos
     const verseIndex = Number(geezVerse.verse.index);
     if (
       !interlinearMetadata[currentBook] ||
@@ -676,7 +683,7 @@ export class Inspector implements OnInit {
       const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
       this.splitIntoMatrix(verse.text, lang).flat().forEach(word => {
         if (custom[word.index] === this.getLexical(word.word, lang)) {
-          metadata.push(this.getMetadataIndexFromSegment(word));
+          metadata.push(this.castSegmentIntoMetadataIndex(word));
         }
       });
       this.saveCustomTranslation(lang);
@@ -731,7 +738,7 @@ export class Inspector implements OnInit {
         return '';
       }
 
-      customTranslationMetadataKey = this.getMetadataIndexFromSegment(scriptureWordOrigin);
+      customTranslationMetadataKey = this.castSegmentIntoMetadataIndex(scriptureWordOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verse.verse.index];
     } else {
       throw new Error('language not found');
@@ -822,7 +829,7 @@ export class Inspector implements OnInit {
     codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
-      const key = this.getMetadataIndexFromSegment(segment);
+      const key = this.castSegmentIntoMetadataIndex(segment);
       if (!metadata[key]) {
         metadata[key] = {
           kind: '',
@@ -843,7 +850,7 @@ export class Inspector implements OnInit {
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, segments);
     segments.forEach(segment => {
-      const key = this.getMetadataIndexFromSegment(segment);
+      const key = this.castSegmentIntoMetadataIndex(segment);
       if (input.checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
@@ -883,7 +890,7 @@ export class Inspector implements OnInit {
       return '';
     }
 
-    const metadataKey = this.getMetadataIndexFromSegment(segment)
+    const metadataKey = this.castSegmentIntoMetadataIndex(segment)
     if (!metadata[metadataKey]) {
       return '';
     }
@@ -917,7 +924,7 @@ export class Inspector implements OnInit {
       return false;
     }
 
-    const segment = this.getMetadataIndexFromSegment(segments[0]);
+    const segment = this.castSegmentIntoMetadataIndex(segments[0]);
     const data = metadata[segment];
     if (!data) {
       return false;
@@ -935,11 +942,12 @@ export class Inspector implements OnInit {
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, [segment]);
     const kind = input.value;
+    const metadatIndex = this.castSegmentIntoMetadataIndex(segment);
 
     if (this.isWordSegmentMetadataGuard(kind)) {
-      wordMetadata[`${segment.index}-${segment.word}`].kind = kind;
+      wordMetadata[metadatIndex].kind = kind;
     } else {
-      delete wordMetadata[`${segment.index}-${segment.word}`];
+      delete wordMetadata[metadatIndex];
     }
 
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
@@ -961,7 +969,8 @@ export class Inspector implements OnInit {
     return (newTestamentBookList as string[]).includes(book);
   }
 
-  getMetadataIndexFromSegment(segment: { index: number; word: string; }): string {
-    return `${segment.index}-${segment.word}`;
+  castSegmentIntoMetadataIndex(segment: { index: number; word: string; }): string {
+    const word = demassoretifier(segment.word);
+    return `${segment.index}-${word}`;
   }
 }

@@ -118,12 +118,12 @@ export class DocumentStorage {
     return this.hebraicLexical;
   }
 
-  getGeezLexical(): Record<string, string> {
-    return this.geezLexical;
-  }
-
   getGreekLexical(): Record<string, string> {
     return this.greekLexical;
+  }
+  
+  getGeezLexical(): Record<string, string> {
+    return this.geezLexical;
   }
 
   addHebraicLexical(hebrew: string, lexical: string): void {
@@ -131,16 +131,30 @@ export class DocumentStorage {
     localStorage.setItem('hebraicLexical', JSON.stringify(this.hebraicLexical));
   }
 
+  addGreekLexical(greek: string, lexical: string): void {
+    this.greekLexical[greek] = lexical;
+    localStorage.setItem('greekLexical', JSON.stringify(this.greekLexical));
+  }
+  
   addGeezLexical(geez: string, lexical: string): void {
     this.geezLexical[geez] = lexical;
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
   }
 
-  addGreekLexical(greek: string, lexical: string): void {
-    this.greekLexical[greek] = lexical;
+  removeHebraicLexical(word: string): void {
+    delete this.hebraicLexical[word];
+    localStorage.setItem('hebraicLexical', JSON.stringify(this.hebraicLexical));
+  }
+  removeGreekLexical(word: string): void {
+    delete this.greekLexical[word];
     localStorage.setItem('greekLexical', JSON.stringify(this.greekLexical));
   }
 
+  removeGeezLexical(word: string): void {
+    delete this.geezLexical[word];
+    localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
+  }
+  
   getHebraicMetadata(): AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
     return this.hebraicMetadata;
   }

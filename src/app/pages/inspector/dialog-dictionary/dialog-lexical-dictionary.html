@@ -6,11 +6,11 @@
     <th></th>
   </tr>
 
-  @for (lexical of getLexicalDictionary(); track $index) {
+  @for (lexical of dictionary; track $index) {
     <tr>
       <td>{{lexical.key}}</td>
       <td>{{lexical.value}}</td>
-      <td>×</td>
+      <td (click)="deleteFromDictionary(lexical.key)">×</td>
     </tr>
   }
 </table>
