@@ -121,7 +121,7 @@ export class DocumentStorage {
   getGreekLexical(): Record<string, string> {
     return this.greekLexical;
   }
-  
+
   getGeezLexical(): Record<string, string> {
     return this.geezLexical;
   }
@@ -135,7 +135,7 @@ export class DocumentStorage {
     this.greekLexical[greek] = lexical;
     localStorage.setItem('greekLexical', JSON.stringify(this.greekLexical));
   }
-  
+
   addGeezLexical(geez: string, lexical: string): void {
     this.geezLexical[geez] = lexical;
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
@@ -154,7 +154,7 @@ export class DocumentStorage {
     delete this.geezLexical[word];
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
   }
-  
+
   getHebraicMetadata(): AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
     return this.hebraicMetadata;
   }
@@ -212,9 +212,16 @@ export class DocumentStorage {
     return this.getPattern(this.greekPatterns);
   }
 
+  private massoretifier(pattern: string): string {
+    return pattern.replace(
+      /([\p{Script=Hebrew}])/gu,
+      '$1\\p{M}*'
+    );
+  }
+
   private getPattern(fromPatterns: PatternsSerialized) {
-    let prefix = new Map<string, RegExp>(fromPatterns.prefix.map(pattern => [pattern, new RegExp(`^${pattern}`)]));
-    let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`${pattern}$`)]));
+    let prefix = new Map<string, RegExp>(fromPatterns.prefix.map(pattern => [pattern, new RegExp(`^${this.massoretifier(pattern)}`, 'u')]));
+    let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`${this.massoretifier(pattern)}$`, 'u')]));
 
     return { prefix, suffix }
   }

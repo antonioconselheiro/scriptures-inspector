@@ -5,28 +5,32 @@ import { ParsedPatterns } from './parsed-patterns';
   providedIn: 'root'
 })
 export class LiteralsPatternsService {
-  
+
   splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
     return pharse.split(' ').map(word => {
       let matchPrefix = '',
         matchSuffix = '';
-  
-      for (let [prefix, pattern] of patterns.prefix) {
-        if (pattern.test(word)) {
+
+      for (let [, pattern] of patterns.prefix) {
+        const match = word.match(pattern);
+        if (match) {
+          const [prefix] = Array.from(match);
           matchPrefix = prefix;
           word = word.replace(pattern, '');
           break;
         }
       }
-  
-      for (let [suffix, pattern] of patterns.suffix) {
-        if (pattern.test(word)) {
+
+      for (let [, pattern] of patterns.suffix) {
+        const match = word.match(pattern);
+        if (match) {
+          const [suffix] = Array.from(match);
           matchSuffix = suffix;
           word = word.replace(pattern, '');
           break;
         }
       }
-  
+
       let words: string[] = [];
       if (matchPrefix && matchSuffix) {
         words = [matchPrefix, ...this.splitByPatterns(patterns, word), matchSuffix];
@@ -37,7 +41,7 @@ export class LiteralsPatternsService {
       } else {
         words = [word];
       }
-  
+
       return words.filter(word => word);
     }).flat();
   }

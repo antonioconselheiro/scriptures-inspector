@@ -264,6 +264,16 @@ export class Inspector implements OnInit {
     }
   }
 
+  openDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
+    if (lang === 'hebraic') {
+      open('https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s', '_BLANK');
+    } else if (lang === 'geez') {
+      open('https://www.geezexperience.com/index.php', '_BLANK');
+    } else if (lang === 'greek') {
+      alert('greek dictionary not configured yet');
+    }
+  }
+
   openDialogDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
     this.modalService
       .createModal(DialogDictionary)
