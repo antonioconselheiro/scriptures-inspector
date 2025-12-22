@@ -108,6 +108,7 @@
       </select>
 
       <button type="button" (click)="go()">Go</button>
+      <button type="button" (click)="back()">Back</button>
       <button type="button" (click)="next()">Next</button>
     </fieldset>
 
@@ -185,6 +186,7 @@
   <tr>
     <th>translation <button type="button" (click)="removeTranslationByIndex($index)">×</button></th>
     <td [colSpan]="hebraic.length">{{chapterTranslation[verseKey] && chapterTranslation[verseKey].text}}</td>
+    <td></td>
   </tr>
   }
   <tr>
@@ -197,6 +199,7 @@
       <span>&nbsp;</span>
       }
     </td>
+    <td></td>
   </tr>
   <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="hebraic">
     @for (sentence of eachHebraicWord; track $index) {
@@ -206,6 +209,7 @@
       }
     </td>
     }
+    <td></td>
   </tr>
   <tr>
     <th>transliteration</th>
@@ -216,7 +220,7 @@
       }
     </td>
     }
-
+    <td></td>
   </tr>
   <tr>
     <th>God said</th>
@@ -227,6 +231,7 @@
         [checked]="getScriptureMetadataWordOfGod(verseKey, eachHebraicWord[wordIndex], 'hebraic')" />
     </td>
     }
+    <td><button type="button">×</button></td>
   </tr>
 
   <tr>
@@ -247,6 +252,7 @@
       }
     </td>
     }
+    <td><button type="button">×</button></td>
   </tr>
 
   <tr>
@@ -261,6 +267,7 @@
       }
     </td>
     }
+    <td rowspan="2"><button type="button">×</button></td>
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
@@ -275,8 +282,9 @@
   <tr>
     <th>gematrics</th>
     @for (word of hebraic; track $index) {
-    <td>{{word | gematrics}}</td>
+      <td>{{word | gematrics}}</td>
     }
+    <td></td>
   </tr>
   <tr>
     <th rowspan="2">hypothetical paleo</th>
@@ -288,6 +296,7 @@
       }
     </td>
     }
+    <td rowspan="2"></td>
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
@@ -320,6 +329,7 @@
         (input)="updateCustomTranslation(customHebraicTranslationEl, hebraicVerse, 'hebraic')"
         [value]="getCustomTranslationVerse(customHebraicTranslation, hebraicVerse)?.text" />
     </td>
+    <td rowspan="3"><button type="button">×</button></td>
   </tr>
 
   <tr>
@@ -347,6 +357,7 @@
       {{sentence}}
     </td>
     }
+    <td></td>
   </tr>
 
   <tr>
@@ -366,6 +377,7 @@
       </select>
     </td>
     }
+    <td><button type="button">×</button></td>
   </tr>
 </table>
 
@@ -386,6 +398,7 @@
       <span>&nbsp;</span>
       }
     </td>
+    <td rowspan="2"></td>
   </tr>
   <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
     @for (sentence of eachGeezMatriz; track $index) {
@@ -405,6 +418,7 @@
       }
     </td>
     }
+    <td></td>
   </tr>
   <tr>
     <th rowspan="2">interlinear</th>
@@ -418,6 +432,7 @@
       }
     </td>
     }
+    <td rowspan="2"><button type="button">×</button></td>
   </tr>
   <tr>
     <td [colSpan]="geez.length">
@@ -449,6 +464,7 @@
       }
     </td>
     }
+    <td><button type="button">×</button></td>
   </tr>
 </table>
 
@@ -470,6 +486,7 @@
         (input)="updateCustomTranslation(customGeezTranslationEl, geezVerse, 'geez')"
         [value]="getCustomTranslationVerse(customGeezTranslation, geezVerse)?.text" />
     </td>
+    <td rowspan="3"><button type="button">×</button></td>
   </tr>
 
   <tr>
@@ -497,6 +514,7 @@
       {{sentence}}
     </td>
     }
+    <td></td>
   </tr>
 
   <tr>
@@ -516,6 +534,7 @@
       </select>
     </td>
     }
+    <td><button type="button">×</button></td>
   </tr>
 </table>
 

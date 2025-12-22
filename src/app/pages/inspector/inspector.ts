@@ -327,6 +327,22 @@ export class Inspector implements OnInit {
     }
   }
 
+  back(): void {
+    const book = this.activatedRoute.snapshot.paramMap.get('book');
+    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
+
+    if (!book || !chapter) return;
+
+    const nextChapter = chapter - 1;
+
+    this.router.navigate([
+      '/book',
+      book,
+      'chapter',
+      nextChapter
+    ]);
+  }
+
   next(): void {
     const book = this.activatedRoute.snapshot.paramMap.get('book');
     const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));

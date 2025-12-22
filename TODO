@@ -1,9 +1,10 @@
 TODO
 
+[ ] - Uma palavra na tradução personalizada pode conter cores de mais de um segmento de palavra dos textos originais
+[ ] - Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
 [ ] - validar gematria com falseamento
 [ ] - incluir e falsear gematria ordinal
 [ ] - completar transliterações geez com todas disponiveis no canone
-[ ] - remover delimitações massoreticas nas associações interlineares
 [ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
 [ ] - baixar tradução geez para comparação
 [ ] - separar versiculos em páginas para evitar muitos ciclos de renderização na interação
@@ -16,5 +17,4 @@ TODO
 [ ] - Após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
 [ ] - Tornar scriptures inspector abstrato para receber todo tipo de texto antigo
 [ ] - Botão para limpar toda associação de metadados da tradução personalizada
-[ ] - Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
 [ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
