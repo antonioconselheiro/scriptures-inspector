@@ -18,3 +18,4 @@ TODO
 [ ] - Tornar scriptures inspector abstrato para receber todo tipo de texto antigo
 [ ] - Botão para limpar toda associação de metadados da tradução personalizada
 [ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
+[ ] - embarcar em tauri

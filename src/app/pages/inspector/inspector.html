@@ -231,7 +231,7 @@
         [checked]="getScriptureMetadataWordOfGod(verseKey, eachHebraicWord[wordIndex], 'hebraic')" />
     </td>
     }
-    <td><button type="button">×</button></td>
+    <td><button (click)="cleanWordOfGodFromVerse(hebraicVerse, 'hebraic')" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -243,7 +243,7 @@
         [value]="getScriptureMetadataDefinedKind(verseKey, segment, 'hebraic')"
         (change)="updateScripturesMetadata(hebraicMetadataEl, verseKey, hebraicVerse, segment, 'hebraic')"
         (focus)="showLegend = true" (blur)="showLegend = false">
-        <option value="nothing">-</option>
+        <option value="">-</option>
         <option value="godname">G</option>
         <option value="character">C</option>
         <option value="keyword">K</option>
@@ -252,7 +252,7 @@
       }
     </td>
     }
-    <td><button type="button">×</button></td>
+    <td><button (click)="cleanScriptureMetadata(hebraicVerse, 'hebraic')" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -267,7 +267,7 @@
       }
     </td>
     }
-    <td rowspan="2"><button type="button">×</button></td>
+    <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachHebraicWord, 'hebraic')" type="button">×</button></td>
   </tr>
   <tr>
     <td [colSpan]="hebraic.length">
@@ -311,16 +311,11 @@
 </table>
 
 <div class="buttonGroup">
-  <button type="button"
-    (click)="derivateTranslationToCustom(hebraicVerse, 'hebraic', customHebraicTranslationEl.value === '')"> ▼
-    Translation </button>
-  <button type="button" [attr.disabled]="customHebraicTranslationEl.value === '' ? true : null"
-    (click)="derivateInterlinearToCustom(hebraicVerse, 'hebraic')"> ▼ Interlinear </button>
   <button type="button" (click)="derivateAllToCustom(hebraicVerse, 'hebraic')"> ▼ All </button>
 </div>
 
 <table border="1">
-  @let splittedCustomTranslation = splitTextBySpacesAndPunctuation(customHebraicTranslationEl.value);
+  @let splittedCustomTranslation = pipeUpdaterController && splitTextBySpacesAndPunctuation(customHebraicTranslationEl.value) || [];
   <tr>
     <th rowspan="3">custom</th>
     <td [colSpan]="splittedCustomTranslation.length">
@@ -329,7 +324,7 @@
         (input)="updateCustomTranslation(customHebraicTranslationEl, hebraicVerse, 'hebraic')"
         [value]="getCustomTranslationVerse(customHebraicTranslation, hebraicVerse)?.text" />
     </td>
-    <td rowspan="3"><button type="button">×</button></td>
+    <td rowspan="3"><button (click)="cleanCustomTranslation(customHebraicTranslationEl, hebraicVerse, 'hebraic')" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -365,7 +360,7 @@
     @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       <select [name]="'selectInterlinearHebraicCustomTranslationEl' + $index" #interlinearHebraicCustomTranslationEl
-        [ngModel]="customHebraicTranslation[currentBook][currentChapter]?.[hebraicVerse.verse.index]?.metadata?.[$index] || ''"
+        [ngModel]="getCustomTranslationInterlinearValue(customHebraicTranslation, hebraicVerse, $index)"
         (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, hebraicVerse, $index, 'hebraic')">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
@@ -469,10 +464,6 @@
 </table>
 
 <div class="buttonGroup">
-  <button type="button" (click)="derivateTranslationToCustom(geezVerse, 'geez', customGeezTranslationEl.value === '')">
-    ▼ Translation </button>
-  <button type="button" [attr.disabled]="customGeezTranslationEl.value === '' ? true : null"
-    (click)="derivateInterlinearToCustom(geezVerse, 'geez')"> ▼ Interlinear </button>
   <button type="button" (click)="derivateAllToCustom(geezVerse, 'geez')"> ▼ All </button>
 </div>
 
@@ -522,7 +513,7 @@
     @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       <select [name]="'selectInterlinearGeezCustomTranslationEl' + $index" #interlinearGeezCustomTranslationEl
-        [ngModel]="customGeezTranslation[currentBook][currentChapter]?.[geezVerse.verse.index]?.metadata?.[$index] || ''"
+        [ngModel]="getCustomTranslationInterlinearValue(customGeezTranslation, geezVerse, $index)"
         (change)="saveCustomTranslationInterlinearMetadata(interlinearGeezCustomTranslationEl.value, geezVerse, $index, 'geez')">
         <option value=""></option>
         @for (geezesWord of eachGeezMatriz; track $index) {
