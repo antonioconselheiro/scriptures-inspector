@@ -12,6 +12,7 @@ import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pat
 import { bookMetadata } from './book-metadata';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
+import { demassoretifier } from './demassoretifier-fn';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
@@ -43,7 +44,6 @@ import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './verse-pipe';
-import { demassoretifier } from './demassoretifier-fn';
 
 @Component({
   selector: 'app-inspector',
@@ -224,7 +224,7 @@ export class Inspector implements OnInit {
       });
   }
 
-  removeTranslationByIndex(index: number): void {
+  cleanTranslationByIndex(index: number): void {
     const paralels = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
     this.translations.splice(index, 1);
     paralels.splice(index, 1);
@@ -320,7 +320,7 @@ export class Inspector implements OnInit {
     if (this.selectedBook && this.selectedChapter) {
       this.router.navigate([
         '/book',
-        this.selectedBook,
+        this.selectedBook.toLowerCase(),
         'chapter',
         (+this.selectedChapter) + 1
       ]);
@@ -337,7 +337,7 @@ export class Inspector implements OnInit {
 
     this.router.navigate([
       '/book',
-      book,
+      book.toLowerCase(),
       'chapter',
       nextChapter
     ]);
@@ -353,7 +353,7 @@ export class Inspector implements OnInit {
 
     this.router.navigate([
       '/book',
-      book,
+      book.toLowerCase(),
       'chapter',
       nextChapter
     ]);
@@ -462,7 +462,7 @@ export class Inspector implements OnInit {
     geezWordIndex: number,
     geezWord: string,
     interlinear: string,
-    lang: 'hebraic' | 'geez' | 'greek'
+    lang: 'hebraic' | 'greek'
   ): void {
     const [scriptureWordIndexString, scriptureWord] = interlinear.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
@@ -503,6 +503,35 @@ export class Inspector implements OnInit {
         word: geezWord
       }
     };
+
+    if (lang === 'hebraic') {
+      this.interlinearGeezHebraic = this.documentStorage.saveInterlinearGeezHebraic(this.interlinearGeezHebraic);
+    } else if (lang === 'greek') {
+      this.interlinearGeezGreek = this.documentStorage.saveInterlinearGeezGreek(this.interlinearGeezGreek);
+    }
+  }
+
+  cleanGeezTranslationInterlinear(geezVerse: ScriptureVerse, lang: 'hebraic' | 'greek'): void {
+    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+
+    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
+      interlinearMetadata = this.interlinearGeezHebraic;
+    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
+      interlinearMetadata = this.interlinearGeezGreek;
+    } else {
+      return;
+    }
+
+    if (
+      !interlinearMetadata[this.currentBook] ||
+      !interlinearMetadata[this.currentBook][this.currentChapter]
+    ) {
+      return;
+    }
+
+    if (interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index]) {
+      interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index] = [];
+    }
 
     if (lang === 'hebraic') {
       this.interlinearGeezHebraic = this.documentStorage.saveInterlinearGeezHebraic(this.interlinearGeezHebraic);
@@ -845,6 +874,33 @@ export class Inspector implements OnInit {
     metadata[wordIndex] = value;
 
     this.saveCustomTranslation(lang);
+  }
+
+  cleanGeezScripturesInterlinear(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    let customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, metadata: string[] = [];
+    const book = this.currentBook;
+    const chapter = this.currentChapter;
+
+    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
+      customTranslation = this.customHebraicTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
+    } else if (lang === 'geez') {
+      customTranslation = this.customGeezTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
+    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
+      customTranslation = this.customGreekTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
+    } else {
+      throw new Error('language not found');
+    }
+
+    if (
+      !customTranslation[book] ||
+      !customTranslation[book][chapter] ||
+      !customTranslation[book][chapter][verse.verse.index]
+    ) {
+      return;
+    }
+
+    delete customTranslation[book][chapter][verse.verse.index].metadata;
+    this.pipeUpdaterController++;
   }
 
   splitTextBySpacesAndPunctuation(value: string): string[] {

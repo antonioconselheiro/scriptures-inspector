@@ -9,13 +9,22 @@ th {
 
 header.tools {
   position: fixed;
+  display: flex;
   top: 0px;
   width: 100%;
   background: #f8f8f8;
   box-shadow: gray 0 0 15px;
 
+  img.logo {
+    float: left;
+    padding: .5rem 1rem;
+    align-self: center;
+    width: 24px;
+  }
+
   >form {
     display: flex;
+    flex: 1 1 0px;
     border: 1px solid;
     padding: 10px;
 
@@ -71,6 +80,10 @@ strong.verseTitle {
   align-self: anchor-center;
   justify-self: flex-end;
   transition: transform 1s;
+}
+
+.minimized .logo {
+  display: none;
 }
 
 .minimized form {
