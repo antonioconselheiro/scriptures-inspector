@@ -43,7 +43,7 @@ import { PaleoPipe } from './paleo-pipe';
 import { ParsedPatterns } from './parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
-import { VersePipe } from './verse-pipe';
+import { VersePipe } from './editor/shared/verse-pipe';
 
 @Component({
   selector: 'app-inspector',
@@ -512,6 +512,10 @@ export class Inspector implements OnInit {
   }
 
   cleanGeezTranslationInterlinear(geezVerse: ScriptureVerse, lang: 'hebraic' | 'greek'): void {
+    if (!confirm('clean interlinear association for this verse?')) {
+      return;
+    }
+
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
 
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {

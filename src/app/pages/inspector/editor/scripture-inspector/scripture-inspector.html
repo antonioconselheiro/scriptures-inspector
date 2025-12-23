@@ -1,0 +1,155 @@
+@let wordList = verse.text.split(' ');
+@let eachWord = splitIntoMatrix(patterns, verse.text);
+
+<strong class="verseTitle">
+  {{bookName}}, {{chapter + 1}}:{{verse | verse}}
+</strong>
+<table border="1">
+  @for (chapterTranslation of chapterTranslations; track $index) {
+  <tr>
+    <th>translation <button type="button" (click)="cleanTranslationByIndex($index)">×</button></th>
+    <td [colSpan]="wordList.length">{{chapterTranslation[verse.verse.index] && chapterTranslation[verse.verse.index].text}}</td>
+    <td></td>
+  </tr>
+  }
+  <tr>
+    <th rowspan="2">scriptures</th>
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [lang]="lang.label">
+      @for (sentence of eachWord; track $index) {
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+      }
+      <span>&nbsp;</span>
+      }
+    </td>
+    <td></td>
+  </tr>
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [lang]="lang.label">
+    @for (sentence of eachWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+      }
+    </td>
+    }
+    <td></td>
+  </tr>
+  @if (lang.transliteration) {
+    <tr>
+      <th>transliteration</th>
+      @for (sentence of eachWord; track $index) {
+      <td>
+        @for (word of sentence; track $index) {
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : lang.transliteration}}</span>
+        }
+      </td>
+      }
+      <td></td>
+    </tr>
+  }
+  <tr>
+    <th>God said</th>
+    @for (word of wordList; track $index; let wordIndex = $index) {
+    <td>
+      <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
+        (change)="setAsWordOfGod(wordOfGodEl, verse.verse.index, verse, eachWord[wordIndex], 'hebraic')"
+        [checked]="getScriptureMetadataWordOfGod(verse.verse.index, eachWord[wordIndex], 'hebraic')" />
+    </td>
+    }
+    <td><button (click)="cleanWordOfGodFromVerse(verse, 'hebraic')" type="button">×</button></td>
+  </tr>
+
+  <tr>
+    <th>metadata</th>
+    @for (word of eachWord; track $index; let wordIndex = $index) {
+    <td>
+      @for (segment of word; track $index; let segmentIndex = $index) {
+      <select #metadataEl [name]="'fieldMetadata' + segment.index"
+        [value]="getScriptureMetadataDefinedKind(verse.verse.index, segment, 'hebraic')"
+        (change)="updateScripturesMetadata(metadataEl, verse.verse.index, verse, segment, 'hebraic')"
+        (focus)="showLegend = true" (blur)="showLegend = false">
+        <option value="">-</option>
+        <option value="godname">G</option>
+        <option value="character">C</option>
+        <option value="keyword">K</option>
+        <option value="amount">A</option>
+      </select>
+      }
+    </td>
+    }
+    <td><button (click)="cleanScriptureMetadata(verse, 'hebraic')" type="button">×</button></td>
+  </tr>
+
+  <tr>
+    <th rowspan="2">interlinear</th>
+    @for (sentence of eachWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      @let lexical = word.word | lexical : 'hebraic' : pipeUpdaterController;
+      <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #fieldHebraicLexical
+        [style.width.px]="calcFieldSize(word.word, lexical)"
+        (input)="updateLexical(fieldHebraicLexical, word.word, 'hebraic')" [value]="lexical" />
+      }
+    </td>
+    }
+    <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord, 'hebraic')" type="button">×</button></td>
+  </tr>
+  <tr>
+    <td [colSpan]="wordList.length">
+      @for (sentence of eachWord; track $index) {
+      @for (word of sentence; track $index) {
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : hebraicPatterns : 'hebraic' : pipeUpdaterController}}</span>
+      <span>&nbsp;</span>
+      }
+      }
+    </td>
+  </tr>
+
+  @if (lang.numerology) {
+    @for (algorythm of lang.numerology; track $index) {
+      <tr>
+        <th>{{algorythm.name}}</th>
+        @for (word of wordList; track $index) {
+          <td>{{word | functionProxy : algorythm.calc}}</td>
+        }
+        <td></td>
+      </tr>
+    }
+  }
+
+  @if (lang.spelling) {
+    @for (spelling of lang.spelling; track $index) {
+      <tr>
+        <th rowspan="2">hypothetical paleo</th>
+    
+        @for (sentence of eachWord; track $index) {
+        <td [attr.lang]="lang.font ? lang.label : null">
+          @for (word of sentence; track $index) {
+            @if (spelling.parse) {
+              <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+            } @else {
+              <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+            }
+          }
+        </td>
+        }
+        <td rowspan="2"></td>
+      </tr>
+
+      <tr>
+        <td [colSpan]="wordList.length">
+          @for (sentence of eachWord; track $index) {
+            @for (word of sentence; track $index) {
+              @if (spelling.parse) {
+                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+              } @else {
+                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+              }
+            }
+            <span>&nbsp;</span>
+          }
+        </td>
+      </tr>
+    }
+  }
+</table>
