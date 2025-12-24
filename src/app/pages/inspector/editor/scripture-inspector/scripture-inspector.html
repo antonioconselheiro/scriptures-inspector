@@ -14,7 +14,7 @@
   }
   <tr>
     <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [lang]="lang.label">
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="lang.label ? lang.label : null">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
       <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
@@ -24,7 +24,7 @@
     </td>
     <td></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [lang]="lang.label">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="lang.label ? lang.label : null">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -67,7 +67,7 @@
       <select #metadataEl [name]="'fieldMetadata' + segment.index"
         [value]="getScriptureMetadataDefinedKind(verse.verse.index, segment, 'hebraic')"
         (change)="updateScripturesMetadata(metadataEl, verse.verse.index, verse, segment, 'hebraic')"
-        (focus)="showLegend = true" (blur)="showLegend = false">
+        (focus)="showLegend.emit(true)" (blur)="showLegend.emit(false)">
         <option value="">-</option>
         <option value="godname">G</option>
         <option value="character">C</option>

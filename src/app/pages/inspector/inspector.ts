@@ -379,6 +379,7 @@ export class Inspector implements OnInit {
     return verses;
   }
 
+  // TODO: remove 
   calcFieldSize(placeholder: string, value: string): number {
     if (value.length) {
       return Math.floor(value.length * 8.5);

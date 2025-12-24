@@ -1,4 +1,4 @@
-export const languageList = [
+export const languageList: [
   'aramaic',
   'hebraic',
   'geez',
@@ -11,5 +11,21 @@ export const languageList = [
   'chinese',
   'avestico',
   'pahlavi',
-  'english'
+  'english',
+  'portuguese'
+] = [
+  'aramaic',
+  'hebraic',
+  'geez',
+  'syriac',
+  'arabic',
+  'latim',
+  'greek',
+  'copta',
+  'sanskrit',
+  'chinese',
+  'avestico',
+  'pahlavi',
+  'english',
+  'portuguese'
 ]
