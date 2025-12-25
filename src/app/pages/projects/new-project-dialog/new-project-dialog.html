@@ -1,0 +1,100 @@
+
+- project name
+- add translation
+- add codice / add book
+- project type: translation; interlinear; custom
+
+custom project type dialog:
+ - add reference translation
+ - add scripture metadata editor
+  - add relational custom translation
+  - add characteres reference editor
+ - add translation metadata editor
+  - add relational custom translation
+  - add characteres reference editor
+
+
+<form>
+  <legend>New Project</legend>
+
+  <div>
+    <label>Name</label>
+    <input type="text" />
+  </div>
+
+  <div>
+    <label>Add codice</label>
+    
+  </div>
+
+  <table>
+    <thead>
+      <tr rowspan="2">
+        <th>Codice name</th>
+        <th>Scriptures</th>
+      </tr>
+      <tr>
+        <th>Book</th>
+        <th>Folder</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GEN</td>
+        <td>/etc/file/hebrew/gen.json</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr rowspan="2">
+        <th>Codice name</th>
+        <th>Translation</th>
+      </tr>
+      <tr>
+        <th>Book</th>
+        <th>Folder</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GEN</td>
+        <td>/etc/file/geez/gen.json</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <label>Project</label>
+    <select>
+      <optgroup label="Basic">
+        <option>Reference Translation</option>
+        <option>Metadata Editor</option>
+      </optgroup>
+
+      <optgroup label="Old Testament Codice">
+        <option>Metadata Translation Relation</option>
+        <option disabled>Metadata Reference Relation</option>
+        <option>Custom Translation</option>
+        <option disabled>Original Derivation Hypotesis</option>
+      </optgroup>
+    </select>
+  </div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Codice name</th>
+      </tr>
+      <tr>
+        <th>Book</th>
+        <th>kind</th>
+        <th>folder</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+</form>

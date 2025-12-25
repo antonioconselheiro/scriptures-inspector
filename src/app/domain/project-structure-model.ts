@@ -2,7 +2,7 @@ import { ToolScriptureMetadataEditor } from "./tool-scripture-metadata-editor-mo
 import { ToolTranslationEditor } from "./tool-translation-editor-model";
 import { ToolTranslationViewer } from "./tool-translation-viewer-model";
 
-export interface ProjectSchemas {
+export interface ProjectStructure {
   name: string;
-  schemas: Array<ToolTranslationViewer | ToolScriptureMetadataEditor | ToolTranslationEditor>;
+  tools: Array<ToolTranslationViewer | ToolScriptureMetadataEditor | ToolTranslationEditor>;
 }
