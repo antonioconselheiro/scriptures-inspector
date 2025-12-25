@@ -1,21 +1,5 @@
-
-- project name
-- add translation
-- add codice / add book
-- project type: translation; interlinear; custom
-
-custom project type dialog:
- - add reference translation
- - add scripture metadata editor
-  - add relational custom translation
-  - add characteres reference editor
- - add translation metadata editor
-  - add relational custom translation
-  - add characteres reference editor
-
-
 <form>
-  <legend>New Project</legend>
+  <h1>New Project</h1>
 
   <div>
     <label>Name</label>
@@ -23,78 +7,100 @@ custom project type dialog:
   </div>
 
   <div>
-    <label>Add codice</label>
-    
+    <label>Destination</label>
+    <input type="text" readonly />
+    <button type="button">Choose</button>
   </div>
 
-  <table>
-    <thead>
-      <tr rowspan="2">
-        <th>Codice name</th>
-        <th>Scriptures</th>
-      </tr>
-      <tr>
-        <th>Book</th>
-        <th>Folder</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>GEN</td>
-        <td>/etc/file/hebrew/gen.json</td>
-      </tr>
-    </tbody>
-  </table>
+  <fieldset>
+    <legend>Project Structure</legend>
 
-  <table>
-    <thead>
-      <tr rowspan="2">
-        <th>Codice name</th>
-        <th>Translation</th>
-      </tr>
-      <tr>
-        <th>Book</th>
-        <th>Folder</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>GEN</td>
-        <td>/etc/file/geez/gen.json</td>
-      </tr>
-    </tbody>
-  </table>
+    <div>
+      <label>Name</label>
+      <input type="text" />
+    </div>
 
-  <div>
-    <label>Project</label>
-    <select>
-      <optgroup label="Basic">
-        <option>Reference Translation</option>
-        <option>Metadata Editor</option>
-      </optgroup>
+    <div>
+      <label>Porpouse</label>
+      <select>
+        <optgroup label="Basic">
+          <option value="translation-viewer">Reference Translation</option>
+          <option value="metadata-editor">Metadata Editor</option>
+        </optgroup>
 
-      <optgroup label="Old Testament Codice">
-        <option>Metadata Translation Relation</option>
-        <option disabled>Metadata Reference Relation</option>
-        <option>Custom Translation</option>
-        <option disabled>Original Derivation Hypotesis</option>
-      </optgroup>
-    </select>
-  </div>
+        <optgroup label="Old Testament Codice">
+          <option value="translation-editor">Interlinear Translation Relation</option>
+          <option value="references-editor" disabled>Metadata Reference Relation</option>
+          <option value="custom-translation">Custom Translation</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div>
+      <label>Language</label>
+      <select>
+        <option></option>
+      </select>
+    </div>
+
+    <button type="button">+ Porpouse</button>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Porpouse name</th>
+        </tr>
+        <tr>
+          <th>Name</th>
+          <th>kind</th>
+        </tr>
+      </thead>
+      <tbody>
   
-  <table>
-    <thead>
-      <tr>
-        <th>Codice name</th>
-      </tr>
-      <tr>
-        <th>Book</th>
-        <th>kind</th>
-        <th>folder</th>
-      </tr>
-    </thead>
-    <tbody>
+      </tbody>
+    </table>
+  </fieldset>
 
-    </tbody>
-  </table>
+  <fieldset>
+    <legend>Project Codices</legend>
+    <div>
+      <label>Codice name</label>
+      <input placeholder="Codice name" type="text" />
+    </div>
+
+    <div>
+      <label>Porpouse</label>
+      <select>
+        <option>list registred porpouses</option>
+      </select>
+    </div>
+
+    <button type="button">+ Add</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Codice books</legend>
+  
+    <table border="1">
+      <thead>
+        <tr rowspan="2">
+          <th>Codice name</th>
+        </tr>
+        <tr>
+          <th>Book</th>
+          <th>Folder</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GEN</td>
+          <td>/etc/file/hebrew/gen.json</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button type="button">+ Book</button>
+  </fieldset>
+
+  <button type="submit">Create</button>
 </form>
