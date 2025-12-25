@@ -1,105 +1,120 @@
-<form>
+<form [formGroup]="form" (ngSubmit)="submit()">
   <h1>New Project</h1>
 
   <div>
     <label>Name</label>
-    <input type="text" />
+    <input type="text" formControlName="name" />
   </div>
 
   <div>
     <label>Destination</label>
-    <input type="text" readonly />
-    <button type="button">Choose</button>
+    <input type="text" formControlName="destination" readonly />
+    <button type="button" (click)="chooseDestination()">Choose</button>
   </div>
 
   <fieldset>
     <legend>Project Structure</legend>
 
-    <div>
-      <label>Name</label>
-      <input type="text" />
+    <button type="button" (click)="addPurpose()">+ Purpose</button>
+
+    <div formArrayName="purposes">
+      @for (p of purposes.controls; track $index) {
+      <div [formGroupName]="$index">
+        <input placeholder="Purpose name" formControlName="name" />
+
+        <select formControlName="kind">
+          <optgroup label="Basic">
+            <option value="translation-viewer">Reference Translation</option>
+            <option value="metadata-editor">Metadata Editor</option>
+          </optgroup>
+
+          <optgroup label="Old Testament Codice">
+            <option value="translation-editor">
+              Interlinear Translation Relation
+            </option>
+            <option value="custom-translation">
+              Custom Translation
+            </option>
+          </optgroup>
+        </select>
+
+        <select formControlName="language">
+          <option [ngValue]="null"></option>
+          @for (lang of languages; track $index) {
+            <option [value]="lang">
+              {{ languageMeta[lang].name }}
+            </option>
+          }
+        </select>
+      </div>
+      }
     </div>
 
-    <div>
-      <label>Porpouse</label>
-      <select>
-        <optgroup label="Basic">
-          <option value="translation-viewer">Reference Translation</option>
-          <option value="metadata-editor">Metadata Editor</option>
-        </optgroup>
-
-        <optgroup label="Old Testament Codice">
-          <option value="translation-editor">Interlinear Translation Relation</option>
-          <option value="references-editor" disabled>Metadata Reference Relation</option>
-          <option value="custom-translation">Custom Translation</option>
-        </optgroup>
-      </select>
-    </div>
-
-    <div>
-      <label>Language</label>
-      <select>
-        <option></option>
-      </select>
-    </div>
-
-    <button type="button">+ Porpouse</button>
-
+    <!-- Purposes table -->
     <table border="1">
       <thead>
-        <tr>
-          <th>Porpouse name</th>
-        </tr>
         <tr>
           <th>Name</th>
-          <th>kind</th>
+          <th>Kind</th>
+          <th>Language</th>
         </tr>
       </thead>
       <tbody>
-  
+        @for (p of purposes.value; track $index) {
+          <tr>
+            <td>{{ p.name }}</td>
+            <td>{{ p.kind }}</td>
+            <td>
+              {{ languageMeta[p.language]?.name }}
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </fieldset>
 
   <fieldset>
-    <legend>Project Codices</legend>
-    <div>
-      <label>Codice name</label>
-      <input placeholder="Codice name" type="text" />
-    </div>
+    <legend>Project Codex</legend>
 
-    <div>
-      <label>Porpouse</label>
-      <select>
-        <option>list registred porpouses</option>
-      </select>
-    </div>
+    <button type="button" (click)="addCodex()">+ Codex</button>
 
-    <button type="button">+ Add</button>
-  </fieldset>
-
-  <fieldset>
-    <legend>Codice books</legend>
+    <div formArrayName="codex">
+      @for (c of codex.controls; track $index) {
+        <div [formGroupName]="$index">
+          <input placeholder="Codex name" formControlName="name" />
   
-    <table border="1">
-      <thead>
-        <tr rowspan="2">
-          <th>Codice name</th>
-        </tr>
-        <tr>
-          <th>Book</th>
-          <th>Folder</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>GEN</td>
-          <td>/etc/file/hebrew/gen.json</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <button type="button">+ Book</button>
+          <select formControlName="purpose">
+            @for (p of purposes.value; track $index) {
+              <option [value]="p.name">
+                {{ p.name }}
+              </option>
+            }
+          </select>
+  
+          <!-- Books table -->
+          <table border="1">
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>Folder</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (b of books($index).value; track $index) {
+                <tr>
+                  <td>{{ b.book }}</td>
+                  <td>{{ b.folder }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+  
+          <button type="button" (click)="addBook($index)">
+            + Book
+          </button>
+        </div>
+      }
+    </div>
   </fieldset>
 
   <button type="submit">Create</button>
