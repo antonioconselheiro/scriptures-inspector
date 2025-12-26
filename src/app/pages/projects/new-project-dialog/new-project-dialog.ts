@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { languageList } from '../../../domain/language-list';
-import { languageMetadataRecord } from '../../../domain/language-metadata-record';
+import { languageMetadataRecord } from '../../../shared/language-metadata/language-metadata-record';
 import { languageUnion } from '../../../domain/language-union';
 import { SystemService } from '../../../shared/system/system-service';
 import { Language } from '../../inspector/domain/language-model';
