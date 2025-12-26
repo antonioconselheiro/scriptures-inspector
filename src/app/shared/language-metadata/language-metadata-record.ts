@@ -4,6 +4,8 @@ import { languageUnion } from "../../domain/language-union";
 import { geezTransliterateFn } from "./geez-transliterate-fn";
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
+import { demassoretifier } from "./demassoretifier-fn";
+import { massoretifier } from "./massoretifier-fn";
 
 export const languageMetadataRecord: {
   [lang in languageUnion]: Language
@@ -32,6 +34,8 @@ export const languageMetadataRecord: {
         parse: (text: string) => paleoHebrewSpellingFn(text)
       }
     ],
+    normalizeFn: (text: string) => demassoretifier(text),
+    prefetchNormalizedToMatcher: (text: string) => massoretifier(text),
     externalDictionaryLink: 'https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s'
   },
   'geez': {

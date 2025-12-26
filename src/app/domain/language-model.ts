@@ -8,7 +8,7 @@ export interface Language {
   transliteration?: (text: string) => string;
   numerology?: Array<LanguageNumerology>;
   normalizeFn?: (text: string) => string;
-  parsePattern?: (text: string) => RegExp;
+  prefetchNormalizedToMatcher?: (text: string) => string;
   alternativeSpelling?: Array<LanguageAlternativeSpelling>;
   externalDictionaryLink?: string;
 }

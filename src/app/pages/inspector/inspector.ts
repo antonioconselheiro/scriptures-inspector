@@ -12,7 +12,7 @@ import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pat
 import { bookMetadata } from './book-metadata';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
-import { demassoretifier } from './demassoretifier-fn';
+import { demassoretifier } from '../../shared/language-metadata/demassoretifier-fn';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
@@ -1062,40 +1062,7 @@ export class Inspector implements OnInit {
     return metadata[metadataKey].kind;
   }
 
-  getScriptureMetadataWordOfGod(
-    verseKey: number,
-    segments: Array<{ index: number; word: string; }>,
-    lang: 'hebraic' | 'geez' | 'greek'
-  ): boolean {
-    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codexMetadata = this.hebraicMetadata;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codexMetadata = this.greekMetadata;
-    }
 
-    if (
-      !codexMetadata[this.currentBook] ||
-      !codexMetadata[this.currentBook][this.currentChapter] ||
-      !codexMetadata[this.currentBook][this.currentChapter][verseKey]
-    ) {
-      return false;
-    }
-
-    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
-
-    if (!metadata || !segments[0]) {
-      return false;
-    }
-
-    const segment = this.castSegmentIntoMetadataIndex(segments[0]);
-    const data = metadata[segment];
-    if (!data) {
-      return false;
-    }
-
-    return data.isWordOfGod || false;
-  }
 
   cleanWordOfGodFromVerse(verse: ScriptureVerse, lang: 'hebraic' | 'greek'): void {
     if (!confirm('Confirm clean words set as "word of God"?')) {
