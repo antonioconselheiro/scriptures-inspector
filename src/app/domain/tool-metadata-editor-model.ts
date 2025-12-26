@@ -1,7 +1,7 @@
 import { languageUnion } from "./language-union";
 
-export interface ToolScriptureMetadataEditor {
-  tool: 'scripture-metadata-editor';
+export interface ToolMetadataEditor {
+  tool: 'metadata-editor';
   lang: languageUnion;
   transliteration?: boolean;
   GodSaid?: boolean;
