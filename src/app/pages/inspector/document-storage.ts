@@ -3,29 +3,29 @@ import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
 import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
-import { AbstractCodice } from './domain/abstract-codice-model';
-import { AbstractScriptureVerse } from './domain/abstract-scripture-verse-model';
+import { Codex } from '../../domain/codex-model';
+import { CodexBookChapterVerse } from '../../domain/codex-book-chapter-verse-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { ScriptureVerseMetadata } from './domain/scripture-verse-metadata-model';
+import { ScriptureVerseMetadata } from '../../domain/scripture-verse-metadata-model';
 import { ParsedPatterns } from './parsed-patterns';
-import { PatternsSerialized } from './patterns-serialized';
+import { PatternsSerialized } from '../../domain/patterns-serialized';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentStorage {
 
-  private hebraicMetadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
+  private hebraicMetadata: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>> = {
     ...createOldTestmentObjectBase()
   };
   private hebraicLexical: Record<string, string> = {};
   private hebraicPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
-  private greekMetadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> = {
+  private greekMetadata: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>> = {
     ...createNewTestmentObjectBase()
   };
   private geezLexical: Record<string, string> = {};
@@ -155,20 +155,20 @@ export class DocumentStorage {
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
   }
 
-  getHebraicMetadata(): AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
+  getHebraicMetadata(): Codex<OldTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>> {
     return this.hebraicMetadata;
   }
 
-  getGreekMetadata(): AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>> {
+  getGreekMetadata(): Codex<NewTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>> {
     return this.greekMetadata;
   }
 
-  saveHebraicMetadata(metadata: AbstractCodice<OldTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+  saveHebraicMetadata(metadata: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>>): void {
     this.hebraicMetadata = metadata;
     localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
   }
 
-  saveGreekMetadata(metadata: AbstractCodice<NewTestamentBooksUnion, AbstractScriptureVerse<ScriptureVerseMetadata>>): void {
+  saveGreekMetadata(metadata: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>>): void {
     this.greekMetadata = metadata;
     localStorage.setItem('greekMetadata', JSON.stringify(metadata));
   }

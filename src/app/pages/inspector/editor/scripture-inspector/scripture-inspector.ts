@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractScriptureVerse } from '../../domain/abstract-scripture-verse-model';
+import { CodexBookChapterVerse } from '../../../../domain/codex-book-chapter-verse-model';
 import { Language } from '../../domain/language-model';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { LiteralsPatternsService } from '../../literals-patterns-service';
@@ -31,7 +31,7 @@ export class ScriptureInspector {
   chapter!: number;
 
   @Input()
-  verse!: AbstractScriptureVerse<{ text: string; }>
+  verse!: CodexBookChapterVerse<{ text: string; }>
 
   @Input()
   patterns!: ParsedPatterns;

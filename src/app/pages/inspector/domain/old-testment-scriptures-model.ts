@@ -1,4 +1,4 @@
-import { AbstractCodice } from "./abstract-codice-model";
-import { AbstractScriptureVerse } from "./abstract-scripture-verse-model";
+import { Codex } from "../../../domain/codex-model";
+import { CodexBookChapterVerse } from "../../../domain/codex-book-chapter-verse-model";
 
-export type OldTestmentScriptures<Data extends object = {}> = AbstractCodice<AbstractScriptureVerse<{ text: string } & Data>>;
+export type OldTestmentScriptures<Data extends object = {}> = Codex<CodexBookChapterVerse<{ text: string } & Data>>;

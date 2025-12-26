@@ -1,4 +1,4 @@
-export type AbstractScriptureVerse<Data extends object = object> = {
+export type CodexBookChapterVerse<Data extends object = object> = {
   verse: {
     index: number,
     start: `${number}`,

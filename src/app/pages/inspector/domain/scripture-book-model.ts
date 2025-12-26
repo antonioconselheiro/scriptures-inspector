@@ -1,4 +1,4 @@
-import { AbstractScriptureBook } from "./abstract-scripture-book-model";
-import { AbstractScriptureVerse } from "./abstract-scripture-verse-model";
+import { CodexBook } from "../../../domain/codex-book-model";
+import { CodexBookChapterVerse } from "../../../domain/codex-book-chapter-verse-model";
 
-export type ScriptureBook<Data extends object = {}> = AbstractScriptureBook<AbstractScriptureVerse<{ text: string } & Data>>
+export type ScriptureBook<Data extends object = {}> = CodexBook<CodexBookChapterVerse<{ text: string } & Data>>

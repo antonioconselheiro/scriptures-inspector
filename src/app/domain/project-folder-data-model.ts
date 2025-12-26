@@ -1,14 +1,13 @@
-import { AbstractCodice } from '../pages/inspector/domain/abstract-codice-model';
-import { AbstractScriptureVerse } from '../pages/inspector/domain/abstract-scripture-verse-model';
-import { ScriptureVerseMetadata } from '../pages/inspector/domain/scripture-verse-metadata-model';
-import { TranslationInterlinearVerse } from '../pages/inspector/domain/translation-interlinear-verse-model';
-import { PatternsSerialized } from '../pages/inspector/patterns-serialized';
+import { Codex } from './codex-model';
+import { CodexBookChapterVerse } from './codex-book-chapter-verse-model';
+import { ScriptureVerseMetadata } from './scripture-verse-metadata-model';
+import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
+import { PatternsSerialized } from './patterns-serialized';
 
 export interface ProjectFolderData {
-  metadata: AbstractCodice<AbstractScriptureVerse<ScriptureVerseMetadata>>;
+  metadata: Codex<CodexBookChapterVerse<ScriptureVerseMetadata>, { patterns: PatternsSerialized }>;
   lexical: Record<string, string>;
-  patterns: PatternsSerialized;
-  customTranslation: AbstractCodice<AbstractScriptureVerse<{ text: string, metadata?: string[] }>>;
+  customTranslation: Codex<CodexBookChapterVerse<{ text: string, metadata?: string[] }>>;
   interlinear: {
     [book: string]: Array<Array<Array<TranslationInterlinearVerse>>>
   }
