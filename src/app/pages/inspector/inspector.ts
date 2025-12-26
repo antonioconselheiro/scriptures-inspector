@@ -29,7 +29,7 @@ import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebrai
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { ScriptureBook } from './domain/scripture-book-model';
-import { ScriptureVerseMetadata } from '../../domain/scripture-verse-metadata-model';
+import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
 import { ScriptureVerseMetadataWord } from '../../domain/scripture-verse-metadata-word-model';
 import { ScriptureVerse } from './domain/scripture-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
@@ -91,8 +91,8 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  hebraicMetadata!: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>>;
-  greekMetadata!: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<ScriptureVerseMetadata>>;
+  hebraicMetadata!: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
+  greekMetadata!: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
     ...createOldTestmentObjectBase()
@@ -805,7 +805,7 @@ export class Inspector implements OnInit {
 
   getCustomTranslationStyleRole(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
     const book = this.currentBook;
-    let verseMetadata: CodexBookChapterVerse<ScriptureVerseMetadata> | null, customTranslationMetadataKey = '';
+    let verseMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
 
     if (lang === 'hebraic' && this.isOldBookGuard(book)) {
       const scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
@@ -819,7 +819,7 @@ export class Inspector implements OnInit {
       customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
     } else if (lang === 'geez') {
       let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-      let scriptureChapterMetadata: CodexBookChapterVerse<ScriptureVerseMetadata>[] = [];
+      let scriptureChapterMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata>[] = [];
 
       const geezMetadata = this.customGeezTranslation[book] &&
         this.customGeezTranslation[book][this.currentChapter] &&
@@ -967,30 +967,30 @@ export class Inspector implements OnInit {
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    let codiceMetadata: Codex<string, CodexBookChapterVerse<ScriptureVerseMetadata>> = {};
+    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codiceMetadata = this.hebraicMetadata;
+      codexMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codiceMetadata = this.greekMetadata;
+      codexMetadata = this.greekMetadata;
     }
 
-    if (!codiceMetadata[this.currentBook]) {
-      codiceMetadata[this.currentBook] = [];
+    if (!codexMetadata[this.currentBook]) {
+      codexMetadata[this.currentBook] = [];
     }
 
-    if (!codiceMetadata[this.currentBook][this.currentChapter]) {
-      codiceMetadata[this.currentBook][this.currentChapter] = [];
+    if (!codexMetadata[this.currentBook][this.currentChapter]) {
+      codexMetadata[this.currentBook][this.currentChapter] = [];
     }
 
-    if (!codiceMetadata[this.currentBook][this.currentChapter][verseIndex]) {
-      codiceMetadata[this.currentBook][this.currentChapter][verseIndex] = {
+    if (!codexMetadata[this.currentBook][this.currentChapter][verseIndex]) {
+      codexMetadata[this.currentBook][this.currentChapter][verseIndex] = {
         verse: verse.verse,
         metadata: {}
       };
     }
 
-    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata || {};
-    codiceMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
+    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseIndex].metadata || {};
+    codexMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
       const key = this.castSegmentIntoMetadataIndex(segment);
@@ -1034,22 +1034,22 @@ export class Inspector implements OnInit {
     segment: { index: number; word: string; },
     lang: 'hebraic' | 'geez' | 'greek'
   ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    let codiceMetadata: Codex<string, CodexBookChapterVerse<ScriptureVerseMetadata>> = {};
+    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codiceMetadata = this.hebraicMetadata;
+      codexMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codiceMetadata = this.greekMetadata;
+      codexMetadata = this.greekMetadata;
     }
 
     if (
-      !codiceMetadata[this.currentBook] ||
-      !codiceMetadata[this.currentBook][this.currentChapter] ||
-      !codiceMetadata[this.currentBook][this.currentChapter][verseKey]
+      !codexMetadata[this.currentBook] ||
+      !codexMetadata[this.currentBook][this.currentChapter] ||
+      !codexMetadata[this.currentBook][this.currentChapter][verseKey]
     ) {
       return '';
     }
 
-    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
+    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
     if (!metadata) {
       return '';
     }
@@ -1067,22 +1067,22 @@ export class Inspector implements OnInit {
     segments: Array<{ index: number; word: string; }>,
     lang: 'hebraic' | 'geez' | 'greek'
   ): boolean {
-    let codiceMetadata: Codex<string, CodexBookChapterVerse<ScriptureVerseMetadata>> = {};
+    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codiceMetadata = this.hebraicMetadata;
+      codexMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codiceMetadata = this.greekMetadata;
+      codexMetadata = this.greekMetadata;
     }
 
     if (
-      !codiceMetadata[this.currentBook] ||
-      !codiceMetadata[this.currentBook][this.currentChapter] ||
-      !codiceMetadata[this.currentBook][this.currentChapter][verseKey]
+      !codexMetadata[this.currentBook] ||
+      !codexMetadata[this.currentBook][this.currentChapter] ||
+      !codexMetadata[this.currentBook][this.currentChapter][verseKey]
     ) {
       return false;
     }
 
-    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
+    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
 
     if (!metadata || !segments[0]) {
       return false;
@@ -1102,22 +1102,22 @@ export class Inspector implements OnInit {
       return;
     }
 
-    let codiceMetadata: Codex<string, CodexBookChapterVerse<ScriptureVerseMetadata>> = {};
+    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codiceMetadata = this.hebraicMetadata;
+      codexMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codiceMetadata = this.greekMetadata;
+      codexMetadata = this.greekMetadata;
     }
 
     if (
-      !codiceMetadata[this.currentBook] ||
-      !codiceMetadata[this.currentBook][this.currentChapter] ||
-      !codiceMetadata[this.currentBook][this.currentChapter][verse.verse.index]
+      !codexMetadata[this.currentBook] ||
+      !codexMetadata[this.currentBook][this.currentChapter] ||
+      !codexMetadata[this.currentBook][this.currentChapter][verse.verse.index]
     ) {
       return;
     }
 
-    const metadata = codiceMetadata[this.currentBook][this.currentChapter][verse.verse.index].metadata;
+    const metadata = codexMetadata[this.currentBook][this.currentChapter][verse.verse.index].metadata;
     if (!metadata) {
       return;
     }
@@ -1166,22 +1166,22 @@ export class Inspector implements OnInit {
       return;
     }
 
-    let codiceMetadata: Codex<string, CodexBookChapterVerse<ScriptureVerseMetadata>> = {};
+    let codexMetadata: Codex<CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
     if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codiceMetadata = this.hebraicMetadata;
+      codexMetadata = this.hebraicMetadata;
     } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codiceMetadata = this.greekMetadata;
+      codexMetadata = this.greekMetadata;
     }
 
     if (
-      !codiceMetadata[this.currentBook] ||
-      !codiceMetadata[this.currentBook][this.currentChapter] ||
-      !codiceMetadata[this.currentBook][this.currentChapter][verse.verse.index]
+      !codexMetadata[this.currentBook] ||
+      !codexMetadata[this.currentBook][this.currentChapter] ||
+      !codexMetadata[this.currentBook][this.currentChapter][verse.verse.index]
     ) {
       return;
     }
 
-    const chapter = codiceMetadata[this.currentBook][this.currentChapter][verse.verse.index];
+    const chapter = codexMetadata[this.currentBook][this.currentChapter][verse.verse.index];
     const metadata = chapter?.metadata;
 
     if (!metadata) {

@@ -21,7 +21,7 @@ export const bookMetadata: {
       pahlavi?: boolean,
       english?: boolean
     },
-    codice: {
+    codex: {
       ocidental: boolean,
       septuaginta: boolean,
       essenes?: boolean,
@@ -47,7 +47,7 @@ export const bookMetadata: {
       syriac: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -67,7 +67,7 @@ export const bookMetadata: {
       syriac: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -89,7 +89,7 @@ export const bookMetadata: {
       aramaic: true,
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -106,7 +106,7 @@ export const bookMetadata: {
       syriac: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -125,7 +125,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -141,7 +141,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -157,7 +157,7 @@ export const bookMetadata: {
     language: {
       syriac: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -175,7 +175,7 @@ export const bookMetadata: {
       copta: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -194,7 +194,7 @@ export const bookMetadata: {
       copta: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -213,7 +213,7 @@ export const bookMetadata: {
       copta: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -232,7 +232,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -250,7 +250,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -268,7 +268,7 @@ export const bookMetadata: {
     language: {
       copta: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -286,7 +286,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -302,7 +302,7 @@ export const bookMetadata: {
       greek: true,
       syriac: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -320,7 +320,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -336,7 +336,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -352,7 +352,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -368,7 +368,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -384,7 +384,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -398,7 +398,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -415,7 +415,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -431,7 +431,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -447,7 +447,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -463,7 +463,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true,
@@ -480,7 +480,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -496,7 +496,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -512,7 +512,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -528,7 +528,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -544,7 +544,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -559,7 +559,7 @@ export const bookMetadata: {
       greek: true,
       syriac: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -575,7 +575,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -591,7 +591,7 @@ export const bookMetadata: {
       greek: true,
       hebraic: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -609,7 +609,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true
@@ -625,7 +625,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: true,
       ethiopian: true
@@ -640,7 +640,7 @@ export const bookMetadata: {
       geez: true,
       greek: true,
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: true,
       ethiopian: true
@@ -655,7 +655,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: true,
       ethiopian: true
@@ -667,7 +667,7 @@ export const bookMetadata: {
     gringo: "Zorobabel",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   '1ET': {
     chapters: 10,
@@ -679,7 +679,7 @@ export const bookMetadata: {
       greek: true,
       hebraic: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: true,
       ethiopian: true,
@@ -695,7 +695,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: true,
       ethiopian: true,
@@ -712,7 +712,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -728,7 +728,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -748,7 +748,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: true,
@@ -764,7 +764,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: false,
       ocidental: false,
@@ -781,7 +781,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: false,
       ocidental: false,
       septuaginta: false,
@@ -798,7 +798,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -816,7 +816,7 @@ export const bookMetadata: {
       greek: true,
       copta: true
     },
-    codice: {
+    codex: {
       ethiopian: false,
       ocidental: false,
       septuaginta: false,
@@ -835,7 +835,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -852,7 +852,7 @@ export const bookMetadata: {
       greek: true,
       syriac: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: false,
       septuaginta: true,
@@ -872,7 +872,7 @@ export const bookMetadata: {
       copta: true,
       syriac: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -888,7 +888,7 @@ export const bookMetadata: {
     gringo: "Wisdom of Essenes",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'ECL': {
     chapters: 12,
@@ -900,7 +900,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -918,7 +918,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: true,
       ethiopian: true,
@@ -936,7 +936,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -951,7 +951,7 @@ export const bookMetadata: {
     language: {
       aramaic: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -969,7 +969,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: true,
@@ -986,7 +986,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1003,7 +1003,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -1021,7 +1021,7 @@ export const bookMetadata: {
       syriac: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1040,7 +1040,7 @@ export const bookMetadata: {
       aramaic: true, // 4QJer
       greek: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: true,
@@ -1058,7 +1058,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1075,7 +1075,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1092,7 +1092,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1110,7 +1110,7 @@ export const bookMetadata: {
       greek: true,
       aramaic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: true,
@@ -1127,7 +1127,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -1144,7 +1144,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -1162,7 +1162,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1178,7 +1178,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1195,7 +1195,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1212,7 +1212,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1229,7 +1229,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1246,7 +1246,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1263,7 +1263,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1279,7 +1279,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1296,7 +1296,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1312,7 +1312,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1329,7 +1329,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1345,7 +1345,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1362,7 +1362,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1378,7 +1378,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1395,7 +1395,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1412,7 +1412,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1429,7 +1429,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: true,
@@ -1445,7 +1445,7 @@ export const bookMetadata: {
     language: {
       hebraic: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ocidental: false,
       septuaginta: false,
@@ -1463,7 +1463,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: false,
@@ -1481,7 +1481,7 @@ export const bookMetadata: {
       hebraic: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: true,
       ethiopian: true,
       ocidental: false,
@@ -1498,7 +1498,7 @@ export const bookMetadata: {
     language: {
       chinese: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1517,7 +1517,7 @@ export const bookMetadata: {
     language: {
       sanskrit: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1537,7 +1537,7 @@ export const bookMetadata: {
       sanskrit: true,
       chinese: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1558,7 +1558,7 @@ export const bookMetadata: {
       sanskrit: true,
       chinese: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1579,7 +1579,7 @@ export const bookMetadata: {
       sanskrit: true,
       chinese: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1599,7 +1599,7 @@ export const bookMetadata: {
     language: {
       copta: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1618,7 +1618,7 @@ export const bookMetadata: {
       avestico: true,
       pahlavi: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1636,7 +1636,7 @@ export const bookMetadata: {
     language: {
       arabic: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1655,7 +1655,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1673,7 +1673,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1692,7 +1692,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1710,7 +1710,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1743,7 +1743,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1763,7 +1763,7 @@ export const bookMetadata: {
       latim: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1783,7 +1783,7 @@ export const bookMetadata: {
       latim: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1802,7 +1802,7 @@ export const bookMetadata: {
     language: {
       latim: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1821,7 +1821,7 @@ export const bookMetadata: {
     language: {
       latim: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1840,7 +1840,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1859,7 +1859,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1878,7 +1878,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: false,
       ocidental: false,
@@ -1894,7 +1894,7 @@ export const bookMetadata: {
     gringo: "Rule of the Community",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'RCG': { // 1QSa
     chapters: 0,
@@ -1902,7 +1902,7 @@ export const bookMetadata: {
     gringo: "Rule of the Congregation",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'RBE': { // 1QSb
     chapters: 0,
@@ -1910,7 +1910,7 @@ export const bookMetadata: {
     gringo: "Rule of Blessings",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'HNG': { // 1QH
     chapters: 0,
@@ -1918,7 +1918,7 @@ export const bookMetadata: {
     gringo: "Thanksgiving Hymns",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'DMC': { // CD
     chapters: 0,
@@ -1926,7 +1926,7 @@ export const bookMetadata: {
     gringo: "Damascus Document",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'GLT': { // 1QM
     chapters: 0,
@@ -1934,7 +1934,7 @@ export const bookMetadata: {
     gringo: "The War of the Sons of Light Against the Sons of Darkness",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'TMP': { // 11QTemple
     chapters: 0,
@@ -1942,7 +1942,7 @@ export const bookMetadata: {
     gringo: "Temple Scroll",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'CSS': { // 4Q400
     chapters: 0,
@@ -1950,7 +1950,7 @@ export const bookMetadata: {
     gringo: "Songs of the Sabbath Sacrifice",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'BEN': { // 4QBerakhot
     chapters: 0,
@@ -1958,7 +1958,7 @@ export const bookMetadata: {
     gringo: "Blessings",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'OTO': { // 4QOtot
     chapters: 0,
@@ -1966,7 +1966,7 @@ export const bookMetadata: {
     gringo: "Otot - Signs and Calendars",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'CAD': { // 4Q503
     chapters: 0,
@@ -1974,7 +1974,7 @@ export const bookMetadata: {
     gringo: "Calendrical Prayers",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'PSC': { // 4QPesach
     chapters: 0,
@@ -1982,7 +1982,7 @@ export const bookMetadata: {
     gringo: "Pesach",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'HLI': { // 4Q251, 4Q252
     chapters: 0,
@@ -1990,7 +1990,7 @@ export const bookMetadata: {
     gringo: "Halakhic",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'HLA': { // 4Q159
     chapters: 0,
@@ -1998,7 +1998,7 @@ export const bookMetadata: {
     gringo: "Halakhah",
     testament: "old",
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   'PCB': { // 3Q15
     chapters: 0,
@@ -2007,7 +2007,7 @@ export const bookMetadata: {
     testament: "old",
     type: [ "treasure" ],
     language: { hebraic: true },
-    codice: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
+    codex: { essenes: true, ocidental: false, septuaginta: false, ethiopian: false }
   },
   '1MA': {
     chapters: 0,
@@ -2019,7 +2019,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -2036,7 +2036,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -2053,7 +2053,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -2070,7 +2070,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       essenes: false,
       ethiopian: true,
       ocidental: false,
@@ -2087,7 +2087,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2104,7 +2104,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2121,7 +2121,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2138,7 +2138,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2155,7 +2155,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2172,7 +2172,7 @@ export const bookMetadata: {
       greek: true,
       copta: true
     },
-    codice: {
+    codex: {
       ethiopian: false,
       ocidental: false,
       septuaginta: false,
@@ -2189,7 +2189,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2207,7 +2207,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2225,7 +2225,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2245,7 +2245,7 @@ export const bookMetadata: {
       syriac: true,
       copta: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: false,
       septuaginta: false,
@@ -2263,7 +2263,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2281,7 +2281,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2299,7 +2299,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2317,7 +2317,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2335,7 +2335,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2353,7 +2353,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2371,7 +2371,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2389,7 +2389,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2407,7 +2407,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2425,7 +2425,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2443,7 +2443,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2461,7 +2461,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2479,7 +2479,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2497,7 +2497,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2515,7 +2515,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2533,7 +2533,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2551,7 +2551,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2569,7 +2569,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2587,7 +2587,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: true,
       septuaginta: false,
@@ -2603,7 +2603,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2618,7 +2618,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2633,7 +2633,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2648,7 +2648,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2663,7 +2663,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2678,7 +2678,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2693,7 +2693,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2708,7 +2708,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2727,7 +2727,7 @@ export const bookMetadata: {
       syriac: true,
       copta: true
     },
-    codice: {
+    codex: {
       ethiopian: true,
       ocidental: false,
       septuaginta: false,
@@ -2745,7 +2745,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ethiopian: false,
       ocidental: false,
       septuaginta: false,
@@ -2762,7 +2762,7 @@ export const bookMetadata: {
     language: {
       geez: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: true,
@@ -2779,7 +2779,7 @@ export const bookMetadata: {
       geez: true,
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: true,
       septuaginta: false,
       ethiopian: true,
@@ -2795,7 +2795,7 @@ export const bookMetadata: {
     language: {
       greek: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,
@@ -2812,7 +2812,7 @@ export const bookMetadata: {
     language: {
       english: true
     },
-    codice: {
+    codex: {
       ocidental: false,
       septuaginta: false,
       ethiopian: false,

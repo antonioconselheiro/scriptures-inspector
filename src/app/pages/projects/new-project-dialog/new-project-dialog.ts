@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { languageList } from '../../../domain/language-list';
-import { languageMetadataRecord } from '../../../shared/language-metadata/language-metadata-record';
 import { languageUnion } from '../../../domain/language-union';
+import { languageMetadataRecord } from '../../../shared/language-metadata/language-metadata-record';
 import { SystemService } from '../../../shared/system/system-service';
-import { Language } from '../../inspector/domain/language-model';
+import { Language } from '../../../domain/language-model';
 
 @Component({
   selector: 'app-new-project-dialog',
@@ -32,18 +32,16 @@ export class NewProjectDialog {
       destination: ['', Validators.required],
 
       purposes: this.fb.array([]),
-      codices: this.fb.array([])
+      codex: this.fb.array([])
     });
   }
-
-  /* ---------------- getters ---------------- */
 
   get purposes(): FormArray {
     return this.form.get('purposes') as FormArray;
   }
 
   get codex(): FormArray {
-    return this.form.get('codices') as FormArray;
+    return this.form.get('codex') as FormArray;
   }
 
   books(codexIndex: number): FormArray {
@@ -93,7 +91,7 @@ export class NewProjectDialog {
 
     console.log('PROJECT CONFIGURATION JSON:', projectConfiguration);
 
-    // implementação futura
+    // TODO:
     await this.system.saveProject();
   }
 }

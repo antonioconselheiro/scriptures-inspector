@@ -1,4 +1,4 @@
-import { Language } from "../../pages/inspector/domain/language-model";
+import { Language } from "../../domain/language-model";
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { languageUnion } from "../../domain/language-union";
 import { geezTransliterateFn } from "./geez-transliterate-fn";

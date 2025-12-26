@@ -1,14 +1,11 @@
 import { Codex } from './codex-model';
+import { CodexBookChapterMetadata } from './codex-book-chapter-metadata-model';
+import { CodexBookChapterVerseMetadata } from './codex-book-chapter-verse-metadata-model';
 import { CodexBookChapterVerse } from './codex-book-chapter-verse-model';
-import { ScriptureVerseMetadata } from './scripture-verse-metadata-model';
-import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
-import { PatternsSerialized } from './patterns-serialized';
+import { TranslationInterlinear } from './translation-interlinear-model';
 
 export interface ProjectFolderData {
-  metadata: Codex<CodexBookChapterVerse<ScriptureVerseMetadata>, { patterns: PatternsSerialized }>;
-  lexical: Record<string, string>;
-  customTranslation: Codex<CodexBookChapterVerse<{ text: string, metadata?: string[] }>>;
-  interlinear: {
-    [book: string]: Array<Array<Array<TranslationInterlinearVerse>>>
-  }
+  metadata: Codex<CodexBookChapterVerse<CodexBookChapterVerseMetadata>, CodexBookChapterMetadata>;
+  customTranslation?: Codex<CodexBookChapterVerse<{ text: string, metadata?: string[] }>>;
+  interlinear: TranslationInterlinear;
 }

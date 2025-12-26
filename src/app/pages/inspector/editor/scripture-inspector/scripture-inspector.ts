@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CodexBookChapterVerse } from '../../../../domain/codex-book-chapter-verse-model';
-import { Language } from '../../domain/language-model';
+import { CodexBookChapterVerse } from '@domain/codex-book-chapter-verse-model';
+import { Language } from '@domain/language-model';
+import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
+import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { LiteralsPatternsService } from '../../literals-patterns-service';
 import { ParsedPatterns } from '../../parsed-patterns';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { VersePipe } from '../shared/verse-pipe';
-import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
-import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 
 @Component({
   selector: 'app-scripture-inspector',
