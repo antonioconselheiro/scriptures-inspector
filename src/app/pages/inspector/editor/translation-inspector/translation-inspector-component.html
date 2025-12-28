@@ -1,0 +1,83 @@
+@let geez = geezVerse.text.split(' ');
+@let eachGeezWord = splitIntoMatrix(geezVerse.text, 'geez');
+
+<table border="1">
+  <tr>
+    <th rowspan="2">Ge'əz</th>
+    <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
+      @for (sentence of eachGeezWord; track $index) {
+      @for (word of sentence; track word.index) {
+      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+      }
+      <span>&nbsp;</span>
+      }
+    </td>
+    <td rowspan="2"></td>
+  </tr>
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
+    @for (sentence of eachGeezWord; track $index) {
+    <td>
+      @for (word of sentence; track word.index) {
+      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+      }
+    </td>
+    }
+  </tr>
+  <tr>
+    <th>transliteration</th>
+    @for (sentence of eachGeezWord; track $index) {
+    <td>
+      @for (word of sentence; track word.index) {
+      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
+      }
+    </td>
+    }
+    <td></td>
+  </tr>
+  <tr>
+    <th rowspan="2">interlinear</th>
+    @for (sentence of eachGeezWord; track $index) {
+    <td>
+      @for (word of sentence; track $index) {
+      @let literal = word.word | lexical : 'geez' : pipeUpdaterController;
+      <input type="text" [name]="'fieldGeez' + word.index" [placeholder]="word.word" #field
+        [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLexical(field, word.word, 'geez')"
+        [value]="literal" />
+      }
+    </td>
+    }
+    <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(eachGeezWord, 'geez')">×</button></td>
+  </tr>
+  <tr>
+    <td [colSpan]="geez.length">
+      @for (sentence of eachGeezWord; track $index) {
+      @for (word of sentence; track word.index) {
+      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
+      <span>&nbsp;</span>
+      }
+      }
+    </td>
+  </tr>
+  <tr>
+    <th>scriptures</th>
+    @for (sentence of eachGeezWord; track $index) {
+    <td>
+      @for (geezWord of sentence; track $index) {
+      <select #interlinear
+        (change)="onSelectInterlinearGeezToScripture(hebraicVerse, geezVerse, geezWord.index, geezWord.word, interlinear.value, 'hebraic')"
+        [ngModel]="getGeezInterlinear(geezVerse, geezWord.index)"
+        [name]="'geezHebraicInterlinear' + $index + '-' + geezWord.word">
+        <option value=""></option>
+        @for (hebraicsWord of eachHebraicWord; track $index) {
+        @for (hebraicWord of hebraicsWord; track $index) {
+        <option [value]="castSegmentIntoMetadataIndex(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        </option>
+        }
+        }
+      </select>
+      }
+    </td>
+    }
+    <td><button type="button" (click)="cleanGeezTranslationInterlinear(geezVerse, 'hebraic')">×</button></td>
+  </tr>
+</table>

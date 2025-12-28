@@ -1,0 +1,71 @@
+<div class="buttonGroup">
+  <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
+</div>
+
+<table border="1">
+  @let splittedCustomTranslation = splitTextBySpacesAndPunctuation(customTranslationEl.value, pipeUpdaterController) || [];
+  <tr>
+    <th rowspan="3">custom</th>
+    <td [colSpan]="splittedCustomTranslation.length">
+      <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
+        placeholder="custom translation"
+        (input)="updateCustomTranslation(customTranslationEl)"
+        [value]="getCustomTranslationVerse()?.text" />
+    </td>
+    <td rowspan="3"><button (click)="cleanCustomTranslation(customTranslationEl)" type="button">×</button></td>
+  </tr>
+
+  <tr>
+    <td [colSpan]="splittedCustomTranslation.length">
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence}}</span>
+      <span>&nbsp;</span>
+      }
+    </td>
+  </tr>
+
+  <tr>
+    <td [colSpan]="splittedCustomTranslation.length">
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <span [class]="getCustomTranslationStyleRole($index)">{{sentence}}</span>
+      <span>&nbsp;</span>
+      }
+    </td>
+  </tr>
+
+  <tr>
+    <th>interlinear</th>
+    @for (sentence of splittedCustomTranslation; track $index) {
+    <td>
+      {{sentence}}
+    </td>
+    }
+    <td></td>
+  </tr>
+
+  <tr>
+    <th>scriptures</th>
+    @for (sentence of splittedCustomTranslation; track $index) {
+    <td>
+      <select
+        #interlinearHebraicCustomTranslationEl
+        [name]="'selectInterlinearHebraicCustomTranslationEl' + $index"
+        [ngModel]="getCustomTranslationInterlinearValue(customHebraicTranslation, hebraicVerse, $index)"
+        (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, hebraicVerse, $index, 'hebraic')">
+        <option value=""></option>
+        @for (hebraicsWord of eachHebraicWord; track $index) {
+        @for (hebraicWord of hebraicsWord; track $index) {
+        <option [value]="castSegmentIntoMetadataIndex(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        </option>
+        }
+        }
+      </select>
+    </td>
+    }
+
+    @if (!splittedCustomTranslation.length) {
+      <td></td>
+    }
+    <td><button type="button" (click)="cleanInterlinear(hebraicVerse, 'hebraic')">×</button></td>
+  </tr>
+</table>

@@ -1,38 +1,39 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CodexBookChapterVerse } from '@domain/codex-book-chapter-verse-model';
+import { CodexBookMetadata } from '@domain/codex-book-metadata-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
+import { Language } from '@domain/language-model';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { ProjectService } from '@shared/project/project-service';
+import { ProjectMetadataService } from '@shared/project/project-metadata-service';
+import { ParsedPatterns } from '../../../../domain/parsed-patterns';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { LiteralizatePipe } from '../../literalizate-pipe';
 import { LiteralsPatternsService } from '../../literals-patterns-service';
 import { LexicalPipe } from '../../literals-pipe';
-import { ParsedPatterns } from '../../../../domain/parsed-patterns';
+import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { VersePipe } from '../shared/verse-pipe';
-import { Language } from '@domain/language-model';
-import { PatternsSerialized } from '@domain/patterns-serialized';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { CodexBookMetadata } from '@domain/codex-book-metadata-model';
 
 @Component({
-  selector: 'app-scripture-inspector',
+  selector: 'app-scripture-inspector-component',
   imports: [
     VersePipe,
     LexicalPipe,
     LiteralizatePipe,
     FunctionProxyPipe,
+    CustomTranslationComponent,
     AddPatternContextMenuTrigger
   ],
-  templateUrl: './scripture-inspector.html',
-  styleUrl: './scripture-inspector.scss'
+  templateUrl: './scripture-inspector-component.html',
+  styleUrl: './scripture-inspector-component.scss'
 })
-export class ScriptureInspector {
+export class ScriptureInspectorComponent {
 
   @Input()
   current!: CurrentChapter;
@@ -41,10 +42,7 @@ export class ScriptureInspector {
   data!: ProjectData;
 
   @Input()
-  verse!: CodexBookChapterVerse<{ text: string; }>
-
-  @Input()
-  patterns!: ParsedPatterns;
+  source!: CodexBookChapterVerse<{ text: string; }>
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -58,7 +56,7 @@ export class ScriptureInspector {
   pipeUpdaterController = 0;
 
   constructor(
-    private projectService: ProjectService,
+    private projectMetadataService: ProjectMetadataService,
     private literalsPatternsService: LiteralsPatternsService
   ) { }
 
@@ -84,29 +82,29 @@ export class ScriptureInspector {
   }
 
   //  word of God
-  setAsWordOfGod(input: HTMLInputElement, targetVerseIndex: number, sourceVerse: SourceVerse, segments: Array<WordSegment>): void {
-    this.projectService.setAsWordOfGod(input.checked, this.data, this.getCurrent(targetVerseIndex), sourceVerse, segments);
+  setAsWordOfGod(input: HTMLInputElement, segments: Array<WordSegment>): void {
+    this.projectMetadataService.setAsWordOfGod(input.checked, this.data, this.getCurrent(this.source.verse.index), this.source, segments);
   }
 
-  getScriptureMetadataWordOfGod(targetVerseIndex: number, segments: Array<WordSegment>): boolean {
-    return this.projectService.getScriptureMetadataWordOfGod(this.data, this.getCurrent(targetVerseIndex), segments);
+  getScriptureMetadataWordOfGod(segments: Array<WordSegment>): boolean {
+    return this.projectMetadataService.getScriptureMetadataWordOfGod(this.data, this.getCurrent(this.source.verse.index), segments);
   }
 
-  cleanWordOfGodFromVerse(targetVerseIndex: number): void {
+  cleanWordOfGodFromVerse(): void {
     if (!confirm('Confirm clean words set as "word of God"?')) {
       return;
     }
 
-    this.projectService.cleanWordOfGodFromVerse(this.data, this.getCurrent(targetVerseIndex));
+    this.projectMetadataService.cleanWordOfGodFromVerse(this.data, this.getCurrent(this.source.verse.index));
   }
 
   //  metadata
-  getScriptureMetadataDefinedKind(targetVerseIndex: number, segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    return this.projectService.getScriptureMetadataDefinedKind(this.data, this.getCurrent(targetVerseIndex), segment);
+  getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
+    return this.projectMetadataService.getScriptureMetadataDefinedKind(this.data, this.getCurrent(this.source.verse.index), segment);
   }
 
-  updateScripturesMetadata(select: HTMLSelectElement, targetVerseIndex: number, verse: SourceVerse, segment: WordSegment): void {
-    this.projectService.updateScripturesMetadata(this.data, this.getCurrent(targetVerseIndex), select.value, verse, segment);
+  updateScripturesMetadata(select: HTMLSelectElement, source: SourceVerse, segment: WordSegment): void {
+    this.projectMetadataService.updateScripturesMetadata(this.data, this.getCurrent(source.verse.index), select.value, source, segment);
   }
 
   cleanScriptureMetadata(sourceVerseIndex: number): void {
@@ -114,12 +112,12 @@ export class ScriptureInspector {
       return;
     }
 
-    this.projectService.cleanScriptureMetadata(this.data, this.getCurrent(sourceVerseIndex));
+    this.projectMetadataService.cleanScriptureMetadata(this.data, this.getCurrent(sourceVerseIndex));
   }
 
   parseBook(book: CodexBookMetadata, lang: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
-    const parsedPatterns = this.projectService.parsePattern(book.patterns, lang);
+    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, lang);
 
     return {
       lexical: book.lexical,
@@ -129,14 +127,14 @@ export class ScriptureInspector {
 
   //  lexical
   updateLexical(input: HTMLInputElement, word: string): void {
-    this.projectService.updateLexical(this.data, this.current.book, word, input.value);
+    this.projectMetadataService.updateLexical(this.data, this.current.book, word, input.value);
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
   }
 
   getLexical(word: string): string {
-    return this.projectService.getLexical(this.data, this.current.book, word);
+    return this.projectMetadataService.getLexical(this.data, this.current.book, word);
   }
 
   cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>): void {
@@ -144,7 +142,7 @@ export class ScriptureInspector {
       return;
     }
 
-    this.projectService.cleanLexicalInterlinear(this.data, this.current.book, eachWord);
+    this.projectMetadataService.cleanLexicalInterlinear(this.data, this.current.book, eachWord);
     this.pipeUpdaterController++;
   }
 }

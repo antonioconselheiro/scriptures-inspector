@@ -3,23 +3,26 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
+import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
+import { CodexBookChapterVerse } from '../../domain/codex-book-chapter-verse-model';
+import { Codex } from '../../domain/codex-model';
 import { newTestamentBookList } from '../../domain/new-testament-books-list';
 import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
 import { oldTestamentBookList } from '../../domain/old-testament-books-list';
 import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
+import { ParsedPatterns } from '../../domain/parsed-patterns';
+import { SourceBook } from '../../domain/source-book-model';
+import { SourceVerse } from '../../domain/source-verse-model';
+import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
+import { demassoretifier } from '../../shared/language-metadata/demassoretifier-fn';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { bookMetadata } from './book-metadata';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
-import { demassoretifier } from '../../shared/language-metadata/demassoretifier-fn';
 import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
-import { Codex } from '../../domain/codex-model';
-import { AbstractHolyScriptureModel } from './domain/abstract-holy-scripture-model';
-import { CodexBook } from '../../domain/codex-book-model';
-import { CodexBookChapterVerse } from '../../domain/codex-book-chapter-verse-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
@@ -28,22 +31,16 @@ import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-cu
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { SourceBook } from '../../domain/source-book-model';
-import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
-import { ScriptureVerseMetadataWord } from '../../domain/scripture-verse-metadata-word-model';
-import { SourceVerse } from '../../domain/source-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
-import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
 import { Translation } from './domain/translation-model';
+import { VersePipe } from './editor/shared/verse-pipe';
 import { GematricsPipe } from './gematrics-pipe';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LexicalPipe } from './literals-pipe';
 import { PaleoPipe } from './paleo-pipe';
-import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
-import { VersePipe } from './editor/shared/verse-pipe';
 
 @Component({
   selector: 'app-inspector',
@@ -91,8 +88,8 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  hebraicMetadata!: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
-  greekMetadata!: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
+  hebraicMetadata!: Codex<{}, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
+  greekMetadata!: Codex<{}, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
     ...createOldTestmentObjectBase()
@@ -301,21 +298,6 @@ export class Inspector implements OnInit {
     }
   }
 
-  saveCustomTranslation(lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (lang === 'hebraic') {
-      this.documentStorage.saveHebraicCustomTranslation(this.customHebraicTranslation);
-      this.customHebraicTranslation = { ...this.customHebraicTranslation };
-    } else if (lang === 'greek') {
-      this.documentStorage.saveGreekCustomTranslation(this.customGreekTranslation);
-      this.customGreekTranslation = { ...this.customGreekTranslation };
-    } else if (lang === 'geez') {
-      this.documentStorage.saveGeezCustomTranslation(this.customGeezTranslation);
-      this.customGeezTranslation = { ...this.customGeezTranslation };
-    }
-
-    this.cd.detectChanges();
-  }
-
   go(): void {
     if (this.selectedBook && this.selectedChapter) {
       this.router.navigate([
@@ -400,22 +382,6 @@ export class Inspector implements OnInit {
     } else {
       throw new Error('language not found: ' + lang);
     }
-  }
-
-  splitIntoMatrix(text: string, lang: 'hebraic' | 'geez' | 'greek'): { index: number, word: string }[][] {
-    let patterns: ParsedPatterns;
-    if (lang === 'hebraic') {
-      patterns = this.hebraicPatterns;
-    } else if (lang === 'greek') {
-      patterns = this.greekPatterns;
-    } else if (lang === 'geez') {
-      patterns = this.geezPatterns;
-    }
-
-    let index = 0;
-    return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
-      return { index: index++, word };
-    }));
   }
 
   getGeezInterlinear(geezVerse: SourceVerse, geezWordIndex: number): string {
@@ -570,33 +536,6 @@ export class Inspector implements OnInit {
     return String(map.origin.index % 7 + 1);
   }
 
-  getCustomTranslationFromHebraicColor(verse: SourceVerse, wordIndex: number): string {
-    const currentBook = this.currentBook;
-    if (!this.isOldBookGuard(currentBook)) {
-      return '';
-    }
-
-    if (
-      !this.customHebraicTranslation[currentBook] ||
-      !this.customHebraicTranslation[currentBook][this.currentChapter] ||
-      !this.customHebraicTranslation[currentBook][this.currentChapter][verse.verse.index]
-    ) {
-      return '';
-    }
-
-    const translationMetadata = this.customHebraicTranslation[currentBook][this.currentChapter][verse.verse.index].metadata;
-    if (!translationMetadata) {
-      return '';
-    }
-
-    const matches = translationMetadata[wordIndex] && translationMetadata[wordIndex].match(/^\d+/);
-    if (matches) {
-      return String(Number(Array.from(matches)[0]) % 7 + 1);
-    }
-
-    return '';
-  }
-
   getGeezCustomTranslationColor(verse: SourceVerse, wordIndex: number): string {
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
     const book = this.currentBook;
@@ -630,290 +569,6 @@ export class Inspector implements OnInit {
     const map = interlinearMetadata[book][this.currentChapter][verseIndex][Number(geezWordIndex)];
     return String(map.origin.index % 7 + 1);
   }
-
-  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: SourceVerse): SourceVerse | null {
-    return custom[this.currentBook] &&
-      custom[this.currentBook][this.currentChapter] &&
-      custom[this.currentBook][this.currentChapter][verse.verse.index] || null;
-  }
-
-  updateCustomTranslation(input: HTMLInputElement, verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<SourceVerse>;
-    const book = this.currentBook;
-    const chapter = this.currentChapter;
-
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      customTranslation = this.customHebraicTranslation;
-      customBook = customTranslation[book];
-    } else if (lang === 'geez') {
-      customTranslation = this.customGeezTranslation;
-      customBook = customTranslation[String(book)];
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      customTranslation = this.customGreekTranslation;
-      customBook = customTranslation[book];
-    } else {
-      throw new Error('language not found');
-    }
-
-    if (!customBook) {
-      customTranslation[book] = customBook = [];
-    }
-
-    if (!customBook[chapter]) {
-      customBook[chapter] = [];
-    }
-
-    if (customBook[chapter][verse.verse.index]) {
-      if (input.value) {
-        customBook[chapter][verse.verse.index].text = input.value;
-      } else {
-        customBook[chapter][verse.verse.index] = {
-          ...verse,
-          text: ''
-        };
-      }
-    } else {
-      customBook[chapter][verse.verse.index] = {
-        ...verse,
-        text: input.value
-      };
-    }
-
-    if (lang === 'hebraic') {
-      this.documentStorage.saveHebraicCustomTranslation(customTranslation as OldTestmentScriptures);
-    } else if (lang === 'greek') {
-      this.documentStorage.saveGreekCustomTranslation(customTranslation as NewTestmentScriptures);
-    } else if (lang === 'geez') {
-      this.documentStorage.saveGeezCustomTranslation(customTranslation as HolyScriptureModel);
-    }
-  }
-
-  cleanCustomTranslation(input: HTMLInputElement, verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (!confirm('clean custom translation on this verse?')) {
-      return;
-    }
-    input.value = '';
-    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<SourceVerse>;
-    const book = this.currentBook;
-    const chapter = this.currentChapter;
-
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      customTranslation = this.customHebraicTranslation;
-      customBook = customTranslation[book];
-    } else if (lang === 'geez') {
-      customTranslation = this.customGeezTranslation;
-      customBook = customTranslation[String(book)];
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      customTranslation = this.customGreekTranslation;
-      customBook = customTranslation[book];
-    } else {
-      throw new Error('language not found');
-    }
-
-    if (!customBook) {
-      customTranslation[book] = customBook = [];
-    }
-
-    if (!customBook[chapter]) {
-      customBook[chapter] = [];
-    }
-
-    customBook[chapter][verse.verse.index] = {
-      ...verse,
-      text: ''
-    };
-
-    if (lang === 'hebraic') {
-      this.documentStorage.saveHebraicCustomTranslation(customTranslation as OldTestmentScriptures);
-    } else if (lang === 'greek') {
-      this.documentStorage.saveGreekCustomTranslation(customTranslation as NewTestmentScriptures);
-    } else if (lang === 'geez') {
-      this.documentStorage.saveGeezCustomTranslation(customTranslation as HolyScriptureModel);
-    }
-
-    this.pipeUpdaterController++;
-  }
-
-  private createCustomTranslationStructureIfNotExists(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): {
-    metadata: string[],
-    customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>
-  } {
-    let customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, metadata: string[] = [];
-    const book = this.currentBook;
-    const chapter = this.currentChapter;
-
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      customTranslation = this.customHebraicTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else if (lang === 'geez') {
-      customTranslation = this.customGeezTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      customTranslation = this.customGreekTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else {
-      throw new Error('language not found');
-    }
-
-    if (!customTranslation[book]) {
-      customTranslation[book] = [];
-    }
-
-    if (!customTranslation[book][chapter]) {
-      customTranslation[book][chapter] = [];
-    }
-
-    if (!customTranslation[book][chapter][verse.verse.index]) {
-      customTranslation[book][chapter][verse.verse.index] = {
-        ...verse
-      };
-    }
-
-    metadata = customTranslation[book][chapter][verse.verse.index].metadata || [];
-    customTranslation[book][chapter][verse.verse.index].metadata = metadata;
-
-    return { metadata, customTranslation };
-  }
-
-  private derivateTranslationToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text = this.splitIntoMatrix(verse.text, lang)
-      .flat()
-      .map(word => this.getLexical(word.word, lang))
-      .join(' ');
-
-    this.saveCustomTranslation(lang);
-  }
-
-  private derivateInterlinearToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { metadata, customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    metadata.splice(0, metadata.length);
-    const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
-    this.splitIntoMatrix(verse.text, lang).flat().forEach(word => {
-      if (custom[word.index] === this.getLexical(word.word, lang)) {
-        metadata.push(this.castSegmentIntoMetadataIndex(word));
-      }
-    });
-
-    this.saveCustomTranslation(lang);
-  }
-
-  derivateAllToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const current = confirm('overwrite verse translation and interlineares?');
-    if (current) {
-      this.derivateTranslationToCustom(verse, lang);
-      setTimeout(() => this.derivateInterlinearToCustom(verse, lang));
-    }
-  }
-
-  getCustomTranslationStyleRole(verse: SourceVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
-    const book = this.currentBook;
-    let verseMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
-
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      const scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
-      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
-      const translationChapterMetadata = this.customHebraicTranslation[book][this.currentChapter] || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      const scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
-      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
-      const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
-    } else if (lang === 'geez') {
-      let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-      let scriptureChapterMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata>[] = [];
-
-      const geezMetadata = this.customGeezTranslation[book] &&
-        this.customGeezTranslation[book][this.currentChapter] &&
-        this.customGeezTranslation[book][this.currentChapter][verse.verse.index]?.metadata?.[wordIndex] || '';
-
-      if (this.isOldBookGuard(book)) {
-        scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
-        interlinearMetadata = this.interlinearGeezHebraic;
-      } else if (this.isNewBookGuard(book)) {
-        scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
-        interlinearMetadata = this.interlinearGeezGreek;
-      }
-
-      const [geezWordIndex] = Array.from(geezMetadata.match(/^\d+/) || ['']);
-      if (!geezWordIndex) {
-        return '';
-      }
-
-      const scriptureWordOrigin = interlinearMetadata[this.currentBook][this.currentChapter][verse.verse.index][Number(geezWordIndex)]?.origin || null;
-      if (!scriptureWordOrigin) {
-        return '';
-      }
-
-      customTranslationMetadataKey = this.castSegmentIntoMetadataIndex(scriptureWordOrigin);
-      verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verse.verse.index];
-    } else {
-      throw new Error('language not found');
-    }
-
-    if (!verseMetadata || !customTranslationMetadataKey) {
-      return '';
-    }
-
-    const metadata = verseMetadata.metadata || {};
-    const data = metadata[customTranslationMetadataKey];
-    if (!data) {
-      return '';
-    }
-
-    return [data.kind, data.isWordOfGod ? 'godsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
-  }
-
-  getCustomTranslationInterlinearValue(
-    customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, verse: SourceVerse, wordIndex: number
-  ): string {
-    const chapter = customTranslation[this.currentBook][this.currentChapter];
-    if (chapter && chapter[verse.verse.index] && chapter[verse.verse.index].metadata) {
-      const metadata = chapter[verse.verse.index].metadata;
-      return metadata && metadata[wordIndex] || '';
-    }
-
-    return '';
-  }
-
-  saveCustomTranslationInterlinearMetadata(value: string, verse: SourceVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): void {
-    const { metadata } = this.createCustomTranslationStructureIfNotExists(verse, lang);
-    metadata[wordIndex] = value;
-
-    this.saveCustomTranslation(lang);
-  }
-
-  cleanGeezScripturesInterlinear(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    let customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, metadata: string[] = [];
-    const book = this.currentBook;
-    const chapter = this.currentChapter;
-
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      customTranslation = this.customHebraicTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else if (lang === 'geez') {
-      customTranslation = this.customGeezTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      customTranslation = this.customGreekTranslation as AbstractHolyScriptureModel<{ metadata?: string[] }>;
-    } else {
-      throw new Error('language not found');
-    }
-
-    if (
-      !customTranslation[book] ||
-      !customTranslation[book][chapter] ||
-      !customTranslation[book][chapter][verse.verse.index]
-    ) {
-      return;
-    }
-
-    delete customTranslation[book][chapter][verse.verse.index].metadata;
-    this.pipeUpdaterController++;
-  }
-
-  splitTextBySpacesAndPunctuation(value: string): string[] {
-    return [...value.matchAll(/(\s*)(\S+?)(\.{3}|…|[.!?]+)?(?=\s|$)/g)]
-      .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`])
-      .map(m => m.trim());
-  }
-
 
   isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {
     return (oldTestamentBookList as string[]).includes(book);

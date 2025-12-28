@@ -1,14 +1,15 @@
-@let wordList = verse.text.split(' ');
-@let eachWord = splitIntoMatrix(patterns, verse.text);
+@let wordList = source.text.split(' ');
+@let parsedBook = parseBook(data.metadata[current.book], data.lang.source, pipeUpdaterController);
+@let eachWord = splitIntoMatrix(parsedBook.patterns, source.text);
 
 <strong class="verseTitle">
-  {{bookName}}, {{chapter + 1}}:{{verse | verse}}
+  {{bookName}}, {{chapter + 1}}:{{source | verse}}
 </strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>
     <th>translation <button type="button" (click)="cleanTranslationByIndex($index)">×</button></th>
-    <td [colSpan]="wordList.length">{{chapterTranslation[verse.verse.index] && chapterTranslation[verse.verse.index].text}}</td>
+    <td [colSpan]="wordList.length">{{chapterTranslation[source.verse.index] && chapterTranslation[source.verse.index].text}}</td>
     <td></td>
   </tr>
   }
@@ -52,11 +53,11 @@
     @for (word of wordList; track $index; let wordIndex = $index) {
     <td>
       <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-        (change)="setAsWordOfGod(wordOfGodEl, verse.verse.index, verse, eachWord[wordIndex])"
-        [checked]="getScriptureMetadataWordOfGod(verse.verse.index, eachWord[wordIndex])" />
+        (change)="setAsWordOfGod(wordOfGodEl, eachWord[wordIndex])"
+        [checked]="getScriptureMetadataWordOfGod(eachWord[wordIndex])" />
     </td>
     }
-    <td><button (click)="cleanWordOfGodFromVerse(verse.verse.index)" type="button">×</button></td>
+    <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -65,8 +66,8 @@
     <td>
       @for (segment of word; track $index; let segmentIndex = $index) {
       <select #metadataEl [name]="'fieldMetadata' + segment.index"
-        [value]="getScriptureMetadataDefinedKind(verse.verse.index, segment)"
-        (change)="updateScripturesMetadata(metadataEl, verse.verse.index, verse, segment)"
+        [value]="getScriptureMetadataDefinedKind(segment)"
+        (change)="updateScripturesMetadata(metadataEl, source, segment)"
         (focus)="showLegend.emit(true)" (blur)="showLegend.emit(false)">
         <option value="">-</option>
         <option value="godname">G</option>
@@ -77,10 +78,9 @@
       }
     </td>
     }
-    <td><button (click)="cleanScriptureMetadata(verse.verse.index)" type="button">×</button></td>
+    <td><button (click)="cleanScriptureMetadata(source.verse.index)" type="button">×</button></td>
   </tr>
 
-  @let parsedBook = parseBook(data.metadata[current.book], data.lang.source, pipeUpdaterController);
   <tr>
     <th rowspan="2">interlinear</th>
     @for (sentence of eachWord; track $index) {
@@ -154,3 +154,5 @@
     }
   }
 </table>
+
+<app-custom-translation-component></app-custom-translation-component>
