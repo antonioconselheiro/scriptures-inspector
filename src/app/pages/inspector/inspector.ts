@@ -511,31 +511,6 @@ export class Inspector implements OnInit {
     }
   }
 
-  getGeezColor(geezVerse: SourceVerse, wordIndex: number): string {
-    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-    const currentBook = this.currentBook;
-    if (this.isOldBookGuard(currentBook)) {
-      interlinearMetadata = this.interlinearGeezHebraic;
-    } else if (this.isNewBookGuard(currentBook)) {
-      interlinearMetadata = this.interlinearGeezGreek;
-    } else {
-      return '';
-    }
-
-    const verseIndex = Number(geezVerse.verse.index);
-    if (
-      !interlinearMetadata[currentBook] ||
-      !interlinearMetadata[currentBook][this.currentChapter] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex]
-    ) {
-      return '';
-    }
-
-    const map = interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex];
-    return String(map.origin.index % 7 + 1);
-  }
-
   getGeezCustomTranslationColor(verse: SourceVerse, wordIndex: number): string {
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
     const book = this.currentBook;

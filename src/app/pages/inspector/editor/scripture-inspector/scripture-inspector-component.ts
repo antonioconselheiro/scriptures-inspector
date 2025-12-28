@@ -9,13 +9,13 @@ import { ProjectData } from '@domain/project-data-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { ProjectMetadataService } from '@shared/project/project-metadata-service';
-import { ParsedPatterns } from '../../../../domain/parsed-patterns';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { LiteralizatePipe } from '../../literalizate-pipe';
 import { LiteralsPatternsService } from '../../literals-patterns-service';
 import { LexicalPipe } from '../../literals-pipe';
+import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { VersePipe } from '../shared/verse-pipe';
@@ -33,7 +33,7 @@ import { VersePipe } from '../shared/verse-pipe';
   templateUrl: './scripture-inspector-component.html',
   styleUrl: './scripture-inspector-component.scss'
 })
-export class ScriptureInspectorComponent {
+export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
 
   @Input()
   current!: CurrentChapter;
@@ -57,28 +57,13 @@ export class ScriptureInspectorComponent {
 
   constructor(
     private projectMetadataService: ProjectMetadataService,
-    private literalsPatternsService: LiteralsPatternsService
-  ) { }
+    protected literalsPatternsService: LiteralsPatternsService
+  ) {
+    super();
+  }
 
   private getCurrent(currentIndex: number): CurrentVerseIndex {
     return { ...this.current, verseIndex: currentIndex };
-  }
-
-  splitIntoMatrix(patterns: ParsedPatterns, text: string): Array<Array<{ index: number, word: string }>> {
-    let index = 0;
-    return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
-      return { index: index++, word };
-    }));
-  }
-
-  calcFieldSize(placeholder: string, value: string): number {
-    if (value.length) {
-      return Math.floor(value.length * 8.5);
-    } else if (placeholder.length) {
-      return Math.floor(placeholder.length * 5);
-    }
-
-    return 30;
   }
 
   //  word of God
@@ -123,26 +108,5 @@ export class ScriptureInspectorComponent {
       lexical: book.lexical,
       patterns: parsedPatterns
     }
-  }
-
-  //  lexical
-  updateLexical(input: HTMLInputElement, word: string): void {
-    this.projectMetadataService.updateLexical(this.data, this.current.book, word, input.value);
-
-    input.style.width = `${this.calcFieldSize(word, input.value)}px`;
-    this.pipeUpdaterController++;
-  }
-
-  getLexical(word: string): string {
-    return this.projectMetadataService.getLexical(this.data, this.current.book, word);
-  }
-
-  cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>): void {
-    if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
-      return;
-    }
-
-    this.projectMetadataService.cleanLexicalInterlinear(this.data, this.current.book, eachWord);
-    this.pipeUpdaterController++;
   }
 }

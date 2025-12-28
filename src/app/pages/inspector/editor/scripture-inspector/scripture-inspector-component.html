@@ -155,4 +155,12 @@
   }
 </table>
 
-<app-custom-translation-component></app-custom-translation-component>
+<app-custom-translation-component
+[data]="data"
+[current]="current"
+[sourceBook]="sourceCodex"
+[sourceLang]="data.lang.source"
+[target]="target"
+[parsedBook]="parsedBook"
+[sourceVerse]="sourceVerse"
+></app-custom-translation-component>

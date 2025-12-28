@@ -1,24 +1,21 @@
 import { Component, Input } from '@angular/core';
 import { CodexBookChapterVerseMetadata } from '@domain/codex-book-chapter-verse-metadata-model';
 import { CodexBookChapterVerse } from '@domain/codex-book-chapter-verse-model';
-import { CodexBook } from '@domain/codex-book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
+import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
 import { Language } from '@domain/language-model';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData } from '@domain/project-data-model';
+import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
-import { SourceCodex } from '../../../../domain/source-codex-model';
-import { HolyScriptureModel } from '../../domain/holy-scripture-model';
-import { NewTestmentScriptures } from '../../domain/new-testment-scriptures-model';
-import { OldTestmentScriptures } from '../../domain/old-testment-scriptures-model';
 import { ProjectCustomTranslationService } from '@shared/project/project-custom-translation-service';
-import { LiteralsPatternsService } from '../../literals-patterns-service';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { WordSegment } from '@domain/word-segment-model';
 import { ProjectMetadataService } from '@shared/project/project-metadata-service';
-import { ProjectData } from '@domain/project-data-model';
 import { ProjectService } from '@shared/project/project-service';
-import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
+import { SourceCodex } from '../../../../domain/source-codex-model';
+import { LiteralsPatternsService } from '../../literals-patterns-service';
+import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -26,19 +23,16 @@ import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
   templateUrl: './custom-translation-component.html',
   styleUrl: './custom-translation-component.scss'
 })
-export class CustomTranslationComponent {
-
-  @Input()
-  pipeUpdaterController = 0;
+export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input()
   data!: ProjectData;
 
   @Input()
-  sourceCodex!: SourceCodex;
+  current!: CurrentChapter;
 
   @Input()
-  current!: CurrentChapter;
+  sourceBook!: SourceBook;
 
   @Input()
   sourceLang!: Language;
@@ -52,28 +46,24 @@ export class CustomTranslationComponent {
   @Input()
   sourceVerse!: SourceVerse;
 
-  @Input()
-  customTranslation!: CustomTranslation;
+  customTranslation: CustomTranslation = {};
+
+  pipeUpdaterController = 0;
 
   constructor(
     private projectService: ProjectService,
-    private projectMetadataService: ProjectMetadataService,
-    private literalsPatternsService: LiteralsPatternsService,
+    protected projectMetadataService: ProjectMetadataService,
+    protected literalsPatternsService: LiteralsPatternsService,
     private projectCustomTranslationService: ProjectCustomTranslationService
-  ) { }
+  ) {
+    super();
+  }
 
   splitTextBySpacesAndPunctuation(value: string, pipeUpdaterController: number): string[] {
     pipeUpdaterController;
     return [...value.matchAll(/(\s*)(\S+?)(\.{3}|…|[.!?]+)?(?=\s|$)/g)]
       .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`])
       .map(m => m.trim());
-  }
-
-  splitIntoMatrix(text: string): Array<Array<WordSegment>> {
-    let index = 0;
-    return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(this.parsedBook.patterns, word).map(word => {
-      return { index: index++, word };
-    }));
   }
 
   private createCustomTranslationStructureIfNotExists(): string[] {
@@ -107,10 +97,6 @@ export class CustomTranslationComponent {
       .join(' ');
 
     this.saveCustomTranslation();
-  }
-
-  getLexical(word: string): string {
-    return this.projectMetadataService.getLexical(this.data, this.current.book, word);
   }
 
   private derivateInterlinearToCustom(verse: SourceVerse): void {
