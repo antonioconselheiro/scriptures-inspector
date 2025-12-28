@@ -1,5 +1,5 @@
-export interface CurrentVerseIndex {
-  book: string;
-  chapter: number;
+import { CurrentChapter } from './current-chapter-model';
+
+export interface CurrentVerseIndex extends CurrentChapter {
   verseIndex: number;
 }

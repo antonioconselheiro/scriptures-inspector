@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ParsedPatterns } from './parsed-patterns';
+import { ParsedPatterns } from '../../domain/parsed-patterns';
 
 @Injectable({
   providedIn: 'root'

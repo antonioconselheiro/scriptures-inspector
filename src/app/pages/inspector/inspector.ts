@@ -28,10 +28,10 @@ import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-cu
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { ScriptureBook } from './domain/scripture-book-model';
+import { SourceBook } from '../../domain/source-book-model';
 import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
 import { ScriptureVerseMetadataWord } from '../../domain/scripture-verse-metadata-word-model';
-import { ScriptureVerse } from './domain/scripture-verse-model';
+import { SourceVerse } from '../../domain/source-verse-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
 import { Translation } from './domain/translation-model';
@@ -40,7 +40,7 @@ import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './literals-patterns-service';
 import { LexicalPipe } from './literals-pipe';
 import { PaleoPipe } from './paleo-pipe';
-import { ParsedPatterns } from './parsed-patterns';
+import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
 import { VersePipe } from './editor/shared/verse-pipe';
@@ -72,9 +72,9 @@ export class Inspector implements OnInit {
 
   readonly bookMetadata = bookMetadata;
 
-  selectedHebraicBook: ScriptureBook | null = null;
-  selectedGeezBook: ScriptureBook | null = null;
-  selectedGreekBook: ScriptureBook | null = null;
+  selectedHebraicBook: SourceBook | null = null;
+  selectedGeezBook: SourceBook | null = null;
+  selectedGreekBook: SourceBook | null = null;
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),
@@ -359,12 +359,12 @@ export class Inspector implements OnInit {
     ]);
   }
 
-  getCorrespondingGeezVerse(verse: ScriptureVerse): Array<ScriptureVerse> {
+  getCorrespondingGeezVerse(verse: SourceVerse): Array<SourceVerse> {
     if (!this.selectedGeezBook) {
       return [];
     }
 
-    const verses = new Array<ScriptureVerse>();
+    const verses = new Array<SourceVerse>();
     for (let index = 0; index < this.selectedGeezBook[this.currentChapter].length; index++) {
       const geezVerse = this.selectedGeezBook[this.currentChapter][index];
 
@@ -418,7 +418,7 @@ export class Inspector implements OnInit {
     }));
   }
 
-  getGeezInterlinear(geezVerse: ScriptureVerse, geezWordIndex: number): string {
+  getGeezInterlinear(geezVerse: SourceVerse, geezWordIndex: number): string {
     let interlinear: TranslationInterlinearVerse;
 
     try {
@@ -458,8 +458,8 @@ export class Inspector implements OnInit {
   }
 
   onSelectInterlinearGeezToScripture(
-    scriptureVerse: ScriptureVerse,
-    geezVerse: ScriptureVerse,
+    scriptureVerse: SourceVerse,
+    geezVerse: SourceVerse,
     geezWordIndex: number,
     geezWord: string,
     interlinear: string,
@@ -512,7 +512,7 @@ export class Inspector implements OnInit {
     }
   }
 
-  cleanGeezTranslationInterlinear(geezVerse: ScriptureVerse, lang: 'hebraic' | 'greek'): void {
+  cleanGeezTranslationInterlinear(geezVerse: SourceVerse, lang: 'hebraic' | 'greek'): void {
     if (!confirm('clean interlinear association for this verse?')) {
       return;
     }
@@ -545,7 +545,7 @@ export class Inspector implements OnInit {
     }
   }
 
-  getGeezColor(geezVerse: ScriptureVerse, wordIndex: number): string {
+  getGeezColor(geezVerse: SourceVerse, wordIndex: number): string {
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
     const currentBook = this.currentBook;
     if (this.isOldBookGuard(currentBook)) {
@@ -570,7 +570,7 @@ export class Inspector implements OnInit {
     return String(map.origin.index % 7 + 1);
   }
 
-  getCustomTranslationFromHebraicColor(verse: ScriptureVerse, wordIndex: number): string {
+  getCustomTranslationFromHebraicColor(verse: SourceVerse, wordIndex: number): string {
     const currentBook = this.currentBook;
     if (!this.isOldBookGuard(currentBook)) {
       return '';
@@ -597,7 +597,7 @@ export class Inspector implements OnInit {
     return '';
   }
 
-  getGeezCustomTranslationColor(verse: ScriptureVerse, wordIndex: number): string {
+  getGeezCustomTranslationColor(verse: SourceVerse, wordIndex: number): string {
     let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
     const book = this.currentBook;
     if (this.isOldBookGuard(book)) {
@@ -631,14 +631,14 @@ export class Inspector implements OnInit {
     return String(map.origin.index % 7 + 1);
   }
 
-  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: ScriptureVerse): ScriptureVerse | null {
+  getCustomTranslationVerse(custom: AbstractHolyScriptureModel, verse: SourceVerse): SourceVerse | null {
     return custom[this.currentBook] &&
       custom[this.currentBook][this.currentChapter] &&
       custom[this.currentBook][this.currentChapter][verse.verse.index] || null;
   }
 
-  updateCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<ScriptureVerse>;
+  updateCustomTranslation(input: HTMLInputElement, verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<SourceVerse>;
     const book = this.currentBook;
     const chapter = this.currentChapter;
 
@@ -688,12 +688,12 @@ export class Inspector implements OnInit {
     }
   }
 
-  cleanCustomTranslation(input: HTMLInputElement, verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  cleanCustomTranslation(input: HTMLInputElement, verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     if (!confirm('clean custom translation on this verse?')) {
       return;
     }
     input.value = '';
-    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<ScriptureVerse>;
+    let customTranslation: AbstractHolyScriptureModel, customBook: CodexBook<SourceVerse>;
     const book = this.currentBook;
     const chapter = this.currentChapter;
 
@@ -734,7 +734,7 @@ export class Inspector implements OnInit {
     this.pipeUpdaterController++;
   }
 
-  private createCustomTranslationStructureIfNotExists(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): {
+  private createCustomTranslationStructureIfNotExists(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): {
     metadata: string[],
     customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>
   } {
@@ -772,7 +772,7 @@ export class Inspector implements OnInit {
     return { metadata, customTranslation };
   }
 
-  private derivateTranslationToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  private derivateTranslationToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     const { customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
     customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text = this.splitIntoMatrix(verse.text, lang)
       .flat()
@@ -782,7 +782,7 @@ export class Inspector implements OnInit {
     this.saveCustomTranslation(lang);
   }
 
-  private derivateInterlinearToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  private derivateInterlinearToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     const { metadata, customTranslation } = this.createCustomTranslationStructureIfNotExists(verse, lang);
     metadata.splice(0, metadata.length);
     const custom = customTranslation[this.currentBook][this.currentChapter][verse.verse.index].text.split(' ');
@@ -795,7 +795,7 @@ export class Inspector implements OnInit {
     this.saveCustomTranslation(lang);
   }
 
-  derivateAllToCustom(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  derivateAllToCustom(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {
       this.derivateTranslationToCustom(verse, lang);
@@ -803,7 +803,7 @@ export class Inspector implements OnInit {
     }
   }
 
-  getCustomTranslationStyleRole(verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
+  getCustomTranslationStyleRole(verse: SourceVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): string {
     const book = this.currentBook;
     let verseMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
 
@@ -863,7 +863,7 @@ export class Inspector implements OnInit {
   }
 
   getCustomTranslationInterlinearValue(
-    customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, verse: ScriptureVerse, wordIndex: number
+    customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, verse: SourceVerse, wordIndex: number
   ): string {
     const chapter = customTranslation[this.currentBook][this.currentChapter];
     if (chapter && chapter[verse.verse.index] && chapter[verse.verse.index].metadata) {
@@ -874,14 +874,14 @@ export class Inspector implements OnInit {
     return '';
   }
 
-  saveCustomTranslationInterlinearMetadata(value: string, verse: ScriptureVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): void {
+  saveCustomTranslationInterlinearMetadata(value: string, verse: SourceVerse, wordIndex: number, lang: 'hebraic' | 'geez' | 'greek'): void {
     const { metadata } = this.createCustomTranslationStructureIfNotExists(verse, lang);
     metadata[wordIndex] = value;
 
     this.saveCustomTranslation(lang);
   }
 
-  cleanGeezScripturesInterlinear(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
+  cleanGeezScripturesInterlinear(verse: SourceVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
     let customTranslation: AbstractHolyScriptureModel<{ metadata?: string[] }>, metadata: string[] = [];
     const book = this.currentBook;
     const chapter = this.currentChapter;
@@ -914,261 +914,6 @@ export class Inspector implements OnInit {
       .map(m => m.trim());
   }
 
-  updateLexical(input: HTMLInputElement, word: string, lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (lang === 'hebraic') {
-      this.documentStorage.addHebraicLexical(word, input.value);
-    } else if (lang === 'greek') {
-      this.documentStorage.addGreekLexical(word, input.value);
-    } else if (lang === 'geez') {
-      this.documentStorage.addGeezLexical(word, input.value);
-    }
-
-    input.style.width = `${this.calcFieldSize(word, input.value)}px`;
-    this.pipeUpdaterController++;
-  }
-
-  getLexical(word: string, lang: 'hebraic' | 'geez' | 'greek'): string {
-    if (lang === 'hebraic') {
-      return this.documentStorage.getHebraicLexical()[word];
-    } else if (lang === 'geez') {
-      return this.documentStorage.getGeezLexical()[word];
-    } else if (lang === 'greek') {
-      return this.documentStorage.getGreekLexical()[word];
-    }
-
-    return '';
-  }
-
-  cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>, lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
-      return;
-    }
-
-    eachWord.forEach(eachSegment => {
-      eachSegment.forEach(segment => {
-        if (lang === 'hebraic') {
-          this.documentStorage.removeHebraicLexical(segment.word);
-        } else if (lang === 'greek') {
-          this.documentStorage.removeGreekLexical(segment.word);
-        } else if (lang === 'geez') {
-          this.documentStorage.removeGeezLexical(segment.word);
-        }
-      });
-    });
-
-    this.pipeUpdaterController++;
-  }
-
-  createIfNotExistsWordMetadata(
-    verseIndex: number,
-    verse: ScriptureVerse,
-    lang: 'hebraic' | 'geez' | 'greek',
-    segments: Array<{ index: number; word: string; }> = []
-  ): {
-    [key: string]: ScriptureVerseMetadataWord;
-  } {
-    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codexMetadata = this.hebraicMetadata;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codexMetadata = this.greekMetadata;
-    }
-
-    if (!codexMetadata[this.currentBook]) {
-      codexMetadata[this.currentBook] = [];
-    }
-
-    if (!codexMetadata[this.currentBook][this.currentChapter]) {
-      codexMetadata[this.currentBook][this.currentChapter] = [];
-    }
-
-    if (!codexMetadata[this.currentBook][this.currentChapter][verseIndex]) {
-      codexMetadata[this.currentBook][this.currentChapter][verseIndex] = {
-        verse: verse.verse,
-        metadata: {}
-      };
-    }
-
-    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseIndex].metadata || {};
-    codexMetadata[this.currentBook][this.currentChapter][verseIndex].metadata = metadata;
-
-    segments.forEach(segment => {
-      const key = this.castSegmentIntoMetadataIndex(segment);
-      if (!metadata[key]) {
-        metadata[key] = {
-          kind: '',
-          segment: segment.word
-        };
-      }
-    });
-
-    return metadata;
-  }
-
-  setAsWordOfGod(
-    input: HTMLInputElement,
-    verseIndex: number,
-    verse: ScriptureVerse,
-    segments: Array<{ index: number; word: string; }>,
-    lang: 'hebraic' | 'geez' | 'greek'
-  ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, segments);
-    segments.forEach(segment => {
-      const key = this.castSegmentIntoMetadataIndex(segment);
-      if (input.checked) {
-        wordMetadata[key].isWordOfGod = true;
-      } else {
-        delete wordMetadata[key].isWordOfGod;
-      }
-    });
-
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    }
-  }
-
-  getScriptureMetadataDefinedKind(
-    verseKey: number,
-    segment: { index: number; word: string; },
-    lang: 'hebraic' | 'geez' | 'greek'
-  ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codexMetadata = this.hebraicMetadata;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codexMetadata = this.greekMetadata;
-    }
-
-    if (
-      !codexMetadata[this.currentBook] ||
-      !codexMetadata[this.currentBook][this.currentChapter] ||
-      !codexMetadata[this.currentBook][this.currentChapter][verseKey]
-    ) {
-      return '';
-    }
-
-    const metadata = codexMetadata[this.currentBook][this.currentChapter][verseKey].metadata;
-    if (!metadata) {
-      return '';
-    }
-
-    const metadataKey = this.castSegmentIntoMetadataIndex(segment)
-    if (!metadata[metadataKey]) {
-      return '';
-    }
-
-    return metadata[metadataKey].kind;
-  }
-
-
-
-  cleanWordOfGodFromVerse(verse: ScriptureVerse, lang: 'hebraic' | 'greek'): void {
-    if (!confirm('Confirm clean words set as "word of God"?')) {
-      return;
-    }
-
-    let codexMetadata: Codex<string, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codexMetadata = this.hebraicMetadata;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codexMetadata = this.greekMetadata;
-    }
-
-    if (
-      !codexMetadata[this.currentBook] ||
-      !codexMetadata[this.currentBook][this.currentChapter] ||
-      !codexMetadata[this.currentBook][this.currentChapter][verse.verse.index]
-    ) {
-      return;
-    }
-
-    const metadata = codexMetadata[this.currentBook][this.currentChapter][verse.verse.index].metadata;
-    if (!metadata) {
-      return;
-    }
-
-    Object.keys(metadata).forEach(key => {
-      delete metadata[key].isWordOfGod;
-    });
-
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    }
-  }
-
-  updateScripturesMetadata(
-    input: HTMLSelectElement,
-    verseIndex: number,
-    verse: ScriptureVerse,
-    segment: { index: number; word: string; },
-    lang: 'hebraic' | 'geez' | 'greek'
-  ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(verseIndex, verse, lang, [segment]);
-    const kind = input.value;
-    const metadatIndex = this.castSegmentIntoMetadataIndex(segment);
-
-    if (this.isWordSegmentMetadataGuard(kind)) {
-      wordMetadata[metadatIndex].kind = kind;
-    } else {
-      if (wordMetadata[metadatIndex].isWordOfGod) {
-        wordMetadata[metadatIndex].kind = '';
-      } else {
-        delete wordMetadata[metadatIndex];
-      }
-    }
-
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    }
-  }
-
-  cleanScriptureMetadata(verse: ScriptureVerse, lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (!confirm('remove metadata?')) {
-      return;
-    }
-
-    let codexMetadata: Codex<CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {};
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      codexMetadata = this.hebraicMetadata;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      codexMetadata = this.greekMetadata;
-    }
-
-    if (
-      !codexMetadata[this.currentBook] ||
-      !codexMetadata[this.currentBook][this.currentChapter] ||
-      !codexMetadata[this.currentBook][this.currentChapter][verse.verse.index]
-    ) {
-      return;
-    }
-
-    const chapter = codexMetadata[this.currentBook][this.currentChapter][verse.verse.index];
-    const metadata = chapter?.metadata;
-
-    if (!metadata) {
-      return;
-    }
-    
-    Object.keys(metadata).forEach(key => {
-      metadata[key].kind = '';
-    });
-
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      this.documentStorage.saveHebraicMetadata(this.hebraicMetadata);
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      this.documentStorage.saveGreekMetadata(this.greekMetadata);
-    }
-  }
-
-  isWordSegmentMetadataGuard(value: string): value is 'godname' | 'keyword' | 'character' | 'amount' {
-    return ['godname', 'keyword', 'character', 'amount'].includes(value);
-  }
 
   isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {
     return (oldTestamentBookList as string[]).includes(book);
@@ -1178,8 +923,5 @@ export class Inspector implements OnInit {
     return (newTestamentBookList as string[]).includes(book);
   }
 
-  castSegmentIntoMetadataIndex(segment: { index: number; word: string; }): string {
-    const word = demassoretifier(segment.word);
-    return `${segment.index}-${word}`;
-  }
+
 }

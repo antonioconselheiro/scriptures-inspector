@@ -1,4 +1,4 @@
-import { languageUnion } from "./language-union";
+import { languageUnion } from './language-union';
 
 export interface ToolTranslationViewer {
   tool: 'translation-viewer';

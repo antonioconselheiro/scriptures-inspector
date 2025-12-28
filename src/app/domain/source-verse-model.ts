@@ -1,4 +1,4 @@
-export type ScriptureVerse = {
+export type SourceVerse = {
   verse: {
     index: number,
     start: `${number}`,

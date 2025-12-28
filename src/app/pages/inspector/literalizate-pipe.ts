@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DocumentStorage } from './document-storage';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { LiteralsPatternsService } from './literals-patterns-service';
-import { ParsedPatterns } from './parsed-patterns';
 
 @Pipe({
   name: 'literalizate'
@@ -9,18 +8,16 @@ import { ParsedPatterns } from './parsed-patterns';
 export class LiteralizatePipe implements PipeTransform {
 
   constructor(
-    private literalsStorage: DocumentStorage,
     private literalsPatternsService: LiteralsPatternsService
   ) { }
 
-  transform(value: string, patterns: ParsedPatterns, lang: 'hebraic' | 'geez' | 'greek', listenUpdate: number): string {
+  transform(value: string, book: ParsedBookMetadata, listenUpdate?: number): string {
     listenUpdate;
-    const literals = lang === 'hebraic' ? this.literalsStorage.getHebraicLexical() : this.literalsStorage.getGeezLexical();
 
     return value.split(' ').map(sentence => {
       let literalWord: string[] = [];
-      for (let word of this.literalsPatternsService.splitByPatterns(patterns, sentence)) {
-        literalWord.push(literals[word]);
+      for (let word of this.literalsPatternsService.splitByPatterns(book.patterns, sentence)) {
+        literalWord.push(book.lexical[word]);
       }
 
       return literalWord.join(' ');

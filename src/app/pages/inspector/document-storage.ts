@@ -11,7 +11,7 @@ import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model'
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
-import { ParsedPatterns } from './parsed-patterns';
+import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { PatternsSerialized } from '../../domain/patterns-serialized';
 
 @Injectable({
@@ -217,13 +217,6 @@ export class DocumentStorage {
       /([\p{Script=Hebrew}])/gu,
       '$1\\p{M}*'
     );
-  }
-
-  private getPattern(fromPatterns: PatternsSerialized) {
-    let prefix = new Map<string, RegExp>(fromPatterns.prefix.map(pattern => [pattern, new RegExp(`^${this.massoretifier(pattern)}`, 'u')]));
-    let suffix = new Map<string, RegExp>(fromPatterns.suffix.map(pattern => [pattern, new RegExp(`${this.massoretifier(pattern)}$`, 'u')]));
-
-    return { prefix, suffix }
   }
 
   addHebraicPattern(word: string, type: 'prefix' | 'suffix'): ParsedPatterns {

@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
 import { DocumentStorage } from '../document-storage';
-import { ParsedPatterns } from '../parsed-patterns';
+import { ParsedPatterns } from '../../../domain/parsed-patterns';
 
 @Component({
   selector: 'app-dialog-patterns',

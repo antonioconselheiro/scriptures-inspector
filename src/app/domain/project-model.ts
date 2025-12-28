@@ -1,4 +1,5 @@
 import { ProjectBook } from './project-book-model';
+import { ProjectData } from './project-data-model';
 import { ProjectStructure } from './project-structure-model';
 
 export interface Project {
@@ -8,4 +9,5 @@ export interface Project {
   /** trabalho */
   workingBooks: Array<ProjectBook>;
   structure: ProjectStructure;
+  data: Array<ProjectData>;
 }

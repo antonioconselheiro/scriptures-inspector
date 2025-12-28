@@ -1,4 +1,4 @@
-import { TranslationInterlinearVerse } from "./translation-interlinear-verse-model";
+import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
 export type TranslationInterlinear = {
   name: string;

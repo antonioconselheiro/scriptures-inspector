@@ -14,7 +14,7 @@
   }
   <tr>
     <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="lang.label ? lang.label : null">
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="data.lang.source.label">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
       <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
@@ -24,7 +24,7 @@
     </td>
     <td></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="lang.label ? lang.label : null">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="data.lang.source.label">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -34,13 +34,13 @@
     }
     <td></td>
   </tr>
-  @if (lang.transliteration) {
+  @if (data.lang.source.transliteration) {
     <tr>
       <th>transliteration</th>
       @for (sentence of eachWord; track $index) {
       <td>
         @for (word of sentence; track $index) {
-        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : lang.transliteration}}</span>
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : data.lang.source.transliteration}}</span>
         }
       </td>
       }
@@ -52,11 +52,11 @@
     @for (word of wordList; track $index; let wordIndex = $index) {
     <td>
       <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-        (change)="setAsWordOfGod(wordOfGodEl, verse.verse.index, verse, eachWord[wordIndex], 'hebraic')"
-        [checked]="getScriptureMetadataWordOfGod(verse.verse.index, eachWord[wordIndex], 'hebraic')" />
+        (change)="setAsWordOfGod(wordOfGodEl, verse.verse.index, verse, eachWord[wordIndex])"
+        [checked]="getScriptureMetadataWordOfGod(verse.verse.index, eachWord[wordIndex])" />
     </td>
     }
-    <td><button (click)="cleanWordOfGodFromVerse(verse, 'hebraic')" type="button">×</button></td>
+    <td><button (click)="cleanWordOfGodFromVerse(verse.verse.index)" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -65,8 +65,8 @@
     <td>
       @for (segment of word; track $index; let segmentIndex = $index) {
       <select #metadataEl [name]="'fieldMetadata' + segment.index"
-        [value]="getScriptureMetadataDefinedKind(verse.verse.index, segment, 'hebraic')"
-        (change)="updateScripturesMetadata(metadataEl, verse.verse.index, verse, segment, 'hebraic')"
+        [value]="getScriptureMetadataDefinedKind(verse.verse.index, segment)"
+        (change)="updateScripturesMetadata(metadataEl, verse.verse.index, verse, segment)"
         (focus)="showLegend.emit(true)" (blur)="showLegend.emit(false)">
         <option value="">-</option>
         <option value="godname">G</option>
@@ -77,36 +77,37 @@
       }
     </td>
     }
-    <td><button (click)="cleanScriptureMetadata(verse, 'hebraic')" type="button">×</button></td>
+    <td><button (click)="cleanScriptureMetadata(verse.verse.index)" type="button">×</button></td>
   </tr>
 
+  @let parsedBook = parseBook(data.metadata[current.book], data.lang.source, pipeUpdaterController);
   <tr>
     <th rowspan="2">interlinear</th>
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      @let lexical = word.word | lexical : 'hebraic' : pipeUpdaterController;
+      @let lexical = word.word | lexical : data.metadata[current.book] : pipeUpdaterController;
       <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #fieldHebraicLexical
         [style.width.px]="calcFieldSize(word.word, lexical)"
-        (input)="updateLexical(fieldHebraicLexical, word.word, 'hebraic')" [value]="lexical" />
+        (input)="updateLexical(fieldHebraicLexical, word.word)" [value]="lexical" />
       }
     </td>
     }
-    <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord, 'hebraic')" type="button">×</button></td>
+    <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord)" type="button">×</button></td>
   </tr>
   <tr>
     <td [colSpan]="wordList.length">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : hebraicPatterns : 'hebraic' : pipeUpdaterController}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
       }
       }
     </td>
   </tr>
 
-  @if (lang.numerology) {
-    @for (algorythm of lang.numerology; track $index) {
+  @if (data.lang.source.numerology) {
+    @for (algorythm of data.lang.source.numerology; track $index) {
       <tr>
         <th>{{algorythm.name}}</th>
         @for (word of wordList; track $index) {
@@ -117,13 +118,13 @@
     }
   }
 
-  @if (lang.spelling) {
-    @for (spelling of lang.spelling; track $index) {
+  @if (data.lang.source.alternativeSpelling) {
+    @for (spelling of data.lang.source.alternativeSpelling; track $index) {
       <tr>
         <th rowspan="2">hypothetical paleo</th>
     
         @for (sentence of eachWord; track $index) {
-        <td [attr.lang]="lang.font ? lang.label : null">
+        <td [attr.lang]="data.lang.source.label">
           @for (word of sentence; track $index) {
             @if (spelling.parse) {
               <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
