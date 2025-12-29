@@ -134,7 +134,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
-    return this.projectService.castSegmentIntoMetadataIndex(this.data, segment);
+    return this.projectService.castSegmentIntoMetadataIndex(this.data.lang.source, segment);
   }
 
   cleanInterlinear(): void {

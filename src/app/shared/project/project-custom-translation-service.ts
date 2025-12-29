@@ -78,7 +78,7 @@ export class ProjectCustomTranslationService {
     const custom = customTranslation[current.book].chapters[current.chapter][sourceVerse.verse.index].text.split(' ');
     this.projectService.splitIntoMatrix(parsedBookMetadata, sourceVerse.text).flat().forEach(segment => {
       if (custom[segment.index] === this.projectService.getLexical(data, current.book,segment.word)) {
-        metadata.push(this.projectService.castSegmentIntoMetadataIndex(data, segment));
+        metadata.push(this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment));
       }
     });
 
@@ -215,7 +215,7 @@ export class ProjectCustomTranslationService {
         return '';
       }
 
-      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(data, scriptureSegmentOrigin);
+      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, scriptureSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[sourceVerse.verse.index];
     } else {
       const scriptureChapterMetadata = data.metadata[current.book] && data.metadata[current.book].chapters[current.chapter] || [];

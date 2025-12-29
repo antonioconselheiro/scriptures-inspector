@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Language } from '@domain/language-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { ProjectData } from '@domain/project-data-model';
@@ -10,10 +11,10 @@ import { WordSegment } from '@domain/word-segment-model';
 export class ProjectService {
 
   castSegmentIntoMetadataIndex(
-    data: ProjectData,
+    lang: Language,
     segment: WordSegment
   ): string {
-    const word = data.lang.source.normalizeFn && data.lang.source.normalizeFn(segment.word) || segment.word;
+    const word = lang.normalizeFn && lang.normalizeFn(segment.word) || segment.word;
     return `${segment.index}-${word}`;
   }
 

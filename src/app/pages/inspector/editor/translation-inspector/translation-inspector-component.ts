@@ -1,16 +1,18 @@
 import { Component, Input } from '@angular/core';
-import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
+import { CurrentChapter } from '@domain/current-chapter-model';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData } from '@domain/project-data-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
-import { LiteralizatePipe } from '../../literalizate-pipe';
-import { LexicalPipe } from '../../literals-pipe';
+import { TranslationInterlinear } from '@domain/translation-interlinear-model';
+import { WordSegment } from '@domain/word-segment-model';
+import { ProjectMetadataService } from '@shared/project/project-metadata-service';
+import { ProjectService } from '@shared/project/project-service';
+import { ProjectTranslationMetadataService } from '@shared/project/project-translation-metadata-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
-import { ProjectMetadataService } from '@shared/project/project-metadata-service';
-import { CurrentChapter } from '@domain/current-chapter-model';
-import { ProjectData } from '@domain/project-data-model';
-import { TranslationInterlinear } from '@domain/translation-interlinear-model';
-import { ProjectTranslationMetadataService } from '@shared/project/project-translation-metadata-service';
+import { LiteralizatePipe } from '../../literalizate-pipe';
+import { LexicalPipe } from '../../literals-pipe';
+import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 
 @Component({
   selector: 'app-translation-inspector-component',
@@ -32,7 +34,7 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
 
   @Input()
   pipeUpdaterController = 0;
-  
+
   @Input()
   sourceVerse!: SourceVerse;
 
@@ -42,7 +44,11 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
+  @Input()
+  parsedBook!: ParsedBookMetadata;
+
   constructor(
+    private projectService: ProjectService,
     protected projectMetadataService: ProjectMetadataService,
     private projectTranslationMetadataService: ProjectTranslationMetadataService
   ) {
@@ -54,24 +60,47 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix() {
-    this.projectTranslationMetadataService.splitIntoMatrix();
+  splitIntoMatrix(text: string) {
+    return this.projectService.splitIntoMatrix(this.parsedBook, text);
   }
 
-  onSelectInterlinearGeezToScripture() {
-    this.projectTranslationMetadataService.onSelectInterlinearGeezToScripture();
+  onSelectInterlinearGeezToScripture(
+    translationWordIndex: number,
+    translationWord: string,
+    interlinearValue: string
+  ): void {
+    this.projectTranslationMetadataService.onSelectInterlinearGeezToScripture(
+      this.translation,
+      this.current,
+      this.sourceVerse,
+      this.sourceVerse,
+      translationWordIndex,
+      translationWord,
+      interlinearValue
+    );
   }
 
-  getGeezInterlinear() {
-    this.projectTranslationMetadataService.getGeezInterlinear();
+  getInterlinear(wordIndex: number): string {
+    return this.projectTranslationMetadataService.getInterlinear(
+      this.translation,
+      this.current,
+      this.sourceVerse,
+      wordIndex
+    );
   }
 
-  castSegmentIntoMetadataIndex() {
-    this.projectTranslationMetadataService.castSegmentIntoMetadataIndex();
+  castSegmentIntoMetadataIndex(segment: WordSegment) {
+    return this.projectService.castSegmentIntoMetadataIndex(this.data.lang.source, segment);
   }
 
   cleanGeezTranslationInterlinear() {
-    this.projectTranslationMetadataService.cleanGeezTranslationInterlinear();
+    if (!confirm('clean interlinear association for this verse?')) {
+      return;
+    }
+
+    this.projectTranslationMetadataService.cleanGeezTranslationInterlinear(
+      this.translation, this.current, this.sourceVerse
+    );
   }
 
 }

@@ -1,49 +1,51 @@
 import { Injectable } from '@angular/core';
+import { SourceVerse } from '@domain/source-verse-model';
+import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
+import { ProjectService } from './project-service';
+import { TranslationInterlinear } from '@domain/translation-interlinear-model';
+import { CurrentChapter } from '@domain/current-chapter-model';
+import { SystemService } from '@shared/system/system-service';
+import { Language } from '@domain/language-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectTranslationMetadataService {
 
-  splitIntoMatrix() {
-
-  }
+  constructor(
+    private projectService: ProjectService,
+    private systemService: SystemService
+  ) { }
 
   onSelectInterlinearGeezToScripture(
-    scriptureVerse: SourceVerse,
-    geezVerse: SourceVerse,
-    geezWordIndex: number,
-    geezWord: string,
-    interlinear: string,
-    lang: 'hebraic' | 'greek'
+    translation: TranslationInterlinear,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    translationVerse: SourceVerse,
+    translationWordIndex: number,
+    translationWord: string,
+    interlinear: string
   ): void {
     const [scriptureWordIndexString, scriptureWord] = interlinear.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
-    const scriptureVerseNumber = Number(scriptureVerse.verse.start);
-    const geezVerseNumber = Number(geezVerse.verse.start);
-    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
+    const scriptureVerseNumber = Number(sourceVerse.verse.start);
+    const geezVerseNumber = Number(translationVerse.verse.start);
 
-    if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-      interlinearMetadata = this.interlinearGeezHebraic;
-    } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-      interlinearMetadata = this.interlinearGeezGreek;
-    } else {
-      return;
+    if (!translation.codex[current.book]) {
+      translation.codex[current.book] = {
+        chapters: []
+      };
     }
 
-    if (!interlinearMetadata[this.currentBook]) {
-      interlinearMetadata[this.currentBook] = [];
+    if (!translation.codex[current.book].chapters[current.chapter]) {
+      translation.codex[current.book].chapters[current.chapter] = [];
     }
 
-    if (!interlinearMetadata[this.currentBook][this.currentChapter]) {
-      interlinearMetadata[this.currentBook][this.currentChapter] = [];
+    if (!translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index]) {
+      translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    if (!interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index]) {
-      interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index] = [];
-    }
-
-    interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex] = {
+    translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
       origin: {
         verse: scriptureVerseNumber,
         index: scriptureWordIndex,
@@ -52,32 +54,28 @@ export class ProjectTranslationMetadataService {
 
       translation: {
         verse: geezVerseNumber,
-        index: geezWordIndex,
-        word: geezWord
+        index: translationWordIndex,
+        word: translationWord
       }
     };
 
-    if (lang === 'hebraic') {
-      this.interlinearGeezHebraic = this.documentStorage.saveInterlinearGeezHebraic(this.interlinearGeezHebraic);
-    } else if (lang === 'greek') {
-      this.interlinearGeezGreek = this.documentStorage.saveInterlinearGeezGreek(this.interlinearGeezGreek);
-    }
+    this.systemService.autoSaveCurrentProject();
   }
 
-  getGeezInterlinear(geezVerse: SourceVerse, geezWordIndex: number): string {
+  getInterlinear(
+    lang: Language,
+    translation: TranslationInterlinear,
+    current: CurrentChapter,
+    translationVerse: SourceVerse,
+    translationWordIndex: number
+  ): string {
     let interlinear: TranslationInterlinearVerse;
 
     try {
-      if (this.isOldBookGuard(this.currentBook)) {
-        interlinear = this.interlinearGeezHebraic[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex];
-      } else if (this.isNewBookGuard(this.currentBook)) {
-        interlinear = this.interlinearGeezGreek[this.currentBook][this.currentChapter][geezVerse.verse.index][geezWordIndex];
-      } else {
-        return '';
-      }
+      interlinear = translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
-        return this.castSegmentIntoMetadataIndex(interlinear.origin);
+        return this.projectService.castSegmentIntoMetadataIndex(lang, interlinear.origin);
       }
     } catch {
 
@@ -86,41 +84,23 @@ export class ProjectTranslationMetadataService {
     return '';
   }
 
-  castSegmentIntoMetadataIndex() {
-
-  }
-
-    cleanGeezTranslationInterlinear(geezVerse: SourceVerse, lang: 'hebraic' | 'greek'): void {
-      if (!confirm('clean interlinear association for this verse?')) {
-        return;
-      }
-  
-      let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-  
-      if (lang === 'hebraic' && this.isOldBookGuard(this.currentBook)) {
-        interlinearMetadata = this.interlinearGeezHebraic;
-      } else if (lang === 'greek' && this.isNewBookGuard(this.currentBook)) {
-        interlinearMetadata = this.interlinearGeezGreek;
-      } else {
-        return;
-      }
-  
-      if (
-        !interlinearMetadata[this.currentBook] ||
-        !interlinearMetadata[this.currentBook][this.currentChapter]
-      ) {
-        return;
-      }
-  
-      if (interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index]) {
-        interlinearMetadata[this.currentBook][this.currentChapter][geezVerse.verse.index] = [];
-      }
-  
-      if (lang === 'hebraic') {
-        this.interlinearGeezHebraic = this.documentStorage.saveInterlinearGeezHebraic(this.interlinearGeezHebraic);
-      } else if (lang === 'greek') {
-        this.interlinearGeezGreek = this.documentStorage.saveInterlinearGeezGreek(this.interlinearGeezGreek);
-      }
+  cleanGeezTranslationInterlinear(
+    translation: TranslationInterlinear,
+    current: CurrentChapter,
+    translationVerse: SourceVerse
+  ): void {
+    if (
+      !translation.codex[current.book] ||
+      !translation.codex[current.book].chapters[current.chapter]
+    ) {
+      return;
     }
+
+    if (translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index]) {
+      translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
+    }
+
+    this.systemService.autoSaveCurrentProject();
+  }
 
 }

@@ -54,7 +54,7 @@ export class ProjectMetadataService {
     data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(data, segment);
+      const key = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
       if (!metadata[key]) {
         metadata[key] = {
           kind: '',
@@ -85,7 +85,7 @@ export class ProjectMetadataService {
       return '';
     }
 
-    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(data, segment)
+    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment)
     if (!metadata[metadataKey]) {
       return '';
     }
@@ -101,7 +101,7 @@ export class ProjectMetadataService {
     segment: { index: number; word: string; }
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(data, current, verse, [segment]);
-    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(data, segment);
+    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
 
     if (this.isWordSegmentMetadataGuard(kind)) {
       wordMetadata[metadataIndex].kind = kind;
@@ -150,7 +150,7 @@ export class ProjectMetadataService {
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(data, current, verse, segments);
     segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(data, segment);
+      const key = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
@@ -162,31 +162,31 @@ export class ProjectMetadataService {
   }
 
   getScriptureMetadataWordOfGod(
-    project: ProjectData,
+    data: ProjectData,
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
   ): boolean {
     if (
-      !project.metadata[current.book] ||
-      !project.metadata[current.book].chapters ||
-      !project.metadata[current.book].chapters[current.chapter] ||
-      !project.metadata[current.book].chapters[current.chapter][current.verseIndex]
+      !data.metadata[current.book] ||
+      !data.metadata[current.book].chapters ||
+      !data.metadata[current.book].chapters[current.chapter] ||
+      !data.metadata[current.book].chapters[current.chapter][current.verseIndex]
     ) {
       return false;
     }
 
-    const metadata = project.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata || !segments[0]) {
       return false;
     }
 
-    const segment = this.projectService.castSegmentIntoMetadataIndex(project, segments[0]);
-    const data = metadata[segment];
-    if (!data) {
+    const segment = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segments[0]);
+    const segmentData = metadata[segment];
+    if (!segmentData) {
       return false;
     }
 
-    return data.isWordOfGod || false;
+    return segmentData.isWordOfGod || false;
   }
 
   //
