@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { LiteralsPatternsService } from './literals-patterns-service';
+import { LiteralsPatternsService } from './editor/translation-inspector/literals-patterns-service';
 
 @Pipe({
   name: 'literalizate'

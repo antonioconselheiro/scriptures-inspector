@@ -7,7 +7,7 @@
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
       @for (sentence of eachGeezWord; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word}}</span>
       }
       <span>&nbsp;</span>
       }
@@ -18,7 +18,7 @@
     @for (sentence of eachGeezWord; track $index) {
     <td>
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word}}</span>
+      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word}}</span>
       }
     </td>
     }
@@ -28,7 +28,7 @@
     @for (sentence of eachGeezWord; track $index) {
     <td>
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
+      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
       }
     </td>
     }
@@ -52,7 +52,7 @@
     <td [colSpan]="geez.length">
       @for (sentence of eachGeezWord; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getGeezColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
+      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
       }
       }

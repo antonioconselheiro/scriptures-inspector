@@ -36,7 +36,7 @@ import { Translation } from './domain/translation-model';
 import { VersePipe } from './editor/shared/verse-pipe';
 import { GematricsPipe } from './gematrics-pipe';
 import { LiteralizatePipe } from './literalizate-pipe';
-import { LiteralsPatternsService } from './literals-patterns-service';
+import { LiteralsPatternsService } from './editor/translation-inspector/literals-patterns-service';
 import { LexicalPipe } from './literals-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { TranslationService } from './translation-service';

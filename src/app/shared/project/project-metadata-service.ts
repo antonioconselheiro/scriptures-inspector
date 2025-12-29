@@ -205,7 +205,7 @@ export class ProjectMetadataService {
     book: string,
     word: string,
   ): string {
-    return project.metadata[book].lexical[word] || '';
+    return this.projectService.getLexical(project, book, word);
   }
 
   cleanLexicalInterlinear(

@@ -51,11 +51,11 @@
         #interlinearHebraicCustomTranslationEl
         [name]="'selectInterlinearHebraicCustomTranslationEl' + $index"
         [ngModel]="getCustomTranslationInterlinearValue($index)"
-        (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, hebraicVerse, $index, 'hebraic')">
+        (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, $index)">
         <option value=""></option>
-        @for (hebraicsWord of eachHebraicWord; track $index) {
-        @for (hebraicWord of hebraicsWord; track $index) {
-        <option [value]="castSegmentIntoMetadataIndex(hebraicWord)">({{hebraicWord.index}} - {{hebraicWord.word}} )
+        @for (wordSegments of eachWord; track $index) {
+        @for (segment of wordSegments; track $index) {
+        <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
         </option>
         }
         }
@@ -66,6 +66,6 @@
     @if (!splittedCustomTranslation.length) {
       <td></td>
     }
-    <td><button type="button" (click)="cleanInterlinear(hebraicVerse, 'hebraic')">×</button></td>
+    <td><button type="button" (click)="cleanInterlinear()">×</button></td>
   </tr>
 </table>

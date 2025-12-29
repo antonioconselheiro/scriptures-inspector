@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CodexBookVerse } from '@domain/codex-book-verse-model';
 import { CodexBookMetadata } from '@domain/codex-book-metadata-model';
+import { CodexBookVerse } from '@domain/codex-book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
@@ -13,12 +13,12 @@ import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-patter
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { LiteralizatePipe } from '../../literalizate-pipe';
-import { LiteralsPatternsService } from '../../literals-patterns-service';
 import { LexicalPipe } from '../../literals-pipe';
 import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { VersePipe } from '../shared/verse-pipe';
+import { ProjectService } from '@shared/project/project-service';
 
 @Component({
   selector: 'app-scripture-inspector-component',
@@ -42,7 +42,7 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   data!: ProjectData;
 
   @Input()
-  source!: CodexBookVerse<{ text: string; }>
+  sourceVerse!: CodexBookVerse<{ text: string; }>
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -56,8 +56,8 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   constructor(
-    protected projectMetadataService: ProjectMetadataService,
-    protected literalsPatternsService: LiteralsPatternsService
+    private projectService: ProjectService,
+    protected projectMetadataService: ProjectMetadataService
   ) {
     super();
   }
@@ -66,13 +66,20 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
+  splitIntoMatrix(parsedBook: ParsedBookMetadata, text: string): Array<Array<{
+    index: number;
+    word: string;
+  }>> {
+    return this.projectService.splitIntoMatrix(parsedBook, text);
+  }
+
   //  word of God
   setAsWordOfGod(input: HTMLInputElement, segments: Array<WordSegment>): void {
-    this.projectMetadataService.setAsWordOfGod(input.checked, this.data, this.getCurrent(this.source.verse.index), this.source, segments);
+    this.projectMetadataService.setAsWordOfGod(input.checked, this.data, this.getCurrent(this.sourceVerse.verse.index), this.sourceVerse, segments);
   }
 
   getScriptureMetadataWordOfGod(segments: Array<WordSegment>): boolean {
-    return this.projectMetadataService.getScriptureMetadataWordOfGod(this.data, this.getCurrent(this.source.verse.index), segments);
+    return this.projectMetadataService.getScriptureMetadataWordOfGod(this.data, this.getCurrent(this.sourceVerse.verse.index), segments);
   }
 
   cleanWordOfGodFromVerse(): void {
@@ -80,12 +87,12 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanWordOfGodFromVerse(this.data, this.getCurrent(this.source.verse.index));
+    this.projectMetadataService.cleanWordOfGodFromVerse(this.data, this.getCurrent(this.sourceVerse.verse.index));
   }
 
   //  metadata
   getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    return this.projectMetadataService.getScriptureMetadataDefinedKind(this.data, this.getCurrent(this.source.verse.index), segment);
+    return this.projectMetadataService.getScriptureMetadataDefinedKind(this.data, this.getCurrent(this.sourceVerse.verse.index), segment);
   }
 
   updateScripturesMetadata(select: HTMLSelectElement, source: SourceVerse, segment: WordSegment): void {

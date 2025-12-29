@@ -1,9 +1,7 @@
 import { Directive, Input } from '@angular/core';
-import { ParsedPatterns } from '@domain/parsed-patterns';
+import { CurrentChapter } from '@domain/current-chapter-model';
 import { ProjectData } from '@domain/project-data-model';
 import { ProjectMetadataService } from '@shared/project/project-metadata-service';
-import { LiteralsPatternsService } from '../literals-patterns-service';
-import { CurrentChapter } from '@domain/current-chapter-model';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {
@@ -17,15 +15,7 @@ export abstract class AbstractInspectorDiretive {
   @Input()
   abstract current: CurrentChapter;
 
-  protected abstract literalsPatternsService: LiteralsPatternsService;
   protected abstract projectMetadataService: ProjectMetadataService;
-
-  splitIntoMatrix(patterns: ParsedPatterns, text: string): Array<Array<{ index: number, word: string }>> {
-    let index = 0;
-    return text.split(' ').map(word => this.literalsPatternsService.splitByPatterns(patterns, word).map(word => {
-      return { index: index++, word };
-    }));
-  }
 
   calcFieldSize(placeholder: string, value: string): number {
     if (value.length) {

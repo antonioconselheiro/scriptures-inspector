@@ -1,15 +1,15 @@
-@let wordList = source.text.split(' ');
+@let wordList = sourceVerse.text.split(' ');
 @let parsedBook = parseBook(data.metadata[current.book], data.lang.source, pipeUpdaterController);
-@let eachWord = splitIntoMatrix(parsedBook.patterns, source.text);
+@let eachWord = splitIntoMatrix(parsedBook, sourceVerse.text);
 
 <strong class="verseTitle">
-  {{bookName}}, {{chapter + 1}}:{{source | verse}}
+  {{bookName}}, {{chapter + 1}}:{{sourceVerse | verse}}
 </strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>
     <th>translation <button type="button" (click)="cleanTranslationByIndex($index)">×</button></th>
-    <td [colSpan]="wordList.length">{{chapterTranslation[source.verse.index] && chapterTranslation[source.verse.index].text}}</td>
+    <td [colSpan]="wordList.length">{{chapterTranslation[sourceVerse.verse.index] && chapterTranslation[sourceVerse.verse.index].text}}</td>
     <td></td>
   </tr>
   }
@@ -67,7 +67,7 @@
       @for (segment of word; track $index; let segmentIndex = $index) {
       <select #metadataEl [name]="'fieldMetadata' + segment.index"
         [value]="getScriptureMetadataDefinedKind(segment)"
-        (change)="updateScripturesMetadata(metadataEl, source, segment)"
+        (change)="updateScripturesMetadata(metadataEl, sourceVerse, segment)"
         (focus)="showLegend.emit(true)" (blur)="showLegend.emit(false)">
         <option value="">-</option>
         <option value="godname">G</option>
@@ -78,7 +78,7 @@
       }
     </td>
     }
-    <td><button (click)="cleanScriptureMetadata(source.verse.index)" type="button">×</button></td>
+    <td><button (click)="cleanScriptureMetadata(sourceVerse.verse.index)" type="button">×</button></td>
   </tr>
 
   <tr>
@@ -155,12 +155,16 @@
   }
 </table>
 
-<app-custom-translation-component
-[data]="data"
-[current]="current"
-[sourceBook]="sourceCodex"
-[sourceLang]="data.lang.source"
-[target]="target"
-[parsedBook]="parsedBook"
-[sourceVerse]="sourceVerse"
-></app-custom-translation-component>
+@for (target of data.lang.target; track $index) {
+  <app-custom-translation-component
+    [data]="data"
+    [current]="current"
+    [sourceBook]="sourceBook"
+    [sourceLang]="data.lang.source"
+    [target]="target"
+    [parsedBook]="parsedBook"
+    [sourceVerse]="sourceVerse"
+    [eachWord]="eachWord"
+    [customTranslation]="customTranslation"
+  ></app-custom-translation-component>
+}
