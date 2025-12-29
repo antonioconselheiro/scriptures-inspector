@@ -7,6 +7,10 @@ import { LexicalPipe } from '../../literals-pipe';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { ProjectMetadataService } from '@shared/project/project-metadata-service';
+import { CurrentChapter } from '@domain/current-chapter-model';
+import { ProjectData } from '@domain/project-data-model';
+import { TranslationInterlinear } from '@domain/translation-interlinear-model';
+import { ProjectTranslationMetadataService } from '@shared/project/project-translation-metadata-service';
 
 @Component({
   selector: 'app-translation-inspector-component',
@@ -21,36 +25,53 @@ import { ProjectMetadataService } from '@shared/project/project-metadata-service
 export class TranslationInspectorComponent extends AbstractInspectorDiretive {
 
   @Input()
+  current!: CurrentChapter;
+
+  @Input()
+  data!: ProjectData;
+
+  @Input()
+  pipeUpdaterController = 0;
+  
+  @Input()
+  sourceVerse!: SourceVerse;
+
+  @Input()
+  translation!: TranslationInterlinear;
+
+  @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
   constructor(
-    protected projectMetadataService: ProjectMetadataService
+    protected projectMetadataService: ProjectMetadataService,
+    private projectTranslationMetadataService: ProjectTranslationMetadataService
   ) {
     super();
   }
 
-  getTranslationColor(sourceVerse: SourceVerse, wordIndex: number): string {
-    let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-    const currentBook = this.currentBook;
-    if (this.isOldBookGuard(currentBook)) {
-      interlinearMetadata = this.interlinearGeezHebraic;
-    } else if (this.isNewBookGuard(currentBook)) {
-      interlinearMetadata = this.interlinearGeezGreek;
-    } else {
-      return '';
-    }
-
-    const verseIndex = Number(sourceVerse.verse.index);
-    if (
-      !interlinearMetadata[currentBook] ||
-      !interlinearMetadata[currentBook][this.currentChapter] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex] ||
-      !interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex]
-    ) {
-      return '';
-    }
-
-    const map = interlinearMetadata[currentBook][this.currentChapter][verseIndex][wordIndex];
+  getTranslationColor(wordIndex: number): string {
+    const map = this.translation.codex[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
+
+  splitIntoMatrix() {
+    this.projectTranslationMetadataService.splitIntoMatrix();
+  }
+
+  onSelectInterlinearGeezToScripture() {
+    this.projectTranslationMetadataService.onSelectInterlinearGeezToScripture();
+  }
+
+  getGeezInterlinear() {
+    this.projectTranslationMetadataService.getGeezInterlinear();
+  }
+
+  castSegmentIntoMetadataIndex() {
+    this.projectTranslationMetadataService.castSegmentIntoMetadataIndex();
+  }
+
+  cleanGeezTranslationInterlinear() {
+    this.projectTranslationMetadataService.cleanGeezTranslationInterlinear();
+  }
+
 }

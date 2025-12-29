@@ -1,5 +1,5 @@
-@let geez = geezVerse.text.split(' ');
-@let eachGeezWord = splitIntoMatrix(geezVerse.text, 'geez');
+@let geez = ext.split(' ');
+@let eachGeezWord = splitIntoMatrix(ext, 'geez');
 
 <table border="1">
   <tr>
@@ -7,7 +7,7 @@
     <td [colSpan]="geez.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
       @for (sentence of eachGeezWord; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word}}</span>
+      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
       }
       <span>&nbsp;</span>
       }
@@ -18,7 +18,7 @@
     @for (sentence of eachGeezWord; track $index) {
     <td>
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word}}</span>
+      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
       }
     </td>
     }
@@ -28,7 +28,7 @@
     @for (sentence of eachGeezWord; track $index) {
     <td>
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word | transliteration : 'geez'}}</span>
+      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | transliteration : 'geez'}}</span>
       }
     </td>
     }
@@ -52,7 +52,7 @@
     <td [colSpan]="geez.length">
       @for (sentence of eachGeezWord; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getTranslationColor(geezVerse, word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
+      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | literalizate : geezPatterns : 'geez' : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
       }
       }
@@ -64,8 +64,8 @@
     <td>
       @for (geezWord of sentence; track $index) {
       <select #interlinear
-        (change)="onSelectInterlinearGeezToScripture(hebraicVerse, geezVerse, geezWord.index, geezWord.word, interlinear.value, 'hebraic')"
-        [ngModel]="getGeezInterlinear(geezVerse, geezWord.index)"
+        (change)="onSelectInterlinearGeezToScripture(hebraicVerse, geezWord.index, geezWord.word, interlinear.value, 'hebraic')"
+        [ngModel]="getGeezInterlinear(geezWord.index)"
         [name]="'geezHebraicInterlinear' + $index + '-' + geezWord.word">
         <option value=""></option>
         @for (hebraicsWord of eachHebraicWord; track $index) {
@@ -78,6 +78,6 @@
       }
     </td>
     }
-    <td><button type="button" (click)="cleanGeezTranslationInterlinear(geezVerse, 'hebraic')">×</button></td>
+    <td><button type="button" (click)="cleanGeezTranslationInterlinear('hebraic')">×</button></td>
   </tr>
 </table>

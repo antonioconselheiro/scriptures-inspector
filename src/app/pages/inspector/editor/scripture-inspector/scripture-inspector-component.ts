@@ -42,6 +42,9 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   data!: ProjectData;
 
   @Input()
+  pipeUpdaterController = 0;
+
+  @Input()
   sourceVerse!: CodexBookVerse<{ text: string; }>
 
   @Input()
@@ -52,8 +55,6 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
 
   @Output()
   showLegend = new EventEmitter<boolean>();
-
-  pipeUpdaterController = 0;
 
   constructor(
     private projectService: ProjectService,
