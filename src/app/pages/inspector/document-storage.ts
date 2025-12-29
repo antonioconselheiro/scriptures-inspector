@@ -4,7 +4,7 @@ import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
 import { Codex } from '../../domain/codex-model';
-import { CodexBookChapterVerse } from '../../domain/codex-book-chapter-verse-model';
+import { CodexBookVerse } from '../../domain/codex-book-verse-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
@@ -19,13 +19,13 @@ import { PatternsSerialized } from '../../domain/patterns-serialized';
 })
 export class DocumentStorage {
 
-  private hebraicMetadata: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {
+  private hebraicMetadata: Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> = {
     ...createOldTestmentObjectBase()
   };
   private hebraicLexical: Record<string, string> = {};
   private hebraicPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
-  private greekMetadata: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> = {
+  private greekMetadata: Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> = {
     ...createNewTestmentObjectBase()
   };
   private geezLexical: Record<string, string> = {};
@@ -155,20 +155,20 @@ export class DocumentStorage {
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
   }
 
-  getHebraicMetadata(): Codex<OldTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> {
+  getHebraicMetadata(): Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> {
     return this.hebraicMetadata;
   }
 
-  getGreekMetadata(): Codex<NewTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>> {
+  getGreekMetadata(): Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> {
     return this.greekMetadata;
   }
 
-  saveHebraicMetadata(metadata: Codex<OldTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>): void {
+  saveHebraicMetadata(metadata: Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>>): void {
     this.hebraicMetadata = metadata;
     localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
   }
 
-  saveGreekMetadata(metadata: Codex<NewTestamentBooksUnion, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>): void {
+  saveGreekMetadata(metadata: Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>>): void {
     this.greekMetadata = metadata;
     localStorage.setItem('greekMetadata', JSON.stringify(metadata));
   }

@@ -1,8 +1,11 @@
+import { CodexBookVerse } from './codex-book-verse-model';
+import { Codex } from './codex-model';
+import { ProjectLanguage } from './project-language-model';
 import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
-export type TranslationInterlinear = {
+export interface TranslationInterlinear {
   name: string;
-  codex: {
-    [book: string]: Array<Array<Array<TranslationInterlinearVerse>>>
-  }
+  lang?: ProjectLanguage;
+  customTranslation?: Codex<object, CodexBookVerse<{ text: string, metadata?: string[] }>>;
+  codex: Codex<object, Array<TranslationInterlinearVerse>>;
 }

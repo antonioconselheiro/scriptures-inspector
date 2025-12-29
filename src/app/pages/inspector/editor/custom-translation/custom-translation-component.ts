@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CodexBookChapterVerseMetadata } from '@domain/codex-book-chapter-verse-metadata-model';
-import { CodexBookChapterVerse } from '@domain/codex-book-chapter-verse-model';
+import { CodexBookVerse } from '@domain/codex-book-verse-model';
+import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
@@ -9,17 +11,19 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
+import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
 import { ProjectCustomTranslationService } from '@shared/project/project-custom-translation-service';
 import { ProjectMetadataService } from '@shared/project/project-metadata-service';
 import { ProjectService } from '@shared/project/project-service';
-import { SourceCodex } from '../../../../domain/source-codex-model';
 import { LiteralsPatternsService } from '../../literals-patterns-service';
 import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 
 @Component({
   selector: 'app-custom-translation-component',
-  imports: [],
+  imports: [
+    FormsModule
+  ],
   templateUrl: './custom-translation-component.html',
   styleUrl: './custom-translation-component.scss'
 })
@@ -27,6 +31,11 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input()
   data!: ProjectData;
+
+  //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
+  // se não a tradução considera apenas o escrito original na propriedade 'data'
+  @Input()
+  translation?: TranslationInterlinear;
 
   @Input()
   current!: CurrentChapter;
@@ -103,9 +112,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     const metadata = this.createCustomTranslationStructureIfNotExists();
     metadata.splice(0, metadata.length);
     const custom = this.customTranslation[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index].text.split(' ');
-    this.splitIntoMatrix(verse.text).flat().forEach(word => {
-      if (custom[word.index] === this.getLexical(word.word)) {
-        metadata.push(this.projectService.castSegmentIntoMetadataIndex(this.data, word));
+    this.splitIntoMatrix(verse.text).flat().forEach(segment => {
+      if (custom[segment.index] === this.getLexical(segment.word)) {
+        metadata.push(this.projectService.castSegmentIntoMetadataIndex(this.data, segment));
       }
     });
 
@@ -197,49 +206,36 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   getCustomTranslationStyleRole(wordIndex: number): string {
-    const book = this.currentBook;
-    let verseMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
+    let verseMetadata: CodexBookVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
 
-    if (lang === 'hebraic' && this.isOldBookGuard(book)) {
-      const scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
-      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
-      const translationChapterMetadata = this.customHebraicTranslation[book][this.currentChapter] || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
-    } else if (lang === 'greek' && this.isNewBookGuard(book)) {
-      const scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
-      verseMetadata = scriptureChapterMetadata[verse.verse.index] || null;
-      const translationChapterMetadata = this.customGreekTranslation[book][this.currentChapter] || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[verse.verse.index]?.metadata || [])?.[wordIndex] || '');
-    } else if (lang === 'geez') {
-      let interlinearMetadata: { [book: string]: TranslationInterlinearVerse[][][] } = {};
-      let scriptureChapterMetadata: CodexBookChapterVerse<CodexBookChapterVerseMetadata>[] = [];
+    if (this.translation) {
+      let interlinearMetadata: Codex<object, Array<TranslationInterlinearVerse>> = {};
+      let scriptureChapterMetadata: CodexBookVerse<CodexBookChapterVerseMetadata>[] = [];
 
-      const geezMetadata = this.customGeezTranslation[book] &&
-        this.customGeezTranslation[book][this.currentChapter] &&
-        this.customGeezTranslation[book][this.currentChapter][verse.verse.index]?.metadata?.[wordIndex] || '';
+      const translationMetadata = this.customTranslation[this.current.book] &&
+        this.customTranslation[this.current.book].chapters[this.current.chapter] &&
+        this.customTranslation[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index]?.metadata?.[wordIndex] || '';
 
-      if (this.isOldBookGuard(book)) {
-        scriptureChapterMetadata = this.hebraicMetadata[book] && this.hebraicMetadata[book][this.currentChapter] || [];
-        interlinearMetadata = this.interlinearGeezHebraic;
-      } else if (this.isNewBookGuard(book)) {
-        scriptureChapterMetadata = this.greekMetadata[book] && this.greekMetadata[book][this.currentChapter] || [];
-        interlinearMetadata = this.interlinearGeezGreek;
-      }
+        scriptureChapterMetadata = this.data.metadata[this.current.book] && this.data.metadata[this.current.book].chapters[this.current.chapter] || [];
+        interlinearMetadata = this.translation.codex;
 
-      const [geezWordIndex] = Array.from(geezMetadata.match(/^\d+/) || ['']);
-      if (!geezWordIndex) {
+      const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
+      if (!translationWordIndex) {
         return '';
       }
 
-      const scriptureWordOrigin = interlinearMetadata[this.currentBook][this.currentChapter][verse.verse.index][Number(geezWordIndex)]?.origin || null;
-      if (!scriptureWordOrigin) {
+      const scriptureSegmentOrigin = interlinearMetadata[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index][Number(translationWordIndex)]?.origin || null;
+      if (!scriptureSegmentOrigin) {
         return '';
       }
 
-      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(this.data, scriptureWordOrigin);
-      verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verse.verse.index];
+      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(this.data, scriptureSegmentOrigin);
+      verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[this.sourceVerse.verse.index];
     } else {
-      throw new Error('language not found');
+      const scriptureChapterMetadata = this.data.metadata[this.current.book] && this.data.metadata[this.current.book].chapters[this.current.chapter] || [];
+      verseMetadata = scriptureChapterMetadata[this.sourceVerse.verse.index] || null;
+      const translationChapterMetadata = this.customTranslation[this.current.book].chapters[this.current.chapter] || [];
+      customTranslationMetadataKey = ((translationChapterMetadata[this.sourceVerse.verse.index]?.metadata || [])?.[wordIndex] || '');
     }
 
     if (!verseMetadata || !customTranslationMetadataKey) {
@@ -255,12 +251,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return [data.kind, data.isWordOfGod ? 'godsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
   }
 
-  getCustomTranslationInterlinearValue(
-    customTranslation: SourceCodex<{ metadata?: string[] }>, verse: SourceVerse, wordIndex: number
-  ): string {
+  getCustomTranslationInterlinearValue(wordIndex: number): string {
     const chapter = this.customTranslation[this.current.book].chapters[this.current.chapter];
-    if (chapter && chapter[verse.verse.index] && chapter[verse.verse.index].metadata) {
-      const metadata = chapter[verse.verse.index].metadata;
+    if (chapter && chapter[this.sourceVerse.verse.index] && chapter[this.sourceVerse.verse.index].metadata) {
+      const metadata = chapter[this.sourceVerse.verse.index].metadata;
       return metadata && metadata[wordIndex] || '';
     }
 

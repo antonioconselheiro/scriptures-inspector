@@ -1,5 +1,5 @@
-import { CodexBookChapterVerse } from './codex-book-chapter-verse-model';
+import { CodexBookVerse } from './codex-book-verse-model';
 
-export type CodexBook<Book extends object = object, Verse extends CodexBookChapterVerse = CodexBookChapterVerse> = {
+export type CodexBook<Book extends object = object, Verse extends object = CodexBookVerse> = {
   chapters: Array<Array<Verse>>;
 } & Book;

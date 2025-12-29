@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
-import { CodexBookChapterVerse } from '../../domain/codex-book-chapter-verse-model';
+import { CodexBookVerse } from '../../domain/codex-book-verse-model';
 import { Codex } from '../../domain/codex-model';
 import { newTestamentBookList } from '../../domain/new-testament-books-list';
 import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
@@ -88,8 +88,8 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  hebraicMetadata!: Codex<{}, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
-  greekMetadata!: Codex<{}, CodexBookChapterVerse<CodexBookChapterVerseMetadata>>;
+  hebraicMetadata!: Codex<object, CodexBookVerse<CodexBookChapterVerseMetadata>>;
+  greekMetadata!: Codex<object, CodexBookVerse<CodexBookChapterVerseMetadata>>;
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
     ...createOldTestmentObjectBase()

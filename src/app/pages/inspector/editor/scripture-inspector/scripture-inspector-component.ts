@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CodexBookChapterVerse } from '@domain/codex-book-chapter-verse-model';
+import { CodexBookVerse } from '@domain/codex-book-verse-model';
 import { CodexBookMetadata } from '@domain/codex-book-metadata-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
@@ -42,7 +42,7 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   data!: ProjectData;
 
   @Input()
-  source!: CodexBookChapterVerse<{ text: string; }>
+  source!: CodexBookVerse<{ text: string; }>
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -56,7 +56,7 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   constructor(
-    private projectMetadataService: ProjectMetadataService,
+    protected projectMetadataService: ProjectMetadataService,
     protected literalsPatternsService: LiteralsPatternsService
   ) {
     super();

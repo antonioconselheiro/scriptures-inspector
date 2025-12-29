@@ -1,4 +1,4 @@
 import { CodexBook } from './codex-book-model';
-import { CodexBookChapterVerse } from './codex-book-chapter-verse-model';
+import { CodexBookVerse } from './codex-book-verse-model';
 
-export type SourceBook<Data extends object = {}> = CodexBook<CodexBookChapterVerse<{ text: string } & Data>>
+export type SourceBook<Data extends object = {}> = CodexBook<CodexBookVerse<{ text: string } & Data>>

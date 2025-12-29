@@ -1,4 +1,4 @@
-import { CodexBookChapterVerse } from './codex-book-chapter-verse-model';
+import { CodexBookVerse } from './codex-book-verse-model';
 import { Codex } from './codex-model';
 
-export type CustomTranslation = Codex<{}, CodexBookChapterVerse<{ text: string, metadata?: string[] }>>;
+export type CustomTranslation = Codex<object, CodexBookVerse<{ text: string, metadata?: string[] }>>;

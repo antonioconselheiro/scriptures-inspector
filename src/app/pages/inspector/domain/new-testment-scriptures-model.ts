@@ -1,5 +1,5 @@
 import { Codex } from '../../../domain/codex-model';
-import { CodexBookChapterVerse } from '../../../domain/codex-book-chapter-verse-model';
+import { CodexBookVerse } from '../../../domain/codex-book-verse-model';
 import { NewTestamentBooksUnion } from '../../../domain/new-testament-books-union';
 
-export type NewTestmentScriptures<Data extends object = {}> = Codex<NewTestamentBooksUnion, CodexBookChapterVerse<{ text: string } & Data>>;
+export type NewTestmentScriptures<Data extends object = {}> = Codex<NewTestamentBooksUnion, CodexBookVerse<{ text: string } & Data>>;
