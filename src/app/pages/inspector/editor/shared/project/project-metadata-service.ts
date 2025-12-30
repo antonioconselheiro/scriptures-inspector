@@ -8,7 +8,7 @@ import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-wor
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
-import { ProjectService } from './project-service';
+import { ProjectDataService } from './project-data-service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ import { ProjectService } from './project-service';
 export class ProjectMetadataService {
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     private systemService: SystemService
   ) { }
 

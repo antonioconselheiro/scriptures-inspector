@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { languageList } from '../../../domain/language-list';
-import { languageUnion } from '../../../domain/language-union';
+import { LanguageUnionType } from '../../../domain/language-union-type';
 import { languageMetadataRecord } from '../../../shared/language-metadata/language-metadata-record';
 import { SystemService } from '../../../shared/system/system-service';
 import { Language } from '../../../domain/language-model';
@@ -53,7 +53,7 @@ export class NewProjectDialog {
       this.fb.group({
         name: ['', Validators.required],
         kind: ['', Validators.required],
-        language: [null as languageUnion | null, Validators.required]
+        language: [null as LanguageUnionType | null, Validators.required]
       })
     );
   }

@@ -1,7 +1,7 @@
 import { Directive, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { ProjectData } from '@domain/project-data-model';
-import { ProjectMetadataService } from './shared/project/project-metadata-service';
+import { ProjectMetadataService } from './project/project-metadata-service';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {

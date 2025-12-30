@@ -1,6 +1,6 @@
 import { Language } from "../../domain/language-model";
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
-import { languageUnion } from "../../domain/language-union";
+import { LanguageUnionType } from "../../domain/language-union-type";
 import { geezTransliterateFn } from "./geez-transliterate-fn";
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
@@ -8,7 +8,7 @@ import { demassoretifier } from "./demassoretifier-fn";
 import { massoretifier } from "./massoretifier-fn";
 
 export const languageMetadataRecord: {
-  [lang in languageUnion]: Language
+  [lang in LanguageUnionType]: Language
 } = {
   'aramaic': {
     name: 'Aramaic',

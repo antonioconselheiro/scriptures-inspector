@@ -1,6 +1,6 @@
-import { Language } from './language-model';
+import { LanguageUnionType } from './language-union-type';
 
 export interface ProjectLanguage {
-  source: Language;
-  target: Array<Language>;
+  source: LanguageUnionType;
+  target: Array<LanguageUnionType>;
 }

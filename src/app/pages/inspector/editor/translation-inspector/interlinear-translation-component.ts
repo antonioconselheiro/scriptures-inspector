@@ -8,25 +8,28 @@ import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
-import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
+import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { ProjectService } from '../shared/project/project-service';
+import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectTranslationMetadataService } from '../shared/project/project-translation-metadata-service';
+import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Component({
-  selector: 'app-translation-inspector-component',
+  selector: 'app-interlinear-translation-component',
   imports: [
     FormsModule,
     LexicalPipe,
     LiteralizatePipe,
     FunctionProxyPipe,
+    CustomTranslationComponent,
     AddPatternContextMenuTrigger
   ],
-  templateUrl: './translation-inspector-component.html',
-  styleUrl: './translation-inspector-component.scss'
+  templateUrl: './interlinear-translation-component.html',
+  styleUrl: './interlinear-translation-component.scss'
 })
 export class TranslationInspectorComponent extends AbstractInspectorDiretive {
 
@@ -40,6 +43,9 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   @Input()
+  parsedBook!: ParsedBookMetadata;
+
+  @Input()
   sourceVerse!: SourceVerse;
 
   @Input()
@@ -48,11 +54,10 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
-  @Input()
-  parsedBook!: ParsedBookMetadata;
+  languageMetadataRecord = languageMetadataRecord;
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
     private projectTranslationMetadataService: ProjectTranslationMetadataService
   ) {

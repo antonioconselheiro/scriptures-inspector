@@ -10,10 +10,11 @@ import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
+import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { ProjectService } from '../shared/project/project-service';
+import { ProjectDataService } from '../shared/project/project-data-service';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -40,7 +41,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   sourceBook!: SourceBook;
 
   @Input()
-  target!: Language;
+  target!: LanguageUnionType;
 
   @Input()
   parsedBook!: ParsedBookMetadata;
@@ -57,7 +58,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
     private projectCustomTranslationService: ProjectCustomTranslationService
   ) {

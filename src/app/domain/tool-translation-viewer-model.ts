@@ -1,7 +1,7 @@
-import { languageUnion } from './language-union';
+import { LanguageUnionType } from './language-union-type';
 
 export interface ToolTranslationViewer {
   tool: 'translation-viewer';
-  lang: languageUnion;
+  lang: LanguageUnionType;
   book: string;
 }

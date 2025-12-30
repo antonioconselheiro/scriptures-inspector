@@ -11,7 +11,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
 import { SystemService } from '@shared/system/system-service';
-import { ProjectService } from './project-service';
+import { ProjectDataService } from './project-data-service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ import { ProjectService } from './project-service';
 export class ProjectCustomTranslationService {
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     private systemService: SystemService
   ) { }
 

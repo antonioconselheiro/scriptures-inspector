@@ -1,8 +1,8 @@
-import { languageUnion } from "./language-union";
+import { LanguageUnionType } from "./language-union-type";
 
 export interface ToolMetadataEditor {
   tool: 'metadata-editor';
-  lang: languageUnion;
+  lang: LanguageUnionType;
   transliteration?: boolean;
   GodSaid?: boolean;
   metadata?: boolean;

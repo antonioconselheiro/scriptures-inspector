@@ -11,18 +11,18 @@ import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
-import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
+import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { ProjectService } from '../shared/project/project-service';
+import { ProjectDataService } from '../shared/project/project-data-service';
 import { VersePipe } from '../shared/verse-pipe';
 import { SourceBook } from '@domain/source-book-model';
 
 @Component({
-  selector: 'app-scripture-inspector-component',
+  selector: 'app-scripture-metadata-component',
   imports: [
     VersePipe,
     LexicalPipe,
@@ -31,10 +31,10 @@ import { SourceBook } from '@domain/source-book-model';
     CustomTranslationComponent,
     AddPatternContextMenuTrigger
   ],
-  templateUrl: './scripture-inspector-component.html',
-  styleUrl: './scripture-inspector-component.scss'
+  templateUrl: './scripture-metadata-component.html',
+  styleUrl: './scripture-metadata-component.scss'
 })
-export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
+export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Input()
   current!: CurrentChapter;
@@ -43,10 +43,10 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   data!: ProjectData;
 
   @Input()
-  sourceBook!: SourceBook;
-
-  @Input()
   pipeUpdaterController = 0;
+  
+  @Input()
+  sourceBook!: SourceBook;
 
   @Input()
   sourceVerse!: CodexBookVerse<{ text: string; }>
@@ -61,7 +61,7 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
   showLegend = new EventEmitter<boolean>();
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService
   ) {
     super();

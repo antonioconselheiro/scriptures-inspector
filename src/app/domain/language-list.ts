@@ -1,6 +1,6 @@
 export const languageList: [
   'aramaic',
-  'hebraic',
+  'hebrew',
   'geez',
   'syriac',
   'arabic',
@@ -15,7 +15,7 @@ export const languageList: [
   'portuguese'
 ] = [
   'aramaic',
-  'hebraic',
+  'hebrew',
   'geez',
   'syriac',
   'arabic',

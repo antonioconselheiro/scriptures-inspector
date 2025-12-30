@@ -23,13 +23,14 @@
     </td>
     }
   </tr>
-  @if (data.lang.source.transliteration) {
+  @let sourceLanguage = languageMetadataRecord[data.lang.source];
+  @if (sourceLanguage.transliteration) {
     <tr>
       <th>transliteration</th>
       @for (sentence of eachWord; track $index) {
       <td>
         @for (word of sentence; track word.index) {
-        <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | functionProxy : data.lang.source.transliteration}}</span>
+        <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | functionProxy : sourceLanguage.transliteration}}</span>
         }
       </td>
       }
@@ -42,7 +43,7 @@
     <td>
       @for (word of sentence; track $index) {
       @let literal = word.word | lexical : parsedBook : pipeUpdaterController;
-      <input type="text" [name]="'fieldGeez' + word.index" [placeholder]="word.word" #field
+      <input type="text" [name]="'fieldTranslation' + word.index" [placeholder]="word.word" #field
         [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLexical(field, word.word)"
         [value]="literal" />
       }
@@ -83,3 +84,16 @@
     <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
   </tr>
 </table>
+
+@for (target of data.lang.target; track $index) {
+  <app-custom-translation-component
+    [data]="data"
+    [current]="current"
+    [sourceBook]="sourceBook"
+    [parsedBook]="parsedBook"
+    [target]="target"
+    [sourceVerse]="sourceVerse"
+    [eachWord]="eachWord"
+    [customTranslation]="customTranslation"
+  ></app-custom-translation-component>
+}

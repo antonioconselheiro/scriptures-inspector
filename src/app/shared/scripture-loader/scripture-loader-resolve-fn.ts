@@ -1,11 +1,11 @@
 import { HttpClient } from "@angular/common/http";
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot } from "@angular/router";
-import { languageUnion } from "../../domain/language-union";
+import { LanguageUnionType } from "../../domain/language-union-type";
 import { newTestamentBookList } from "../../domain/new-testament-books-list";
 import { oldTestamentBookList } from "../../domain/old-testament-books-list";
 
-export function scriptureLoaderResolveFn(lang: languageUnion) {
+export function scriptureLoaderResolveFn(lang: LanguageUnionType) {
   return (route: ActivatedRouteSnapshot) => {
     const oldList: string[] = oldTestamentBookList;
     const newList: string[] = newTestamentBookList;

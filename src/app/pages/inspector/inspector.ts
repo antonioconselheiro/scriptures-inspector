@@ -118,21 +118,8 @@ export class Inspector implements OnInit {
   customGreekTranslation!: NewTestmentScriptures<{ metadata?: string[] }>;
   customGeezTranslation!: HolyScriptureModel<{ metadata?: string[] }>;
 
-  selectedBook: string = '';
-  selectedChapter: number | null = null;
-
-  currentBook: OldTestamentBooksUnion | NewTestamentBooksUnion = 'GEN';
-  currentChapter = 0;
-
-  showLegend = false;
-  minimized = true;
-  pipeUpdaterController = 1;
-
   constructor(
-    private router: Router,
     private cd: ChangeDetectorRef,
-    private modalService: ModalService,
-    private activatedRoute: ActivatedRoute,
     private documentStorage: DocumentStorage,
     private translationService: TranslationService,
     private literalsPatternsService: LiteralsPatternsService
@@ -148,22 +135,6 @@ export class Inspector implements OnInit {
     this.readSelectedParalelTranslation();
   }
 
-  private readMetadata(): void {
-    this.hebraicMetadata = this.documentStorage.getHebraicMetadata();
-    this.greekMetadata = this.documentStorage.getGreekMetadata();
-  }
-
-  private readPatterns(): void {
-    this.hebraicPatterns = this.documentStorage.getHebraicPattern();
-    this.geezPatterns = this.documentStorage.getGeezPattern();
-    this.greekPatterns = this.documentStorage.getGreekPattern();
-  }
-
-  private readInterlineares(): void {
-    this.interlinearGeezHebraic = this.documentStorage.getInterlinearGeezHebraic();
-    this.interlinearGeezGreek = this.documentStorage.getInterlinearGeezGreek();
-  }
-
   private readSelectedParalelTranslation(): void {
     const paralels: Array<string> = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
     localStorage.setItem('paralelTranslations', '[]');
@@ -176,28 +147,7 @@ export class Inspector implements OnInit {
     this.customGeezTranslation = this.documentStorage.getCustomGeezTranslation();
   }
 
-  private subscribeParams(): void {
-    this.activatedRoute.params.subscribe({
-      next: params => {
-        this.selectedBook = this.currentBook = params['book'].toUpperCase();
-        this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
 
-        this.updateChapterTranslation();
-      }
-    });
-  }
-
-  private subscribeData(): void {
-    this.activatedRoute.data.subscribe({
-      next: data => {
-        this.selectedHebraicBook = data['hebraic'];
-        this.selectedGeezBook = data['geez'];
-        this.selectedGreekBook = data['greek'];
-
-        this.updateChapterTranslation();
-      }
-    });
-  }
 
   private updateChapterTranslation(): void {
     this.chapterTranslations = this.translations.map(translation => {
@@ -228,117 +178,6 @@ export class Inspector implements OnInit {
 
     localStorage.setItem('paralelTranslations', JSON.stringify(paralels));
     this.updateChapterTranslation();
-  }
-
-  getChapters(): number[] {
-    if (!this.selectedBook) return [];
-    const metadata = this.bookMetadata[this.selectedBook];
-    return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
-  }
-
-  openDialogPatterns(lang: 'hebraic' | 'geez' | 'greek'): void {
-    let patterns: ParsedPatterns | null = null;
-    if (lang === 'hebraic') {
-      patterns = this.hebraicPatterns
-    } else if (lang === 'geez') {
-      patterns = this.geezPatterns
-    } else if (lang === 'greek') {
-      patterns = this.greekPatterns
-    }
-
-    if (patterns) {
-      this.modalService
-        .createModal(DialogPatterns)
-        .setOutletName('main')
-        .setData({
-          lang,
-          patterns
-        })
-        .build()
-        .subscribe({
-          next: () => this.readPatterns()
-        });
-    }
-  }
-
-  openDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
-    if (lang === 'hebraic') {
-      open('https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s', '_BLANK');
-    } else if (lang === 'geez') {
-      open('https://www.geezexperience.com/index.php', '_BLANK');
-    } else if (lang === 'greek') {
-      alert('greek dictionary not configured yet');
-    }
-  }
-
-  openDialogDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
-    this.modalService
-      .createModal(DialogDictionary)
-      .setOutletName('main')
-      .setData({
-        lang
-      })
-      .build()
-      .subscribe({
-        next: () => this.readInterlineares()
-      });
-  }
-
-  onAddPattern(option: {
-    word: string;
-    type: 'prefix' | 'suffix';
-    lang: 'hebraic' | 'geez' | 'greek';
-  }): void {
-    if (option.lang === 'hebraic') {
-      this.hebraicPatterns = this.documentStorage.addHebraicPattern(demassoretifier(option.word), option.type);
-    } else if (option.lang === 'geez') {
-      this.geezPatterns = this.documentStorage.addGeezPattern(option.word, option.type);
-    } else if (option.lang === 'greek') {
-      this.greekPatterns = this.documentStorage.addGreekPattern(option.word, option.type);
-    }
-  }
-
-  go(): void {
-    if (this.selectedBook && this.selectedChapter) {
-      this.router.navigate([
-        '/book',
-        this.selectedBook.toLowerCase(),
-        'chapter',
-        (+this.selectedChapter) + 1
-      ]);
-    }
-  }
-
-  back(): void {
-    const book = this.activatedRoute.snapshot.paramMap.get('book');
-    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
-
-    if (!book || !chapter) return;
-
-    const nextChapter = chapter - 1;
-
-    this.router.navigate([
-      '/book',
-      book.toLowerCase(),
-      'chapter',
-      nextChapter
-    ]);
-  }
-
-  next(): void {
-    const book = this.activatedRoute.snapshot.paramMap.get('book');
-    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
-
-    if (!book || !chapter) return;
-
-    const nextChapter = chapter + 1;
-
-    this.router.navigate([
-      '/book',
-      book.toLowerCase(),
-      'chapter',
-      nextChapter
-    ]);
   }
 
   getCorrespondingGeezVerse(verse: SourceVerse): Array<SourceVerse> {

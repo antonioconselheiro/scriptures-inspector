@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Language } from '@domain/language-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { ProjectData } from '@domain/project-data-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectService {
+export class ProjectDataService {
 
   castSegmentIntoMetadataIndex(
-    lang: Language,
+    lang: LanguageUnionType,
     segment: WordSegment
   ): string {
-    const word = lang.normalizeFn && lang.normalizeFn(segment.word) || segment.word;
+    const word = languageMetadataRecord[lang].normalizeFn && languageMetadataRecord[lang].normalizeFn(segment.word) || segment.word;
     return `${segment.index}-${word}`;
   }
 

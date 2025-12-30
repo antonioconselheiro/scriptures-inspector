@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectService } from './project/project-service';
+import { ProjectDataService } from './project/project-data-service';
 
 @Pipe({
   name: 'literalizate'
@@ -8,7 +8,7 @@ import { ProjectService } from './project/project-service';
 export class LiteralizatePipe implements PipeTransform {
 
   constructor(
-    private projectService: ProjectService
+    private projectService: ProjectDataService
   ) { }
 
   transform(value: string, book: ParsedBookMetadata, listenUpdate?: number): string {

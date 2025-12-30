@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
-import { ProjectService } from './project-service';
+import { ProjectDataService } from './project-data-service';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { SystemService } from '@shared/system/system-service';
 import { Language } from '@domain/language-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ import { Language } from '@domain/language-model';
 export class ProjectTranslationMetadataService {
 
   constructor(
-    private projectService: ProjectService,
+    private projectService: ProjectDataService,
     private systemService: SystemService
   ) { }
 
@@ -63,7 +64,7 @@ export class ProjectTranslationMetadataService {
   }
 
   getInterlinear(
-    lang: Language,
+    lang: LanguageUnionType,
     translation: TranslationInterlinear,
     current: CurrentChapter,
     translationVerse: SourceVerse,
