@@ -84,7 +84,7 @@ export class ProjectTranslationMetadataService {
     return '';
   }
 
-  cleanGeezTranslationInterlinear(
+  cleanTranslationInterlinear(
     translation: TranslationInterlinear,
     current: CurrentChapter,
     translationVerse: SourceVerse

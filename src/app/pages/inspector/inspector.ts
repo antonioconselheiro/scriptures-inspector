@@ -37,7 +37,7 @@ import { VersePipe } from './editor/shared/verse-pipe';
 import { GematricsPipe } from './gematrics-pipe';
 import { LiteralizatePipe } from './literalizate-pipe';
 import { LiteralsPatternsService } from './editor/translation-inspector/literals-patterns-service';
-import { LexicalPipe } from './literals-pipe';
+import { LexicalPipe } from './editor/shared/lexical-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';

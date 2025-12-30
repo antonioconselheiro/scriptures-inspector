@@ -28,7 +28,7 @@ export class ProjectService {
     }));
   }
 
-  private splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
+  splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
     return pharse.split(' ').map(word => {
       let matchPrefix = '',
         matchSuffix = '';

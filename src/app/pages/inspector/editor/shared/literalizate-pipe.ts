@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { LiteralsPatternsService } from './editor/translation-inspector/literals-patterns-service';
+import { ProjectService } from './project/project-service';
 
 @Pipe({
   name: 'literalizate'
@@ -8,7 +8,7 @@ import { LiteralsPatternsService } from './editor/translation-inspector/literals
 export class LiteralizatePipe implements PipeTransform {
 
   constructor(
-    private literalsPatternsService: LiteralsPatternsService
+    private projectService: ProjectService
   ) { }
 
   transform(value: string, book: ParsedBookMetadata, listenUpdate?: number): string {
@@ -16,7 +16,7 @@ export class LiteralizatePipe implements PipeTransform {
 
     return value.split(' ').map(sentence => {
       let literalWord: string[] = [];
-      for (let word of this.literalsPatternsService.splitByPatterns(book.patterns, sentence)) {
+      for (let word of this.projectService.splitByPatterns(book.patterns, sentence)) {
         literalWord.push(book.lexical[word]);
       }
 

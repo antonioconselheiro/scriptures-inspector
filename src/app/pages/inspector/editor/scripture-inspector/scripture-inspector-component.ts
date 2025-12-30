@@ -8,17 +8,18 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { ProjectMetadataService } from '@shared/project/project-metadata-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
-import { LiteralizatePipe } from '../../literalizate-pipe';
-import { LexicalPipe } from '../../literals-pipe';
 import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
+import { LexicalPipe } from '../shared/lexical-pipe';
+import { LiteralizatePipe } from '../shared/literalizate-pipe';
+import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { ProjectService } from '../shared/project/project-service';
 import { VersePipe } from '../shared/verse-pipe';
-import { ProjectService } from '@shared/project/project-service';
+import { SourceBook } from '@domain/source-book-model';
 
 @Component({
   selector: 'app-scripture-inspector-component',
@@ -40,6 +41,9 @@ export class ScriptureInspectorComponent extends AbstractInspectorDiretive {
 
   @Input()
   data!: ProjectData;
+
+  @Input()
+  sourceBook!: SourceBook;
 
   @Input()
   pipeUpdaterController = 0;

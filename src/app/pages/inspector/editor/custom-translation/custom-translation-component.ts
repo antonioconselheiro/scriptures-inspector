@@ -10,10 +10,10 @@ import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { ProjectCustomTranslationService } from '@shared/project/project-custom-translation-service';
-import { ProjectMetadataService } from '@shared/project/project-metadata-service';
-import { ProjectService } from '@shared/project/project-service';
 import { AbstractInspectorDiretive } from '../abstract-inspector-directive';
+import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
+import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { ProjectService } from '../shared/project/project-service';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -38,9 +38,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input()
   sourceBook!: SourceBook;
-
-  @Input()
-  sourceLang!: Language;
 
   @Input()
   target!: Language;
