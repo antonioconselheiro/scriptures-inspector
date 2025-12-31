@@ -5,9 +5,9 @@ import { ProjectStructure } from './project-structure-model';
 export interface Project {
   name: string;
   /** traduções de apoio */
-  referenceBooks: Array<string>;
+  referenceCodex: Array<string>;
   /** trabalho */
-  workingBooks: Array<ProjectBook>;
+  workingCodex: Array<ProjectBook>;
   structure: ProjectStructure;
   data: Array<ProjectData>;
 }

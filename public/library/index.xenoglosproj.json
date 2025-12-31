@@ -1,0 +1,87 @@
+{
+  "name": "Bible Translation",
+  "codex": [
+    "hebrew-stuttgartensia",
+    "greek-elzeviriana",
+    "geez-mashafa-qeddus",
+    "bible-pt-aa",
+    "bible-pt-acf",
+    "bible-pt-kja",
+    "bible-pt-nvi",
+    "bible-pt-tb",
+    "bible-pt-vc"
+  ],
+  "structure": [
+    {
+      "translationViewer": [
+        "bible-pt-acf",
+        "bible-pt-kja"
+      ],
+      "metadataEditor": {
+        "source": "hebrew-stuttgartensia",
+        "transliteration": true,
+        "GodSaid": true,
+        "metadata": true,
+        "interlinear": true,
+        "numerology": true,
+        "spelling": true,
+        "customTranslationEditor": [
+          {
+            "name": "Tradução para o Português",
+            "target": "portuguese",
+            "interlinear": true
+          }
+        ],
+        "translationInterlinearEditor": {
+          "source": "geez-mashafa-qeddus",
+          "transliteration": true,
+          "numerology": false,
+          "spelling": false,
+          "customTranslation": [
+            {
+              "name": "Tradução para o Português",
+              "target": "portuguese",
+              "interlinear": true
+            }
+          ]
+        }
+      }
+    },
+
+    {
+      "translationViewer": [
+        "bible-pt-acf",
+        "bible-pt-kja"
+      ],
+      "metadataEditor": {
+        "source": "greek-elzeviriana",
+        "transliteration": true,
+        "GodSaid": true,
+        "metadata": true,
+        "interlinear": true,
+        "numerology": true,
+        "spelling": false,
+        "customTranslationEditor": [
+          {
+            "name": "Tradução para o Português",
+            "target": "portuguese",
+            "interlinear": true
+          }
+        ],
+        "translationInterlinearEditor": {
+          "source": "geez-mashafa-qeddus",
+          "transliteration": true,
+          "numerology": false,
+          "spelling": false,
+          "customTranslationEditor": [
+            {
+              "name": "Tradução para o Português",
+              "target": "portuguese",
+              "interlinear": true
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

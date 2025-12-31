@@ -29,7 +29,7 @@
     <fieldset>
       <legend>Change chapter</legend>
 
-      <select name="selectedBook" placeholder="Book" [ngModel]="selectedBook.toLocaleLowerCase()">
+      <select name="selectedBook" placeholder="Book" [ngModel]="formSelectedBook.toLocaleLowerCase()">
         <optgroup label="Old Testament">
           <option value="gen">Genesis</option>
           <option value="exo">Exodus</option>
@@ -102,7 +102,7 @@
         </optgroup>
       </select>
 
-      <select name="selectedChapter" [(ngModel)]="selectedChapter">
+      <select name="selectedChapter" [(ngModel)]="formSelectedChapter">
         @for (chapter of getChapters(); track $index) {
         <option [value]="chapter - 1">{{ chapter }}</option>
         }
@@ -173,26 +173,28 @@
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
 @for (data of project.data; track $index) {
-  <app-scripture-metadata-component
-    current
-    [data]="data"
-    [pipeUpdaterController]="pipeUpdaterController"
-    sourceBook
-    sourceVerse
-    chapterTranslations
-    [addPatternMenuRef]="addPatternMenuRef"
-    showLegend
-  ></app-scripture-metadata-component>
-  
-  @if (project.structure.tools.translationInterlinear) {
-    <app-interlinear-translation-component
-      current
+  @if (current) {
+    <app-scripture-metadata-component
+      [current]="current"
       [data]="data"
       [pipeUpdaterController]="pipeUpdaterController"
-      parsedBook
+      sourceBook
       sourceVerse
-      translation
+      chapterTranslations
       [addPatternMenuRef]="addPatternMenuRef"
-    ></app-interlinear-translation-component>
+      (showLegend)="showLegend = $event"
+    ></app-scripture-metadata-component>
+    
+    @if (project.structure.tools.translationInterlinear) {
+      <app-interlinear-translation-component
+        [current]="current"
+        [data]="data"
+        [pipeUpdaterController]="pipeUpdaterController"
+        parsedBook
+        sourceVerse
+        translation
+        [addPatternMenuRef]="addPatternMenuRef"
+      ></app-interlinear-translation-component>
+    }
   }
 }

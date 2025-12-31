@@ -32,8 +32,7 @@ export class EditorComponent implements OnInit {
   @Input()
   project!: Project;
 
-  @Input()
-  current!: CurrentChapter;
+  current: CurrentChapter | null = null;
 
   @Input()
   sourceBook!: SourceBook;
@@ -44,14 +43,8 @@ export class EditorComponent implements OnInit {
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
 
-  @Input()
-  addPatternMenuRef!: AddPatternContextMenu;
-
-  selectedBook: string = '';
-  selectedChapter: number | null = null;
-
-  currentBook!: string;
-  currentChapter!: number;
+  formSelectedBook: string = '';
+  formSelectedChapter: number | null = null;
 
   showLegend = false;
   minimized = true;
@@ -64,33 +57,25 @@ export class EditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.readMetadata();
-    this.readPatterns();
-    this.readInterlineares();
     this.subscribeData();
     this.subscribeParams();
   }
 
-  private readMetadata(): void {
-    this.hebraicMetadata = this.documentStorage.getHebraicMetadata();
-    this.greekMetadata = this.documentStorage.getGreekMetadata();
-  }
-
-  private readPatterns(): void {
-    this.hebraicPatterns = this.documentStorage.getHebraicPattern();
-    this.geezPatterns = this.documentStorage.getGeezPattern();
-    this.greekPatterns = this.documentStorage.getGreekPattern();
-  }
-
-  private readInterlineares(): void {
-    this.interlinearGeezHebraic = this.documentStorage.getInterlinearGeezHebraic();
-    this.interlinearGeezGreek = this.documentStorage.getInterlinearGeezGreek();
-  }
   private subscribeParams(): void {
     this.activatedRoute.params.subscribe({
       next: params => {
-        this.selectedBook = this.currentBook = params['book'].toUpperCase();
-        this.selectedChapter = this.currentChapter = Number(params['chapter']) - 1;
+        const book = params['book'].toUpperCase();
+        const chapter = Number(params['chapter']) - 1;
+
+        if (!this.current) {
+          this.current = {
+            book, chapter 
+          };
+        } else {
+          this.current.book = book;
+          this.current.chapter = chapter;
+        }
+
 
         this.updateChapterTranslation();
       }
@@ -110,12 +95,12 @@ export class EditorComponent implements OnInit {
   }
 
   go(): void {
-    if (this.selectedBook && this.selectedChapter) {
+    if (this.formSelectedBook && this.formSelectedChapter) {
       this.router.navigate([
         '/book',
-        this.selectedBook.toLowerCase(),
+        this.formSelectedBook.toLowerCase(),
         'chapter',
-        (+this.selectedChapter) + 1
+        (+this.formSelectedChapter) + 1
       ]);
     }
   }
@@ -160,8 +145,8 @@ export class EditorComponent implements OnInit {
   }
 
   getChapters(): number[] {
-    if (!this.selectedBook) return [];
-    const metadata = this.bookMetadata[this.selectedBook];
+    if (!this.formSelectedBook) return [];
+    const metadata = this.bookMetadata[this.formSelectedBook];
     return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
   }
 
@@ -183,10 +168,7 @@ export class EditorComponent implements OnInit {
           lang,
           patterns
         })
-        .build()
-        .subscribe({
-          next: () => this.readPatterns()
-        });
+        .build();
     }
   }
 
@@ -197,10 +179,7 @@ export class EditorComponent implements OnInit {
       .setData({
         lang
       })
-      .build()
-      .subscribe({
-        next: () => this.readInterlineares()
-      });
+      .build();
   }
 
   onAddPattern(option: {

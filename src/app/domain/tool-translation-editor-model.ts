@@ -3,7 +3,7 @@ import { ToolTranslationMetadataEditor } from "./tool-translation-metadata-edito
 
 export interface ToolTranslationEditor {
   tool: 'translation-editor';
-  from: LanguageUnionType;
-  to: LanguageUnionType;
+  source: LanguageUnionType;
+  target: LanguageUnionType;
   metadata?: ToolTranslationMetadataEditor;
 }

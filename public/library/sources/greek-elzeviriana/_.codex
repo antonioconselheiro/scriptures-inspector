@@ -1,0 +1,33 @@
+{
+  "name": "Greek Elzeviriana",
+  "lang": "greek",
+  "metadata": {
+    "MAT": { "name": "Mateus" },
+    "MAR": { "name": "Marcos" },
+    "LUC": { "name": "Lucas" },
+    "JOA": { "name": "João" },
+    "ATO": { "name": "Atos" },
+    "ROM": { "name": "Romanos" },
+    "1CO": { "name": "1 Coríntios" },
+    "2CO": { "name": "2 Coríntios" },
+    "GAL": { "name": "Gálatas" },
+    "EFE": { "name": "Efésios" },
+    "FIL": { "name": "Filipenses" },
+    "COL": { "name": "Colossenses" },
+    "1TS": { "name": "1 Tessalonicenses" },
+    "2TS": { "name": "2 Tessalonicenses" },
+    "1TM": { "name": "1 Timóteo" },
+    "2TM": { "name": "2 Timóteo" },
+    "TIT": { "name": "Tito" },
+    "FLM": { "name": "Filemom" },
+    "HEB": { "name": "Hebreus" },
+    "TIA": { "name": "Tiago" },
+    "1PE": { "name": "1 Pedro" },
+    "2PE": { "name": "2 Pedro" },
+    "1JO": { "name": "1 João" },
+    "2JO": { "name": "2 João" },
+    "3JO": { "name": "3 João" },
+    "JUD": { "name": "Judas" },
+    "APO": { "name": "Apocalipse" }
+  }
+}
