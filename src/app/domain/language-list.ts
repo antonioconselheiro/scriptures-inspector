@@ -10,9 +10,7 @@ export const languageList: [
   'sanskrit',
   'chinese',
   'avestico',
-  'pahlavi',
-  'english',
-  'portuguese'
+  'pahlavi'
 ] = [
   'aramaic',
   'hebrew',
@@ -25,7 +23,5 @@ export const languageList: [
   'sanskrit',
   'chinese',
   'avestico',
-  'pahlavi',
-  'english',
-  'portuguese'
+  'pahlavi'
 ]
