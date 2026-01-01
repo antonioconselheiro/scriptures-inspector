@@ -1,0 +1,116 @@
+https://www.tau.ac.il/~hacohen/Biblia.html
+https://www.stepbible.org/version.jsp?version=Geez
+https://www.bible.com/tg/bible/3177/MAT.1
+https://github.com/geezorg/ebooks/blob/master/geez/religious/LET/simplified/Enoch/Book_1/gi1.html
+https://tips.translation.bible/tip_verse/en-1-1/
+https://www.debretsioneotc.org/commentaries.htm
+https://github.com/BetaMasaheft/Works/blob/2a18a07ebd31cf10f8293839b61d77c025d1ae90/2001-3000/LIT2697Sam.xml#L12
+https://ethiopiangospelmusic.net/src/bible-geez/
+
+GEN [X] LIT1546Genesi
+EXO [X] LIT1367Exodus
+LEV [X] LIT1793Leviti
+NUM [X] LIT2075Number
+DEU [X] LIT2637Deuteronomy
+JOS [X] LIT1696Joshua
+JUI [X] LIT1700Judges
+RUT [X] LIT2229RuthBo
+1SM [X] LIT2697Sam
+2SM [X] LIT2698Sam
+1RS [X] LIT2699Kings
+2RS [X] LIT2700Kings
+1CR [X] LIT3499Chroni
+2CR [X] LIT3500Chroni
+1ED [X] LIT3581Bookof
+2ED [X] LIT1374Bookof
+1ET [X] LIT1362Esther
+JOB [X] LIT1688Job
+1SL [X] LIT2000Mazmur
+PRO [X] LIT3927Messale [partial], LIT2396Tagsas [partial]
+ECL [X] LIT1320Eccles
+CAN [X] LIT2362Songof
+ISA [X] LIT1672Isaiah
+1JE [X] LIT1685Bookof
+2JE [X] LIT1753Lament
+EZE [X] LIT5802EzekII
+1DA [X] LIT3529Daniel
+OSE [X] LIT3144Hosea
+JOE [X] LIT1689Joel
+AMO [X] LIT3145Amos
+OBA [X] LIT3147Obadiah
+JON [X] LIT1694Jonah
+MIQ [X] LIT3146Micah
+NAU [X] LIT2057Bookof
+HAB [X] LIT1567Bookof
+SOF [X] LIT3148Zephan
+AGE [X] LIT3149Haggai
+ZAC [X] LIT3150Zechar
+MAL [X] LIT3151Malachi
+--------
+MAT [X] LIT2709Matthew
+MAR [X] LIT2711Mark
+LUC [X] LIT2713Luke
+JOA [X] LIT2715John
+ATO [X] LIT1019Actsof
+ROM [X] LIT3515Epistle
+1CO [X] LIT3516Epistle
+2CO [X] LIT3517Epistle
+GAL [X] LIT3518Epistle
+EFE [X] LIT3519Epistle
+FIL [X] LIT3520Epistle
+COL [X] LIT3521Epistle
+1TS [X] LIT3522Epistle
+2TS [X] LIT3523Epistle
+1TM [X] LIT3525Epistle
+2TM [X] LIT3526Epistle
+TIT [X] LIT3527Epistle
+FLM [X] LIT3528Epistle
+HEB [X] LIT3524Epistle
+TIA [X] LIT3512Epistle
+1PE [X] LIT3507Epistle
+2PE [X] LIT3508Epistle
+1JO [X] LIT3509Epistle
+2JO [X] LIT3510Epistle
+3JO [X] LIT3511Epistle
+JUD [X] LIT3513Epistle
+APO [X] LIT3179Revela
+--------
+EN1 [X] LIT1340EnochE
+JUB [X] LIT1697Jubilees
+3ED [X] LIT1377Bookof [partial]
+4ED [X] LIT1376Apocal
+2ET [ ]
+SSL [X] LIT2516Wisdom
+SIR [X] LIT2358Sirach
+BA1 [X] LIT1202Bookof
+DA2 [?] LIT3529Daniel?
+DA3 [?] LIT3529Daniel?
+2IS [X] LIT1671Isaiah
+TOB [X] LIT2473TobitB
+JDT [X] LIT1701Judith
+1MA [X] LIT1819Maccab
+2MA [X] LIT5840SecondEthioMaccabees
+3MA [X] LIT5839ThirdEthioMaccabees
+4MA [-]
+--------
+3CO [ ]
+JBG [ ]
+SRT [ ]
+TZA [ ]
+GIT [ ]
+ABS [ ]
+1DO [ ]
+2DO [ ]
+1CM [?] LIT1957Mashaf, LIT2132OntheJ, LIT2680ClemPeter, LIT4943Martyr
+2CM [?]
+DDS [-]
+
+OUTROS LIVROS INTERESSANTES
+LIT2167Parali - The Rest of the Words of Baruch
+LIT1686Epistl - Epistle of Jeremiah / 6 Baruch
+LIT2003Mazmur - Psalter of Jesus Christ
+
+
+LIT6936TarWaAmidBeta - Historias Ecumenica dos Consilios
+LIT3122Galaw - Chronicle of Galāwdewos
+- - Kebra Nagast

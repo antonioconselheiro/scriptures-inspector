@@ -174,7 +174,7 @@ async function fetchSection(book, chapter) {
 async function loadChapter(book, chapter) {
   if (book === 'Regum/RegIII' && chapter === 3) {
     const verses3a = await loadChapter(book, '3a');
-    const verses3b = await loadChapter(book, '3b', verses3a[verses3a.length].verse.index);
+    const verses3b = await loadChapter(book, '3b', verses3a[verses3a.length - 1].verse.index);
     return [...verses3a, ...verses3b];
   } else if (book === 'Obadia/Obadia' && typeof chapter === 'number') {
     return loadChapter(book, 'txt');
@@ -184,14 +184,27 @@ async function loadChapter(book, chapter) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(text, "text/html");
     const aLink = doc.querySelector('[href^="https://www.sacred-texts.com/"],[href^="http://www.sacred-texts.com/"]');
-    const parent = aLink.parentElement.parentElement;
+    let parent = aLink.parentElement;
+
+    if (!parent.querySelectorAll('span').length) {
+      const child = parent;
+      parent = parent.parentElement;
+      let previous = child.previousSibling
+      while (previous) {
+        const remove = previous;
+        previous = previous.previousSibling;
+        remove.remove();
+      }
+
+      child.remove();
+    } else if (/^\d+$/.test(parent.innerText.replace(/�/g, '').trim())) {
+      parent = parent.parentElement;
+    }
 
     aLink.remove();
     let index = indexStartFrom;
-    const content = parent.innerText.trim();
-    debugger;
+    const content = parent.innerText.replace(/�/g, '').trim().replace(/^[^\d]+1/, '1');
     const parts = content.split(/\s(?=\d+\s)/);
-    debugger;
     return parts.map((part) => {
 
       const [verseNo] = Array.from(part.match(/^\d+/));
