@@ -147,7 +147,7 @@ async function fetchSection(book, chapter) {
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-      const text = await res.text(); // HTML bruto
+      const text = await res.text();
       console.log(`✅ Fetched Book ${book} Section ${chapter}`);
       return text;
     } catch (err) {

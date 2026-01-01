@@ -1,5 +1,5 @@
 export const oldTestamentEthiopianBookList: [
-  'ENO',
+  'EN1',
   'JUB',
   '2ED',
   '3ED',
@@ -16,7 +16,7 @@ export const oldTestamentEthiopianBookList: [
   '3MA',
   '4MA'
 ] = [
-    'ENO',
+    'EN1',
     'JUB',
     '2ED',
     '3ED',

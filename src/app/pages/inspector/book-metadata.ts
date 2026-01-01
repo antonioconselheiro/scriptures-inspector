@@ -77,7 +77,7 @@ export const bookMetadata: {
       helenism: true
     }
   },
-  'ENO': {
+  'EN1': {
     chapters: 0,
     normal: 'Enoque',
     gringo: 'Enoch',
@@ -756,10 +756,24 @@ export const bookMetadata: {
       copta: true
     }
   },
-  '2SL': { // 4Q448, 11QPs
+  '2SL': {
+    chapters: 1,
+    normal: 'Salmos de Davi',
+    gringo: 'Psalms of David',
+    testament: 'old',
+    language: {
+      geez: true
+    },
+    codex: {
+      ethiopian: true,
+      ocidental: false,
+      septuaginta: false
+    }
+  },
+  '3SL': { // 4Q448, 11QPs
     chapters: 0,
-    normal: '2 Salmos',
-    gringo: '2 Psalms',
+    normal: '3 Salmos',
+    gringo: '3 Psalms',
     testament: 'old',
     language: {
       hebraic: true
@@ -772,7 +786,7 @@ export const bookMetadata: {
       copta: false
     }
   },
-  '3SL': {
+  '4SL': {
     chapters: 0,
     normal: 'Salmos de Salomão',
     gringo: 'Psalms of Solomon',
@@ -959,7 +973,7 @@ export const bookMetadata: {
       syriac: false
     }
   },
-  'ISA': {
+  '1IS': {
     chapters: 66,
     normal: 'Isaias',
     gringo: 'Isaiah',
@@ -975,6 +989,21 @@ export const bookMetadata: {
       ocidental: true,
       septuaginta: true,
       copta: true
+    }
+  },
+  '2IS': {
+    chapters: 11,
+    normal: 'Assunção de Isaias',
+    gringo: 'Ascension of Isaiah',
+    testament: 'old',
+    language: {
+      geez: true,
+      greek: true
+    },
+    codex: {
+      ethiopian: true,
+      ocidental: false,
+      septuaginta: false
     }
   },
   'PIS': { // 4QpIsa
