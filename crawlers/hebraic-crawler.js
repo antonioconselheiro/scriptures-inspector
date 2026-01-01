@@ -40,7 +40,7 @@ const livros = [
   { sigla: 'NEH', capitulos: 13 },
 ];
 
-async function sleep(n){
+async function sleep(n) {
   return new Promise(resolve => setTimeout(resolve, n))
 }
 
@@ -74,46 +74,46 @@ async function fetchWithRetry(url, delay = 2000) {
 }
 
 function convertBibleJson(inputJson) {
-    const result = [];
+  const result = [];
 
-    if (!inputJson?.data?.chapter?.content) {
-        return result;
-    }
-
-    const chapterContent = inputJson.data.chapter.content;
-
-    chapterContent.forEach(paragraph => {
-        if (paragraph.type === 'paragraph' && Array.isArray(paragraph.content)) {
-            let verseObj = null;
-
-            paragraph.content.forEach(item => {
-                if (item.type === 'verse-number') {
-                    if (verseObj) {
-                        result.push(verseObj); // adiciona ao resultado final
-                    }
-                    verseObj = {
-                        verse: {
-                            start: item.content,
-                            end: item.content,
-                            index: parseInt(item.content) - 1
-                        },
-                        text: ''
-                    };
-                } else if (item.type === 'verse-text') {
-                    if (verseObj) {
-                        verseObj.text = item.content.trim();
-                    }
-                }
-            });
-
-            // Adiciona o último versículo do parágrafo
-            if (verseObj) {
-                result.push(verseObj);
-            }
-        }
-    });
-
+  if (!inputJson?.data?.chapter?.content) {
     return result;
+  }
+
+  const chapterContent = inputJson.data.chapter.content;
+
+  chapterContent.forEach(paragraph => {
+    if (paragraph.type === 'paragraph' && Array.isArray(paragraph.content)) {
+      let verseObj = null;
+
+      paragraph.content.forEach(item => {
+        if (item.type === 'verse-number') {
+          if (verseObj) {
+            result.push(verseObj); // adiciona ao resultado final
+          }
+          verseObj = {
+            verse: {
+              start: item.content,
+              end: item.content,
+              index: parseInt(item.content) - 1
+            },
+            text: ''
+          };
+        } else if (item.type === 'verse-text') {
+          if (verseObj) {
+            verseObj.text = item.content.trim();
+          }
+        }
+      });
+
+      // Adiciona o último versículo do parágrafo
+      if (verseObj) {
+        result.push(verseObj);
+      }
+    }
+  });
+
+  return result;
 }
 
 window.bibleData = {};
@@ -125,10 +125,10 @@ async function fetchBibleContent() {
 
     for (let cap = 1; cap <= livro.capitulos; cap++) {
       const url = `https://api.ibep-prod.com/bibles/9f3cb709f9bded60-01/chapters/${sigla}.${cap}/with-study-content`
-      
+
       const data = await fetchWithRetry(url);
       bibleData[sigla].push(convertBibleJson(data));
-      
+
       console.log(`✔ Livro ${sigla}, capítulo ${cap} carregado.`);
       await sleep(10);
     }
