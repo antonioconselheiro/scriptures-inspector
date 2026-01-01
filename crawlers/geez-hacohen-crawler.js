@@ -174,32 +174,34 @@ async function fetchSection(book, chapter) {
 async function loadChapter(book, chapter) {
   if (book === 'Regum/RegIII' && chapter === 3) {
     const verses3a = await loadChapter(book, '3a');
-    const verses3b = await loadChapter(book, '3b');
+    const verses3b = await loadChapter(book, '3b', verses3a[verses3a.length].verse.index);
     return [...verses3a, ...verses3b];
   } else if (book === 'Obadia/Obadia' && typeof chapter === 'number') {
     return loadChapter(book, 'txt');
   }
 
-  return fetchSection(book, chapter).then(text => {
+  return fetchSection(book, chapter, indexStartFrom = 0).then(text => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(text, "text/html");
     const aLink = doc.querySelector('[href^="https://www.sacred-texts.com/"],[href^="http://www.sacred-texts.com/"]');
     const parent = aLink.parentElement.parentElement;
 
     aLink.remove();
-    return parent.innerText.trim().split(/\s(?=\d+\s)/).map((part, index) => {
-      const match = part.match(/^(\d+)\s+(.*)$/);
+    let index = indexStartFrom;
+    const content = parent.innerText.trim();
+    debugger;
+    const parts = content.split(/\s(?=\d+\s)/);
+    debugger;
+    return parts.map((part) => {
 
-      if (!match) return null;
-
-      const verseNumber = match[1];
-      const verseText = match[2].trim();
+      const [verseNo] = Array.from(part.match(/^\d+/));
+      const verseText = part.replace(/^\d+/, '').trim();
 
       return {
         verse: {
-          start: verseNumber,
-          end: verseNumber,
-          index: index
+          start: verseNo,
+          end: verseNo,
+          index: index++
         },
         text: verseText
       };
