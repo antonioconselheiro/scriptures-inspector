@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { JSDOM } = require('jsdom');
 
 const path = '../../ethiopian-geez-literature/Works/';
 const crawlingData = [
@@ -268,15 +269,15 @@ const books = {};
 crawlingData.forEach(metadata => {
   const file = `${path}${metadata.path}`;
   const xmlContent = fs.readFileSync(file, 'utf8');
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlContent, "application/xml");
+  const dom = new JSDOM(xmlContent, { contentType: 'text/xml' });
+  const xmlDoc = dom.window.document;
 
   const chapters = Array.from(xmlDoc.querySelector('body').querySelectorAll('ab')).map(ab => {
     const list = [];
     let index = 0;
     const title = ab.querySelector('title');
-    const titleContent = title?.innerText.trim();
-    const verses = ab.querySelectorAll(' > l[n]');
+    const titleContent = title?.textContent?.trim();
+    const verses = ab.querySelectorAll('l[n]');
 
     if (title && titleContent && !/^\d+$/.test(titleContent)) {
       list.push({
@@ -285,20 +286,22 @@ crawlingData.forEach(metadata => {
           end: "0",
           index: index++
         },
-        text: title.innerText
+        text: title.textContent.trim().replace(/\s+/g, ' ')
       });
     }
 
-    verses.forEach(verse => {
+    Array.from(verses).forEach(verse => {
       list.push({
         verse: {
           start: verse.getAttribute('n'),
           end: verse.getAttribute('n'),
           index: index++
         },
-        text: verse.innerText
+        text: verse.textContent.trim().replace(/\s+/g, ' ')
       });
     });
+
+    return list;
   });
 
   books[metadata.finalKey] = { chapters };
