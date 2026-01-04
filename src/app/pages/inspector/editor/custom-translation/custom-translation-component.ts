@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
-import { Language } from '@domain/language-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -12,9 +12,8 @@ import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
-import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 
 @Component({
   selector: 'app-custom-translation-component',

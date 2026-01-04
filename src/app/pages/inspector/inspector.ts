@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
+import { AsyncModalModule } from '@belomonte/async-modal-ngx';
 import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
 import { CodexBookVerse } from '../../domain/codex-book-verse-model';
 import { Codex } from '../../domain/codex-model';
@@ -14,14 +13,11 @@ import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { SourceBook } from '../../domain/source-book-model';
 import { SourceVerse } from '../../domain/source-verse-model';
 import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
-import { demassoretifier } from '../../shared/language-metadata/demassoretifier-fn';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from './add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { bookMetadata } from './book-metadata';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
-import { DialogDictionary } from './dialog-dictionary/dialog-lexical-dictionary';
-import { DialogPatterns } from './dialog-patterns/dialog-patterns';
 import { DocumentStorage } from './document-storage';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezCustomTranslation } from './domain/interlinear-geez-custom-translation-model';
@@ -33,11 +29,9 @@ import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
+import { LexicalPipe } from './editor/shared/lexical-pipe';
 import { VersePipe } from './editor/shared/verse-pipe';
 import { GematricsPipe } from './gematrics-pipe';
-import { LiteralizatePipe } from './literalizate-pipe';
-import { LiteralsPatternsService } from './editor/translation-inspector/literals-patterns-service';
-import { LexicalPipe } from './editor/shared/lexical-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { TranslationService } from './translation-service';
 import { TransliterationPipe } from './transliteration-pipe';
@@ -52,7 +46,6 @@ import { TransliterationPipe } from './transliteration-pipe';
     VersePipe,
     GematricsPipe,
     LexicalPipe,
-    LiteralizatePipe,
     AsyncModalModule,
     TransliterationPipe,
     AddPatternContextMenu,
@@ -121,8 +114,7 @@ export class Inspector implements OnInit {
   constructor(
     private cd: ChangeDetectorRef,
     private documentStorage: DocumentStorage,
-    private translationService: TranslationService,
-    private literalsPatternsService: LiteralsPatternsService
+    private translationService: TranslationService
   ) { }
 
   ngOnInit(): void {
@@ -273,14 +265,4 @@ export class Inspector implements OnInit {
     const map = interlinearMetadata[book][this.currentChapter][verseIndex][Number(geezWordIndex)];
     return String(map.origin.index % 7 + 1);
   }
-
-  isOldBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is OldTestamentBooksUnion {
-    return (oldTestamentBookList as string[]).includes(book);
-  }
-
-  isNewBookGuard(book: OldTestamentBooksUnion | NewTestamentBooksUnion): book is NewTestamentBooksUnion {
-    return (newTestamentBookList as string[]).includes(book);
-  }
-
-
 }

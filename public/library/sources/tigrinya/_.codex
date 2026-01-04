@@ -1,7 +1,7 @@
 {
   "name": "Ge'əz Mashafa Qeddus",
   "lang": "geez",
-  "metadata": {
+  "data": {
     "GEN": { "name": "Gênesis" },
     "EXO": { "name": "Êxodo" },
     "LEV": { "name": "Levítico" },

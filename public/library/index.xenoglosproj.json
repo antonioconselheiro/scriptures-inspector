@@ -4,18 +4,18 @@
     "hebrew-stuttgartensia",
     "greek-elzeviriana",
     "geez-mashafa-qeddus",
-    "bible-pt-aa",
-    "bible-pt-acf",
-    "bible-pt-kja",
-    "bible-pt-nvi",
-    "bible-pt-tb",
-    "bible-pt-vc",
-    "bible-en-niv",
-    "bible-en-leb",
-    "bible-en-rnt",
-    "bible-en-kjv",
-    "bible-es-rv",
-    "bible-es-sev"
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-aa",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-acf",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-kja",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-nvi",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-tb",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-vc",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-niv",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-leb",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-rnt",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-kjv",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-rv",
+    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-sev"
   ],
   "structure": [
     {
@@ -42,44 +42,10 @@
       },
       "metadataEditor": {
         "source": "hebrew-stuttgartensia",
-        "editGodSaid": true,
-        "editMetadata": true,
-        "viewTransliteration": true,
-        "viewNumerology": true,
-        "viewSpelling": true,
-        "customTranslationEditor": {
-          "portuguese": {
-            "name": "Tradução para o Português",
-            "interlinear": true
-          },
-          "english": {
-            "name": "Translation to English",
-            "interlinear": true
-          },
-          "spanish": {
-            "name": "Traducción al Español",
-            "interlinear": true
-          }
-        },
+        "customTranslationEditor": true,
         "translationInterlinearEditor": {
           "source": "geez-mashafa-qeddus",
-          "viewTransliteration": true,
-          "viewNumerology": false,
-          "viewSpelling": false,
-          "customTranslation": {
-            "portuguese": {
-              "name": "Tradução para o Português",
-              "interlinear": true
-            },
-            "english": {
-              "name": "Translation to English",
-              "interlinear": true
-            },
-            "spanish": {
-              "name": "Traducción al Español",
-              "interlinear": true
-            }
-          }
+          "customTranslationEditor": true
         }
       }
     },
@@ -107,44 +73,10 @@
       },
       "metadataEditor": {
         "source": "greek-elzeviriana",
-        "editGodSaid": true,
-        "editMetadata": true,
-        "viewNumerology": true,
-        "viewTransliteration": true,
-        "viewAlternativeSpelling": false,
-        "customTranslationEditor": {
-          "portuguese": {
-            "name": "Tradução para o Português",
-            "interlinear": true
-          },
-          "english": {
-            "name": "Translation to English",
-            "interlinear": true
-          },
-          "spanish": {
-            "name": "Traducción al Español",
-            "interlinear": true
-          }
-        },
+        "customTranslationEditor": true,
         "translationInterlinearEditor": {
           "source": "geez-mashafa-qeddus",
-          "viewTransliteration": true,
-          "viewNumerology": false,
-          "viewAlternativeSpelling": false,
-          "customTranslationEditor": {
-            "portuguese": {
-              "name": "Tradução para o Português",
-              "interlinear": true
-            },
-            "english": {
-              "name": "Translation to English",
-              "interlinear": true
-            },
-            "spanish": {
-              "name": "Traducción al Español",
-              "interlinear": true
-            }
-          }
+          "customTranslationEditor": true
         }
       }
     }

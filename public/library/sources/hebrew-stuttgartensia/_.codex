@@ -1,7 +1,7 @@
 {
   "name": "Hebrew Stuttgartensia",
   "lang": "hebrew",
-  "metadata": {
+  "data": {
     "GEN": { "name": "Gênesis" },
     "EXO": { "name": "Êxodo" },
     "LEV": { "name": "Levítico" },

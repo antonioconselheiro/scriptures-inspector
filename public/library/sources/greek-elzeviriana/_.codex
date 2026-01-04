@@ -1,7 +1,7 @@
 {
   "name": "Greek Elzeviriana",
   "lang": "greek",
-  "metadata": {
+  "data": {
     "MAT": { "name": "Mateus" },
     "MAR": { "name": "Marcos" },
     "LUC": { "name": "Lucas" },

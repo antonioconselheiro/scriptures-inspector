@@ -1,6 +1,10 @@
-import { ProjectStructureTools } from './project-structure-tools-model';
+import { ProjectStructureMetadataEditor } from './project-structure-metadata-editor-model';
+import { ProjectStructureTranslationInterlinearEditor } from './project-structure-translation-interlinear-editor-model';
+import { ProjectStructureTranslationViewer } from './project-structure-translation-viewer-model';
 
 export interface ProjectStructure {
-  name: string;
-  tools: ProjectStructureTools;
+  target: Array<string>;
+  translationViewer?: ProjectStructureTranslationViewer;
+  metadataEditor: ProjectStructureMetadataEditor;
+  translationInterlinearEditor?: ProjectStructureTranslationInterlinearEditor;
 }
