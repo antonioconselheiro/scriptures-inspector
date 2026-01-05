@@ -3,5 +3,5 @@ import { ProjectStructureTranslationInterlinearEditor } from './project-structur
 export interface ProjectStructureMetadataEditor {
   source: string;
   customTranslationEditor: boolean;
-  translationInterlinearEditor?: ProjectStructureTranslationInterlinearEditor;
+  translationInterlinearEditor?: Array<ProjectStructureTranslationInterlinearEditor>;
 }

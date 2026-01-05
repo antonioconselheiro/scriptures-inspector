@@ -3,8 +3,7 @@ import { ProjectStructureTranslationInterlinearEditor } from './project-structur
 import { ProjectStructureTranslationViewer } from './project-structure-translation-viewer-model';
 
 export interface ProjectStructure {
-  target: Array<string>;
   translationViewer?: ProjectStructureTranslationViewer;
   metadataEditor: ProjectStructureMetadataEditor;
-  translationInterlinearEditor?: ProjectStructureTranslationInterlinearEditor;
+  translationInterlinearEditor?: Array<ProjectStructureTranslationInterlinearEditor>;
 }

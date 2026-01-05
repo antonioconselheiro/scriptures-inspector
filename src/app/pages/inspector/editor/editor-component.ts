@@ -4,17 +4,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
 import { CodexBookVerse } from '@domain/codex-book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogDictionary } from '../dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
 import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { ScriptureMetadataComponent } from './scripture-inspector/scripture-metadata-component';
 import { TranslationInspectorComponent } from './translation-inspector/interlinear-translation-component';
-import { LanguageUnionType } from '@domain/language-union-type';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Component({
   selector: 'app-editor-component',
@@ -38,7 +38,7 @@ export class EditorComponent implements OnInit {
   sourceBook!: SourceBook;
 
   @Input()
-  sourceVerse!: CodexBookVerse<{ text: string; }>
+  sourceVerse!: CodexBookVerse<{ text: string; }>;
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -75,7 +75,6 @@ export class EditorComponent implements OnInit {
           this.current.book = book;
           this.current.chapter = chapter;
         }
-
 
         this.updateChapterTranslation();
       }
