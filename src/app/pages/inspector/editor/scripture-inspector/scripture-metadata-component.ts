@@ -40,7 +40,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   current!: CurrentChapter;
 
   @Input()
-  data!: ProjectData;
+  data: ProjectData | undefined;
 
   @Input()
   pipeUpdaterController = 0;

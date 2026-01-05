@@ -50,6 +50,10 @@ export class EditorComponent implements OnInit {
   minimized = true;
   pipeUpdaterController = 1;
 
+  selectedBook: {
+    [language: string]: SourceBook | null
+  } = {};
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -84,12 +88,32 @@ export class EditorComponent implements OnInit {
   private subscribeData(): void {
     this.activatedRoute.data.subscribe({
       next: data => {
-        this.selectedHebraicBook = data['hebraic'];
-        this.selectedGeezBook = data['geez'];
-        this.selectedGreekBook = data['greek'];
+        const sources = this.getProjectSources();
+        sources.forEach(source => {
+          this.selectedBook[source] = data[source];
+        });
 
         this.updateChapterTranslation();
       }
+    });
+  }
+
+  private getProjectSources(): Array<string> {
+    return this.project.structure.map(structure => {
+      if (structure.translationInterlinearEditor) {
+        return [structure.metadataEditor.source, ...structure.translationInterlinearEditor.map(interlinear => interlinear.source)]
+      }
+      return [ structure.metadataEditor.source ];
+    }).flat();
+  }
+
+  getBooks(): Array<{ key: string, name: string }> {
+    const language = this.project.target.language[0];
+    return Object.keys(this.project.target.books[language]).map(book => {
+      return {
+        key: book,
+        name: this.project.target.books[language][book].name
+      };
     });
   }
 
@@ -97,7 +121,7 @@ export class EditorComponent implements OnInit {
     if (this.formSelectedBook && this.formSelectedChapter) {
       this.router.navigate([
         '/book',
-        this.formSelectedBook.toLowerCase(),
+        this.formSelectedBook,
         'chapter',
         (+this.formSelectedChapter) + 1
       ]);
@@ -113,7 +137,7 @@ export class EditorComponent implements OnInit {
     const nextChapter = chapter - 1;
     this.router.navigate([
       '/book',
-      book.toLowerCase(),
+      book,
       'chapter',
       nextChapter
     ]);

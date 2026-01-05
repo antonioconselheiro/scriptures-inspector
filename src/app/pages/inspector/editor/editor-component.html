@@ -29,77 +29,10 @@
     <fieldset>
       <legend>Change chapter</legend>
 
-      <select name="selectedBook" placeholder="Book" [ngModel]="formSelectedBook.toLocaleLowerCase()">
-        <optgroup label="Old Testament">
-          <option value="gen">Genesis</option>
-          <option value="exo">Exodus</option>
-          <option value="lev">Leviticus</option>
-          <option value="num">Numbers</option>
-          <option value="deu">Deuteronomy</option>
-          <option value="jos">Joshua</option>
-          <option value="jui">Judges</option>
-          <option value="rut">Ruth</option>
-          <option value="1sm">1 Samuel</option>
-          <option value="2sm">2 Samuel</option>
-          <option value="1rs">1 Kings</option>
-          <option value="2rs">2 Kings</option>
-          <option value="1cr">1 Chronicles</option>
-          <option value="2cr">2 Chronicles</option>
-          <option value="1ed">Ezra</option>
-          <option value="2ed">Nehemiah</option>
-          <option value="1et">Esther</option>
-          <option value="job">Job</option>
-          <option value="sal">Psalms</option>
-          <option value="pro">Proverbs</option>
-          <option value="ecl">Ecclesiastes</option>
-          <option value="can">Song of Solomon</option>
-          <option value="isa">Isaiah</option>
-          <option value="je1">Jeremiah</option>
-          <option value="je2">Lamentations</option>
-          <option value="eze">Ezekiel</option>
-          <option value="da1">Daniel</option>
-          <option value="ose">Hosea</option>
-          <option value="joe">Joel</option>
-          <option value="amo">Amos</option>
-          <option value="oba">Obadiah</option>
-          <option value="jon">Jonah</option>
-          <option value="miq">Micah</option>
-          <option value="nau">Nahum</option>
-          <option value="hab">Habakkuk</option>
-          <option value="sof">Zephaniah</option>
-          <option value="age">Haggai</option>
-          <option value="zac">Zechariah</option>
-          <option value="mal">Malachi</option>
-        </optgroup>
-        <optgroup label="New Testament">
-          <option value="mat">Matthew</option>
-          <option value="mar">Mark</option>
-          <option value="luc">Luke</option>
-          <option value="joa">John</option>
-          <option value="ato">Acts</option>
-          <option value="rom">Romans</option>
-          <option value="1co">1 Corinthians</option>
-          <option value="2co">2 Corinthians</option>
-          <option value="gal">Galatians</option>
-          <option value="efe">Ephesians</option>
-          <option value="fil">Philippians</option>
-          <option value="col">Colossians</option>
-          <option value="1ts">1 Thessalonians</option>
-          <option value="2ts">2 Thessalonians</option>
-          <option value="1tm">1 Timothy</option>
-          <option value="2tm">2 Timothy</option>
-          <option value="tit">Titus</option>
-          <option value="flm">Philemon</option>
-          <option value="heb">Hebrews</option>
-          <option value="tia">James</option>
-          <option value="1pe">1 Peter</option>
-          <option value="2pe">2 Peter</option>
-          <option value="1jo">1 John</option>
-          <option value="2jo">2 John</option>
-          <option value="3jo">3 John</option>
-          <option value="jud">Jude</option>
-          <option value="apo">Apocalypse</option>
-        </optgroup>
+      <select name="selectedBook" placeholder="Book" [ngModel]="formSelectedBook">
+        @for (book of getBooks(); track $index) {
+          <option [value]="book.key">{{ book.name }}</option>
+        }
       </select>
 
       <select name="selectedChapter" [(ngModel)]="formSelectedChapter">
@@ -172,20 +105,22 @@
 
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
-@for (data of project.data; track $index) {
+@for (strcture of project.structure; track $index) {
   @if (current) {
+    {{current.book}}
+
     <app-scripture-metadata-component
       [current]="current"
-      [data]="data"
+      [data]="project.data[$index]"
       [pipeUpdaterController]="pipeUpdaterController"
-      sourceBook
+      [sourceBook]="selectedBook[strcture.metadataEditor.source]"
       sourceVerse
       chapterTranslations
       [addPatternMenuRef]="addPatternMenuRef"
       (showLegend)="showLegend = $event"
     ></app-scripture-metadata-component>
-    
-    @if (project.structure.tools.translationInterlinear) {
+
+    @for (item of data.customTranslation; track $index) {
       <app-interlinear-translation-component
         [current]="current"
         [data]="data"
@@ -196,5 +131,6 @@
         [addPatternMenuRef]="addPatternMenuRef"
       ></app-interlinear-translation-component>
     }
+
   }
 }

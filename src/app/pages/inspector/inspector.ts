@@ -5,12 +5,7 @@ import { AsyncModalModule } from '@belomonte/async-modal-ngx';
 import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
 import { CodexBookVerse } from '../../domain/codex-book-verse-model';
 import { Codex } from '../../domain/codex-model';
-import { newTestamentBookList } from '../../domain/new-testament-books-list';
-import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
-import { oldTestamentBookList } from '../../domain/old-testament-books-list';
-import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { ParsedPatterns } from '../../domain/parsed-patterns';
-import { SourceBook } from '../../domain/source-book-model';
 import { SourceVerse } from '../../domain/source-verse-model';
 import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
 import { AddPatternContextMenu } from './add-pattern-context-menu/add-pattern-context-menu';
@@ -61,10 +56,6 @@ import { TransliterationPipe } from './transliteration-pipe';
 export class Inspector implements OnInit {
 
   readonly bookMetadata = bookMetadata;
-
-  selectedHebraicBook: SourceBook | null = null;
-  selectedGeezBook: SourceBook | null = null;
-  selectedGreekBook: SourceBook | null = null;
 
   hebraicPatterns: ParsedPatterns = {
     prefix: new Map(),

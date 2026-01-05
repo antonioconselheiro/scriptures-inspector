@@ -10,7 +10,7 @@ export abstract class AbstractInspectorDiretive {
   abstract pipeUpdaterController: number;
 
   @Input()
-  abstract data: ProjectData;
+  abstract data?: ProjectData;
 
   @Input()
   abstract current: CurrentChapter;
