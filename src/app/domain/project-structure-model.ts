@@ -1,9 +1,9 @@
 import { ProjectStructureMetadataEditor } from './project-structure-metadata-editor-model';
-import { ProjectStructureTranslationInterlinearEditor } from './project-structure-translation-interlinear-editor-model';
+import { ProjectStructureInterlinearEditor } from './project-structure-interlinear-editor-model';
 import { ProjectStructureTranslationViewer } from './project-structure-translation-viewer-model';
 
 export interface ProjectStructure {
   translationViewer?: ProjectStructureTranslationViewer;
   metadataEditor: ProjectStructureMetadataEditor;
-  translationInterlinearEditor?: Array<ProjectStructureTranslationInterlinearEditor>;
+  interlinearEditor?: Array<ProjectStructureInterlinearEditor>;
 }

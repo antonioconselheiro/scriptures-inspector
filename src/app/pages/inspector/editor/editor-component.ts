@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
-import { CodexBookVerse } from '@domain/codex-book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedPatterns } from '@domain/parsed-patterns';
@@ -13,8 +12,8 @@ import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-c
 import { DialogDictionary } from '../dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
 import { TranslationBookVerse } from '../domain/translation-book-verse-model';
-import { ScriptureMetadataComponent } from './scripture-inspector/scripture-metadata-component';
-import { TranslationInspectorComponent } from './translation-inspector/interlinear-translation-component';
+import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
+import { InterlinearComponent } from './interlinear/interlinear-component';
 
 @Component({
   selector: 'app-editor-component',
@@ -22,7 +21,7 @@ import { TranslationInspectorComponent } from './translation-inspector/interline
     FormsModule,
     AddPatternContextMenu,
     ScriptureMetadataComponent,
-    TranslationInspectorComponent
+    InterlinearComponent
   ],
   templateUrl: './editor-component.html',
   styleUrl: './editor-component.scss'
@@ -33,12 +32,6 @@ export class EditorComponent implements OnInit {
   project!: Project;
 
   current: CurrentChapter | null = null;
-
-  @Input()
-  sourceBook!: SourceBook;
-
-  @Input()
-  sourceVerse!: CodexBookVerse<{ text: string; }>;
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -100,8 +93,8 @@ export class EditorComponent implements OnInit {
 
   private getProjectSources(): Array<string> {
     return this.project.structure.map(structure => {
-      if (structure.translationInterlinearEditor) {
-        return [structure.metadataEditor.source, ...structure.translationInterlinearEditor.map(interlinear => interlinear.source)]
+      if (structure.interlinearEditor) {
+        return [structure.metadataEditor.source, ...structure.interlinearEditor.map(interlinear => interlinear.source)]
       }
       return [ structure.metadataEditor.source ];
     }).flat();

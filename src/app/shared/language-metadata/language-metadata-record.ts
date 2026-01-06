@@ -1,11 +1,11 @@
-import { Language } from "../../domain/language-model";
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
+import { Language } from "../../domain/language-model";
 import { LanguageUnionType } from "../../domain/language-union-type";
+import { demassoretifier } from "./demassoretifier-fn";
 import { geezTransliterateFn } from "./geez-transliterate-fn";
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
-import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
-import { demassoretifier } from "./demassoretifier-fn";
 import { massoretifier } from "./massoretifier-fn";
+import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
 
 export const languageMetadataRecord: {
   [lang in LanguageUnionType]: Language
@@ -15,7 +15,7 @@ export const languageMetadataRecord: {
     label: 'aramaic',
     direction: 'rtl'
   },
-  'hebraic': {
+  'hebrew': {
     name: 'Hebraic',
     label: 'hebraic',
     direction: 'rtl',
@@ -83,13 +83,5 @@ export const languageMetadataRecord: {
     name: 'Pahlavi',
     label: 'pahlavi',
     direction: 'rtl'
-  },
-  'english': {
-    name: 'English',
-    label: 'english'
-  },
-  'portuguese': {
-    name: 'Portuguese',
-    label: 'portuguese'
   }
 };

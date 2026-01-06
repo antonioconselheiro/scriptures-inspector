@@ -1,5 +1,6 @@
 @let wordList = sourceVerse.text.split(' ');
 @let eachWord = splitIntoMatrix(sourceVerse.text);
+@let sourceLanguage = language[data.lang.source];
 
 <table border="1">
   <tr>
@@ -23,7 +24,7 @@
     </td>
     }
   </tr>
-  @let sourceLanguage = languageMetadataRecord[data.lang.source];
+
   @if (sourceLanguage.transliteration) {
     <tr>
       <th>transliteration</th>

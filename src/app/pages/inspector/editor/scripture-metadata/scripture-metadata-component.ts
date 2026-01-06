@@ -6,20 +6,21 @@ import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
+import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
-import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
+import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
-import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
+import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { VersePipe } from '../shared/verse-pipe';
-import { SourceBook } from '@domain/source-book-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -40,7 +41,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   current!: CurrentChapter;
 
   @Input()
-  data: ProjectData | undefined;
+  data!: ProjectData;
 
   @Input()
   pipeUpdaterController = 0;
@@ -59,6 +60,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Output()
   showLegend = new EventEmitter<boolean>();
+
+  language = languageMetadataRecord;
 
   constructor(
     private projectService: ProjectDataService,

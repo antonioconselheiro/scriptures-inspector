@@ -3,23 +3,24 @@ import { FormsModule } from '@angular/forms';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
+import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
-import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
+import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { ProjectTranslationMetadataService } from '../shared/project/project-translation-metadata-service';
-import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Component({
-  selector: 'app-interlinear-translation-component',
+  selector: 'app-interlinear-component',
   imports: [
     FormsModule,
     LexicalPipe,
@@ -28,10 +29,10 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
     CustomTranslationComponent,
     AddPatternContextMenuTrigger
   ],
-  templateUrl: './interlinear-translation-component.html',
-  styleUrl: './interlinear-translation-component.scss'
+  templateUrl: './interlinear-component.html',
+  styleUrl: './interlinear-component.scss'
 })
-export class TranslationInspectorComponent extends AbstractInspectorDiretive {
+export class InterlinearComponent extends AbstractInspectorDiretive {
 
   @Input()
   current!: CurrentChapter;
@@ -46,6 +47,9 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
   parsedBook!: ParsedBookMetadata;
 
   @Input()
+  sourceBook!: SourceBook;
+
+  @Input()
   sourceVerse!: SourceVerse;
 
   @Input()
@@ -54,7 +58,7 @@ export class TranslationInspectorComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
-  languageMetadataRecord = languageMetadataRecord;
+  language = languageMetadataRecord;
 
   constructor(
     private projectService: ProjectDataService,

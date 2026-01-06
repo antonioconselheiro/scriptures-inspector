@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
-import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -31,19 +30,19 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
   // se não a tradução considera apenas o escrito original na propriedade 'data'
   @Input()
-  translation?: TranslationInterlinear;
+  interlinear?: TranslationInterlinear;
 
   @Input()
   current!: CurrentChapter;
 
   @Input()
+  parsedBook!: ParsedBookMetadata;
+
+  @Input()
   sourceBook!: SourceBook;
 
   @Input()
-  target!: LanguageUnionType;
-
-  @Input()
-  parsedBook!: ParsedBookMetadata;
+  target!: string;
 
   @Input()
   sourceVerse!: SourceVerse;
@@ -109,7 +108,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): string {
     return this.projectCustomTranslationService.getCustomTranslationStyleRole(
-      this.data, this.translation, this.customTranslation, this.current, this.sourceVerse, wordIndex
+      this.data, this.interlinear, this.customTranslation, this.current, this.sourceVerse, wordIndex
     );
   }
 

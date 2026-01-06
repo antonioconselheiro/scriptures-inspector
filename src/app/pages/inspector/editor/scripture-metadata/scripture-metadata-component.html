@@ -1,6 +1,7 @@
 @let wordList = sourceVerse.text.split(' ');
-@let parsedBook = parseBook(data.metadata[current.book], data.lang.source, pipeUpdaterController);
+@let parsedBook = parseBook(data.metadata[current.book], language[data.lang.source], pipeUpdaterController);
 @let eachWord = splitIntoMatrix(parsedBook, sourceVerse.text);
+@let transliteration = language[data.lang.source].transliteration;
 
 <strong class="verseTitle">
   {{bookName}}, {{chapter + 1}}:{{sourceVerse | verse}}
@@ -15,7 +16,7 @@
   }
   <tr>
     <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="data.lang.source.label">
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="language[data.lang.source].label">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
       <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
@@ -25,7 +26,7 @@
     </td>
     <td></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="data.lang.source.label">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="language[data.lang.source].label">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -35,13 +36,14 @@
     }
     <td></td>
   </tr>
-  @if (data.lang.source.transliteration) {
+
+  @if (transliteration) {
     <tr>
       <th>transliteration</th>
       @for (sentence of eachWord; track $index) {
       <td>
         @for (word of sentence; track $index) {
-        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : data.lang.source.transliteration}}</span>
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : transliteration}}</span>
         }
       </td>
       }
@@ -106,8 +108,8 @@
     </td>
   </tr>
 
-  @if (data.lang.source.numerology) {
-    @for (algorythm of data.lang.source.numerology; track $index) {
+  @if (language[data.lang.source].numerology) {
+    @for (algorythm of language[data.lang.source].numerology; track $index) {
       <tr>
         <th>{{algorythm.name}}</th>
         @for (word of wordList; track $index) {
@@ -118,13 +120,13 @@
     }
   }
 
-  @if (data.lang.source.alternativeSpelling) {
-    @for (spelling of data.lang.source.alternativeSpelling; track $index) {
+  @if (language[data.lang.source].alternativeSpelling) {
+    @for (spelling of language[data.lang.source].alternativeSpelling; track $index) {
       <tr>
         <th rowspan="2">hypothetical paleo</th>
     
         @for (sentence of eachWord; track $index) {
-        <td [attr.lang]="data.lang.source.label">
+        <td [attr.lang]="language[data.lang.source].label">
           @for (word of sentence; track $index) {
             @if (spelling.parse) {
               <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>

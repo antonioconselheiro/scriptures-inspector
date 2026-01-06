@@ -105,32 +105,36 @@
 
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
-@for (strcture of project.structure; track $index) {
-  @if (current) {
-    {{current.book}}
+@for (structure of project.structure; track $index) {
+  @let selectedSourceBook = selectedBook[structure.metadataEditor.source];
+  @if (current && selectedSourceBook) {
 
-    <app-scripture-metadata-component
-      [current]="current"
-      [data]="project.data[$index]"
-      [pipeUpdaterController]="pipeUpdaterController"
-      [sourceBook]="selectedBook[strcture.metadataEditor.source]"
-      sourceVerse
-      chapterTranslations
-      [addPatternMenuRef]="addPatternMenuRef"
-      (showLegend)="showLegend = $event"
-    ></app-scripture-metadata-component>
-
-    @for (item of data.customTranslation; track $index) {
-      <app-interlinear-translation-component
-        [current]="current"
-        [data]="data"
-        [pipeUpdaterController]="pipeUpdaterController"
-        parsedBook
-        sourceVerse
-        translation
-        [addPatternMenuRef]="addPatternMenuRef"
-      ></app-interlinear-translation-component>
+    @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
+      @let projectData = project.data?.[$index];
+      @if (projectData) {
+        <app-scripture-metadata-component
+          [current]="current"
+          [data]="projectData"
+          [pipeUpdaterController]="pipeUpdaterController"
+          [sourceBook]="selectedSourceBook"
+          [sourceVerse]="verse"
+          chapterTranslations
+          [addPatternMenuRef]="addPatternMenuRef"
+          (showLegend)="showLegend = $event"
+        ></app-scripture-metadata-component>
+    
+        @for (item of structure.interlinearEditor; track $index) {
+          <app-interlinear-component
+            [current]="current"
+            [data]="projectData"
+            [pipeUpdaterController]="pipeUpdaterController"
+            [sourceVerse]="verse"
+            [addPatternMenuRef]="addPatternMenuRef"
+            parsedBook
+            translation
+          ></app-interlinear-component>
+        }
+      }
     }
-
   }
 }

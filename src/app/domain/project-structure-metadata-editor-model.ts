@@ -1,7 +1,7 @@
-import { ProjectStructureTranslationInterlinearEditor } from './project-structure-translation-interlinear-editor-model';
+import { ProjectStructureInterlinearEditor } from './project-structure-interlinear-editor-model';
 
 export interface ProjectStructureMetadataEditor {
   source: string;
   customTranslationEditor: boolean;
-  translationInterlinearEditor?: Array<ProjectStructureTranslationInterlinearEditor>;
+  translationInterlinearEditor?: Array<ProjectStructureInterlinearEditor>;
 }
