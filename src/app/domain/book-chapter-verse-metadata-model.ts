@@ -1,5 +1,5 @@
 import { ScriptureVerseMetadataWord } from './scripture-verse-metadata-word-model';
 
-export interface CodexBookChapterVerseMetadata {
+export interface BookChapterVerseMetadata {
   metadata?: { [key: string]: ScriptureVerseMetadataWord };
 }

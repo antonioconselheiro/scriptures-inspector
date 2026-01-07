@@ -48,10 +48,10 @@
     @for (sentence of splittedCustomTranslation; track $index) {
     <td>
       <select
-        #interlinearHebraicCustomTranslationEl
-        [name]="'selectInterlinearHebraicCustomTranslationEl' + $index"
+        #interlinearCustomTranslationEl
+        [name]="'selectInterlinearCustomTranslationEl' + $index"
         [ngModel]="getCustomTranslationInterlinearValue($index)"
-        (change)="saveCustomTranslationInterlinearMetadata(interlinearHebraicCustomTranslationEl.value, $index)">
+        (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
         <option value=""></option>
         @for (wordSegments of eachWord; track $index) {
         @for (segment of wordSegments; track $index) {

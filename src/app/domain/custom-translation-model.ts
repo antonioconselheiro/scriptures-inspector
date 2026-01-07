@@ -1,4 +1,4 @@
-import { CodexBookVerse } from './codex-book-verse-model';
-import { Codex } from './codex-model';
+import { BookVerse } from './book-verse-model';
+import { CodexRecord } from './codex-record';
 
-export type CustomTranslation = Codex<object, CodexBookVerse<{ text: string, metadata?: string[] }>>;
+export type CustomTranslation = CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;

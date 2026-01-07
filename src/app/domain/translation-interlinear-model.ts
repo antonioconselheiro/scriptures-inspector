@@ -1,5 +1,5 @@
-import { CodexBookVerse } from './codex-book-verse-model';
-import { Codex } from './codex-model';
+import { BookVerse } from './book-verse-model';
+import { CodexRecord } from './codex-record';
 import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
 
 export interface TranslationInterlinear {
@@ -15,6 +15,6 @@ export interface TranslationInterlinear {
    */
   target: string;
 
-  customTranslation?: Codex<object, CodexBookVerse<{ text: string, metadata?: string[] }>>;
-  codex: Codex<object, Array<TranslationInterlinearVerse>>;
+  customTranslation?: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
+  codex: CodexRecord<object, Array<TranslationInterlinearVerse>>;
 }

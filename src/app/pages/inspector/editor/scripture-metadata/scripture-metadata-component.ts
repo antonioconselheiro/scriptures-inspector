@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CodexBookMetadata } from '@domain/codex-book-metadata-model';
-import { CodexBookVerse } from '@domain/codex-book-verse-model';
+import { BookMetadata } from '@domain/book-metadata-model';
+import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
@@ -50,7 +50,10 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   sourceBook!: SourceBook;
 
   @Input()
-  sourceVerse!: CodexBookVerse<{ text: string; }>
+  parsedBook!: ParsedBookMetadata;
+
+  @Input()
+  sourceVerse!: BookVerse<{ text: string; }>
 
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
@@ -61,7 +64,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   @Output()
   showLegend = new EventEmitter<boolean>();
 
-  language = languageMetadataRecord;
+  readonly languageMetadataRecord = languageMetadataRecord;
 
   constructor(
     private projectService: ProjectDataService,
@@ -113,15 +116,5 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     }
 
     this.projectMetadataService.cleanScriptureMetadata(this.data, this.getCurrent(sourceVerseIndex));
-  }
-
-  parseBook(book: CodexBookMetadata, lang: Language, pipeUpdaterController: number): ParsedBookMetadata {
-    pipeUpdaterController;
-    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, lang);
-
-    return {
-      lexical: book.lexical,
-      patterns: parsedPatterns
-    }
   }
 }

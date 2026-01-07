@@ -2,18 +2,24 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
+import { BookMetadata } from '@domain/book-metadata-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
+import { demassoretifier } from '@shared/language-metadata/demassoretifier-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogDictionary } from '../dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
 import { TranslationBookVerse } from '../domain/translation-book-verse-model';
-import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { InterlinearComponent } from './interlinear/interlinear-component';
+import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
+import { ProjectMetadataService } from './shared/project/project-metadata-service';
+import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -31,10 +37,10 @@ export class EditorComponent implements OnInit {
   @Input()
   project!: Project;
 
-  current: CurrentChapter | null = null;
-
   @Input()
   chapterTranslations!: Array<Array<TranslationBookVerse>>;
+
+  current: CurrentChapter | null = null;
 
   formSelectedBook: string = '';
   formSelectedChapter: number | null = null;
@@ -47,10 +53,13 @@ export class EditorComponent implements OnInit {
     [language: string]: SourceBook | null
   } = {};
 
+  readonly languageMetadataRecord = languageMetadataRecord;
+
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private modalService: ModalService
+    private modalService: ModalService,
+    protected projectMetadataService: ProjectMetadataService
   ) { }
 
   ngOnInit(): void {
@@ -66,7 +75,7 @@ export class EditorComponent implements OnInit {
 
         if (!this.current) {
           this.current = {
-            book, chapter 
+            book, chapter
           };
         } else {
           this.current.book = book;
@@ -81,7 +90,7 @@ export class EditorComponent implements OnInit {
   private subscribeData(): void {
     this.activatedRoute.data.subscribe({
       next: data => {
-        const sources = this.getProjectSources();
+        const sources = getProjectSourcesFn(this.project);
         sources.forEach(source => {
           this.selectedBook[source] = data[source];
         });
@@ -91,16 +100,7 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  private getProjectSources(): Array<string> {
-    return this.project.structure.map(structure => {
-      if (structure.interlinearEditor) {
-        return [structure.metadataEditor.source, ...structure.interlinearEditor.map(interlinear => interlinear.source)]
-      }
-      return [ structure.metadataEditor.source ];
-    }).flat();
-  }
-
-  getBooks(): Array<{ key: string, name: string }> {
+  listBookNames(): Array<{ key: string, name: string }> {
     const language = this.project.target.language[0];
     return Object.keys(this.project.target.books[language]).map(book => {
       return {
@@ -210,5 +210,15 @@ export class EditorComponent implements OnInit {
     } else if (option.lang === 'greek') {
       this.greekPatterns = this.documentStorage.addGreekPattern(option.word, option.type);
     }
+  }
+
+  parseBook(book: BookMetadata, lang: Language, pipeUpdaterController: number): ParsedBookMetadata {
+    pipeUpdaterController;
+    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, lang);
+
+    return {
+      lexical: book.lexical,
+      patterns: parsedPatterns
+    };
   }
 }

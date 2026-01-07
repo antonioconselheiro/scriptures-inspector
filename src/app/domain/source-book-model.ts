@@ -1,4 +1,4 @@
-import { CodexBook } from './codex-book-model';
-import { CodexBookVerse } from './codex-book-verse-model';
+import { Book } from './book-model';
+import { BookVerse } from './book-verse-model';
 
-export type SourceBook = CodexBook<object, CodexBookVerse<{ text: string }>>
+export type SourceBook = Book<object, BookVerse<{ text: string }>>

@@ -30,7 +30,7 @@
       <legend>Change chapter</legend>
 
       <select name="selectedBook" placeholder="Book" [ngModel]="formSelectedBook">
-        @for (book of getBooks(); track $index) {
+        @for (book of listBookNames(); track $index) {
           <option [value]="book.key">{{ book.name }}</option>
         }
       </select>
@@ -111,11 +111,15 @@
 
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
       @let projectData = project.data?.[$index];
+      
       @if (projectData) {
+        @let parsedBook = parseBook(projectData.metadata[current.book], languageMetadataRecord[projectData.lang.source], pipeUpdaterController);
+
         <app-scripture-metadata-component
           [current]="current"
           [data]="projectData"
           [pipeUpdaterController]="pipeUpdaterController"
+          [parsedBook]="parsedBook",
           [sourceBook]="selectedSourceBook"
           [sourceVerse]="verse"
           chapterTranslations
@@ -130,7 +134,7 @@
             [pipeUpdaterController]="pipeUpdaterController"
             [sourceVerse]="verse"
             [addPatternMenuRef]="addPatternMenuRef"
-            parsedBook
+            [parsedBook]="parsedBook"
             translation
           ></app-interlinear-component>
         }

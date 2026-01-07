@@ -1,4 +1,4 @@
-import { Codex } from "../../../domain/codex-model";
-import { CodexBookVerse } from "../../../domain/codex-book-verse-model";
+import { CodexRecord } from "../../../domain/codex-record";
+import { BookVerse } from "../../../domain/book-verse-model";
 
-export type OldTestmentScriptures<Data extends object = {}> = Codex<CodexBookVerse<{ text: string } & Data>>;
+export type OldTestmentScriptures<Data extends object = {}> = CodexRecord<BookVerse<{ text: string } & Data>>;

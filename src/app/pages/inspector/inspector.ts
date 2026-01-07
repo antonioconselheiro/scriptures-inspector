@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
-import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
-import { CodexBookVerse } from '../../domain/codex-book-verse-model';
-import { Codex } from '../../domain/codex-model';
+import { BookChapterVerseMetadata } from '../../domain/book-chapter-verse-metadata-model';
+import { BookVerse } from '../../domain/book-verse-model';
+import { CodexRecord } from '../../domain/codex-record';
 import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { SourceVerse } from '../../domain/source-verse-model';
 import { TranslationInterlinearVerse } from '../../domain/translation-interlinear-verse-model';
@@ -72,8 +72,8 @@ export class Inspector implements OnInit {
     suffix: new Map()
   };
 
-  hebraicMetadata!: Codex<object, CodexBookVerse<CodexBookChapterVerseMetadata>>;
-  greekMetadata!: Codex<object, CodexBookVerse<CodexBookChapterVerseMetadata>>;
+  hebraicMetadata!: CodexRecord<object, BookVerse<BookChapterVerseMetadata>>;
+  greekMetadata!: CodexRecord<object, BookVerse<BookChapterVerseMetadata>>;
 
   interlinearGeezHebraic: InterlinearGeezHebraic = {
     ...createOldTestmentObjectBase()

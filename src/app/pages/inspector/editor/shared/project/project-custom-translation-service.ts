@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CodexBookChapterVerseMetadata } from '@domain/codex-book-chapter-verse-metadata-model';
-import { CodexBookVerse } from '@domain/codex-book-verse-model';
-import { Codex } from '@domain/codex-model';
+import { BookChapterVerseMetadata } from '@domain/book-chapter-verse-metadata-model';
+import { BookVerse } from '@domain/book-verse-model';
+import { CodexRecord } from '@domain/codex-record';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
@@ -192,11 +192,11 @@ export class ProjectCustomTranslationService {
     sourceVerse: SourceVerse,
     wordIndex: number
   ): string {
-    let verseMetadata: CodexBookVerse<CodexBookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
+    let verseMetadata: BookVerse<BookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
 
     if (translation) {
-      let interlinearMetadata: Codex<object, Array<TranslationInterlinearVerse>> = {};
-      let scriptureChapterMetadata: CodexBookVerse<CodexBookChapterVerseMetadata>[] = [];
+      let interlinearMetadata: CodexRecord<object, Array<TranslationInterlinearVerse>> = {};
+      let scriptureChapterMetadata: BookVerse<BookChapterVerseMetadata>[] = [];
 
       const translationMetadata = customTranslation[current.book] &&
         customTranslation[current.book].chapters[current.chapter] &&

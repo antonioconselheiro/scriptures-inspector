@@ -3,14 +3,14 @@ import { NewTestamentBooksUnion } from '../../domain/new-testament-books-union';
 import { OldTestamentBooksUnion } from '../../domain/old-testament-books-union';
 import { createNewTestmentObjectBase } from './create-new-testment-fn';
 import { createOldTestmentObjectBase } from './create-old-testment-fn';
-import { Codex } from '../../domain/codex-model';
-import { CodexBookVerse } from '../../domain/codex-book-verse-model';
+import { CodexRecord } from '../../domain/codex-record';
+import { BookVerse } from '../../domain/book-verse-model';
 import { HolyScriptureModel } from './domain/holy-scripture-model';
 import { InterlinearGeezGreek } from './domain/interlinear-geez-greek-model';
 import { InterlinearGeezHebraic } from './domain/interlinear-geez-hebraic-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { CodexBookChapterVerseMetadata } from '../../domain/codex-book-chapter-verse-metadata-model';
+import { BookChapterVerseMetadata } from '../../domain/book-chapter-verse-metadata-model';
 import { ParsedPatterns } from '../../domain/parsed-patterns';
 import { PatternsSerialized } from '../../domain/patterns-serialized';
 
@@ -19,13 +19,13 @@ import { PatternsSerialized } from '../../domain/patterns-serialized';
 })
 export class DocumentStorage {
 
-  private hebraicMetadata: Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> = {
+  private hebraicMetadata: CodexRecord<OldTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>> = {
     ...createOldTestmentObjectBase()
   };
   private hebraicLexical: Record<string, string> = {};
   private hebraicPatterns: PatternsSerialized = { prefix: [], suffix: [] };
 
-  private greekMetadata: Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> = {
+  private greekMetadata: CodexRecord<NewTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>> = {
     ...createNewTestmentObjectBase()
   };
   private geezLexical: Record<string, string> = {};
@@ -155,20 +155,20 @@ export class DocumentStorage {
     localStorage.setItem('geezLexical', JSON.stringify(this.geezLexical));
   }
 
-  getHebraicMetadata(): Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> {
+  getHebraicMetadata(): CodexRecord<OldTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>> {
     return this.hebraicMetadata;
   }
 
-  getGreekMetadata(): Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>> {
+  getGreekMetadata(): CodexRecord<NewTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>> {
     return this.greekMetadata;
   }
 
-  saveHebraicMetadata(metadata: Codex<OldTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>>): void {
+  saveHebraicMetadata(metadata: CodexRecord<OldTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>>): void {
     this.hebraicMetadata = metadata;
     localStorage.setItem('hebraicMetadata', JSON.stringify(metadata));
   }
 
-  saveGreekMetadata(metadata: Codex<NewTestamentBooksUnion, CodexBookVerse<CodexBookChapterVerseMetadata>>): void {
+  saveGreekMetadata(metadata: CodexRecord<NewTestamentBooksUnion, BookVerse<BookChapterVerseMetadata>>): void {
     this.greekMetadata = metadata;
     localStorage.setItem('greekMetadata', JSON.stringify(metadata));
   }
