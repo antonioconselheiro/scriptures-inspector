@@ -1,9 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BookMetadata } from '@domain/book-metadata-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
-import { Language } from '@domain/language-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';

@@ -122,7 +122,7 @@
   @if (languageMetadataRecord[data.lang.source].alternativeSpelling) {
     @for (spelling of languageMetadataRecord[data.lang.source].alternativeSpelling; track $index) {
       <tr>
-        <th rowspan="2">hypothetical paleo</th>
+        <th rowspan="2">{{spelling.name}}</th>
     
         @for (sentence of eachWord; track $index) {
         <td [attr.lang]="languageMetadataRecord[data.lang.source].label">

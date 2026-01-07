@@ -106,7 +106,7 @@
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
 @for (structure of project.structure; track $index) {
-  @let selectedSourceBook = selectedBook[structure.metadataEditor.source];
+  @let selectedSourceBook = souceBookRecord[structure.metadataEditor.source];
   @if (current && selectedSourceBook) {
 
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {

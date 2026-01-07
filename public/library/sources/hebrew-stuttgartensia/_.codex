@@ -1,6 +1,6 @@
 {
   "name": "Hebrew Stuttgartensia",
-  "lang": "hebrew",
+  "language": "hebrew",
   "data": {
     "GEN": { "name": "Gênesis" },
     "EXO": { "name": "Êxodo" },

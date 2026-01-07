@@ -1,6 +1,6 @@
 {
   "name": "Greek Elzeviriana",
-  "lang": "greek",
+  "language": "greek",
   "data": {
     "MAT": { "name": "Mateus" },
     "MAR": { "name": "Marcos" },

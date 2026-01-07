@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Codex } from '@domain/codex-model';
+import { firstValueFrom } from 'rxjs';
 
-export async function getSourceFn(source: string): Promise<> {
-const http = inject(HttpClient);
+export async function getSourceFn(source: string): Promise<Codex> {
+  const http = inject(HttpClient);
+  return firstValueFrom(http.get<Codex>(`/library/sources/${source}/_.codex`));
 }
