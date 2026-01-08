@@ -3,15 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadata } from '@domain/book-metadata-model';
+import { Book } from '@domain/book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ParsedPatterns } from '@domain/parsed-patterns';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { demassoretifier } from '@shared/language-metadata/demassoretifier-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
+import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogDictionary } from '../dialog-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
@@ -19,7 +21,6 @@ import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
-import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -49,7 +50,7 @@ export class EditorComponent implements OnInit {
   minimized = true;
   pipeUpdaterController = 1;
 
-  selectedBook: {
+  souceBookRecord: {
     [language: string]: SourceBook | null
   } = {};
 
@@ -59,6 +60,7 @@ export class EditorComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
+    private systemService: SystemService,
     protected projectMetadataService: ProjectMetadataService
   ) { }
 
@@ -92,7 +94,7 @@ export class EditorComponent implements OnInit {
       next: data => {
         const sources = getProjectSourcesFn(this.project);
         sources.forEach(source => {
-          this.selectedBook[source] = data[source];
+          this.souceBookRecord[source] = data[source];
         });
 
         this.updateChapterTranslation();
@@ -162,40 +164,39 @@ export class EditorComponent implements OnInit {
 
   getChapters(): number[] {
     if (!this.formSelectedBook) return [];
-    const metadata = this.bookMetadata[this.formSelectedBook];
-    return Array.from({ length: metadata.chapters }, (_, i) => i + 1);
+    const length = Math.max(...Object.keys(this.souceBookRecord).map(
+      key => this.souceBookRecord[key]?.chapters.length ? this.souceBookRecord[key].chapters.length + 1 : 0
+    ));
+
+    return Array.from({ length }, (_, i) => i + 1);
   }
 
-  openDialogPatterns(lang: 'hebraic' | 'geez' | 'greek'): void {
-    let patterns: ParsedPatterns | null = null;
-    if (lang === 'hebraic') {
-      patterns = this.hebraicPatterns
-    } else if (lang === 'geez') {
-      patterns = this.geezPatterns
-    } else if (lang === 'greek') {
-      patterns = this.greekPatterns
-    }
-
-    if (patterns) {
+  openDialogPatterns(book: Book<BookMetadata>): void {
+    if (book.patterns) {
       this.modalService
         .createModal(DialogPatterns)
         .setOutletName('main')
         .setData({
-          lang,
-          patterns
+          patterns: book.patterns
         })
-        .build();
+        .build()
+        .subscribe({
+          next: () => this.systemService.autoSaveCurrentProject()
+        });
     }
   }
 
-  openDialogDictionary(lang: 'hebraic' | 'geez' | 'greek'): void {
+  openDialogDictionary(book: Book<BookMetadata>): void {
     this.modalService
       .createModal(DialogDictionary)
       .setOutletName('main')
       .setData({
-        lang
+        book
       })
-      .build();
+      .build()
+      .subscribe({
+        next: () => this.systemService.autoSaveCurrentProject()
+      });
   }
 
   onAddPattern(option: {

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
 import { DocumentStorage } from '../document-storage';
+import { BookMetadata } from '@domain/book-metadata-model';
+import { Book } from '@domain/book-model';
 
 @Component({
   selector: 'app-dialog-lexical-dictionary',
@@ -9,11 +11,11 @@ import { DocumentStorage } from '../document-storage';
   templateUrl: './dialog-lexical-dictionary.html',
   styleUrl: './dialog-lexical-dictionary.scss'
 })
-export class DialogDictionary extends ModalableDirective<{ lang: 'hebraic' | 'geez' | 'greek' }, boolean> implements OnInit {
+export class DialogDictionary extends ModalableDirective<Book<BookMetadata>, boolean> implements OnInit {
 
-  lang = 'hebraic';
-  override response = new Subject<boolean | void>();
+  book: Book<BookMetadata> | null = null;
   dictionary: Array<{ key: string; value: string; }> = [];
+  override response = new Subject<boolean | void>();
 
   constructor(
     private literalsStorage: DocumentStorage
@@ -21,8 +23,8 @@ export class DialogDictionary extends ModalableDirective<{ lang: 'hebraic' | 'ge
     super();
   }
 
-  override onInjectData(data: { lang: 'hebraic' | 'geez' | 'greek' }): void {
-    this.lang = data.lang;
+  override onInjectData(book: Book<BookMetadata>): void {
+    this.book = book;
   }
 
   ngOnInit(): void {
@@ -30,29 +32,19 @@ export class DialogDictionary extends ModalableDirective<{ lang: 'hebraic' | 'ge
   }
 
   getLexicalDictionary(): Array<{ key: string; value: string; }> {
-    let lexical: Record<string, string> = {};
-
-    if (this.lang === 'hebraic') {
-      lexical = this.literalsStorage.getHebraicLexical();
-    } else if (this.lang === 'greek') {
-      lexical = this.literalsStorage.getGreekLexical();
-    } else {
-      lexical = this.literalsStorage.getGeezLexical();
+    if (this.book) {
+      return Object.entries(this.book.lexical).map(([key, value]) => ({
+        key,
+        value
+      }));
     }
 
-    return Object.entries(lexical).map(([key, value]) => ({
-      key,
-      value
-    }));
+    return [];
   }
 
   deleteFromDictionary(key: string): void {
-    if (this.lang === 'hebraic') {
-      this.literalsStorage.removeHebraicLexical(key);
-    } else if (this.lang === 'greek') {
-      this.literalsStorage.removeGreekLexical(key);
-    } else if (this.lang === 'geez') {
-      this.literalsStorage.removeGeezLexical(key);
+    if (this.book) {
+      delete this.book.lexical[key];
     }
     this.dictionary = this.getLexicalDictionary();
   }

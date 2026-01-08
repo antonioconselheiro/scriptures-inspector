@@ -26,7 +26,8 @@ export class DialogPatterns extends ModalableDirective<{ lang: 'hebraic' | 'geez
     ['hebraic']: 'Hebraic',
     ['geez']: 'Ge\'əz',
     ['greek']: 'Greek'
-  }
+  };
+
   override response = new Subject<ParsedPatterns | void>();
 
   constructor(
