@@ -1,3 +1,5 @@
+@let sources = getProjectSources();
+
 <header [class.minimized]="minimized" class="tools">
   <img class="logo" src="script.png" />
   <form>
@@ -49,25 +51,25 @@
     <fieldset>
       <legend>Patterns</legend>
 
-      <button type="button" (click)="openDialogPatterns('hebraic')">Hebraic</button>
-      <button type="button" (click)="openDialogPatterns('geez')">Ge'əz</button>
-      <button type="button" (click)="openDialogPatterns('greek')">Greek</button>
+      @for (source of sources; track $index) {
+        <button type="button" (click)="openDialogPatterns(source)">{{codexMetadataRecord[source].name}}</button>
+      }
     </fieldset>
 
     <fieldset>
       <legend>Lexical</legend>
 
-      <button type="button" (click)="openDialogDictionary('hebrew')">Hebraic</button>
-      <button type="button" (click)="openDialogDictionary('geez')">Ge'əz</button>
-      <button type="button" (click)="openDialogDictionary('greek')">Greek</button>
+      @for (source of sources; track $index) {
+        <button type="button" (click)="openDialogDictionary(source)">{{codexMetadataRecord[source].name}}</button>
+      }
     </fieldset>
 
     <fieldset>
       <legend>Dictionary</legend>
 
-      <button type="button" (click)="openExternalDictionary('hebrew')">Hebraic</button>
-      <button type="button" (click)="openExternalDictionary('geez')">Ge'əz</button>
-      <button type="button" (click)="openExternalDictionary('greek')">Greek</button>
+      @for (source of sources; track $index) {
+        <button type="button" (click)="openExternalDictionary(source)">{{codexMetadataRecord[source].name}}</button>
+      }
     </fieldset>
 
     <div class="sidebuttons">

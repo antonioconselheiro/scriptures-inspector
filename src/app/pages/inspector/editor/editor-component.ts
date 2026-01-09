@@ -21,6 +21,7 @@ import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
+import { Codex } from '@domain/codex-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -50,9 +51,17 @@ export class EditorComponent implements OnInit {
   minimized = true;
   pipeUpdaterController = 1;
 
-  souceBookRecord: {
+  codexMetadataRecord: {
+    [source: string]: Codex
+  } = {};
+
+  sourceBookRecord: {
     [language: string]: SourceBook | null
   } = {};
+
+  dataBookRecord: {
+
+  }
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -92,14 +101,18 @@ export class EditorComponent implements OnInit {
   private subscribeData(): void {
     this.activatedRoute.data.subscribe({
       next: data => {
-        const sources = getProjectSourcesFn(this.project);
+        const sources = this.getProjectSources();
         sources.forEach(source => {
-          this.souceBookRecord[source] = data[source];
+          this.sourceBookRecord[source] = data[source];
         });
 
         this.updateChapterTranslation();
       }
     });
+  }
+
+  getProjectSources(): Array<string> {
+    return getProjectSourcesFn(this.project);
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
@@ -164,14 +177,18 @@ export class EditorComponent implements OnInit {
 
   getChapters(): number[] {
     if (!this.formSelectedBook) return [];
-    const length = Math.max(...Object.keys(this.souceBookRecord).map(
-      key => this.souceBookRecord[key]?.chapters.length ? this.souceBookRecord[key].chapters.length + 1 : 0
+    const length = Math.max(...Object.keys(this.sourceBookRecord).map(
+      key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
     ));
 
     return Array.from({ length }, (_, i) => i + 1);
   }
 
-  openDialogPatterns(lang: string, book: Book<BookMetadata>): void {
+  openDialogPatterns(source: string): void {
+    this.sourceBookRecord[source]
+    const lang = this.codexMetadataRecord[source].lang;
+
+    // lang: string, book: Book<BookMetadata>
     if (book.patterns) {
       this.modalService
         .createModal(DialogPatterns)
