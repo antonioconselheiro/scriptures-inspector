@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
+import { Language } from '@domain/language-model';
+import { PatternsSerialized } from '@domain/patterns-serialized';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { Subject } from 'rxjs';
-import { DocumentStorage } from '../document-storage';
-import { ParsedPatterns } from '../../../domain/parsed-patterns';
 
 @Component({
   selector: 'app-dialog-patterns',
@@ -15,24 +16,17 @@ import { ParsedPatterns } from '../../../domain/parsed-patterns';
   templateUrl: './dialog-patterns.html',
   styleUrl: './dialog-patterns.scss'
 })
-export class DialogPatterns extends ModalableDirective<{ lang: 'hebraic' | 'geez' | 'greek', patterns: ParsedPatterns }, ParsedPatterns> {
+export class DialogPatterns extends ModalableDirective<{ lang: string, patterns: PatternsSerialized }, PatternsSerialized> {
 
-  patterns!: ParsedPatterns;
-  lang = 'hebraic';
+  languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
+  patterns!: PatternsSerialized;
+  lang!: string;
   form: any;
-  title: {
-    [lang: string]: string
-  } = {
-    ['hebraic']: 'Hebraic',
-    ['geez']: 'Ge\'əz',
-    ['greek']: 'Greek'
-  };
 
-  override response = new Subject<ParsedPatterns | void>();
+  override response = new Subject<PatternsSerialized | void>();
 
   constructor(
-    fb: FormBuilder,
-    private literalsStorage: DocumentStorage
+    fb: FormBuilder
   ) {
     super();
     this.form = fb.group({
@@ -41,37 +35,23 @@ export class DialogPatterns extends ModalableDirective<{ lang: 'hebraic' | 'geez
     });
   }
 
-  override onInjectData(data: { lang: 'hebraic' | 'geez' | 'greek', patterns: ParsedPatterns }): void {
+  override onInjectData(data: { lang: string, patterns: PatternsSerialized }): void {
     this.patterns = data.patterns;
     this.lang = data.lang;
   }
 
-  deletePattern(lang: 'hebraic' | 'geez' | 'greek', type: 'prefix' | 'suffix', index: number, key: string): void {
-    if (lang === 'hebraic') {
-      this.literalsStorage.deleteHebraicPattern(type, index);
-      this.patterns[type].delete(key);
-    } else if (lang === 'geez') {
-      this.literalsStorage.deleteGeezPattern(type, index);
-      this.patterns[type].delete(key);
-    } else if (lang === 'greek') {
-      this.literalsStorage.deleteGreekPattern(type, index);
-      this.patterns[type].delete(key);
-    }
+  deletePattern(type: 'prefix' | 'suffix', index: number): void {
+    delete this.patterns[type][index];
   }
 
   onAddPatternSubmit(): void {
     if (this.form.valid) {
       const { type, word } = this.form.value;
-      let patterns: ParsedPatterns;
-      if (this.lang === 'hebraic') {
-        patterns = this.literalsStorage.addHebraicPattern(word, type);
-        this.response.next(patterns);
-      } else if (this.lang === 'greek') {
-        patterns = this.literalsStorage.addGreekPattern(word, type);
-        this.response.next(patterns);
-      } else if (this.lang === 'geez') {
-        patterns = this.literalsStorage.addGeezPattern(word, type);
-        this.response.next(patterns);
+
+      if (type === 'prefix') {
+        this.patterns.prefix.push(word);
+      } else if (type === 'sufix') {
+        this.patterns.suffix.push(word);
       }
 
       this.form.reset();

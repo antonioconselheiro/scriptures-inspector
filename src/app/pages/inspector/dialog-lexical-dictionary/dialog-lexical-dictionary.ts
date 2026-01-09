@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
-import { Subject } from 'rxjs';
-import { DocumentStorage } from '../document-storage';
 import { BookMetadata } from '@domain/book-metadata-model';
 import { Book } from '@domain/book-model';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-lexical-dictionary',
@@ -11,17 +10,11 @@ import { Book } from '@domain/book-model';
   templateUrl: './dialog-lexical-dictionary.html',
   styleUrl: './dialog-lexical-dictionary.scss'
 })
-export class DialogDictionary extends ModalableDirective<Book<BookMetadata>, boolean> implements OnInit {
+export class DialogLexicalDictionary extends ModalableDirective<Book<BookMetadata>, boolean> implements OnInit {
 
   book: Book<BookMetadata> | null = null;
   dictionary: Array<{ key: string; value: string; }> = [];
   override response = new Subject<boolean | void>();
-
-  constructor(
-    private literalsStorage: DocumentStorage
-  ) {
-    super();
-  }
 
   override onInjectData(book: Book<BookMetadata>): void {
     this.book = book;

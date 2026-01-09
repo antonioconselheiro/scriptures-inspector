@@ -15,7 +15,7 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
-import { DialogDictionary } from '../dialog-dictionary/dialog-lexical-dictionary';
+import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
 import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
@@ -171,12 +171,13 @@ export class EditorComponent implements OnInit {
     return Array.from({ length }, (_, i) => i + 1);
   }
 
-  openDialogPatterns(book: Book<BookMetadata>): void {
+  openDialogPatterns(lang: string, book: Book<BookMetadata>): void {
     if (book.patterns) {
       this.modalService
         .createModal(DialogPatterns)
         .setOutletName('main')
         .setData({
+          lang,
           patterns: book.patterns
         })
         .build()
@@ -188,11 +189,9 @@ export class EditorComponent implements OnInit {
 
   openDialogDictionary(book: Book<BookMetadata>): void {
     this.modalService
-      .createModal(DialogDictionary)
+      .createModal(DialogLexicalDictionary)
       .setOutletName('main')
-      .setData({
-        book
-      })
+      .setData(book)
       .build()
       .subscribe({
         next: () => this.systemService.autoSaveCurrentProject()

@@ -35,13 +35,13 @@
   </thead>
   <tbody>
     <tr>
-      <th colspan="3">{{title[lang]}}</th>
+      <th colspan="3">{{languageMetadataRecord[lang].name}}</th>
     </tr>
     @for (pattern of patterns.prefix.keys(); track $index) {
     <tr>
       <td>prefix</td>
       <td>{{pattern}}</td>
-      <td><a (click)="deletePattern('hebraic', 'prefix', $index, pattern)">×</a></td>
+      <td><a (click)="deletePattern('prefix', $index)">×</a></td>
     </tr>
     }
 
@@ -49,7 +49,7 @@
     <tr>
       <td>suffix</td>
       <td>{{pattern}}</td>
-      <td><a (click)="deletePattern('hebraic', 'suffix', $index, pattern)">×</a></td>
+      <td><a (click)="deletePattern('suffix', $index)">×</a></td>
     </tr>
     }
   </tbody>
