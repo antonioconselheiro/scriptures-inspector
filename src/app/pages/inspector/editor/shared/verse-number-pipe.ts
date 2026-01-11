@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { SourceVerse } from '../../../../domain/source-verse-model';
+import { SourceVerse } from '@domain/source-verse-model';
 
 @Pipe({
-  name: 'verse'
+  name: 'verseNumber'
 })
-export class VersePipe implements PipeTransform {
+export class VerseNumberPipe implements PipeTransform {
 
   transform(value: SourceVerse): string {
     if (value.verse.start != value.verse.end) {

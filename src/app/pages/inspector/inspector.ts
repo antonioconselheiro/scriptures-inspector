@@ -25,7 +25,7 @@ import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
 import { TranslationBookVerse } from './domain/translation-book-verse-model';
 import { Translation } from './domain/translation-model';
 import { LexicalPipe } from './editor/shared/lexical-pipe';
-import { VersePipe } from './editor/shared/verse-pipe';
+import { VerseNumberPipe } from './editor/shared/verse-number-pipe';
 import { GematricsPipe } from './gematrics-pipe';
 import { PaleoPipe } from './paleo-pipe';
 import { TranslationService } from './translation-service';
@@ -38,7 +38,7 @@ import { TransliterationPipe } from './transliteration-pipe';
     FormsModule,
     ReactiveFormsModule,
     PaleoPipe,
-    VersePipe,
+    VerseNumberPipe,
     GematricsPipe,
     LexicalPipe,
     AsyncModalModule,

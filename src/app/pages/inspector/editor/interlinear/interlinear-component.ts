@@ -41,6 +41,9 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   data!: ProjectData;
 
   @Input()
+  source!: string;
+
+  @Input()
   pipeUpdaterController = 0;
 
   @Input()
@@ -58,7 +61,10 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
-  language = languageMetadataRecord;
+  @Input()
+  customTranslation = false;
+
+  readonly languageMetadataRecord = languageMetadataRecord;
 
   constructor(
     private projectService: ProjectDataService,

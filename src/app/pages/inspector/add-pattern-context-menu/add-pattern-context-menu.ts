@@ -14,19 +14,19 @@ export class AddPatternContextMenu {
   @Input() x = 0;
   @Input() y = 0;
   @Input() selectedWord = '';
-  @Input() lang: 'hebraic' | 'geez' | 'greek' = 'hebraic';
+  @Input() source = '';
 
   @Output() optionSelected = new EventEmitter<{
     word: string,
     type: 'prefix' | 'suffix',
-    lang: 'hebraic' | 'geez' | 'greek'
+    source: string
   }>();
 
   onSelect(type: 'prefix' | 'suffix', word: string) {
     this.optionSelected.emit({
       type,
       word,
-      lang: this.lang
+      source: this.source
     });
     this.visible = false;
   }

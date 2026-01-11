@@ -8,7 +8,9 @@ import { TranslationInterlinear } from './translation-interlinear-model';
 export interface ProjectData {
   lang: ProjectLanguage;
   metadata: CodexRecord<BookMetadata, BookVerse<BookChapterVerseMetadata>>;
-  interlineares?: Array<TranslationInterlinear>;
+  interlineares?: {
+    [source: string]: TranslationInterlinear
+  };
   customTranslation?: Array<{
     target: string;
     codex: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;

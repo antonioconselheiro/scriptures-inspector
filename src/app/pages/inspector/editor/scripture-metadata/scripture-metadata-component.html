@@ -2,9 +2,6 @@
 @let eachWord = splitIntoMatrix(parsedBook, sourceVerse.text);
 @let transliteration = languageMetadataRecord[data.lang.source].transliteration;
 
-<strong class="verseTitle">
-  {{bookName}}, {{chapter + 1}}:{{sourceVerse | verse}}
-</strong>
 <table border="1">
   @for (chapterTranslation of chapterTranslations; track $index) {
   <tr>
@@ -15,7 +12,7 @@
   }
   <tr>
     <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="languageMetadataRecord[data.lang.source].label">
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [source]="data.lang.source" [attr.lang]="languageMetadataRecord[data.lang.source].label">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
       <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
@@ -25,7 +22,7 @@
     </td>
     <td></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [attr.lang]="languageMetadataRecord[data.lang.source].label">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [source]="data.lang.source" [attr.lang]="languageMetadataRecord[data.lang.source].label">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -88,9 +85,9 @@
     <td>
       @for (word of sentence; track $index) {
       @let lexical = word.word | lexical : data.metadata[current.book] : pipeUpdaterController;
-      <input type="text" [name]="'fieldHebraic' + word.index" [placeholder]="word.word" #fieldHebraicLexical
+      <input type="text" [name]="'fieldLexical' + word.index" [placeholder]="word.word" #fieldLexical
         [style.width.px]="calcFieldSize(word.word, lexical)"
-        (input)="updateLexical(fieldHebraicLexical, word.word)" [value]="lexical" />
+        (input)="updateLexical(fieldLexical, word.word)" [value]="lexical" />
       }
     </td>
     }

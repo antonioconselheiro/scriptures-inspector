@@ -108,7 +108,7 @@
 <app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
 
 @for (structure of project.structure; track $index) {
-  @let selectedSourceBook = souceBookRecord[structure.metadataEditor.source];
+  @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
   @if (current && selectedSourceBook) {
 
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
@@ -116,6 +116,9 @@
       
       @if (projectData) {
         @let parsedBook = parseBook(projectData.metadata[current.book], languageMetadataRecord[projectData.lang.source], pipeUpdaterController);
+        <strong class="verseTitle">
+          {{codexMetadataRecord[projectData.lang.source].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+        </strong>
 
         <app-scripture-metadata-component
           [current]="current"
@@ -130,15 +133,27 @@
         ></app-scripture-metadata-component>
     
         @for (item of structure.interlinearEditor; track $index) {
-          <app-interlinear-component
-            [current]="current"
-            [data]="projectData"
-            [pipeUpdaterController]="pipeUpdaterController"
-            [sourceVerse]="verse"
-            [addPatternMenuRef]="addPatternMenuRef"
-            [parsedBook]="parsedBook"
-            translation
-          ></app-interlinear-component>
+          @let bookInterlinearSource = sourceBookRecord[item.source];
+
+          @if (bookInterlinearSource) {
+            @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
+            @let langInterlinearSource = codexMetadataRecord[item.source].lang;
+            @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source][].metadata[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+
+
+            <app-interlinear-component
+              [current]="current"
+              [data]="projectData"
+              [source]="item.source"
+              [pipeUpdaterController]="pipeUpdaterController"
+              [sourceVerse]="verse"
+              [addPatternMenuRef]="addPatternMenuRef"
+              [parsedBook]="parsedBook"
+              [customTranslation]="item.customTranslationEditor"
+              translation
+            ></app-interlinear-component>
+          }
+
         }
       }
     }

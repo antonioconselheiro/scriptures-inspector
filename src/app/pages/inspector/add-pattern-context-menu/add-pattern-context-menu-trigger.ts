@@ -9,8 +9,8 @@ export class AddPatternContextMenuTrigger {
   @Input('appAddPatternContextMenuTrigger')
   contextMenu!: AddPatternContextMenu;
 
-  @Input('lang')
-  lang!: 'hebraic' | 'geez' | 'greek';
+  @Input()
+  source!: string;
 
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {
@@ -22,7 +22,7 @@ export class AddPatternContextMenuTrigger {
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.contextMenu.visible = true;
-      this.contextMenu.lang = this.lang;
+      this.contextMenu.source = this.source;
     } else {
       this.contextMenu.visible = false;
     }

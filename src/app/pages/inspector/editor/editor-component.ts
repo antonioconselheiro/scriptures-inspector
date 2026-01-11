@@ -11,7 +11,6 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
-import { demassoretifier } from '@shared/language-metadata/demassoretifier-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { SystemService } from '@shared/system/system-service';
@@ -22,10 +21,12 @@ import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
+import { VerseNumberPipe } from './shared/verse-number-pipe';
 
 @Component({
   selector: 'app-editor-component',
   imports: [
+    VerseNumberPipe,
     FormsModule,
     AddPatternContextMenu,
     ScriptureMetadataComponent,
@@ -230,20 +231,15 @@ export class EditorComponent implements OnInit {
   onAddPattern(option: {
     word: string;
     type: 'prefix' | 'suffix';
-    lang: 'hebraic' | 'geez' | 'greek';
+    source: string;
   }): void {
-
-
+    const book = this.current?.book;
     if (book) {
-      const bookMetadata = this.dataBookRecord[source][book];
-    }
+      const bookMetadata = this.dataBookRecord[option.source][book];
+      const langMetadata = this.languageMetadataRecord[this.codexMetadataRecord[option.source].lang];
+      const word = langMetadata.prefetchNormalizedToMatcher ? langMetadata.prefetchNormalizedToMatcher(option.word) : option.word;
 
-    if (option.lang === 'hebraic') {
-      this.hebraicPatterns = this.documentStorage.addHebraicPattern(demassoretifier(option.word), option.type);
-    } else if (option.lang === 'geez') {
-      this.geezPatterns = this.documentStorage.addGeezPattern(option.word, option.type);
-    } else if (option.lang === 'greek') {
-      this.greekPatterns = this.documentStorage.addGreekPattern(option.word, option.type);
+      bookMetadata.patterns[option.type].push(word);
     }
   }
 

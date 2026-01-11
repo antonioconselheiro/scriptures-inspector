@@ -1,11 +1,11 @@
 @let wordList = sourceVerse.text.split(' ');
 @let eachWord = splitIntoMatrix(sourceVerse.text);
-@let sourceLanguage = language[data.lang.source];
+@let sourceLanguage = languageMetadataRecord[data.lang.source];
 
 <table border="1">
   <tr>
-    <th rowspan="2">Ge'əz</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
+    <th rowspan="2">{{languageMetadataRecord[data.lang.source].name}}</th>
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [source]="data.lang.source" [attr.lang]="languageMetadataRecord[data.lang.source].label">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track word.index) {
       <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
@@ -15,7 +15,7 @@
     </td>
     <td rowspan="2"></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" lang="geez">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [source]="data.lang.source" [attr.lang]="languageMetadataRecord[data.lang.source].label">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track word.index) {
@@ -86,15 +86,17 @@
   </tr>
 </table>
 
-@for (target of data.lang.target; track $index) {
-  <app-custom-translation-component
-    [data]="data"
-    [current]="current"
-    [sourceBook]="sourceBook"
-    [parsedBook]="parsedBook"
-    [target]="target"
-    [sourceVerse]="sourceVerse"
-    [eachWord]="eachWord"
-    [customTranslation]="customTranslation"
-  ></app-custom-translation-component>
+@if (customTranslation) {
+  @for (target of data.lang.target; track $index) {
+    <app-custom-translation-component
+      [data]="data"
+      [current]="current"
+      [sourceBook]="sourceBook"
+      [parsedBook]="parsedBook"
+      [target]="target"
+      [sourceVerse]="sourceVerse"
+      [eachWord]="eachWord"
+      [customTranslation]="customTranslation"
+    ></app-custom-translation-component>
+  }
 }
