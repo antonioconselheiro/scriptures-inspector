@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadata } from '@domain/book-metadata-model';
-import { Book } from '@domain/book-model';
+import { Codex } from '@domain/codex-model';
+import { CodexRecord } from '@domain/codex-record';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
@@ -21,7 +22,6 @@ import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
-import { Codex } from '@domain/codex-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -52,16 +52,16 @@ export class EditorComponent implements OnInit {
   pipeUpdaterController = 1;
 
   codexMetadataRecord: {
-    [source: string]: Codex
+    [source: string]: Codex<LanguageUnionType>
   } = {};
 
   sourceBookRecord: {
-    [language: string]: SourceBook | null
+    readonly [language: string]: SourceBook | null
   } = {};
 
   dataBookRecord: {
-
-  }
+    [source: string]: CodexRecord<BookMetadata, object>
+  } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -102,10 +102,15 @@ export class EditorComponent implements OnInit {
     this.activatedRoute.data.subscribe({
       next: data => {
         const sources = this.getProjectSources();
+        const sourceBookRecord: {
+          [language: string]: SourceBook | null
+        } = {};
+
         sources.forEach(source => {
-          this.sourceBookRecord[source] = data[source];
+          sourceBookRecord[source] = data[source];
         });
 
+        this.sourceBookRecord = sourceBookRecord;
         this.updateChapterTranslation();
       }
     });
@@ -166,7 +171,8 @@ export class EditorComponent implements OnInit {
     ]);
   }
 
-  openExternalDictionary(language: LanguageUnionType): void {
+  openExternalDictionary(source: string): void {
+    const language = this.codexMetadataRecord[source].lang;
     const languageMetadata = languageMetadataRecord[language];
     if (languageMetadata.externalDictionaryLink) {
       open(languageMetadata.externalDictionaryLink, '_BLANK');
@@ -187,15 +193,16 @@ export class EditorComponent implements OnInit {
   openDialogPatterns(source: string): void {
     this.sourceBookRecord[source]
     const lang = this.codexMetadataRecord[source].lang;
+    const book = this.current?.book;
 
-    // lang: string, book: Book<BookMetadata>
-    if (book.patterns) {
+    if (book) {
+      const bookMetadata = this.dataBookRecord[source][book];
       this.modalService
         .createModal(DialogPatterns)
         .setOutletName('main')
         .setData({
           lang,
-          patterns: book.patterns
+          patterns: bookMetadata.patterns
         })
         .build()
         .subscribe({
@@ -204,15 +211,20 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  openDialogDictionary(book: Book<BookMetadata>): void {
-    this.modalService
-      .createModal(DialogLexicalDictionary)
-      .setOutletName('main')
-      .setData(book)
-      .build()
-      .subscribe({
-        next: () => this.systemService.autoSaveCurrentProject()
-      });
+  openDialogLexicalDictionary(source: string): void {
+    const bookName = this.current?.book;
+
+    if (bookName) {
+      const bookMetadata = this.dataBookRecord[source][bookName];
+      this.modalService
+        .createModal(DialogLexicalDictionary)
+        .setOutletName('main')
+        .setData(bookMetadata)
+        .build()
+        .subscribe({
+          next: () => this.systemService.autoSaveCurrentProject()
+        });
+    }
   }
 
   onAddPattern(option: {
@@ -220,6 +232,12 @@ export class EditorComponent implements OnInit {
     type: 'prefix' | 'suffix';
     lang: 'hebraic' | 'geez' | 'greek';
   }): void {
+
+
+    if (book) {
+      const bookMetadata = this.dataBookRecord[source][book];
+    }
+
     if (option.lang === 'hebraic') {
       this.hebraicPatterns = this.documentStorage.addHebraicPattern(demassoretifier(option.word), option.type);
     } else if (option.lang === 'geez') {

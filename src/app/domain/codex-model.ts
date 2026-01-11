@@ -1,6 +1,6 @@
-export interface Codex {
+export interface Codex<LanguageType = string> {
   name: string;
-  lang: string;
+  lang: LanguageType;
   data: {
     [book: string]: {
       name: string
