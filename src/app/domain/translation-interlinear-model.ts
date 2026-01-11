@@ -5,5 +5,7 @@ import { TranslationInterlinearVerse } from './translation-interlinear-verse-mod
 
 export interface TranslationInterlinear {
   codex: CodexRecord<BookMetadata, Array<TranslationInterlinearVerse>>;
-  customTranslation?: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
+  customTranslations?: {
+    [targetLanguage: string]: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
+  } 
 }

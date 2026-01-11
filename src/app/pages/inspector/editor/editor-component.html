@@ -135,22 +135,21 @@
         @for (item of structure.interlinearEditor; track $index) {
           @let bookInterlinearSource = sourceBookRecord[item.source];
 
-          @if (bookInterlinearSource) {
+          @if (bookInterlinearSource && projectData.interlineares) {
             @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
             @let langInterlinearSource = codexMetadataRecord[item.source].lang;
-            @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source][].metadata[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
-
+            @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source].codex[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
             <app-interlinear-component
               [current]="current"
               [data]="projectData"
               [source]="item.source"
               [pipeUpdaterController]="pipeUpdaterController"
-              [sourceVerse]="verse"
+              [sourceVerse]="verseInterlinearSource"
               [addPatternMenuRef]="addPatternMenuRef"
-              [parsedBook]="parsedBook"
+              [parsedBook]="parsedInterlinearBook"
               [customTranslation]="item.customTranslationEditor"
-              translation
+              [interlinear]="projectData.interlineares[item.source]"
             ></app-interlinear-component>
           }
 
