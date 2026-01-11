@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Book } from '@domain/book-model';
 import { Project } from '@domain/project-model';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 // TODO: integrar com tauri
 @Injectable({
@@ -18,22 +19,28 @@ export class SystemService {
   loadProject(): Promise<Project> {
     return Promise.resolve({
       "name": "Bible Translation",
+      "repositories": [
+        {
+          "path": "example",
+          "repository": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/"
+        }
+      ],
       "codex": [
         "hebrew-stuttgartensia",
         "greek-elzeviriana",
         "geez-mashafa-qeddus",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-aa",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-acf",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-kja",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-nvi",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-tb",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-vc",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-niv",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-leb",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-rnt",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-kjv",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-rv",
-        "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-sev"
+        "@example/bible-pt-aa",
+        "@example/bible-pt-acf",
+        "@example/bible-pt-kja",
+        "@example/bible-pt-nvi",
+        "@example/bible-pt-tb",
+        "@example/bible-pt-vc",
+        "@example/bible-en-niv",
+        "@example/bible-en-leb",
+        "@example/bible-en-rnt",
+        "@example/bible-en-kjv",
+        "@example/bible-es-rv",
+        "@example/bible-es-sev"
       ],
       "target": {
         "language": [
@@ -706,9 +713,13 @@ export class SystemService {
     });
   }
 
-  async loadBook(path: string, book: string): Promise<string> {
-    if (/^http/.test(path)) {
-      return this.httpClient.get(`${path}${book}.json`);
+  async loadBook(path: string, book: string): Promise<Book> {
+    if (/^@/.test(path)) {
+      const project = await this.loadProject();
+      const repository = project.repositories.find(repository => repository.path === path.replace(/^@|\/[^ ]+$/, ''))?.repository || '';
+      const folder = path.replace(/^@[^ ]+\//, '');
+
+      return firstValueFrom(this.httpClient.get<Book>(`${repository}/${folder}/${book}.json`));
     } else {
       return Promise.resolve('');
     }
