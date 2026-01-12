@@ -5,6 +5,7 @@ import { ProjectTarget } from './project-target-model';
 
 export interface Project {
   name: string;
+  readonly path: string;
   repositories: Array<ProjectRepositoryModel>
   codex: Array<string>;
   target: ProjectTarget;

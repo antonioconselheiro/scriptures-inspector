@@ -1,21 +1,27 @@
 {
   "name": "Bible Translation",
+  "repositories": [
+    {
+      "path": "example",
+      "repository": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/"
+    }
+  ],
   "codex": [
     "hebrew-stuttgartensia",
     "greek-elzeviriana",
     "geez-mashafa-qeddus",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-aa",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-acf",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-kja",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-nvi",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-tb",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-pt-vc",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-niv",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-leb",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-rnt",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-en-kjv",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-rv",
-    "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/bible-es-sev"
+    "@example/bible-pt-aa",
+    "@example/bible-pt-acf",
+    "@example/bible-pt-kja",
+    "@example/bible-pt-nvi",
+    "@example/bible-pt-tb",
+    "@example/bible-pt-vc",
+    "@example/bible-en-niv",
+    "@example/bible-en-leb",
+    "@example/bible-en-rnt",
+    "@example/bible-en-kjv",
+    "@example/bible-es-rv",
+    "@example/bible-es-sev"
   ],
   "target": {
     "language": [
@@ -648,18 +654,18 @@
     {
       "translationViewer": {
         "portuguese": [
-          "bible-pt-acf",
-          "bible-pt-kja"
+          "@example/bible-pt-acf",
+          "@example/bible-pt-kja"
         ],
         "english": [
-          "bible-en-niv",
-          "bible-en-leb",
-          "bible-en-rnt",
-          "bible-en-kjv"
+          "@example/bible-en-niv",
+          "@example/bible-en-leb",
+          "@example/bible-en-rnt",
+          "@example/bible-en-kjv"
         ],
         "spanish": [
-          "bible-es-rv",
-          "bible-es-sev"
+          "@example/bible-es-rv",
+          "@example/bible-es-sev"
         ]
       },
       "metadataEditor": {
@@ -676,18 +682,18 @@
     {
       "translationViewer": {
         "portuguese": [
-          "bible-pt-acf",
-          "bible-pt-kja"
+          "@example/bible-pt-acf",
+          "@example/bible-pt-kja"
         ],
         "english": [
-          "bible-en-niv",
-          "bible-en-leb",
-          "bible-en-rnt",
-          "bible-en-kjv"
+          "@example/bible-en-niv",
+          "@example/bible-en-leb",
+          "@example/bible-en-rnt",
+          "@example/bible-en-kjv"
         ],
         "spanish": [
-          "bible-es-rv",
-          "bible-es-sev"
+          "@example/bible-es-rv",
+          "@example/bible-es-sev"
         ]
       },
       "metadataEditor": {
