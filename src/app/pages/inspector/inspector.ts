@@ -38,12 +38,10 @@ import { TransliterationPipe } from './transliteration-pipe';
     FormsModule,
     ReactiveFormsModule,
     PaleoPipe,
-    VerseNumberPipe,
     GematricsPipe,
     LexicalPipe,
     AsyncModalModule,
     TransliterationPipe,
-    AddPatternContextMenu,
     AddPatternContextMenuTrigger
   ],
   providers: [

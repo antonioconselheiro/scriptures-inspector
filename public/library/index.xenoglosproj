@@ -231,11 +231,13 @@
       },
       "metadataEditor": {
         "source": "hebrew-stuttgartensia",
-        "customTranslationEditor": true,
+        "target": "hebrew-stuttgartensia-portuguese-metadata",
+        "customTranslationEditor": "hebrew-stuttgartensia-custom-portuguese-translation",
         "translationInterlinearEditor": [
           {
             "source": "geez-mashafa-qeddus",
-            "customTranslationEditor": true
+            "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+            "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
           }
         ]
       }
@@ -247,11 +249,13 @@
       },
       "metadataEditor": {
         "source": "greek-elzeviriana",
-        "customTranslationEditor": true,
+        "target": "greek-elzeviriana-portuguese-metadata",
+        "customTranslationEditor": "greek-elzeviriana-custom-portuguese-translation",
         "translationInterlinearEditor": [
           {
             "source": "geez-mashafa-qeddus",
-            "customTranslationEditor": true
+            "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+            "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
           }
         ]
       }

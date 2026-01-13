@@ -2,6 +2,7 @@ import { ProjectStructureInterlinearEditor } from './project-structure-interline
 
 export interface ProjectStructureMetadataEditor {
   source: string;
-  customTranslationEditor: boolean;
+  target: string;
+  customTranslationEditor: string | null;
   translationInterlinearEditor?: Array<ProjectStructureInterlinearEditor>;
 }

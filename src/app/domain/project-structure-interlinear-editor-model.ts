@@ -1,4 +1,5 @@
 export interface ProjectStructureInterlinearEditor {
   source: string;
-  customTranslationEditor: boolean;
+  target: string;
+  customTranslationEditor: string | null;
 }
