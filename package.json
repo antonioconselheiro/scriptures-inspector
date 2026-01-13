@@ -17,13 +17,13 @@
     ]
   },
   "dependencies": {
-    "@angular/common": "^20.1.0",
-    "@angular/compiler": "^20.1.0",
-    "@angular/core": "^20.1.0",
-    "@angular/forms": "^20.1.0",
-    "@angular/platform-browser": "^20.1.0",
-    "@angular/router": "^20.1.0",
-    "@belomonte/async-modal-ngx": "^18.1.1",
+    "@angular/common": "^20.3.16",
+    "@angular/compiler": "^20.3.16",
+    "@angular/core": "^20.3.16",
+    "@angular/forms": "^20.3.16",
+    "@angular/platform-browser": "^20.3.16",
+    "@angular/router": "^20.3.16",
+    "@belomonte/async-modal-ngx": "^20.0.0",
     "@belomonte/iterable-string": "^1.0.2",
     "@hebcal/core": "^6.0.5",
     "@tauri-apps/api": "^2.9.1",
@@ -35,9 +35,9 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
-    "@angular/build": "^20.1.1",
-    "@angular/cli": "^20.1.1",
-    "@angular/compiler-cli": "^20.1.0",
+    "@angular/build": "^20.3.14",
+    "@angular/cli": "^20.3.14",
+    "@angular/compiler-cli": "^20.3.16",
     "@types/jasmine": "~5.1.0",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
