@@ -11,8 +11,5 @@ export interface ProjectData {
   interlineares?: {
     [source: string]: TranslationInterlinear
   };
-  customTranslation?: Array<{
-    target: string;
-    codex: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
-  }>;
+  customTranslation?: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
 }

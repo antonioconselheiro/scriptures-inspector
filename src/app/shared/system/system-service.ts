@@ -5,8 +5,10 @@ import { Project } from '@domain/project-model';
 import { open as openFile } from '@tauri-apps/plugin-fs';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import { firstValueFrom, Subject } from 'rxjs';
+import { BookMetadata } from '@domain/book-metadata-model';
+import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
+import { BookVerse } from '@domain/book-verse-model';
 
-// TODO: integrar com tauri
 @Injectable({
   providedIn: 'root'
 })
@@ -82,7 +84,6 @@ export class SystemService {
       // TODO: incluir validação de schema para json do projeto
       const project = JSON.parse(content);
       return Promise.resolve(project);
-
     }
   }
 
@@ -90,15 +91,43 @@ export class SystemService {
     return Promise.resolve('~/project');
   }
 
-  saveProjectBook(book: string): Promise<void> {
+  async saveProjectBook(project: Project, book: string): Promise<void> {
+    (project.data || []).forEach(async data => {
+      const metadata = data.metadata[book];
+      const interlineares = data.interlineares;
+      const customTranslationBook = data.customTranslation && data.customTranslation[book] || null;
 
+      if (interlineares) {
+        Object.keys(interlineares || {}).forEach(async source => {
+          const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
+          await file.write(new TextEncoder().encode(JSON.stringify(interlineares[source].codex[book], null, 2)));
+          await file.close();
+
+          if (interlineares[source].customTranslations && interlineares[source].customTranslations[book]) {
+            const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
+            await file.write(new TextEncoder().encode(JSON.stringify(interlineares[source].customTranslations[book], null, 2)));
+            await file.close();
+          }
+        });
+      }
+
+      if (metadata) {
+        const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
+        await file.write(new TextEncoder().encode(JSON.stringify(metadata, null, 2)));
+        await file.close();
+      }
+      
+    });
   }
 
-  saveProject(): Promise<void> {
+  async saveProjectConfig(): Promise<void> {
     if (SystemService.project) {
-      const project = { ...SystemService.project };
+      const project: any = { ...SystemService.project };
       delete project.data;
       delete project.path;
+
+      const file = await openFile(SystemService.project.path, { write: true });
+      file.write(new TextEncoder().encode(JSON.stringify(project, null, 2)));
     }
 
     return Promise.resolve();

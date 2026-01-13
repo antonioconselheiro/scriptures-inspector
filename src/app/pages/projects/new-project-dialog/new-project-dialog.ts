@@ -92,6 +92,6 @@ export class NewProjectDialog {
     console.log('PROJECT CONFIGURATION JSON:', projectConfiguration);
 
     // TODO:
-    await this.system.saveProject();
+    await this.system.saveProjectConfig();
   }
 }
