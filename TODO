@@ -1,7 +1,7 @@
 TODO
 
 [ ] - Uma palavra na tradução personalizada pode conter cores de mais de um segmento de palavra dos textos originais
-[ ] - Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
+[ ] - (não mvp) Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
 [ ] - validar gematria com falseamento
 [ ] - incluir e falsear gematria ordinal
 [ ] - completar transliterações geez com todas disponiveis no canone

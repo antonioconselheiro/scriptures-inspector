@@ -122,11 +122,10 @@ export class EditorComponent implements OnInit {
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
-    const language = this.project.target.language[0];
-    return Object.keys(this.project.target.books[language]).map(book => {
+    return Object.keys(this.project.target.books).map(book => {
       return {
         key: book,
-        name: this.project.target.books[language][book].name
+        name: this.project.target.books[book].name
       };
     });
   }

@@ -1,10 +1,8 @@
 export interface ProjectTarget {
-  language: Array<string>;
+  language: string;
   books: {
-    [language: string]: {
-      [book: string]: {
-        name: string;
-      }
+    [book: string]: {
+      name: string;
     }
   }
 }

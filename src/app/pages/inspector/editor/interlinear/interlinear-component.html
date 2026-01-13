@@ -87,16 +87,14 @@
 </table>
 
 @if (customTranslation) {
-  @for (target of data.lang.target; track $index) {
-    <app-custom-translation-component
-      [data]="data"
-      [current]="current"
-      [sourceBook]="sourceBook"
-      [parsedBook]="parsedBook"
-      [target]="target"
-      [sourceVerse]="sourceVerse"
-      [eachWord]="eachWord"
-      [customTranslation]="customTranslation"
-    ></app-custom-translation-component>
-  }
+  <app-custom-translation-component
+    [data]="data"
+    [current]="current"
+    [sourceBook]="sourceBook"
+    [parsedBook]="parsedBook"
+    [target]="data.lang.target"
+    [sourceVerse]="sourceVerse"
+    [eachWord]="eachWord"
+    [customTranslation]="customTranslation"
+  ></app-custom-translation-component>
 }

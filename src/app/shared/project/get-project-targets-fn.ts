@@ -2,13 +2,13 @@ import { Project } from "@domain/project-model";
 
 export function getProjectTargetsFn(project: Project): Array<string> {
     return project.structure.map(structure => {
-      const targetCustomInterlinear = project.target.language.map(language => `${structure.metadataEditor.source}-custom-${language}-interlinear`);
-      const targetCustomTranslation = structure.metadataEditor.customTranslationEditor ? project.target.language.map(language => `${structure.metadataEditor.source}-custom-${language}-translation`) : [];
+      const targetCustomInterlinear = `${structure.metadataEditor.source}-custom-${project.target.language}-interlinear`;
+      const targetCustomTranslation = structure.metadataEditor.customTranslationEditor ? [`${structure.metadataEditor.source}-custom-${project.target.language}-translation`] : [];
 
     if (structure.interlinearEditor) {
       const targetInterlinearesCustomTranslation = structure.interlinearEditor
         .filter(interlinear => interlinear.customTranslationEditor)
-        .map(interlinear => project.target.language.map(language => `${interlinear.source}-custom-${language}-translation`))
+        .map(interlinear => `${interlinear.source}-custom-${project.target.language}-translation`)
         .flat();
 
       return [
