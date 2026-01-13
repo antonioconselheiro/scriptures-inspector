@@ -16,7 +16,12 @@
         "ms-azuretools.vscode-docker",
         "manishsencha.readme-preview",
         "wix.vscode-import-cost",
-        "jbelford.cyberpunk-plus"
+        "jbelford.cyberpunk-plus",
+        "tauri-apps.tauri-vscode",
+        "rust-lang.rust-analyzer",
+        "dustypomerleau.rust-syntax",
+        "BarbossHack.crates-io",
+        "tamasfe.even-better-toml"
       ]
     }
   }
