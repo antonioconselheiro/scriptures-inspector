@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '@domain/book-model';
 import { Project } from '@domain/project-model';
-import { firstValueFrom, Subject } from 'rxjs';
-import { writeTextFile, readTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 import { open } from '@tauri-apps/api/dialog';
+import { readTextFile } from '@tauri-apps/api/fs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 // TODO: integrar com tauri
 @Injectable({
@@ -37,16 +37,28 @@ export class SystemService {
   }
 
   async loadBook(project: Project, source: string, book: string): Promise<Book> {
-    if (/^@/.test(source)) {
-      const repository = project.repositories.find(repository => repository.path === source.replace(/^@|\/[^ ]+$/, ''))?.repository || '';
-      const folder = source.replace(/^@[^ ]+\//, '');
+    let resourcePath = '';
 
+    if (/^@/.test(source)) {
+      const repository = Object.keys(project.repositories).find(path => path === source.replace(/^@|\/[^ ]+$/, '')) || '';
+      const folderName = source.replace(/^@[^ ]+\//, '');
+
+      if (repository) {
+        resourcePath = `${repository}/${folderName}/${book}.json`;
+
+        if (!/^http/.test(repository)) {
+          resourcePath = `sources/${resourcePath}`;
+        }
+      }
     } else {
-      
+      resourcePath = `sources/${source}/${book}.json`; 
     }
 
-
-    return firstValueFrom(this.httpClient.get<Book>(`${repository}/${folder}/${book}.json`));
+    if (/^http/.test(resourcePath)) {
+      return firstValueFrom(this.httpClient.get<Book>(resourcePath));
+    } else {
+      return readTextFile(resourcePath);
+    }
   }
 
   chooseFolder(): Promise<string> {

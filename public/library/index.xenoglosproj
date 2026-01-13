@@ -1,11 +1,8 @@
 {
   "name": "Bible Translation",
-  "repositories": [
-    {
-      "path": "example",
-      "repository": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/"
-    }
-  ],
+  "repositories": {
+    "example": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/"
+  },
   "codex": [
     "hebrew-stuttgartensia",
     "greek-elzeviriana",
