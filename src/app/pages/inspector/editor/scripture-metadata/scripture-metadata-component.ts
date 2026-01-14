@@ -10,7 +10,6 @@ import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
-import { TranslationBookVerse } from '../../domain/translation-book-verse-model';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
@@ -50,9 +49,14 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Input()
   sourceVerse!: BookVerse<{ text: string; }>
-
+  
   @Input()
-  chapterTranslations!: Array<Array<TranslationBookVerse>>;
+  translationBookRecord: {
+    readonly [source: string]: {
+      translation: string;
+      verse: Readonly<BookVerse<{ text: string }>>
+    }
+  } = {};
 
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
@@ -71,6 +75,19 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   private getCurrent(currentIndex: number): CurrentVerseIndex {
     return { ...this.current, verseIndex: currentIndex };
+  }
+
+  getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>>}> {
+    return Object.keys(this.translationBookRecord).map(source => {
+      return {
+        source,
+        ...this.translationBookRecord[source]
+      };
+    });
+  }
+
+  removeTranslationViewing(source: string): void {
+
   }
 
   splitIntoMatrix(parsedBook: ParsedBookMetadata, text: string): Array<Array<{

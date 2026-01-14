@@ -3,10 +3,10 @@
 @let transliteration = languageMetadataRecord[data.lang.source].transliteration;
 
 <table border="1">
-  @for (chapterTranslation of chapterTranslations; track $index) {
+  @for (translationInformation of getTranslations(); track $index) {
   <tr>
-    <th>translation <button type="button" (click)="cleanTranslationByIndex($index)">×</button></th>
-    <td [colSpan]="wordList.length">{{chapterTranslation[sourceVerse.verse.index] && chapterTranslation[sourceVerse.verse.index].text}}</td>
+    <th><span>{{translationInformation.translation}}</span> <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button></th>
+    <td [colSpan]="wordList.length">{{translationInformation.verse.text}}</td>
     <td></td>
   </tr>
   }

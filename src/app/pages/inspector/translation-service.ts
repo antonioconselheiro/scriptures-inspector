@@ -18,4 +18,8 @@ export class TranslationService {
 
     return bookContent.content[chapter];
   }
+
+  getVerse() {
+    // precisa pegar o versiculo compativel não por index, mas por start e end
+  }
 }

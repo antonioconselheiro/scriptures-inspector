@@ -13,11 +13,11 @@ import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
+import { getProjectViewingTranslationFn } from '@shared/project/get-project-viewing-translations-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
-import { TranslationBookVerse } from '../domain/translation-book-verse-model';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
@@ -40,9 +40,6 @@ export class EditorComponent implements OnInit {
   @Input()
   project!: Project;
 
-  @Input()
-  chapterTranslations!: Array<Array<TranslationBookVerse>>;
-
   current: CurrentChapter | null = null;
 
   formSelectedBook: string = '';
@@ -57,7 +54,11 @@ export class EditorComponent implements OnInit {
   } = {};
 
   sourceBookRecord: {
-    readonly [language: string]: SourceBook | null
+    readonly [source: string]: SourceBook | undefined
+  } = {};
+
+  translationBookRecord: {
+    readonly [source: string]: Readonly<SourceBook> | undefined
   } = {};
 
   dataBookRecord: {
@@ -93,8 +94,6 @@ export class EditorComponent implements OnInit {
           this.current.book = book;
           this.current.chapter = chapter;
         }
-
-        this.updateChapterTranslation();
       }
     });
   }
@@ -103,22 +102,35 @@ export class EditorComponent implements OnInit {
     this.activatedRoute.data.subscribe({
       next: data => {
         const sources = this.getProjectSources();
+        const translations = this.getProjectViewingTranslation();
+
         const sourceBookRecord: {
-          [language: string]: SourceBook | null
+          [source: string]: SourceBook | undefined
         } = {};
 
         sources.forEach(source => {
           sourceBookRecord[source] = data[source];
         });
 
-        this.sourceBookRecord = sourceBookRecord;
-        this.updateChapterTranslation();
+        const translationBookRecord: {
+          [source: string]: SourceBook | undefined
+        } = {};
+
+        translations.forEach(source => {
+          translationBookRecord[source] = data[source];
+        });
+
+        this.translationBookRecord = translationBookRecord;
       }
     });
   }
 
   getProjectSources(): Array<string> {
     return getProjectSourcesFn(this.project);
+  }
+
+  getProjectViewingTranslation(): Array<string> {
+    return getProjectViewingTranslationFn(this.project);
   }
 
   listBookNames(): Array<{ key: string, name: string }> {

@@ -1,4 +1,4 @@
-import { Project } from "@domain/project-model";
+import { Project } from '@domain/project-model';
 
 export function getProjectSourcesFn(project: Project): Array<string> {
   return project.structure.map(structure => {
