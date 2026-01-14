@@ -7,7 +7,8 @@ export const routes: Routes = [
     path: 'book/:book/chapter/:chapter',
     runGuardsAndResolvers: 'pathParamsChange',
     resolve: {
-      books: booksLoaderResolveFn()
+      books: booksLoaderResolveFn(),
+      repositories: repositoriesLoadResolverFn()
     },
     component: Inspector
   },

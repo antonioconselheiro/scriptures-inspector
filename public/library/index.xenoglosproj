@@ -1,7 +1,7 @@
 {
   "name": "Bible Translation",
   "repositories": {
-    "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/"
+    "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/repository.json"
   },
   "codex": [
     "hebrew-stuttgartensia",
@@ -10,9 +10,6 @@
     "@remote/bible-pt-aa",
     "@remote/bible-pt-acf",
     "@remote/bible-pt-kja",
-    "@remote/bible-pt-nvi",
-    "@remote/bible-pt-tb",
-    "@remote/bible-pt-vc"
   ],
   "target": {
     "language": "portuguese",

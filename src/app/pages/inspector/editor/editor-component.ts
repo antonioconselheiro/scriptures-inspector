@@ -22,6 +22,7 @@ import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
+import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 
 @Component({
   selector: 'app-editor-component',
@@ -30,6 +31,7 @@ import { VerseNumberPipe } from './shared/verse-number-pipe';
     FormsModule,
     AddPatternContextMenu,
     ScriptureMetadataComponent,
+    TranslationViewerManager,
     InterlinearComponent
   ],
   templateUrl: './editor-component.html',
