@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
+import { booksLoaderResolveFn } from '@shared/project/books-loader-resolve-fn';
+import { repositoriesLoadResolverFn } from '@shared/project/repositories-load-resolver-fn';
 import { Inspector } from './pages/inspector/inspector';
-import { booksLoaderResolveFn } from './shared/project/books-loader-resolve-fn';
 
 export const routes: Routes = [
   {

@@ -62,7 +62,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Input()
-  customTranslation = false;
+  customTranslation: string | null = null;
 
   readonly languageMetadataRecord = languageMetadataRecord;
 

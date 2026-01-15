@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Book } from '@domain/book-model';
-import { getBookFn } from './get-book-fn';
+import { loadBookFn } from './load-book-fn';
 import { getProjectFn } from './get-project-fn';
 import { getProjectSourcesFn } from './get-project-sources-fn';
 import { getProjectViewingTranslationFn } from './get-project-viewing-translations-fn';
@@ -15,7 +15,7 @@ export function booksLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Promi
       const sources = getProjectSourcesFn(project);
       const translations = getProjectViewingTranslationFn(project);
       await Promise.all([...sources, ...translations]
-        .map(source => getBookFn(source, book)
+        .map(source => loadBookFn(source, book)
         .then(sourceBook => crossSourcesCodex[source] = sourceBook))
       );
     }
