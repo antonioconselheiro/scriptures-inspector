@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
-import { ProjectData } from '@domain/project-data-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
@@ -70,7 +69,6 @@ export class ProjectDataService {
   }
 
   getLexical(
-    project: ProjectData,
     book: string,
     word: string,
   ): string {

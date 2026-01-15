@@ -86,51 +86,49 @@
 
 @for (structure of project.structure; track $index) {
   @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
+  @let metadata = projectData[structure.metadataEditor.target];
   @if (current && selectedSourceBook) {
 
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
-      @let projectData = project.data?.[$index];
-      
-      @if (projectData) {
-        @let parsedBook = parseBook(projectData.metadata[current.book], languageMetadataRecord[projectData.lang.source], pipeUpdaterController);
-        <strong class="verseTitle">
-          {{codexMetadataRecord[projectData.lang.source].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
-        </strong>
+      @let parsedBook = parseBook(metadata, languageMetadataRecord[structure.lang], pipeUpdaterController);
+      <strong class="verseTitle">
+        {{codexMetadataRecord[structure.lang].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+      </strong>
 
-        <app-scripture-metadata-component
-          [current]="current"
-          [data]="projectData"
-          [pipeUpdaterController]="pipeUpdaterController"
-          [parsedBook]="parsedBook",
-          [sourceBook]="selectedSourceBook"
-          [sourceVerse]="verse"
-          chapterTranslations
-          [addPatternMenuRef]="addPatternMenuRef"
-          (showLegend)="showLegend = $event"
-        ></app-scripture-metadata-component>
-    
-        @for (item of structure.interlinearEditor; track $index) {
-          @let bookInterlinearSource = sourceBookRecord[item.source];
+      <app-scripture-metadata-component
+        [current]="current"
+        [projectData]="projectData"
+        [customTranslation]=""
+        [parsedBook]="parsedBook",
+        [sourceBook]="selectedSourceBook"
+        [sourceVerse]="verse"
+        chapterTranslations
+        [addPatternMenuRef]="addPatternMenuRef"
+        (showLegend)="showLegend = $event"
+        [pipeUpdaterController]="pipeUpdaterController"
+      ></app-scripture-metadata-component>
+  
+      @for (item of structure.interlinearEditor; track $index) {
+        @let bookInterlinearSource = sourceBookRecord[item.source];
 
-          @if (bookInterlinearSource && projectData.interlineares) {
-            @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
-            @let langInterlinearSource = codexMetadataRecord[item.source].lang;
-            @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source].codex[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+        @if (bookInterlinearSource && projectData.interlineares) {
+          @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
+          @let langInterlinearSource = codexMetadataRecord[item.source].lang;
+          @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source].codex[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
-            <app-interlinear-component
-              [current]="current"
-              [data]="projectData"
-              [source]="item.source"
-              [pipeUpdaterController]="pipeUpdaterController"
-              [sourceVerse]="verseInterlinearSource"
-              [addPatternMenuRef]="addPatternMenuRef"
-              [parsedBook]="parsedInterlinearBook"
-              [customTranslation]="item.customTranslationEditor"
-              [interlinear]="projectData.interlineares[item.source]"
-            ></app-interlinear-component>
-          }
-
+          <app-interlinear-component
+            [current]="current"
+            [source]="item.source"
+            [projectData]="projectData"
+            [customTranslation]="item.customTranslationEditor"
+            [parsedBook]="parsedInterlinearBook"
+            [sourceVerse]="verseInterlinearSource"
+            [interlinear]="projectData.interlineares[item.source]"
+            [addPatternMenuRef]="addPatternMenuRef"
+            [pipeUpdaterController]="pipeUpdaterController"
+          ></app-interlinear-component>
         }
+
       }
     }
   }

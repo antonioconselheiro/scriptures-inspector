@@ -3,7 +3,6 @@ import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { PatternsSerialized } from '@domain/patterns-serialized';
-import { ProjectData } from '@domain/project-data-model';
 import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-word-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -21,7 +20,6 @@ export class ProjectMetadataService {
   ) { }
 
   createIfNotExistsWordMetadata(
-    data: ProjectData,
     current: CurrentVerseIndex,
     verse: SourceVerse,
     segments: Array<WordSegment> = []
@@ -68,7 +66,6 @@ export class ProjectMetadataService {
 
   //  source text metadata methods
   getScriptureMetadataDefinedKind(
-    data: ProjectData,
     current: CurrentVerseIndex,
     segment: { index: number; word: string; }
   ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
@@ -94,7 +91,6 @@ export class ProjectMetadataService {
   }
 
   updateScripturesMetadata(
-    data: ProjectData,
     current: CurrentVerseIndex,
     kind: string,
     verse: SourceVerse,
@@ -117,7 +113,6 @@ export class ProjectMetadataService {
   }
 
   cleanScriptureMetadata(
-    data: ProjectData,
     current: CurrentVerseIndex
   ): void {
     if (
@@ -143,7 +138,6 @@ export class ProjectMetadataService {
   // word of God methods
   setAsWordOfGod(
     checked: boolean,
-    data: ProjectData,
     current: CurrentVerseIndex,
     verse: SourceVerse,
     segments: Array<WordSegment>
@@ -162,7 +156,6 @@ export class ProjectMetadataService {
   }
 
   getScriptureMetadataWordOfGod(
-    data: ProjectData,
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
   ): boolean {
@@ -191,7 +184,6 @@ export class ProjectMetadataService {
 
   //
   updateLexical(
-    project: ProjectData,
     book: string,
     word: string,
     lexicalValue: string
@@ -201,7 +193,6 @@ export class ProjectMetadataService {
   }
 
   getLexical(
-    project: ProjectData,
     book: string,
     word: string,
   ): string {
@@ -209,7 +200,6 @@ export class ProjectMetadataService {
   }
 
   cleanLexicalInterlinear(
-    project: ProjectData,
     book: string,
     eachWord: Array<Array<{ index: number; word: string; }>>
   ): void {
@@ -227,7 +217,7 @@ export class ProjectMetadataService {
     return ['godname', 'keyword', 'character', 'amount'].includes(value);
   }
 
-  cleanWordOfGodFromVerse(data: ProjectData, current: CurrentVerseIndex): void {
+  cleanWordOfGodFromVerse(current: CurrentVerseIndex): void {
     if (
       !data.metadata[current.book] ||
       !data.metadata[current.book].chapters[current.chapter] ||

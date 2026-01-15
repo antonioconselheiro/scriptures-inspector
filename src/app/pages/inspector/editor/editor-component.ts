@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadata } from '@domain/book-metadata-model';
+import { Book } from '@domain/book-model';
 import { Codex } from '@domain/codex-model';
-import { CodexRecord } from '@domain/codex-record';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
@@ -63,8 +63,8 @@ export class EditorComponent implements OnInit {
     readonly [source: string]: Readonly<SourceBook> | undefined
   } = {};
 
-  dataBookRecord: {
-    [source: string]: CodexRecord<BookMetadata, object>
+  projectData: {
+    [source: string]: Book<BookMetadata, object>
   } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
@@ -111,7 +111,7 @@ export class EditorComponent implements OnInit {
         } = {};
 
         sources.forEach(source => {
-          sourceBookRecord[source] = data[source];
+          sourceBookRecord[source] = data['books'][source];
         });
 
         const translationBookRecord: {
@@ -119,7 +119,7 @@ export class EditorComponent implements OnInit {
         } = {};
 
         translations.forEach(source => {
-          translationBookRecord[source] = data[source];
+          translationBookRecord[source] = data['books'][source];
         });
 
         this.translationBookRecord = translationBookRecord;
@@ -210,7 +210,7 @@ export class EditorComponent implements OnInit {
     const book = this.current?.book;
 
     if (book) {
-      const bookMetadata = this.dataBookRecord[source][book];
+      const bookMetadata = this.projectData[source];
       this.modalService
         .createModal(DialogPatterns)
         .setOutletName('main')
@@ -229,7 +229,7 @@ export class EditorComponent implements OnInit {
     const bookName = this.current?.book;
 
     if (bookName) {
-      const bookMetadata = this.dataBookRecord[source][bookName];
+      const bookMetadata = this.projectData[source];
       this.modalService
         .createModal(DialogLexicalDictionary)
         .setOutletName('main')
@@ -248,7 +248,7 @@ export class EditorComponent implements OnInit {
   }): void {
     const book = this.current?.book;
     if (book) {
-      const bookMetadata = this.dataBookRecord[option.source][book];
+      const bookMetadata = this.projectData[option.source];
       const langMetadata = this.languageMetadataRecord[this.codexMetadataRecord[option.source].lang];
       const word = langMetadata.prefetchNormalizedToMatcher ? langMetadata.prefetchNormalizedToMatcher(option.word) : option.word;
 

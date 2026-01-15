@@ -6,7 +6,6 @@ import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData } from '@domain/project-data-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
@@ -51,7 +50,6 @@ export class ProjectCustomTranslationService {
   }
 
   private derivateTranslationToCustom(
-    data: ProjectData,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: CustomTranslation,
     current: CurrentChapter,
@@ -60,14 +58,13 @@ export class ProjectCustomTranslationService {
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     customTranslation[current.book].chapters[current.chapter][sourceVerse.verse.index].text = this.projectService.splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
       .flat()
-      .map(word => this.projectService.getLexical(data, current.book, word.word))
+      .map(word => this.projectService.getLexical(data, word.word))
       .join(' ');
 
     this.systemService.autoSaveCurrentProject();
   }
 
   private derivateInterlinearToCustom(
-    data: ProjectData,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: CustomTranslation,
     current: CurrentChapter,
@@ -77,7 +74,7 @@ export class ProjectCustomTranslationService {
     metadata.splice(0, metadata.length);
     const custom = customTranslation[current.book].chapters[current.chapter][sourceVerse.verse.index].text.split(' ');
     this.projectService.splitIntoMatrix(parsedBookMetadata, sourceVerse.text).flat().forEach(segment => {
-      if (custom[segment.index] === this.projectService.getLexical(data, current.book,segment.word)) {
+      if (custom[segment.index] === this.projectService.getLexical(data, current.book, segment.word)) {
         metadata.push(this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment));
       }
     });
@@ -86,7 +83,6 @@ export class ProjectCustomTranslationService {
   }
 
   derivateAllToCustom(
-    data: ProjectData,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: CustomTranslation,
     current: CurrentChapter,
@@ -185,7 +181,6 @@ export class ProjectCustomTranslationService {
   }
 
   getCustomTranslationStyleRole(
-    data: ProjectData,
     translation: TranslationInterlinear | undefined,
     customTranslation: CustomTranslation,
     current: CurrentChapter,

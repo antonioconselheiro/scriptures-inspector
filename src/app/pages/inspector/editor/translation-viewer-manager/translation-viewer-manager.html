@@ -2,22 +2,17 @@
   <legend>Translation</legend>
   <select #bibleTranslation name="bibleTranslation" placeholder="Translation">
     <option></option>
-    <optgroup label="Normal">
-      <option value="bible-pt-aa.json">Almeida Atualizada</option>
-      <option value="bible-pt-acf.json">Almeida Corrigida Fiel</option>
-      <option value="bible-pt-kja.json">King James Atualizada</option>
-      <option value="bible-pt-nvi.json">No\va Versão Internacional</option>
-      <option value="bible-pt-tb.json">Tradução Brasileira</option>
-      <option value="bible-pt-vc.json">Versão Católica</option>
-    </optgroup>
-    <optgroup label="Gringo">
-      <option value="bible-la-vulgata.json">Vulgata</option>
-      <option value="bible-en-kjv.json">King James version</option>
-      <option value="bible-el-greek.json">Grego moderno</option>
-      <option value="bible-es-rv.json">Reina Valera</option>
-      <option value="bible-zh-cuv-s.json">中文联盟版简体</option>
-      <option value="bible-zh-cuv.json">中國聯合版</option>
-    </optgroup>
+
+    @if (repositories) {
+      @for (repository of repositories | keyvalue; track $index) {
+        <optgroup [attr.label]="repository.value.name">
+          @for (translation of repository.value.translations | keyvalue; track $index) {
+            <option [attr.value]="translation.key">{{translation.value.name}}</option>
+          }
+        </optgroup>    
+      }
+    }
+
   </select>
 
   <button (click)="loadTranslation(bibleTranslation.value); bibleTranslation.value = ''" type="button">+</button>

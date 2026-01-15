@@ -1,6 +1,5 @@
 import { Directive, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { ProjectData } from '@domain/project-data-model';
 import { ProjectMetadataService } from './project/project-metadata-service';
 
 @Directive()
@@ -8,9 +7,6 @@ export abstract class AbstractInspectorDiretive {
 
   @Input()
   abstract pipeUpdaterController: number;
-
-  @Input()
-  abstract data: ProjectData;
 
   @Input()
   abstract current: CurrentChapter;

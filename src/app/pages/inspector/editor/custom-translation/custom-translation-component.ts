@@ -4,7 +4,6 @@ import { CurrentChapter } from '@domain/current-chapter-model';
 import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
@@ -23,9 +22,6 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   styleUrl: './custom-translation-component.scss'
 })
 export class CustomTranslationComponent extends AbstractInspectorDiretive {
-
-  @Input()
-  data!: ProjectData;
 
   //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
   // se não a tradução considera apenas o escrito original na propriedade 'data'

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BookMetadata } from '@domain/book-metadata-model';
+import { Book } from '@domain/book-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -36,9 +37,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   current!: CurrentChapter;
 
   @Input()
-  data!: ProjectData;
-
-  @Input()
   pipeUpdaterController = 0;
   
   @Input()
@@ -49,6 +47,9 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Input()
   sourceVerse!: BookVerse<{ text: string; }>
+
+  @Input()
+  projectData: Record<string, Book<BookMetadata, object>> = {};
   
   @Input()
   translationBookRecord: {
