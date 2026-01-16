@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BookMetadata } from '@domain/book-metadata-model';
-import { Book } from '@domain/book-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData2 } from '@domain/project-data-2-model';
+import { ProjectStructureMetadataEditor } from '@domain/project-structure-metadata-editor-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -18,6 +18,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -43,16 +44,22 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   sourceBook!: SourceBook;
 
   @Input()
+  sourceLanguage!: LanguageUnionType;
+
+  @Input()
   parsedBook!: ParsedBookMetadata;
 
   @Input()
   sourceVerse!: BookVerse<{ text: string; }>
 
   @Input()
-  projectData: Record<string, Book<BookMetadata, object>> = {};
-  
+  projectData: ProjectData2 = {};
+
   @Input()
-  translationBookRecord: {
+  metadataEditor!: ProjectStructureMetadataEditor;
+
+  @Input()
+  viewingTranslationBookRecord: {
     readonly [source: string]: {
       translation: string;
       verse: Readonly<BookVerse<{ text: string }>>
@@ -79,10 +86,10 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   }
 
   getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>>}> {
-    return Object.keys(this.translationBookRecord).map(source => {
+    return Object.keys(this.viewingTranslationBookRecord).map(source => {
       return {
         source,
-        ...this.translationBookRecord[source]
+        ...this.viewingTranslationBookRecord[source]
       };
     });
   }
@@ -100,11 +107,21 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   //  word of God
   setAsWordOfGod(input: HTMLInputElement, segments: Array<WordSegment>): void {
-    this.projectMetadataService.setAsWordOfGod(input.checked, this.data, this.getCurrent(this.sourceVerse.verse.index), this.sourceVerse, segments);
+    this.projectMetadataService.setAsWordOfGod(
+      input.checked,
+      this.projectData[this.metadataEditor.source],
+      this.getCurrent(this.sourceVerse.verse.index),
+      this.sourceVerse,
+      segments
+    );
   }
 
   getScriptureMetadataWordOfGod(segments: Array<WordSegment>): boolean {
-    return this.projectMetadataService.getScriptureMetadataWordOfGod(this.data, this.getCurrent(this.sourceVerse.verse.index), segments);
+    return this.projectMetadataService.getScriptureMetadataWordOfGod(
+      this.projectData[this.metadataEditor.source],
+      this.getCurrent(this.sourceVerse.verse.index),
+      segments
+    );
   }
 
   cleanWordOfGodFromVerse(): void {

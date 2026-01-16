@@ -19,6 +19,8 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 import { ProjectTranslationMetadataService } from '../shared/project/project-translation-metadata-service';
 import { Book } from '@domain/book-model';
 import { BookMetadata } from '@domain/book-metadata-model';
+import { ProjectData2 } from '@domain/project-data-2-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -42,6 +44,9 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   source!: string;
 
   @Input()
+  sourceLanguage!: LanguageUnionType;
+
+  @Input()
   pipeUpdaterController = 0;
 
   @Input()
@@ -60,12 +65,10 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Input()
-  customTranslation: string | null = null;
+  customTranslation: string | undefined;
 
   @Input()
-  projectData!: {
-    [source: string]: Book<BookMetadata, object>
-  };
+  projectData!: ProjectData2;
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -78,7 +81,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const map = this.interlinear.codex[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
+    const map = this.interlinear.target[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 

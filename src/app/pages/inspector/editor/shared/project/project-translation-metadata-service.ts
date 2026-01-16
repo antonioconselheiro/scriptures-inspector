@@ -31,21 +31,21 @@ export class ProjectTranslationMetadataService {
     const scriptureVerseNumber = Number(sourceVerse.verse.start);
     const geezVerseNumber = Number(translationVerse.verse.start);
 
-    if (!translation.codex[current.book]) {
-      translation.codex[current.book] = {
+    if (!translation.target[current.book]) {
+      translation.target[current.book] = {
         chapters: []
       };
     }
 
-    if (!translation.codex[current.book].chapters[current.chapter]) {
-      translation.codex[current.book].chapters[current.chapter] = [];
+    if (!translation.target[current.book].chapters[current.chapter]) {
+      translation.target[current.book].chapters[current.chapter] = [];
     }
 
-    if (!translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index]) {
-      translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
+    if (!translation.target[current.book].chapters[current.chapter][translationVerse.verse.index]) {
+      translation.target[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
+    translation.target[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
       origin: {
         verse: scriptureVerseNumber,
         index: scriptureWordIndex,
@@ -72,7 +72,7 @@ export class ProjectTranslationMetadataService {
     let interlinear: TranslationInterlinearVerse;
 
     try {
-      interlinear = translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
+      interlinear = translation.target[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
         return this.projectService.castSegmentIntoMetadataIndex(lang, interlinear.origin);
@@ -90,14 +90,14 @@ export class ProjectTranslationMetadataService {
     translationVerse: SourceVerse
   ): void {
     if (
-      !translation.codex[current.book] ||
-      !translation.codex[current.book].chapters[current.chapter]
+      !translation.target[current.book] ||
+      !translation.target[current.book].chapters[current.chapter]
     ) {
       return;
     }
 
-    if (translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index]) {
-      translation.codex[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
+    if (translation.target[current.book].chapters[current.chapter][translationVerse.verse.index]) {
+      translation.target[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
     this.systemService.autoSaveCurrentProject();

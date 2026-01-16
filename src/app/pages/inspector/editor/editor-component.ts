@@ -3,12 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadata } from '@domain/book-metadata-model';
-import { Book } from '@domain/book-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData2 } from '@domain/project-data-2-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
@@ -63,9 +63,7 @@ export class EditorComponent implements OnInit {
     readonly [source: string]: Readonly<SourceBook> | undefined
   } = {};
 
-  projectData: {
-    [source: string]: Book<BookMetadata, object>
-  } = {};
+  projectData: ProjectData2 = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -205,7 +203,6 @@ export class EditorComponent implements OnInit {
   }
 
   openDialogPatterns(source: string): void {
-    this.sourceBookRecord[source]
     const lang = this.codexMetadataRecord[source].lang;
     const book = this.current?.book;
 

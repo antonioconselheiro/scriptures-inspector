@@ -198,7 +198,7 @@ export class ProjectCustomTranslationService {
         customTranslation[current.book].chapters[current.chapter][sourceVerse.verse.index]?.metadata?.[wordIndex] || '';
 
       scriptureChapterMetadata = data.metadata[current.book] && data.metadata[current.book].chapters[current.chapter] || [];
-      interlinearMetadata = translation.codex;
+      interlinearMetadata = translation.target;
 
       const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
       if (!translationWordIndex) {

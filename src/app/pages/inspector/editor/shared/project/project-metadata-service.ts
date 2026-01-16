@@ -3,6 +3,8 @@ import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { PatternsSerialized } from '@domain/patterns-serialized';
+import { ProjectData2 } from '@domain/project-data-2-model';
+import { ProjectStructureMetadataEditor } from '@domain/project-structure-metadata-editor-model';
 import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-word-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -20,14 +22,18 @@ export class ProjectMetadataService {
   ) { }
 
   createIfNotExistsWordMetadata(
+    data: ProjectData2,
+    editor: ProjectStructureMetadataEditor,
     current: CurrentVerseIndex,
     verse: SourceVerse,
     segments: Array<WordSegment> = []
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    if (!data.metadata[current.book]) {
-      data.metadata[current.book] = {
+    //  TODO: isso não pode ficar aqui, a criação da estrutura base do metadata precisa vir antes da inserção dele via url,
+    //  a criação aqui não poderá ser enxergada no contexto onde será salvo as alterações
+    if (!data[editor.target]) {
+      data[editor.target] = {
         chapters: [],
         patterns: {
           prefix: [],
@@ -37,19 +43,19 @@ export class ProjectMetadataService {
       };
     }
 
-    if (!data.metadata[current.book].chapters[current.chapter]) {
-      data.metadata[current.book].chapters[current.chapter] = [];
+    if (!data[editor.target].chapters[current.chapter]) {
+      data[editor.target].chapters[current.chapter] = [];
     }
 
-    if (!data.metadata[current.book].chapters[current.chapter][current.verseIndex]) {
-      data.metadata[current.book].chapters[current.chapter][current.verseIndex] = {
+    if (!data[editor.target].chapters[current.chapter][current.verseIndex]) {
+      data[editor.target].chapters[current.chapter][current.verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata || {};
-    data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata = metadata;
+    const metadata = data[editor.target].chapters[current.chapter][current.verseIndex].metadata || {};
+    data[editor.target].chapters[current.chapter][current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
@@ -66,18 +72,20 @@ export class ProjectMetadataService {
 
   //  source text metadata methods
   getScriptureMetadataDefinedKind(
+    data: ProjectData2,
+    editor: ProjectStructureMetadataEditor,
     current: CurrentVerseIndex,
     segment: { index: number; word: string; }
   ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
     if (
-      !data.metadata[current.book] ||
-      !data.metadata[current.book].chapters[current.chapter] ||
-      !data.metadata[current.book].chapters[current.chapter][current.verseIndex]
+      !data[editor.target] ||
+      !data[editor.target].chapters[current.chapter] ||
+      !data[editor.target].chapters[current.chapter][current.verseIndex]
     ) {
       return '';
     }
 
-    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = data[editor.target].chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
       return '';
     }

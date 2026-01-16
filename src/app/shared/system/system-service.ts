@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '@domain/book-model';
+import { CurrentBook } from '@domain/current-book-model';
+import { ProjectData2 } from '@domain/project-data-2-model';
 import { Project } from '@domain/project-model';
-import { open as openFile } from '@tauri-apps/plugin-fs';
+import { setProjectFn } from '@shared/project/set-project-fn';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
+import { open as openFile } from '@tauri-apps/plugin-fs';
 import { firstValueFrom, Subject } from 'rxjs';
-import { BookMetadata } from '@domain/book-metadata-model';
-import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
-import { BookVerse } from '@domain/book-verse-model';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +42,7 @@ export class SystemService {
         await file.read(buf);
         const content = new TextDecoder().decode(buf);
         await file.close();
-  
+
         // TODO: incluir validação de schema para json do projeto
         const project = JSON.parse(content);
         project.path = selected;
@@ -91,40 +91,37 @@ export class SystemService {
     return Promise.resolve('~/project');
   }
 
-  async saveProjectBook(project: Project, book: string): Promise<void> {
-    (project.data || []).forEach(async data => {
-      const metadata = data.metadata[book];
-      const interlineares = data.interlineares;
-      const customTranslationBook = data.customTranslation && data.customTranslation[book] || null;
+  async saveCurrentBook(project: Project, current: CurrentBook, data: ProjectData2): Promise<void> {
+    project.structure.forEach(async structure => {
+      await this.saveFile(project, structure.metadataEditor.target, current, data);
 
-      if (interlineares) {
-        Object.keys(interlineares || {}).forEach(async source => {
-          const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
-          await file.write(new TextEncoder().encode(JSON.stringify(interlineares[source].codex[book], null, 2)));
-          await file.close();
+      if (structure.metadataEditor.customTranslationEditor) {
+        await this.saveFile(project, structure.metadataEditor.customTranslationEditor, current, data);
+      }
 
-          if (interlineares[source].customTranslations && interlineares[source].customTranslations[book]) {
-            const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
-            await file.write(new TextEncoder().encode(JSON.stringify(interlineares[source].customTranslations[book], null, 2)));
-            await file.close();
+      if (structure.interlinearEditor) {
+        structure.interlinearEditor.forEach(async interlinear => {
+          await this.saveFile(project, interlinear.target, current, data);
+
+          if (interlinear.customTranslationEditor) {
+            await this.saveFile(project, interlinear.customTranslationEditor, current, data);
           }
         });
       }
-
-      if (metadata) {
-        const file = await openFile(`${project.path}/target/?/${book}.json`, { write: true });
-        await file.write(new TextEncoder().encode(JSON.stringify(metadata, null, 2)));
-        await file.close();
-      }
-      
     });
+  }
+
+  private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData2): Promise<void> {
+    const file = await openFile(`${project.path}/target/${target}/${current.book}.json`, { write: true });
+    await file.write(new TextEncoder().encode(JSON.stringify(content[target], null, 2)));
+    await file.close();
   }
 
   async saveProjectConfig(): Promise<void> {
     if (SystemService.project) {
       const project: any = { ...SystemService.project };
-      delete project.data;
       delete project.path;
+      setProjectFn(project);
 
       const file = await openFile(SystemService.project.path, { write: true });
       file.write(new TextEncoder().encode(JSON.stringify(project, null, 2)));
