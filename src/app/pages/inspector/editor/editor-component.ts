@@ -23,6 +23,8 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
+import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -129,6 +131,10 @@ export class EditorComponent implements OnInit {
     return getProjectSourcesFn(this.project);
   }
 
+  getProjectTargetsMetadataDetails(): Array<TargetMetadataDetail> {
+    return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
+  }
+
   getProjectViewingTranslation(): Array<string> {
     return getProjectViewingTranslationFn(this.project);
   }
@@ -183,9 +189,8 @@ export class EditorComponent implements OnInit {
     ]);
   }
 
-  openExternalDictionary(source: string): void {
-    const language = this.codexMetadataRecord[source].lang;
-    const languageMetadata = languageMetadataRecord[language];
+  openExternalDictionary(detail: TargetMetadataDetail): void {
+    const languageMetadata = languageMetadataRecord[detail.languageSource];
     if (languageMetadata.externalDictionaryLink) {
       open(languageMetadata.externalDictionaryLink, '_BLANK');
     } else {
@@ -202,17 +207,16 @@ export class EditorComponent implements OnInit {
     return Array.from({ length }, (_, i) => i + 1);
   }
 
-  openDialogPatterns(source: string): void {
-    const lang = this.codexMetadataRecord[source].lang;
+  openDialogPatterns(detail: TargetMetadataDetail): void {
     const book = this.current?.book;
 
     if (book) {
-      const bookMetadata = this.projectData[source];
+      const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(DialogPatterns)
         .setOutletName('main')
         .setData({
-          lang,
+          language: detail.languageSource,
           patterns: bookMetadata.patterns
         })
         .build()
@@ -222,11 +226,11 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  openDialogLexicalDictionary(source: string): void {
+  openDialogLexicalDictionary(detail: TargetMetadataDetail): void {
     const bookName = this.current?.book;
 
     if (bookName) {
-      const bookMetadata = this.projectData[source];
+      const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(DialogLexicalDictionary)
         .setOutletName('main')
@@ -241,21 +245,21 @@ export class EditorComponent implements OnInit {
   onAddPattern(option: {
     word: string;
     type: 'prefix' | 'suffix';
-    source: string;
+    target: `${string}-metadata` | `${string}-interlinear`;
   }): void {
     const book = this.current?.book;
     if (book) {
-      const bookMetadata = this.projectData[option.source];
-      const langMetadata = this.languageMetadataRecord[this.codexMetadataRecord[option.source].lang];
+      const bookMetadata = this.projectData[option.target];
+      const langMetadata = this.languageMetadataRecord[this.codexMetadataRecord[option.target].language];
       const word = langMetadata.prefetchNormalizedToMatcher ? langMetadata.prefetchNormalizedToMatcher(option.word) : option.word;
 
       bookMetadata.patterns[option.type].push(word);
     }
   }
 
-  parseBook(book: BookMetadata, lang: Language, pipeUpdaterController: number): ParsedBookMetadata {
+  parseBook(book: BookMetadata, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
-    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, lang);
+    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, language);
 
     return {
       lexical: book.lexical,

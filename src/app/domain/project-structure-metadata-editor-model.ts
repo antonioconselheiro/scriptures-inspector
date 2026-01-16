@@ -3,4 +3,3 @@ export interface ProjectStructureMetadataEditor {
   target: `${string}-metadata`;
   customTranslationEditor: `${string}-translation` | null;
 }
-

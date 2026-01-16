@@ -19,7 +19,7 @@ import { Language } from '../../../domain/language-model';
 export class NewProjectDialog {
 
   readonly languages = languageList;
-  readonly languageMeta: { [lang: string]: Language } = languageMetadataRecord;
+  readonly languageMeta: { [language: string]: Language } = languageMetadataRecord;
 
   form: FormGroup;
 

@@ -6,7 +6,7 @@ import { ProjectLanguage } from './project-language-model';
 import { TranslationInterlinear } from './translation-interlinear-model';
 
 export interface ProjectData {
-  lang: ProjectLanguage;
+  language: ProjectLanguage;
   metadata: CodexRecord<BookMetadata, BookVerse<BookChapterVerseMetadata>>;
   interlineares?: {
     [source: string]: TranslationInterlinear

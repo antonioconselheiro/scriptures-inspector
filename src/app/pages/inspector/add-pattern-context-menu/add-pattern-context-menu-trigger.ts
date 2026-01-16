@@ -10,7 +10,7 @@ export class AddPatternContextMenuTrigger {
   contextMenu!: AddPatternContextMenu;
 
   @Input()
-  source!: string;
+  target!: `${string}-metadata` | `${string}-interlinear`;
 
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {
@@ -22,7 +22,7 @@ export class AddPatternContextMenuTrigger {
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.contextMenu.visible = true;
-      this.contextMenu.source = this.source;
+      this.contextMenu.target = this.target;
     } else {
       this.contextMenu.visible = false;
     }

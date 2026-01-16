@@ -13,10 +13,10 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 export class ProjectDataService {
 
   castSegmentIntoMetadataIndex(
-    lang: LanguageUnionType,
+    language: LanguageUnionType,
     segment: WordSegment
   ): string {
-    const word = languageMetadataRecord[lang].normalizeFn && languageMetadataRecord[lang].normalizeFn(segment.word) || segment.word;
+    const word = languageMetadataRecord[language].normalizeFn && languageMetadataRecord[language].normalizeFn(segment.word) || segment.word;
     return `${segment.index}-${word}`;
   }
 

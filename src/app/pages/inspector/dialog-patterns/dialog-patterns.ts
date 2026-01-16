@@ -16,11 +16,11 @@ import { Subject } from 'rxjs';
   templateUrl: './dialog-patterns.html',
   styleUrl: './dialog-patterns.scss'
 })
-export class DialogPatterns extends ModalableDirective<{ lang: string, patterns: PatternsSerialized }, PatternsSerialized> {
+export class DialogPatterns extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> {
 
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
   patterns!: PatternsSerialized;
-  lang!: string;
+  language!: string;
   form: any;
 
   override response = new Subject<PatternsSerialized | void>();
@@ -35,9 +35,9 @@ export class DialogPatterns extends ModalableDirective<{ lang: string, patterns:
     });
   }
 
-  override onInjectData(data: { lang: string, patterns: PatternsSerialized }): void {
+  override onInjectData(data: { language: string, patterns: PatternsSerialized }): void {
     this.patterns = data.patterns;
-    this.lang = data.lang;
+    this.language = data.language;
   }
 
   deletePattern(type: 'prefix' | 'suffix', index: number): void {

@@ -14,19 +14,19 @@ export class AddPatternContextMenu {
   @Input() x = 0;
   @Input() y = 0;
   @Input() selectedWord = '';
-  @Input() source = '';
+  @Input() target!: `${string}-metadata` | `${string}-interlinear`;
 
   @Output() optionSelected = new EventEmitter<{
     word: string,
     type: 'prefix' | 'suffix',
-    source: string
+    target: `${string}-metadata` | `${string}-interlinear`
   }>();
 
   onSelect(type: 'prefix' | 'suffix', word: string) {
     this.optionSelected.emit({
       type,
       word,
-      source: this.source
+      target: this.target
     });
     this.visible = false;
   }

@@ -46,8 +46,8 @@ export class TransliterationPipe implements PipeTransform {
 
   readonly geezRegex = new RegExp(Object.keys(this.geezToLatin).join('|'), 'g');
 
-  transform(word: string, lang: 'hebraic' | 'geez' | 'greek'): string {
-    return lang === 'hebraic' ? transliterate(word) : word.replace(this.geezRegex, match => this.geezToLatin[match] ?? match);
+  transform(word: string, language: 'hebraic' | 'geez' | 'greek'): string {
+    return language === 'hebraic' ? transliterate(word) : word.replace(this.geezRegex, match => this.geezToLatin[match] ?? match);
   }
 
 }

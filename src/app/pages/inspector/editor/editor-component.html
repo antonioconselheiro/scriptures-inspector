@@ -1,4 +1,4 @@
-@let sources = getProjectSources();
+@let targetMetadataDetails = getProjectTargetsMetadataDetails();
 
 <header [class.minimized]="minimized" class="tools">
   <img class="logo" src="script.png" />
@@ -28,24 +28,24 @@
     <fieldset>
       <legend>Patterns</legend>
 
-      @for (source of sources; track $index) {
-        <button type="button" (click)="openDialogPatterns(source)">{{codexMetadataRecord[source].name}}</button>
+      @for (detail of targetMetadataDetails; track $index) {
+        <button type="button" (click)="openDialogPatterns(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
     <fieldset>
       <legend>Lexical</legend>
 
-      @for (source of sources; track $index) {
-        <button type="button" (click)="openDialogLexicalDictionary(source)">{{codexMetadataRecord[source].name}}</button>
+      @for (detail of targetMetadataDetails; track $index) {
+        <button type="button" (click)="openDialogLexicalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
     <fieldset>
       <legend>Dictionary</legend>
 
-      @for (source of sources; track $index) {
-        <button type="button" (click)="openExternalDictionary(source)">{{codexMetadataRecord[source].name}}</button>
+      @for (detail of targetMetadataDetails; track $index) {
+        <button type="button" (click)="openExternalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
@@ -90,9 +90,9 @@
   @if (current && selectedSourceBook) {
 
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
-      @let parsedBook = parseBook(metadata, languageMetadataRecord[structure.lang], pipeUpdaterController);
+      @let parsedBook = parseBook(metadata, languageMetadataRecord[structure.language], pipeUpdaterController);
       <strong class="verseTitle">
-        {{codexMetadataRecord[structure.lang].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+        {{codexMetadataRecord[structure.language].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
       </strong>
 
       <app-scripture-metadata-component
@@ -113,7 +113,7 @@
 
         @if (bookInterlinearSource && projectData.interlineares) {
           @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
-          @let langInterlinearSource = codexMetadataRecord[item.source].lang;
+          @let langInterlinearSource = codexMetadataRecord[item.source].language;
           @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source].codex[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
           <app-interlinear-component

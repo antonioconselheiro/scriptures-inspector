@@ -247,8 +247,8 @@ export class ProjectMetadataService {
     this.systemService.autoSaveCurrentProject();
   }
 
-  parsePattern(serialized: PatternsSerialized, lang: Language): ParsedPatterns {
-    const normalizedFn = lang.normalizeFn ? lang.normalizeFn : (t: string) => t;
+  parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {
+    const normalizedFn = language.normalizeFn ? language.normalizeFn : (t: string) => t;
     let prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${normalizedFn(pattern)}`, 'u')]));
     let suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${normalizedFn(pattern)}$`, 'u')]));
 

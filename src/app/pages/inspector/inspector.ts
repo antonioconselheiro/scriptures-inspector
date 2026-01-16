@@ -190,15 +190,15 @@ export class Inspector implements OnInit {
     return 30;
   }
 
-  splitByPatterns(word: string, lang: 'hebraic' | 'geez' | 'greek'): string[] {
-    if (lang === 'hebraic') {
+  splitByPatterns(word: string, language: 'hebraic' | 'geez' | 'greek'): string[] {
+    if (language === 'hebraic') {
       return this.literalsPatternsService.splitByPatterns(this.hebraicPatterns, word);
-    } else if (lang === 'greek') {
+    } else if (language === 'greek') {
       return this.literalsPatternsService.splitByPatterns(this.greekPatterns, word);
-    } else if (lang === 'geez') {
+    } else if (language === 'geez') {
       return this.literalsPatternsService.splitByPatterns(this.geezPatterns, word);
     } else {
-      throw new Error('language not found: ' + lang);
+      throw new Error('language not found: ' + language);
     }
   }
 

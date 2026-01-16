@@ -63,7 +63,7 @@ export class ProjectTranslationMetadataService {
   }
 
   getInterlinear(
-    lang: LanguageUnionType,
+    language: LanguageUnionType,
     translation: TranslationInterlinear,
     current: CurrentChapter,
     translationVerse: SourceVerse,
@@ -75,7 +75,7 @@ export class ProjectTranslationMetadataService {
       interlinear = translation.target[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
-        return this.projectService.castSegmentIntoMetadataIndex(lang, interlinear.origin);
+        return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);
       }
     } catch {
 
