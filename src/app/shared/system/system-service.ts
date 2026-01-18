@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Book } from '@domain/book-model';
 import { CurrentBook } from '@domain/current-book-model';
-import { ProjectData2 } from '@domain/project-data-2-model';
+import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
@@ -91,7 +91,7 @@ export class SystemService {
     return Promise.resolve('~/project');
   }
 
-  async saveCurrentBook(project: Project, current: CurrentBook, data: ProjectData2): Promise<void> {
+  async saveCurrentBook(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
       await this.saveFile(project, structure.metadataEditor.target, current, data);
 
@@ -111,7 +111,7 @@ export class SystemService {
     });
   }
 
-  private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData2): Promise<void> {
+  private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData): Promise<void> {
     const file = await openFile(`${project.path}/target/${target}/${current.book}.json`, { write: true });
     await file.write(new TextEncoder().encode(JSON.stringify(content[target], null, 2)));
     await file.close();

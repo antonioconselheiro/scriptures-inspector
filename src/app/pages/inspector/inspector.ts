@@ -21,8 +21,6 @@ import { InterlinearGreekCustomTranslation } from './domain/interlinear-greek-cu
 import { InterlinearHebraicCustomTranslation } from './domain/interlinear-hebraic-custom-translation-model';
 import { NewTestmentScriptures } from './domain/new-testment-scriptures-model';
 import { OldTestmentScriptures } from './domain/old-testment-scriptures-model';
-import { TranslationBookVerse } from './domain/translation-book-verse-model';
-import { Translation } from './domain/translation-model';
 import { LexicalPipe } from './editor/shared/lexical-pipe';
 import { GematricsPipe } from './gematrics-pipe';
 import { PaleoPipe } from './paleo-pipe';
@@ -105,19 +103,7 @@ export class Inspector implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.readMetadata();
     this.readCustomTranslation();
-    this.readPatterns();
-    this.readInterlineares();
-    this.subscribeData();
-    this.subscribeParams();
-    this.readSelectedParalelTranslation();
-  }
-
-  private readSelectedParalelTranslation(): void {
-    const paralels: Array<string> = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
-    localStorage.setItem('paralelTranslations', '[]');
-    paralels.forEach(translation => this.loadTranslation(translation));
   }
 
   private readCustomTranslation(): void {
@@ -126,28 +112,11 @@ export class Inspector implements OnInit {
     this.customGeezTranslation = this.documentStorage.getCustomGeezTranslation();
   }
 
-
-
   private updateChapterTranslation(): void {
     this.chapterTranslations = this.translations.map(translation => {
       return this.translationService.getChapter(translation, this.currentBook, this.currentChapter);
     });
     this.cd.detectChanges();
-  }
-
-  loadTranslation(bible: string): void {
-    const paralels = JSON.parse(localStorage.getItem('paralelTranslations') || '[]');
-    if (paralels.includes(bible)) {
-      return;
-    }
-
-    localStorage.setItem('paralelTranslations', JSON.stringify([...paralels, bible]));
-    fetch(`https://antonioconselheiro.github.io/bible/src/${bible}`)
-      .then(res => res.json())
-      .then(translation => {
-        this.translations = [...this.translations, translation];
-        this.updateChapterTranslation();
-      });
   }
 
   cleanTranslationByIndex(index: number): void {

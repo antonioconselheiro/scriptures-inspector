@@ -1,15 +1,14 @@
-import { BookChapterVerseMetadata } from './book-chapter-verse-metadata-model';
-import { BookMetadataAttributes } from './book-metadata-attributes-model';
-import { BookVerse } from './book-verse-model';
-import { CodexRecord } from './codex-record';
-import { ProjectLanguage } from './project-language-model';
-import { TranslationInterlinear } from './translation-interlinear-model';
+import { BookInterlinearTarget } from './book-interlinear-target-model';
+import { BookMetadataTarget } from './book-metadata-target-model';
+import { Book } from './book-model';
+import { BookTranslationTarget } from './book-translation-target-model';
+import { KeyInterlinear } from './key-interlinear-type';
+import { KeyMetadata } from './key-metadata-type';
+import { KeyTranslation } from './key-translation-type';
 
-export interface ProjectData {
-  language: ProjectLanguage;
-  metadata: CodexRecord<BookMetadataAttributes, BookVerse<BookChapterVerseMetadata>>;
-  interlineares?: {
-    [source: string]: TranslationInterlinear
-  };
-  customTranslation?: CodexRecord<object, BookVerse<{ text: string, metadata?: string[] }>>;
+export type ProjectData = {
+  [target: KeyMetadata]: BookMetadataTarget,
+  [target: KeyTranslation]: BookTranslationTarget,
+  [target: KeyInterlinear]: BookInterlinearTarget,
+  [target: string]: Book<object, object>
 }

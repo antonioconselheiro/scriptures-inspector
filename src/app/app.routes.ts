@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { booksLoaderResolveFn } from '@shared/project/books-loader-resolve-fn';
+import { sourcesLoaderResolveFn as sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { repositoriesLoadResolverFn } from '@shared/project/repositories-load-resolver-fn';
 import { Inspector } from './pages/inspector/inspector';
 
@@ -8,7 +8,8 @@ export const routes: Routes = [
     path: 'book/:book/chapter/:chapter',
     runGuardsAndResolvers: 'pathParamsChange',
     resolve: {
-      books: booksLoaderResolveFn(),
+      sources: sourcesLoaderResolveFn(),
+      targets: targetsLoaderResolverFn(),
       repositories: repositoriesLoadResolverFn()
     },
     component: Inspector

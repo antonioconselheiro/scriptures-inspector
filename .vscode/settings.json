@@ -1,6 +1,8 @@
 {
   "workbench.colorTheme": "Cyberpunk+",
   "editor.tabSize": 2,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
   "editor.formatOnSave": false,
   "remote.forwardOnOpen": false
 }

@@ -54,7 +54,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   sourceVerse!: SourceVerse;
 
   @Input()
-  interlinear!: BookInterlinearTarget;
+  bookTarget!: BookInterlinearTarget;
 
   @Input()
   customTranslation: BookTranslationTarget | undefined;
@@ -73,7 +73,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const map = this.interlinear.chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
+    const map = this.bookTarget.chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
@@ -90,7 +90,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     interlinearValue: string
   ): void {
     this.projectTranslationMetadataService.onSelectInterlinearGeezToScripture(
-      this.interlinear,
+      this.bookTarget,
       this.current,
       this.sourceVerse,
       this.sourceVerse,
@@ -103,7 +103,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   getInterlinear(wordIndex: number): string {
     return this.projectTranslationMetadataService.getInterlinear(
       this.sourceLanguage,
-      this.interlinear,
+      this.bookTarget,
       this.current,
       this.sourceVerse,
       wordIndex
@@ -120,7 +120,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     }
 
     this.projectTranslationMetadataService.cleanTranslationInterlinear(
-      this.interlinear, this.current, this.sourceVerse
+      this.bookTarget, this.current, this.sourceVerse
     );
   }
 

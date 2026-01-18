@@ -8,14 +8,13 @@ import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData2 } from '@domain/project-data-2-model';
+import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
-import { getProjectViewingTranslationFn } from '@shared/project/get-project-viewing-translations-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
@@ -25,6 +24,10 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { KeyInterlinear } from '@domain/key-interlinear-type';
+import { KeyTranslation } from '@domain/key-translation-type';
+import { KeyMetadata } from '@domain/key-metadata-type';
+import { getProjectTargets } from '@shared/project/get-project-targets-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -44,8 +47,6 @@ export class EditorComponent implements OnInit {
   @Input()
   project!: Project;
 
-  projectData: ProjectData2 = {};
-
   current: CurrentChapter | null = null;
 
   formSelectedBook: string = '';
@@ -54,6 +55,8 @@ export class EditorComponent implements OnInit {
   showLegend = false;
   minimized = true;
   pipeUpdaterController = 1;
+
+  projectData: ProjectData = {};
 
   codexMetadataRecord: {
     [source: string]: Codex<LanguageUnionType>
@@ -78,7 +81,7 @@ export class EditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.subscribeData();
+    this.subscribeSources();
     this.subscribeParams();
   }
 
@@ -100,29 +103,35 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  private subscribeData(): void {
+  private subscribeSources(): void {
     this.activatedRoute.data.subscribe({
       next: data => {
         const sources = this.getProjectSources();
-        const translations = this.getProjectViewingTranslation();
+        const targets = this.getProjectTargets();
 
+        //
         const sourceBookRecord: {
           [source: string]: SourceBook | undefined
         } = {};
 
         sources.forEach(source => {
-          sourceBookRecord[source] = data['books'][source];
+          sourceBookRecord[source] = data['sources'][source];
         });
 
+        //
         const translationBookRecord: {
           [source: string]: SourceBook | undefined
         } = {};
 
-        translations.forEach(source => {
-          translationBookRecord[source] = data['books'][source];
+        this.project.translationViewer.forEach(source => {
+          translationBookRecord[source] = data['sources'][source];
         });
 
         this.translationBookRecord = translationBookRecord;
+
+        targets.forEach(target => {
+          this.projectData[target] = data['targets'][target]
+        });
       }
     });
   }
@@ -131,12 +140,12 @@ export class EditorComponent implements OnInit {
     return getProjectSourcesFn(this.project);
   }
 
-  getProjectTargetsMetadataDetails(): Array<TargetMetadataDetail> {
-    return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
+  getProjectTargets(): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
+    return getProjectTargets(this.project);
   }
 
-  getProjectViewingTranslation(): Array<string> {
-    return getProjectViewingTranslationFn(this.project);
+  getProjectTargetsMetadataDetails(): Array<TargetMetadataDetail> {
+    return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
