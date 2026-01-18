@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { PatternsSerialized } from '@domain/patterns-serialized';
-import { ProjectData2 } from '@domain/project-data-2-model';
-import { ProjectStructureMetadataEditor } from '@domain/project-structure-metadata-editor-model';
 import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-word-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { KeyMetadata } from '@domain/key-metadata-type';
-import { BookMetadata } from '@domain/book-metadata-model';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
+import { Book } from '@domain/book-model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +24,7 @@ export class ProjectMetadataService {
   ) { }
 
   createIfNotExistsWordMetadata(
-    data: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
@@ -46,19 +45,19 @@ export class ProjectMetadataService {
     //   };
     // }
 
-    if (!data.chapters[current.chapter]) {
-      data.chapters[current.chapter] = [];
+    if (!bookMetadata.chapters[current.chapter]) {
+      bookMetadata.chapters[current.chapter] = [];
     }
 
-    if (!data.chapters[current.chapter][current.verseIndex]) {
-      data.chapters[current.chapter][current.verseIndex] = {
+    if (!bookMetadata.chapters[current.chapter][current.verseIndex]) {
+      bookMetadata.chapters[current.chapter][current.verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = data.chapters[current.chapter][current.verseIndex].metadata || {};
-    data.chapters[current.chapter][current.verseIndex].metadata = metadata;
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata || {};
+    bookMetadata.chapters[current.chapter][current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
@@ -75,7 +74,7 @@ export class ProjectMetadataService {
 
   //  source text metadata methods
   getScriptureMetadataDefinedKind(
-    bookMetadata: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     segment: { index: number; word: string; }
@@ -101,7 +100,7 @@ export class ProjectMetadataService {
   }
 
   updateScripturesMetadata(
-    bookMetadata: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     kind: string,
@@ -125,17 +124,17 @@ export class ProjectMetadataService {
   }
 
   cleanScriptureMetadata(
-    data: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     current: CurrentVerseIndex
   ): void {
     if (
-      !data.chapters[current.chapter] ||
-      !data.chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters[current.chapter] ||
+      !bookMetadata.chapters[current.chapter][current.verseIndex]
     ) {
       return;
     }
 
-    const metadata = data.chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
       return;
     }
@@ -150,7 +149,7 @@ export class ProjectMetadataService {
   // word of God methods
   setAsWordOfGod(
     checked: boolean,
-    bookMetadata: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
@@ -170,7 +169,7 @@ export class ProjectMetadataService {
   }
 
   getScriptureMetadataWordOfGod(
-    bookMetadata: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
@@ -199,7 +198,7 @@ export class ProjectMetadataService {
 
   //
   updateLexical(
-    bookMetadata: BookMetadata,
+    bookMetadata: Book<BookMetadataAttributes, any>,
     word: string,
     lexicalValue: string
   ): void {
@@ -208,14 +207,14 @@ export class ProjectMetadataService {
   }
 
   getLexical(
-    data: { lexical: Record<string, string> },
+    data: Book<BookMetadataAttributes, any>,
     word: string
   ): string {
     return this.projectService.getLexical(data, word);
   }
 
   cleanLexicalInterlinear(
-    bookMetadata: BookMetadata,
+    bookMetadata: Book<BookMetadataAttributes, any>,
     eachWord: Array<Array<{ index: number; word: string; }>>
   ): void {
     eachWord.forEach(eachSegment => {
@@ -233,7 +232,7 @@ export class ProjectMetadataService {
   }
 
   cleanWordOfGodFromVerse(
-    bookMetadata: BookMetadata,
+    bookMetadata: BookMetadataTarget,
     current: CurrentVerseIndex
   ): void {
     if (

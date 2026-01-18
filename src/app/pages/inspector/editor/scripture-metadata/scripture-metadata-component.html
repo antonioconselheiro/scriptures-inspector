@@ -12,7 +12,7 @@
   }
   <tr>
     <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [target]="data.lang.source" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
       <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
@@ -22,7 +22,7 @@
     </td>
     <td></td>
   </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [target]="data.lang.source" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
@@ -84,7 +84,7 @@
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      @let lexical = word.word | lexical : data.metadata[current.book] : pipeUpdaterController;
+      @let lexical = word.word | lexical : bookTarget : pipeUpdaterController;
       <input type="text" [name]="'fieldLexical' + word.index" [placeholder]="word.word" #fieldLexical
         [style.width.px]="calcFieldSize(word.word, lexical)"
         (input)="updateLexical(fieldLexical, word.word)" [value]="lexical" />
@@ -153,13 +153,15 @@
   }
 </table>
 
-<app-custom-translation-component
-  [data]="data"
-  [current]="current"
-  [sourceBook]="sourceBook"
-  [parsedBook]="parsedBook"
-  [target]="data.lang.target"
-  [sourceVerse]="sourceVerse"
-  [eachWord]="eachWord"
-  [customTranslation]="customTranslation"
-></app-custom-translation-component>
+@if (customTranslation) {
+  <app-custom-translation-component
+    [bookTarget]="bookTarget"
+    [translationSourceLanguage]="sourceLanguage"
+    [current]="current"
+    [sourceBook]="sourceBook"
+    [parsedBook]="parsedBook"
+    [sourceVerse]="sourceVerse"
+    [eachWord]="eachWord"
+    [customTranslation]="customTranslation"
+  ></app-custom-translation-component>
+}

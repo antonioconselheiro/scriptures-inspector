@@ -11,8 +11,10 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData2 } from '@domain/project-data-2-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
+import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
+import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 import { getProjectViewingTranslationFn } from '@shared/project/get-project-viewing-translations-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -23,8 +25,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
-import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -242,19 +242,9 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  onAddPattern(option: {
-    word: string;
-    type: 'prefix' | 'suffix';
-    target: `${string}-metadata` | `${string}-interlinear`;
-  }): void {
-    const book = this.current?.book;
-    if (book) {
-      const bookMetadata = this.projectData[option.target];
-      const langMetadata = this.languageMetadataRecord[this.codexMetadataRecord[option.target].language];
-      const word = langMetadata.prefetchNormalizedToMatcher ? langMetadata.prefetchNormalizedToMatcher(option.word) : option.word;
-
-      bookMetadata.patterns[option.type].push(word);
-    }
+  onAddViewingTranslation(viewingTranslation: string): void {
+    this.project.translationViewer.push(viewingTranslation);
+    this.systemService.autoSaveCurrentProject();
   }
 
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {

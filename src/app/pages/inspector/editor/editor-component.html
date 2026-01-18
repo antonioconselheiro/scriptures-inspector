@@ -3,7 +3,7 @@
 <header [class.minimized]="minimized" class="tools">
   <img class="logo" src="script.png" />
   <form>
-    <app-translation-viewer-manager></app-translation-viewer-manager>
+    <app-translation-viewer-manager (addViewingTranslation)="onAddViewingTranslation($event)"></app-translation-viewer-manager>
 
     <fieldset>
       <legend>Change chapter</legend>
@@ -82,27 +82,29 @@
 </div>
 }
 
-<app-add-pattern-context-menu #addPatternMenuRef (optionSelected)="onAddPattern($event)"></app-add-pattern-context-menu>
+<app-add-pattern-context-menu #addPatternMenuRef></app-add-pattern-context-menu>
 
 @for (structure of project.structure; track $index) {
+  @let sourceCodex = codexMetadataRecord[structure.metadataEditor.source];
   @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
-  @let metadata = projectData[structure.metadataEditor.target];
-  @if (current && selectedSourceBook) {
+  @let bookMetadata = projectData[structure.metadataEditor.target];
+  @let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ? projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 
+  @if (current && selectedSourceBook) {
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
-      @let parsedBook = parseBook(metadata, languageMetadataRecord[structure.language], pipeUpdaterController);
+      @let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
+
       <strong class="verseTitle">
-        {{codexMetadataRecord[structure.language].data}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+        {{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
       </strong>
 
       <app-scripture-metadata-component
         [current]="current"
-        [projectData]="projectData"
-        [metadataEditor]="structure.metadataEditor"
+        [bookTarget]="bookMetadata"
         [parsedBook]="parsedBook",
         [sourceBook]="selectedSourceBook"
         [sourceVerse]="verse"
-        chapterTranslations
+        [customTranslation]="bookCustomTranslation"
         [addPatternMenuRef]="addPatternMenuRef"
         (showLegend)="showLegend = $event"
         [pipeUpdaterController]="pipeUpdaterController"
@@ -110,25 +112,26 @@
   
       @for (item of structure.interlinearEditor; track $index) {
         @let bookInterlinearSource = sourceBookRecord[item.source];
+        @let bookInterlinearTarget = projectData[item.target];
+        @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
-        @if (bookInterlinearSource && projectData.interlineares) {
+        @if (bookInterlinearSource) {
           @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
           @let langInterlinearSource = codexMetadataRecord[item.source].language;
-          @let parsedInterlinearBook = parseBook(projectData.interlineares[item.source].codex[current.book], languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+          @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
           <app-interlinear-component
             [current]="current"
-            [source]="item.source"
-            [projectData]="projectData"
-            [customTranslation]="item.customTranslationEditor"
-            [parsedBook]="parsedInterlinearBook"
-            [sourceVerse]="verseInterlinearSource"
-            [interlinear]="projectData.interlineares[item.source]"
-            [addPatternMenuRef]="addPatternMenuRef"
+            [sourceLanguage]="langInterlinearSource"
             [pipeUpdaterController]="pipeUpdaterController"
+            [parsedBook]="parsedInterlinearBook"
+            [sourceBook]="bookInterlinearSource"
+            [sourceVerse]="verseInterlinearSource"
+            [interlinear]="bookInterlinearTarget"
+            [customTranslation]="bookCustomTranslationTarget"
+            [addPatternMenuRef]="addPatternMenuRef"
           ></app-interlinear-component>
         }
-
       }
     }
   }

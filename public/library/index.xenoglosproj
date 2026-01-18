@@ -11,6 +11,10 @@
     "@remote/bible-pt-acf",
     "@remote/bible-pt-kja",
   ],
+  "translationViewer": {
+    "@remote/bible-pt-acf",
+    "@remote/bible-pt-kja"
+  },
   "target": {
     "language": "portuguese",
     "books": {
@@ -222,10 +226,6 @@
   },
   "structure": [
     {
-      "translationViewer": {
-        "@example/bible-pt-acf",
-        "@example/bible-pt-kja"
-      },
       "metadataEditor": {
         "source": "hebrew-stuttgartensia",
         "target": "hebrew-stuttgartensia-portuguese-metadata",
@@ -240,10 +240,6 @@
       }
     },
     {
-      "translationViewer": {
-        "@example/bible-pt-acf",
-        "@example/bible-pt-kja"
-      },
       "metadataEditor": {
         "source": "greek-elzeviriana",
         "target": "greek-elzeviriana-portuguese-metadata",

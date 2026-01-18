@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BookInterlinear } from '@domain/book-interlinear-model';
+import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { SourceVerse } from '@domain/source-verse-model';
@@ -18,7 +18,7 @@ export class ProjectTranslationMetadataService {
   ) { }
 
   onSelectInterlinearGeezToScripture(
-    interlinearTarget: BookInterlinear,
+    interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     translationVerse: SourceVerse,
@@ -65,7 +65,7 @@ export class ProjectTranslationMetadataService {
 
   getInterlinear(
     language: LanguageUnionType,
-    interlinearTarget: BookInterlinear,
+    interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
     translationVerse: SourceVerse,
     translationWordIndex: number
@@ -86,7 +86,7 @@ export class ProjectTranslationMetadataService {
   }
 
   cleanTranslationInterlinear(
-    interlinearTarget: BookInterlinear,
+    interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
     translationVerse: SourceVerse
   ): void {

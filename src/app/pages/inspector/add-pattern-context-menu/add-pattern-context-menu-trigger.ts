@@ -1,5 +1,8 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { AddPatternContextMenu } from './add-pattern-context-menu';
+import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Directive({
   selector: '[appAddPatternContextMenuTrigger]'
@@ -10,7 +13,10 @@ export class AddPatternContextMenuTrigger {
   contextMenu!: AddPatternContextMenu;
 
   @Input()
-  target!: `${string}-metadata` | `${string}-interlinear`;
+  sourceLanguage!: LanguageUnionType;
+
+  @Input()
+  bookTarget!: BookMetadataTarget | BookInterlinearTarget;
 
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {
@@ -22,7 +28,8 @@ export class AddPatternContextMenuTrigger {
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.contextMenu.visible = true;
-      this.contextMenu.target = this.target;
+      this.contextMenu.sourceLanguage = this.sourceLanguage;
+      this.contextMenu.bookTarget = this.bookTarget;
     } else {
       this.contextMenu.visible = false;
     }
@@ -34,5 +41,4 @@ export class AddPatternContextMenuTrigger {
       this.contextMenu.visible = false;
     }
   }
-
 }

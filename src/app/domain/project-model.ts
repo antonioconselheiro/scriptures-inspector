@@ -7,5 +7,6 @@ export interface Project {
   repositories: { [alias: string]: string };
   codex: Array<string>;
   target: ProjectTarget;
+  translationViewer: Array<string>;
   structure: Array<ProjectStructure>;
 }

@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
+import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData2 } from '@domain/project-data-2-model';
-import { ProjectStructureMetadataEditor } from '@domain/project-structure-metadata-editor-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -18,7 +19,6 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { LanguageUnionType } from '@domain/language-union-type';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -39,7 +39,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Input()
   pipeUpdaterController = 0;
-  
+
   @Input()
   sourceBook!: SourceBook;
 
@@ -50,13 +50,13 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   parsedBook!: ParsedBookMetadata;
 
   @Input()
-  sourceVerse!: BookVerse<{ text: string; }>
+  sourceVerse!: BookVerse<{ text: string; }>;
 
   @Input()
-  projectData: ProjectData2 = {};
+  bookTarget!: BookMetadataTarget;
 
   @Input()
-  metadataEditor!: ProjectStructureMetadataEditor;
+  customTranslation: BookTranslationTarget | undefined;
 
   @Input()
   viewingTranslationBookRecord: {
@@ -85,7 +85,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
-  getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>>}> {
+  getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>> }> {
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
       return {
         source,
@@ -109,7 +109,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   setAsWordOfGod(input: HTMLInputElement, segments: Array<WordSegment>): void {
     this.projectMetadataService.setAsWordOfGod(
       input.checked,
-      this.projectData[this.metadataEditor.source],
+      this.bookTarget,
+      this.sourceLanguage,
       this.getCurrent(this.sourceVerse.verse.index),
       this.sourceVerse,
       segments
@@ -118,7 +119,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   getScriptureMetadataWordOfGod(segments: Array<WordSegment>): boolean {
     return this.projectMetadataService.getScriptureMetadataWordOfGod(
-      this.projectData[this.metadataEditor.source],
+      this.bookTarget,
+      this.sourceLanguage,
       this.getCurrent(this.sourceVerse.verse.index),
       segments
     );
@@ -129,16 +131,28 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanWordOfGodFromVerse(this.data, this.getCurrent(this.sourceVerse.verse.index));
+    this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.sourceVerse.verse.index));
   }
 
   //  metadata
   getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    return this.projectMetadataService.getScriptureMetadataDefinedKind(this.data, this.getCurrent(this.sourceVerse.verse.index), segment);
+    return this.projectMetadataService.getScriptureMetadataDefinedKind(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.getCurrent(this.sourceVerse.verse.index),
+      segment
+    );
   }
 
   updateScripturesMetadata(select: HTMLSelectElement, source: SourceVerse, segment: WordSegment): void {
-    this.projectMetadataService.updateScripturesMetadata(this.data, this.getCurrent(source.verse.index), select.value, source, segment);
+    this.projectMetadataService.updateScripturesMetadata(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.getCurrent(source.verse.index),
+      select.value,
+      source,
+      segment
+    );
   }
 
   cleanScriptureMetadata(sourceVerseIndex: number): void {
@@ -146,6 +160,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanScriptureMetadata(this.data, this.getCurrent(sourceVerseIndex));
+    this.projectMetadataService.cleanScriptureMetadata(this.bookTarget, this.getCurrent(sourceVerseIndex));
   }
 }

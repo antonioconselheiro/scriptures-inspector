@@ -1,13 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { KeyTranslation } from '@domain/key-translation-type';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectData2 } from '@domain/project-data-2-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
@@ -40,9 +39,6 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   current!: CurrentChapter;
 
   @Input()
-  source!: string;
-
-  @Input()
   sourceLanguage!: LanguageUnionType;
 
   @Input()
@@ -58,16 +54,13 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   sourceVerse!: SourceVerse;
 
   @Input()
-  interlinear!: TranslationInterlinear;
+  interlinear!: BookInterlinearTarget;
 
+  @Input()
+  customTranslation: BookTranslationTarget | undefined;
+  
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
-
-  @Input()
-  customTranslation: KeyTranslation | undefined;
-
-  @Input()
-  projectData!: ProjectData2;
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -80,7 +73,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const map = this.projectData[this.interlinear.target].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
+    const map = this.interlinear.chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RepositoryRecord } from '@domain/repository-record';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
@@ -12,7 +12,10 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
   templateUrl: './translation-viewer-manager.html',
   styleUrl: './translation-viewer-manager.scss',
 })
-export class TranslationViewerManager  implements OnInit {
+export class TranslationViewerManager implements OnInit {
+
+  @Output()
+  addViewingTranslation = new EventEmitter<string>();
 
   repositories!: RepositoryRecord;
   readonly languageMetadataRecord = languageMetadataRecord;
@@ -41,5 +44,9 @@ export class TranslationViewerManager  implements OnInit {
         });
       }
     });
+  }
+
+  loadTranslation(viewingTranslation: string): void {
+    this.addViewingTranslation.next(viewingTranslation);
   }
 }

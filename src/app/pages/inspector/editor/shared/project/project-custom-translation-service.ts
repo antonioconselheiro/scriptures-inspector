@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BookChapterVerseMetadata } from '@domain/book-chapter-verse-metadata-model';
-import { BookInterlinear } from '@domain/book-interlinear-model';
-import { BookMetadata } from '@domain/book-metadata-model';
-import { BookTranslation } from '@domain/book-translation-model';
+import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
+import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { CustomTranslation } from '@domain/custom-translation-model';
 import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { KeyTranslation } from '@domain/key-translation-type';
-import { LanguageUnionType } from '@domain/language-union-type';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +23,7 @@ export class ProjectCustomTranslationService {
   ) { }
 
   private createCustomTranslationStructureIfNotExists(
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): string[] {
@@ -48,7 +46,7 @@ export class ProjectCustomTranslationService {
 
   private derivateTranslationToCustom(
     parsedBookMetadata: ParsedBookMetadata,
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
@@ -64,7 +62,7 @@ export class ProjectCustomTranslationService {
   private derivateInterlinearToCustom(
     translationSourceLanguage: LanguageUnionType,
     parsedBookMetadata: ParsedBookMetadata,
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
@@ -83,7 +81,7 @@ export class ProjectCustomTranslationService {
   derivateAllToCustom(
     translationSourceLanguage: LanguageUnionType,
     parsedBookMetadata: ParsedBookMetadata,
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
@@ -92,7 +90,7 @@ export class ProjectCustomTranslationService {
   }
 
   getCustomTranslationVerse(
-    customTranslation: BookTranslation, current: CurrentChapter, sourceVerse: SourceVerse
+    customTranslation: BookTranslationTarget, current: CurrentChapter, sourceVerse: SourceVerse
   ): CustomTranslationVerse | null {
     return customTranslation.chapters[current.chapter] &&
       customTranslation.chapters[current.chapter][sourceVerse.verse.index] || null;
@@ -100,7 +98,7 @@ export class ProjectCustomTranslationService {
 
   updateCustomTranslation(
     input: HTMLInputElement,
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
@@ -128,7 +126,7 @@ export class ProjectCustomTranslationService {
 
   cleanCustomTranslation(
     input: HTMLInputElement,
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
@@ -151,7 +149,7 @@ export class ProjectCustomTranslationService {
   }
 
   getCustomTranslationColor(
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -178,9 +176,9 @@ export class ProjectCustomTranslationService {
 
   getCustomTranslationStyleRole(
     translationSourceLanguage: LanguageUnionType,
-    bookMetadata: BookMetadata,
-    translation: BookInterlinear | undefined,
-    customTranslation: BookTranslation,
+    bookMetadata: BookMetadataTarget,
+    translation: BookInterlinearTarget | undefined,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -228,7 +226,7 @@ export class ProjectCustomTranslationService {
   }
 
   getCustomTranslationInterlinearValue(
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -243,7 +241,7 @@ export class ProjectCustomTranslationService {
   }
 
   saveCustomTranslationInterlinearMetadata(
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     value: string,
@@ -256,7 +254,7 @@ export class ProjectCustomTranslationService {
   }
 
   cleanInterlinear(
-    customTranslation: BookTranslation,
+    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): void {
