@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { BookInterlinear } from '@domain/book-interlinear-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { SourceVerse } from '@domain/source-verse-model';
-import { TranslationInterlinear } from '@domain/translation-interlinear-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
@@ -18,34 +18,35 @@ export class ProjectTranslationMetadataService {
   ) { }
 
   onSelectInterlinearGeezToScripture(
-    translation: TranslationInterlinear,
+    interlinearTarget: BookInterlinear,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     translationVerse: SourceVerse,
     translationWordIndex: number,
     translationWord: string,
-    interlinear: string
+    interlinearOptionValue: string
   ): void {
-    const [scriptureWordIndexString, scriptureWord] = interlinear.split('-');
+    const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
     const scriptureVerseNumber = Number(sourceVerse.verse.start);
     const geezVerseNumber = Number(translationVerse.verse.start);
 
-    if (!translation.target[current.book]) {
-      translation.target[current.book] = {
-        chapters: []
-      };
+    //  TODO: mover created if not exists para o resolver
+    // if (!interlinear.target[current.book]) {
+    //   interlinear.target[current.book] = {
+    //     chapters: []
+    //   };
+    // }
+
+    if (!interlinearTarget.chapters[current.chapter]) {
+      interlinearTarget.chapters[current.chapter] = [];
     }
 
-    if (!translation.target[current.book].chapters[current.chapter]) {
-      translation.target[current.book].chapters[current.chapter] = [];
+    if (!interlinearTarget.chapters[current.chapter][translationVerse.verse.index]) {
+      interlinearTarget.chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    if (!translation.target[current.book].chapters[current.chapter][translationVerse.verse.index]) {
-      translation.target[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
-    }
-
-    translation.target[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
+    interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
       origin: {
         verse: scriptureVerseNumber,
         index: scriptureWordIndex,
@@ -64,7 +65,7 @@ export class ProjectTranslationMetadataService {
 
   getInterlinear(
     language: LanguageUnionType,
-    translation: TranslationInterlinear,
+    interlinearTarget: BookInterlinear,
     current: CurrentChapter,
     translationVerse: SourceVerse,
     translationWordIndex: number
@@ -72,7 +73,7 @@ export class ProjectTranslationMetadataService {
     let interlinear: TranslationInterlinearVerse;
 
     try {
-      interlinear = translation.target[current.book].chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
+      interlinear = interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
         return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);
@@ -85,19 +86,18 @@ export class ProjectTranslationMetadataService {
   }
 
   cleanTranslationInterlinear(
-    translation: TranslationInterlinear,
+    interlinearTarget: BookInterlinear,
     current: CurrentChapter,
     translationVerse: SourceVerse
   ): void {
     if (
-      !translation.target[current.book] ||
-      !translation.target[current.book].chapters[current.chapter]
+      !interlinearTarget.chapters[current.chapter]
     ) {
       return;
     }
 
-    if (translation.target[current.book].chapters[current.chapter][translationVerse.verse.index]) {
-      translation.target[current.book].chapters[current.chapter][translationVerse.verse.index] = [];
+    if (interlinearTarget.chapters[current.chapter][translationVerse.verse.index]) {
+      interlinearTarget.chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
     this.systemService.autoSaveCurrentProject();

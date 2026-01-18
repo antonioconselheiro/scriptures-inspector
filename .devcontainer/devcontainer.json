@@ -21,7 +21,8 @@
         "rust-lang.rust-analyzer",
         "dustypomerleau.rust-syntax",
         "BarbossHack.crates-io",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "d0whc3r.better-find-unused-exports"
       ]
     }
   }

@@ -10,6 +10,9 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { KeyMetadata } from '@domain/key-metadata-type';
+import { BookMetadata } from '@domain/book-metadata-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +25,8 @@ export class ProjectMetadataService {
   ) { }
 
   createIfNotExistsWordMetadata(
-    data: ProjectData2,
-    editor: ProjectStructureMetadataEditor,
+    data: BookMetadata,
+    sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
     segments: Array<WordSegment> = []
@@ -32,33 +35,33 @@ export class ProjectMetadataService {
   } {
     //  TODO: isso não pode ficar aqui, a criação da estrutura base do metadata precisa vir antes da inserção dele via url,
     //  a criação aqui não poderá ser enxergada no contexto onde será salvo as alterações
-    if (!data[editor.target]) {
-      data[editor.target] = {
-        chapters: [],
-        patterns: {
-          prefix: [],
-          suffix: []
-        },
-        lexical: {}
-      };
+    // if (!data[editor.target]) {
+    //   data[editor.target] = {
+    //     chapters: [],
+    //     patterns: {
+    //       prefix: [],
+    //       suffix: []
+    //     },
+    //     lexical: {}
+    //   };
+    // }
+
+    if (!data.chapters[current.chapter]) {
+      data.chapters[current.chapter] = [];
     }
 
-    if (!data[editor.target].chapters[current.chapter]) {
-      data[editor.target].chapters[current.chapter] = [];
-    }
-
-    if (!data[editor.target].chapters[current.chapter][current.verseIndex]) {
-      data[editor.target].chapters[current.chapter][current.verseIndex] = {
+    if (!data.chapters[current.chapter][current.verseIndex]) {
+      data.chapters[current.chapter][current.verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = data[editor.target].chapters[current.chapter][current.verseIndex].metadata || {};
-    data[editor.target].chapters[current.chapter][current.verseIndex].metadata = metadata;
+    const metadata = data.chapters[current.chapter][current.verseIndex].metadata || {};
+    data.chapters[current.chapter][current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
+      const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (!metadata[key]) {
         metadata[key] = {
           kind: '',
@@ -72,25 +75,24 @@ export class ProjectMetadataService {
 
   //  source text metadata methods
   getScriptureMetadataDefinedKind(
-    data: ProjectData2,
-    editor: ProjectStructureMetadataEditor,
+    bookMetadata: BookMetadata,
+    sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     segment: { index: number; word: string; }
   ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
     if (
-      !data[editor.target] ||
-      !data[editor.target].chapters[current.chapter] ||
-      !data[editor.target].chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters[current.chapter] ||
+      !bookMetadata.chapters[current.chapter][current.verseIndex]
     ) {
       return '';
     }
 
-    const metadata = data[editor.target].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
       return '';
     }
 
-    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment)
+    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment)
     if (!metadata[metadataKey]) {
       return '';
     }
@@ -99,13 +101,15 @@ export class ProjectMetadataService {
   }
 
   updateScripturesMetadata(
+    bookMetadata: BookMetadata,
+    sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     kind: string,
     verse: SourceVerse,
     segment: { index: number; word: string; }
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(data, current, verse, [segment]);
-    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
+    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, [segment]);
+    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
 
     if (this.isWordSegmentMetadataGuard(kind)) {
       wordMetadata[metadataIndex].kind = kind;
@@ -121,17 +125,17 @@ export class ProjectMetadataService {
   }
 
   cleanScriptureMetadata(
+    data: BookMetadata,
     current: CurrentVerseIndex
   ): void {
     if (
-      !data.metadata[current.book] ||
-      !data.metadata[current.book].chapters[current.chapter] ||
-      !data.metadata[current.book].chapters[current.chapter][current.verseIndex]
+      !data.chapters[current.chapter] ||
+      !data.chapters[current.chapter][current.verseIndex]
     ) {
       return;
     }
 
-    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = data.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
       return;
     }
@@ -146,13 +150,15 @@ export class ProjectMetadataService {
   // word of God methods
   setAsWordOfGod(
     checked: boolean,
+    bookMetadata: BookMetadata,
+    sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
     segments: Array<WordSegment>
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(data, current, verse, segments);
+    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, segments);
     segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segment);
+      const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
@@ -164,24 +170,25 @@ export class ProjectMetadataService {
   }
 
   getScriptureMetadataWordOfGod(
+    bookMetadata: BookMetadata,
+    sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
   ): boolean {
     if (
-      !data.metadata[current.book] ||
-      !data.metadata[current.book].chapters ||
-      !data.metadata[current.book].chapters[current.chapter] ||
-      !data.metadata[current.book].chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters ||
+      !bookMetadata.chapters[current.chapter] ||
+      !bookMetadata.chapters[current.chapter][current.verseIndex]
     ) {
       return false;
     }
 
-    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata || !segments[0]) {
       return false;
     }
 
-    const segment = this.projectService.castSegmentIntoMetadataIndex(data.lang.source, segments[0]);
+    const segment = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segments[0]);
     const segmentData = metadata[segment];
     if (!segmentData) {
       return false;
@@ -192,28 +199,28 @@ export class ProjectMetadataService {
 
   //
   updateLexical(
-    book: string,
+    bookMetadata: BookMetadata,
     word: string,
     lexicalValue: string
   ): void {
-    project.metadata[book].lexical[word] = lexicalValue;
+    bookMetadata.lexical[word] = lexicalValue;
     this.systemService.autoSaveCurrentProject();
   }
 
   getLexical(
-    book: string,
-    word: string,
+    data: { lexical: Record<string, string> },
+    word: string
   ): string {
-    return this.projectService.getLexical(project, book, word);
+    return this.projectService.getLexical(data, word);
   }
 
   cleanLexicalInterlinear(
-    book: string,
+    bookMetadata: BookMetadata,
     eachWord: Array<Array<{ index: number; word: string; }>>
   ): void {
     eachWord.forEach(eachSegment => {
       eachSegment.forEach(segment => {
-        delete project.metadata[book].lexical[segment.word];
+        delete bookMetadata.lexical[segment.word];
       });
     });
 
@@ -225,17 +232,19 @@ export class ProjectMetadataService {
     return ['godname', 'keyword', 'character', 'amount'].includes(value);
   }
 
-  cleanWordOfGodFromVerse(current: CurrentVerseIndex): void {
+  cleanWordOfGodFromVerse(
+    bookMetadata: BookMetadata,
+    current: CurrentVerseIndex
+  ): void {
     if (
-      !data.metadata[current.book] ||
-      !data.metadata[current.book].chapters[current.chapter] ||
-      !data.metadata[current.book].chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters[current.chapter] ||
+      !bookMetadata.chapters[current.chapter][current.verseIndex]
     ) {
       return;
     }
 
 
-    const metadata = data.metadata[current.book].chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
       return;
     }

@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
-import { BookMetadata } from '@domain/book-metadata-model';
+import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
@@ -44,6 +44,8 @@ export class EditorComponent implements OnInit {
   @Input()
   project!: Project;
 
+  projectData: ProjectData2 = {};
+
   current: CurrentChapter | null = null;
 
   formSelectedBook: string = '';
@@ -64,8 +66,6 @@ export class EditorComponent implements OnInit {
   translationBookRecord: {
     readonly [source: string]: Readonly<SourceBook> | undefined
   } = {};
-
-  projectData: ProjectData2 = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -257,7 +257,7 @@ export class EditorComponent implements OnInit {
     }
   }
 
-  parseBook(book: BookMetadata, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
+  parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
     const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, language);
 

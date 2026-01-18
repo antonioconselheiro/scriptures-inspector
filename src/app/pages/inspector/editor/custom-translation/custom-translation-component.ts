@@ -12,6 +12,8 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { ProjectData2 } from '@domain/project-data-2-model';
+import { KeyTranslation } from '@domain/key-translation-type';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -47,7 +49,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   eachWord!: Array<Array<{ index: number; word: string; }>>;
 
   @Input()
-  customTranslation!: CustomTranslation;
+  customTranslation!: KeyTranslation;
+
+  @Input()
+  projectData!: ProjectData2;
 
   pipeUpdaterController = 0;
 
@@ -74,12 +79,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   updateCustomTranslation(input: HTMLInputElement): void {
-    this.projectCustomTranslationService.updateCustomTranslation(input, this.customTranslation, this.current, this.sourceVerse);
+    this.projectCustomTranslationService.updateCustomTranslation(input, this.projectData[this.customTranslation], this.current, this.sourceVerse);
   }
 
   getCustomTranslationVerse(): CustomTranslationVerse | null {
     return this.projectCustomTranslationService.getCustomTranslationVerse(
-      this.customTranslation, this.current, this.sourceVerse
+      this.projectData[this.customTranslation], this.current, this.sourceVerse
     );
   }
 
@@ -88,7 +93,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectCustomTranslationService.cleanCustomTranslation(input, this.customTranslation, this.current, this.sourceVerse);
+    this.projectCustomTranslationService.cleanCustomTranslation(input, this.projectData[this.customTranslation], this.current, this.sourceVerse);
     this.pipeUpdaterController++;
   }
 

@@ -1,7 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { KeyTranslation } from '@domain/key-translation-type';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData2 } from '@domain/project-data-2-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinear } from '@domain/translation-interlinear-model';
@@ -17,10 +20,6 @@ import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { ProjectTranslationMetadataService } from '../shared/project/project-translation-metadata-service';
-import { Book } from '@domain/book-model';
-import { BookMetadata } from '@domain/book-metadata-model';
-import { ProjectData2 } from '@domain/project-data-2-model';
-import { LanguageUnionType } from '@domain/language-union-type';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -65,7 +64,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Input()
-  customTranslation: string | undefined;
+  customTranslation: KeyTranslation | undefined;
 
   @Input()
   projectData!: ProjectData2;
@@ -81,11 +80,14 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const map = this.interlinear.target[this.current.book].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
+    const map = this.projectData[this.interlinear.target].chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix(text: string) {
+  splitIntoMatrix(text: string): Array<Array<{
+    index: number;
+    word: string;
+  }>> {
     return this.projectService.splitIntoMatrix(this.parsedBook, text);
   }
 
@@ -107,7 +109,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
 
   getInterlinear(wordIndex: number): string {
     return this.projectTranslationMetadataService.getInterlinear(
-      this.data.lang.source,
+      this.sourceLanguage,
       this.interlinear,
       this.current,
       this.sourceVerse,
@@ -116,7 +118,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
-    return this.projectService.castSegmentIntoMetadataIndex(this.data.lang.source, segment);
+    return this.projectService.castSegmentIntoMetadataIndex(this.sourceLanguage, segment);
   }
 
   cleanTranslationInterlinear() {
