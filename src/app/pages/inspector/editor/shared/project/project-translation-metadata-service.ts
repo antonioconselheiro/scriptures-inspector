@@ -31,13 +31,6 @@ export class ProjectTranslationMetadataService {
     const scriptureVerseNumber = Number(sourceVerse.verse.start);
     const geezVerseNumber = Number(translationVerse.verse.start);
 
-    //  TODO: mover created if not exists para o resolver
-    // if (!interlinear.target[current.book]) {
-    //   interlinear.target[current.book] = {
-    //     chapters: []
-    //   };
-    // }
-
     if (!interlinearTarget.chapters[current.chapter]) {
       interlinearTarget.chapters[current.chapter] = [];
     }

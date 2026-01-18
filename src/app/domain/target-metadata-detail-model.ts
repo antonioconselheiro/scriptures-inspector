@@ -1,3 +1,5 @@
+import { KeyInterlinear } from './key-interlinear-type';
+import { KeyMetadata } from './key-metadata-type';
 import { LanguageUnionType } from './language-union-type';
 
 export type TargetMetadataDetail = {
@@ -6,8 +8,8 @@ export type TargetMetadataDetail = {
   languageTarget: string;
 } & ({
   type: 'metadata';
-  target: `${string}-metadata`;
+  target: KeyMetadata;
 } | {
   type: 'interlinear';
-  target: `${string}-interlinear`;
+  target: KeyInterlinear;
 });

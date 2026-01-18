@@ -32,19 +32,6 @@ export class ProjectMetadataService {
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    //  TODO: isso não pode ficar aqui, a criação da estrutura base do metadata precisa vir antes da inserção dele via url,
-    //  a criação aqui não poderá ser enxergada no contexto onde será salvo as alterações
-    // if (!data[editor.target]) {
-    //   data[editor.target] = {
-    //     chapters: [],
-    //     patterns: {
-    //       prefix: [],
-    //       suffix: []
-    //     },
-    //     lexical: {}
-    //   };
-    // }
-
     if (!bookMetadata.chapters[current.chapter]) {
       bookMetadata.chapters[current.chapter] = [];
     }

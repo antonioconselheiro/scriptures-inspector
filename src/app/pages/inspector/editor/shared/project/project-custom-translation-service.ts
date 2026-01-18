@@ -27,7 +27,6 @@ export class ProjectCustomTranslationService {
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): string[] {
-    //  TODO: criação deve vir antes da inserção dos dados na url
     if (!customTranslation.chapters[current.chapter]) {
       customTranslation.chapters[current.chapter] = [];
     }

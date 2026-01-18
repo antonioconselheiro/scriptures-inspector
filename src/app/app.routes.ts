@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
-import { sourcesLoaderResolveFn as sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { repositoriesLoadResolverFn } from '@shared/project/repositories-load-resolver-fn';
+import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
+import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
 import { Inspector } from './pages/inspector/inspector';
 
 export const routes: Routes = [
@@ -9,7 +10,7 @@ export const routes: Routes = [
     runGuardsAndResolvers: 'pathParamsChange',
     resolve: {
       sources: sourcesLoaderResolveFn(),
-      targets: targetsLoaderResolverFn(),
+      targets: targetsLoaderResolveFn(),
       repositories: repositoriesLoadResolverFn()
     },
     component: Inspector
