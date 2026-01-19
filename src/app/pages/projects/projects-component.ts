@@ -16,6 +16,10 @@ export class ProjectsComponent {
     private modalService: ModalService
   ) { }
 
+  onClickOpenProject(): void {
+    
+  }
+
   onClickNewProject(): void {
     this.modalService
       .createModal(NewProjectDialog)
