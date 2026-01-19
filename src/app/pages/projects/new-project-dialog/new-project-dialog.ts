@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { languageList } from '../../../domain/language-list';
-import { LanguageUnionType } from '../../../domain/language-union-type';
-import { languageMetadataRecord } from '../../../shared/language-metadata/language-metadata-record';
-import { SystemService } from '../../../shared/system/system-service';
-import { Language } from '../../../domain/language-model';
+import { ModalableDirective } from '@belomonte/async-modal-ngx';
+import { languageList } from '@domain/language-list';
+import { Language } from '@domain/language-model';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { SystemService } from '@shared/system/system-service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-project-dialog',
@@ -16,17 +18,19 @@ import { Language } from '../../../domain/language-model';
   templateUrl: './new-project-dialog.html',
   styleUrl: './new-project-dialog.scss'
 })
-export class NewProjectDialog {
+export class NewProjectDialog extends ModalableDirective<object, object> {
 
   readonly languages = languageList;
   readonly languageMeta: { [language: string]: Language } = languageMetadataRecord;
 
   form: FormGroup;
+  override response = new Subject<object | void>();
 
   constructor(
     private fb: FormBuilder,
     private system: SystemService
   ) {
+    super();
     this.form = this.fb.group({
       name: ['', Validators.required],
       destination: ['', Validators.required],
@@ -95,3 +99,4 @@ export class NewProjectDialog {
     await this.system.saveProjectConfig();
   }
 }
+
