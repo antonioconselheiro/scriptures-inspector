@@ -1,0 +1,161 @@
+:host {
+  margin-top: 5rem;
+  display: block;
+}
+
+th {
+  min-width: 135px;
+}
+
+header.tools {
+  position: fixed;
+  display: flex;
+  top: 0px;
+  width: 100%;
+  background: #f8f8f8;
+  box-shadow: gray 0 0 15px;
+
+  img.logo {
+    float: left;
+    padding: .5rem 1rem;
+    align-self: center;
+    width: 24px;
+  }
+
+  >form {
+    display: flex;
+    flex: 1 1 0px;
+    border: 1px solid;
+    padding: 10px;
+
+    button {
+      cursor: pointer;
+    }
+  }
+}
+
+table[border="1"] {
+  margin: 1rem auto;
+}
+
+strong.verseTitle {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.legendBox {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+.legendBox table {
+  border-collapse: collapse;
+}
+
+.legendBox table th,
+.legendBox table td {
+  padding: 6px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebuttons {
+  display: flex;
+  flex: 1 1 0px;
+  flex-direction: row-reverse;
+}
+
+.minimize {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  margin: 0;
+  padding: 0;
+  align-self: anchor-center;
+  justify-self: flex-end;
+  transition: transform 1s;
+}
+
+.minimized .logo {
+  display: none;
+}
+
+.minimized form {
+  height: 8px;
+}
+
+.minimized fieldset {
+  visibility: hidden;
+  max-height: 0px;
+}
+
+.minimized .minimize {
+  transform: rotate(180deg);
+}
+
+.literalInput {
+  min-width: 20px;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.customTranslation {
+  width: calc(100% - 7px);
+}
+
+.prisma1 {
+  color: rgb(211, 1, 1);
+}
+
+.prisma2 {
+  color: rgb(236, 106, 0);
+}
+
+.prisma3 {
+  color: rgb(206, 203, 0);
+}
+
+.prisma4 {
+  color: rgb(77, 187, 5);
+}
+
+.prisma5 {
+  color: rgb(1, 146, 165);
+}
+
+.prisma6 {
+  color: rgb(59, 0, 168);
+}
+
+.prisma7 {
+  color: rgb(206, 1, 179);
+}
+
+.metagodsaid {
+  color: red;
+}
+
+.metagodname {
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.metakeyword {
+  font-weight: bold;
+}
+
+.metacharacter {
+  text-decoration: underline;
+}
+
+.metaamount {
+  background-color: yellow;
+}

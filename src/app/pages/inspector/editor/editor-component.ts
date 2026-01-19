@@ -5,6 +5,9 @@ import { ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { KeyInterlinear } from '@domain/key-interlinear-type';
+import { KeyMetadata } from '@domain/key-metadata-type';
+import { KeyTranslation } from '@domain/key-translation-type';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
@@ -14,6 +17,7 @@ import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
+import { getProjectTargets } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -24,10 +28,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { KeyInterlinear } from '@domain/key-interlinear-type';
-import { KeyTranslation } from '@domain/key-translation-type';
-import { KeyMetadata } from '@domain/key-metadata-type';
-import { getProjectTargets } from '@shared/project/get-project-targets-fn';
 
 @Component({
   selector: 'app-editor-component',
