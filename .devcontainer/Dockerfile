@@ -6,6 +6,7 @@ ENV LC_ALL=C.UTF-8
 ENV TZ=America/Sao_Paulo
 ENV DEBUG_COLORS=true
 ENV FORCE_COLOR=true
+ENV RUST_BACKTRACE=1
 ENV NG_CLI_COMPLETION=false
 ENV CHROME_BIN=/usr/bin/chromium
 ENV PATH="/root/.cargo/bin:${PATH}"

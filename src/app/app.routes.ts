@@ -3,12 +3,12 @@ import { repositoriesLoadResolverFn } from '@shared/project/repositories-load-re
 import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
 import { EditorComponent } from './pages/inspector/editor/editor-component';
-import { ProjectsComponent } from './pages/projects/projects-component';
+import { OpenComponent } from './pages/open-component/open-component';
 
 export const routes: Routes = [
   {
-    path: 'projects',
-    component: ProjectsComponent
+    path: 'open',
+    component: OpenComponent
   },
 
   {
@@ -25,6 +25,6 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/projects'
+    redirectTo: '/open'
   }
 ];
