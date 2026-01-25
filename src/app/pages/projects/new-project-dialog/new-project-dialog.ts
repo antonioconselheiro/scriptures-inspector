@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { languageList } from '@domain/language-list';
 import { Language } from '@domain/language-model';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { RepositoryRecord } from '@domain/repository-record';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { SystemService } from '@shared/system/system-service';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-new-project-dialog',
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    FormsModule
   ],
   templateUrl: './new-project-dialog.html',
   styleUrl: './new-project-dialog.scss'
@@ -23,80 +24,90 @@ export class NewProjectDialog extends ModalableDirective<object, object> {
   readonly languages = languageList;
   readonly languageMeta: { [language: string]: Language } = languageMetadataRecord;
 
-  form: FormGroup;
   override response = new Subject<object | void>();
 
+  remoteCodex: Record<string, string> = {};
+
+  newProject = {
+    basicInfo: {
+      name: '',
+      language: '',
+      destination: ''
+    },
+
+    repositories: [{
+      alias: '',
+      address: ''
+    }],
+
+    relatedCodex: [
+      {
+        key: '',
+        name: '',
+        type: 'disk',
+        from: ''
+      }
+    ],
+
+    targetBooks: [
+      {
+        key: '',
+        name: ''
+      }
+    ],
+
+    viewingCodex: [],
+    metadataCodex: [
+      {
+        source: '',
+        customTranslation: true,
+        interlineares: [
+          {
+            source: '',
+            customTranslation: true
+          }
+        ]
+      }
+    ]
+  };
+
   constructor(
-    private fb: FormBuilder,
+    private httpClient: HttpClient,
     private system: SystemService
   ) {
     super();
-    this.form = this.fb.group({
-      name: ['', Validators.required],
-      destination: ['', Validators.required],
-
-      purposes: this.fb.array([]),
-      codex: this.fb.array([])
-    });
   }
 
-  get purposes(): FormArray {
-    return this.form.get('purposes') as FormArray;
+  chooseDestination(): void {
+    this.system.chooseFolder().then(destination => this.newProject.basicInfo.destination = destination);
   }
 
-  get codex(): FormArray {
-    return this.form.get('codex') as FormArray;
+  addRepository(alias: HTMLInputElement, address: HTMLInputElement): void {
+    if (alias.value && /^https:\/\/[^ ]*\/repository.json$/.test(address.value)) {
+      firstValueFrom(this.httpClient.get<RepositoryRecord>(address.value))
+        .then(repositoryData => {
+          Object
+            .keys(repositoryData)
+            .map(language => Object.values(repositoryData[language].translations))
+            .flat()
+            .forEach(codex => this.remoteCodex[`${alias.value}/${codex.key}`] = codex.name);
+
+          this.newProject.repositories.push({
+            alias: alias.value,
+            address: address.value
+          });
+
+          alias.value = '';
+          address.value = '';
+        });
+    }
   }
 
-  books(codexIndex: number): FormArray {
-    return this.codex.at(codexIndex).get('books') as FormArray;
+  addRelatedCodexFromRepository(remoteCodex: HTMLInputElement): void {
+    this.newProject.relatedCodex
   }
 
-  addPurpose(): void {
-    this.purposes.push(
-      this.fb.group({
-        name: ['', Validators.required],
-        kind: ['', Validators.required],
-        language: [null as LanguageUnionType | null, Validators.required]
-      })
-    );
-  }
+  addRelatedCodexFromDisk(): void {
 
-  addCodex(): void {
-    this.codex.push(
-      this.fb.group({
-        name: ['', Validators.required],
-        purpose: ['', Validators.required],
-        books: this.fb.array([])
-      })
-    );
-  }
-
-  async addBook(codexIndex: number): Promise<void> {
-    const folder = await this.system.chooseFolder();
-
-    this.books(codexIndex).push(
-      this.fb.group({
-        book: ['', Validators.required],
-        folder: [folder, Validators.required]
-      })
-    );
-  }
-
-  async chooseDestination(): Promise<void> {
-    const folder = await this.system.chooseFolder();
-    this.form.patchValue({ destination: folder });
-  }
-
-  async submit(): Promise<void> {
-    if (this.form.invalid) return;
-
-    const projectConfiguration = this.form.value;
-
-    console.log('PROJECT CONFIGURATION JSON:', projectConfiguration);
-
-    // TODO:
-    await this.system.saveProjectConfig();
   }
 }
-

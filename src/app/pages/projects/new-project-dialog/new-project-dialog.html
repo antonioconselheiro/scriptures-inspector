@@ -1,121 +1,168 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
+<form>
   <h1>New Project</h1>
 
   <div>
-    <label>Name</label>
-    <input type="text" formControlName="name" />
-  </div>
+    <div class="fieldGroup">
+      <label>Name</label>
+      <input [(ngModel)]="newProject.basicInfo.name" type="text" />
+    </div>
 
-  <div>
-    <label>Destination</label>
-    <input type="text" formControlName="destination" readonly />
+    <div class="fieldGroup">
+      <label>Language target</label>
+      <input [(ngModel)]="newProject.basicInfo.language" type="text" />
+    </div>
+
+    <div class="fieldGroup">
+      <label>Destination</label>
+      <input [(ngModel)]="newProject.basicInfo.destination" type="text" readonly />
+    </div>
     <button type="button" (click)="chooseDestination()">Choose</button>
   </div>
 
+  @if (newProject.basicInfo.language) {
   <fieldset>
-    <legend>Project Structure</legend>
+    <legend>Add Repository</legend>
 
-    <button type="button" (click)="addPurpose()">+ Purpose</button>
-
-    <div formArrayName="purposes">
-      @for (p of purposes.controls; track $index) {
-      <div [formGroupName]="$index">
-        <input placeholder="Purpose name" formControlName="name" />
-
-        <select formControlName="kind">
-          <optgroup label="Basic">
-            <option value="translation-viewer">Reference Translation</option>
-            <option value="metadata-editor">Metadata Editor</option>
-          </optgroup>
-
-          <optgroup label="Old Testament Codex">
-            <option value="translation-editor">
-              Interlinear Translation Relation
-            </option>
-            <option value="custom-translation">
-              Custom Translation
-            </option>
-          </optgroup>
-        </select>
-
-        <select formControlName="language">
-          <option [ngValue]="null"></option>
-          @for (lang of languages; track $index) {
-            <option [value]="lang">
-              {{ languageMeta[lang].name }}
-            </option>
-          }
-        </select>
-      </div>
-      }
-    </div>
-
-    <!-- Purposes table -->
-    <table border="1">
+    <table>
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Kind</th>
-          <th>Language</th>
+          <th>Codex</th>
+          <th>From</th>
         </tr>
       </thead>
+    </table>
+
+    <div class="fieldGroup">
+      <label>Repository Alias</label>
+      <input #repositoryAlias type="text" />
+    </div>
+
+    <div class="fieldGroup">
+      <label>Repository Address</label>
+      <input #repositoryAddress type="text" placeholder="https://.../repository.json" />
+    </div>
+
+    <button type="button" (click)="addRepository(repositoryAlias, repositoryAddress)">+ Repository</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Import Codex</legend>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Codex</th>
+          <th>From</th>
+        </tr>
+      </thead>
+
       <tbody>
-        @for (p of purposes.value; track $index) {
-          <tr>
-            <td>{{ p.name }}</td>
-            <td>{{ p.kind }}</td>
-            <td>
-              {{ languageMeta[p.language]?.name }}
-            </td>
-          </tr>
+        @for (codex of newProject.relatedCodex; track $index) {
+        <tr>
+          <td>{{codex.key}}</td>
+          <td>{{codex.from}}</td>
+        </tr>
         }
       </tbody>
     </table>
+
+    <div class="fieldGroup">
+      <label>Search Remote Codex</label>
+      <input #searchRemoteCodex list="datalistSearchRemoteCodex" type="search" />
+      <datalist id="datalistSearchRemoteCodex">
+        @for (codex of remoteCodex | keyvalue; track $index) {
+        <option [value]="codex.key">{{codex.value}}</option>
+        }
+      </datalist>
+    </div>
+
+    <button (click)="addRelatedCodexFromRepository(searchRemoteCodex)" type="button">+ from repositories</button>
+    <button (click)="addRelatedCodexFromDisk()" type="button">+ from disk</button>
   </fieldset>
 
   <fieldset>
-    <legend>Project Codex</legend>
+    <legend>Project Target Books</legend>
 
-    <button type="button" (click)="addCodex()">+ Codex</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Book id</th>
+          <th>Book name in {{newProject.basicInfo.language}}</th>
+        </tr>
+      </thead>
+    </table>
 
-    <div formArrayName="codex">
-      @for (c of codex.controls; track $index) {
-        <div [formGroupName]="$index">
-          <input placeholder="Codex name" formControlName="name" />
-  
-          <select formControlName="purpose">
-            @for (p of purposes.value; track $index) {
-              <option [value]="p.name">
-                {{ p.name }}
-              </option>
-            }
-          </select>
-  
-          <!-- Books table -->
-          <table border="1">
-            <thead>
-              <tr>
-                <th>Book</th>
-                <th>Folder</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (b of books($index).value; track $index) {
-                <tr>
-                  <td>{{ b.book }}</td>
-                  <td>{{ b.folder }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-  
-          <button type="button" (click)="addBook($index)">
-            + Book
-          </button>
-        </div>
-      }
+    <div class="fieldGroup">
+      <label>Book</label>
+      <select>
+        <option></option>
+      </select>
     </div>
   </fieldset>
+
+  <fieldset>
+    <legend>Project Purposes</legend>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Codex</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+    </table>
+
+    <div class="fieldGroup">
+      <label>Codex</label>
+      <select>
+        <option></option>
+      </select>
+    </div>
+
+    <div class="fieldGroup">
+      <label>Purposes</label>
+      <select>
+        <option value="translation-viewer">Translation Viewer for Reference</option>
+        <option value="metadata-editor">Scripture Metadata Editor</option>
+      </select>
+    </div>
+
+    <div class="fieldGroup">
+      <label>Cutom Translation</label>
+      <input type="checkbox" />
+    </div>
+
+    <button type="button">+ Add</button>
+  </fieldset>
+
+  <fieldset>
+    <legend>Associate Interlinear Purposes</legend>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Codex</th>
+          <th>Interlinear</th>
+          <th>From</th>
+        </tr>
+      </thead>
+    </table>
+
+    <div class="fieldGroup">
+      <label>From metadata</label>
+      <select>
+        <option></option>
+      </select>
+    </div>
+
+    <div class="fieldGroup">
+      <label>Cutom Translation</label>
+      <input type="checkbox" />
+    </div>
+
+    <button type="button">+ Add</button>
+  </fieldset>
+  }
 
   <button type="submit">Create</button>
 </form>

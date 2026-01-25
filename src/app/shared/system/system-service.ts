@@ -23,7 +23,6 @@ export class SystemService {
   ) { }
 
   async loadProject(): Promise<Project | null> {
-
     const selected = await openDialog({
       multiple: false,
       filters: [{
@@ -31,7 +30,6 @@ export class SystemService {
         extensions: ['xenoglosproj']
       }]
     });
-
 
     if (typeof selected === 'string') {
       const file = await openFile(selected, { read: true });
