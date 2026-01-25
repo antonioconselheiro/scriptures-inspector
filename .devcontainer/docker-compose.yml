@@ -10,5 +10,6 @@ services:
       - "4205:4205"
     volumes:
       - ..:/scriptures-inspector:cached
+      - ../home:/root/bible-translation2
       - /var/run/docker.sock:/var/run/docker.sock
     tty: true
