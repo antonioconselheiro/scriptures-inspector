@@ -14,8 +14,12 @@ export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
       const sources = getProjectSourcesFn(project);
       await Promise.all(
         [...sources, ...project.translationViewer]
-          .map(source => loadSourceBookFn(source, book)
-          .then(sourceBook => sourcesCodex[source] = sourceBook))
+          .map(source => loadSourceBookFn(project, source, book)
+          .then(sourceBook => {
+            if (sourceBook) {
+              sourcesCodex[source] = sourceBook
+            }
+          }))
       );
     }
 

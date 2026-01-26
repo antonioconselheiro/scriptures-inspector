@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModalService } from '@belomonte/async-modal-ngx';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
@@ -34,6 +34,7 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
   imports: [
     VerseNumberPipe,
     FormsModule,
+    AsyncModalModule,
     AddPatternContextMenu,
     ScriptureMetadataComponent,
     TranslationViewerManager,

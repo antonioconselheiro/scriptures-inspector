@@ -21,13 +21,13 @@ export function targetsLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
         targets
           .map(target => {
             if (isKeyMetadataFn(target)) {
-              return loadTargetMetadataBookFn(target, book)
+              return loadTargetMetadataBookFn(project, target, book)
                 .then(savedBook => targetsCodex[target] = savedBook);
             } else if (isKeyInterlinearFn(target)) {
-              return loadTargetInterlinearBookFn(target, book)
+              return loadTargetInterlinearBookFn(project, target, book)
                 .then(savedBook => targetsCodex[target] = savedBook);
             } else if (isKeyTranslationFn(target)) {
-              return loadTargetTranslationBookFn(target, book)
+              return loadTargetTranslationBookFn(project, target, book)
                 .then(savedBook => targetsCodex[target] = savedBook);
             } else {
               return Promise.resolve();
