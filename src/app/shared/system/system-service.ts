@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CurrentBook } from '@domain/current-book-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
-import { readJsonFileFn } from '@shared/project/read-json-file-fn';
+import { readJsonFileFn } from '@shared/project/read-file-json-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';

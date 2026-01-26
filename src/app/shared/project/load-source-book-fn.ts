@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { firstValueFrom } from 'rxjs';
-import { readJsonFileFn } from './read-json-file-fn';
+import { readJsonFileFn } from './read-file-json-fn';
 
 export async function loadSourceBookFn(project: Project, source: string, book: string): Promise<SourceBook | null> {
   const httpClient = inject(HttpClient);

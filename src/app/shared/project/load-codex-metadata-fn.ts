@@ -3,7 +3,7 @@ import { Codex } from '@domain/codex-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { Project } from '@domain/project-model';
 import { firstValueFrom } from 'rxjs';
-import { readJsonFileFn } from './read-json-file-fn';
+import { readJsonFileFn } from './read-file-json-fn';
 
 export async function loadCodexMetadataFn(httpClient: HttpClient, project: Project, kind: 'source' | 'target', name: string): Promise<Codex<LanguageUnionType> | null> {
   let resourcePath = '';

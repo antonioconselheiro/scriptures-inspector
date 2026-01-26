@@ -5,7 +5,7 @@ import { KeyInterlinear } from '@domain/key-interlinear-type';
 import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
 import { Project } from '@domain/project-model';
-import { readJsonFileFn } from './read-json-file-fn';
+import { readJsonFileFn } from './read-file-json-fn';
 
 export function loadTargetBookFn(project: Project, target: KeyMetadata, book: string): Promise<BookMetadataTarget | null>;
 export function loadTargetBookFn(project: Project, target: KeyTranslation, book: string): Promise<BookTranslationTarget | null>;
