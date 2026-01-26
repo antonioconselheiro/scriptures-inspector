@@ -221,29 +221,29 @@
       "metadataEditor": {
         "source": "hebrew-stuttgartensia",
         "target": "hebrew-stuttgartensia-portuguese-metadata",
-        "customTranslationEditor": "hebrew-stuttgartensia-custom-portuguese-translation",
-        "translationInterlinearEditor": [
-          {
-            "source": "geez-mashafa-qeddus",
-            "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-            "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
-          }
-        ]
-      }
+        "customTranslationEditor": "hebrew-stuttgartensia-custom-portuguese-translation"
+      },
+      "interlinearEditor": [
+        {
+          "source": "geez-mashafa-qeddus",
+          "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+          "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
+        }
+      ]
     },
     {
       "metadataEditor": {
         "source": "greek-elzeviriana",
         "target": "greek-elzeviriana-portuguese-metadata",
-        "customTranslationEditor": "greek-elzeviriana-custom-portuguese-translation",
-        "translationInterlinearEditor": [
-          {
-            "source": "geez-mashafa-qeddus",
-            "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-            "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
-          }
-        ]
-      }
+        "customTranslationEditor": "greek-elzeviriana-custom-portuguese-translation"
+      },
+      "interlinearEditor": [
+        {
+          "source": "geez-mashafa-qeddus",
+          "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+          "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
+        }
+      ]
     }
   ]
 }

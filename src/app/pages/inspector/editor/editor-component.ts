@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
@@ -16,6 +16,7 @@ import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargets } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
@@ -45,7 +46,6 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
 })
 export class EditorComponent implements OnInit {
 
-  @Input()
   project!: Project;
 
   current: CurrentChapter | null = null;
@@ -82,8 +82,18 @@ export class EditorComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.subscribeSources();
+    this.readProjectFromSession();
+    this.subscribeData();
     this.subscribeParams();
+  }
+
+  private readProjectFromSession(): void {
+    const project = getProjectFn();
+    if (project) {
+      this.project = project;
+    } else {
+      this.router.navigate(['open']);
+    }
   }
 
   private subscribeParams(): void {
@@ -104,37 +114,45 @@ export class EditorComponent implements OnInit {
     });
   }
 
-  private subscribeSources(): void {
+  private subscribeData(): void {
     this.activatedRoute.data.subscribe({
       next: data => {
-        const sources = this.getProjectSources();
-        const targets = this.getProjectTargets();
-
-        //
-        const sourceBookRecord: {
-          [source: string]: SourceBook | undefined
-        } = {};
-
-        sources.forEach(source => {
-          sourceBookRecord[source] = data['sources'][source];
-        });
-
-        //
-        const translationBookRecord: {
-          [source: string]: SourceBook | undefined
-        } = {};
-
-        this.project.translationViewer.forEach(source => {
-          translationBookRecord[source] = data['sources'][source];
-        });
-
-        this.translationBookRecord = translationBookRecord;
-
-        targets.forEach(target => {
-          this.projectData[target] = data['targets'][target]
-        });
+        this.readBookSourceFromData(data);
+        this.readBookTranslationViewerFromData(data);
+        this.readBookTargetsFromData(data);
       }
     });
+  }
+
+  private readBookSourceFromData(data: Data): void {
+    const sources = this.getProjectSources();
+    const sourceBookRecord: { [source: string]: SourceBook | undefined } = {};
+
+    sources.forEach(source => {
+      sourceBookRecord[source] = data['sources'][source];
+      this.codexMetadataRecord[source] = data['codex'][source];
+    });
+
+    this.sourceBookRecord = sourceBookRecord;
+  }
+
+  private readBookTranslationViewerFromData(data: Data): void {
+    const translationBookRecord: { [source: string]: SourceBook | undefined } = {};
+
+    this.project.translationViewer.forEach(source => {
+      translationBookRecord[source] = data['sources'][source];
+      this.codexMetadataRecord[source] = data['codex'][source];
+    });
+
+    this.translationBookRecord = translationBookRecord;
+  }
+
+  private readBookTargetsFromData(data: Data): void {
+    const targets = this.getProjectTargets();
+    const projectData: ProjectData = {};
+
+    targets.forEach(target => projectData[target] = data['targets'][target]);
+    this.projectData = projectData;
   }
 
   getProjectSources(): Array<string> {

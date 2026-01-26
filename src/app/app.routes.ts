@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { repositoriesLoadResolverFn } from '@shared/project/repositories-load-resolver-fn';
+import { codexLoaderResolveFn } from '@shared/project/codex-loader-resolve-fn';
+import { repositoriesLoaderResolveFn } from '@shared/project/repositories-loader-resolve-fn';
 import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
 import { EditorComponent } from './pages/inspector/editor/editor-component';
@@ -17,7 +18,8 @@ export const routes: Routes = [
     resolve: {
       sources: sourcesLoaderResolveFn(),
       targets: targetsLoaderResolveFn(),
-      repositories: repositoriesLoadResolverFn()
+      repositories: repositoriesLoaderResolveFn(),
+      codex: codexLoaderResolveFn()
     },
     component: EditorComponent
   },

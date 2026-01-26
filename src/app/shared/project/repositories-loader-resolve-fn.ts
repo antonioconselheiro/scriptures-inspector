@@ -4,7 +4,7 @@ import { inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { getProjectFn } from './get-project-fn';
 
-export function repositoriesLoadResolverFn(): () => Promise<RepositoryRecord> {
+export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
   return async () => {
     const http = inject(HttpClient);
     const project = getProjectFn();
