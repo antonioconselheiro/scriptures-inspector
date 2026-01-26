@@ -151,7 +151,10 @@ export class EditorComponent implements OnInit {
     const targets = this.getProjectTargets();
     const projectData: ProjectData = {};
 
-    targets.forEach(target => projectData[target] = data['targets'][target]);
+    targets.forEach(target => {
+      projectData[target] = data['targets'][target];
+      this.codexMetadataRecord[target] = data['codex'][target];
+    });
     this.projectData = projectData;
   }
 

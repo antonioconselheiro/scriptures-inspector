@@ -10,14 +10,11 @@
   "target": {
     "language": "portuguese",
     "books": {
-      "EN1": {
-        "name": "Enoque"
-      },
-      "JUB": {
-        "name": "Jubileus"
-      },
       "GEN": {
         "name": "Gênesis"
+      },
+      "EN1": {
+        "name": "Enoque"
       },
       "EXO": {
         "name": "Êxodo"

@@ -1,13 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
 import { Codex } from '@domain/codex-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { Project } from '@domain/project-model';
 import { firstValueFrom } from 'rxjs';
 import { readFileFn } from './read-file-fn';
 
-export async function loadCodexMetadataFn(project: Project, kind: 'source' | 'target', name: string): Promise<Codex<LanguageUnionType> | null> {
-  const httpClient = inject(HttpClient);
+export async function loadCodexMetadataFn(httpClient: HttpClient, project: Project, kind: 'source' | 'target', name: string): Promise<Codex<LanguageUnionType> | null> {
   let resourcePath = '';
 
   if (kind === 'source') {

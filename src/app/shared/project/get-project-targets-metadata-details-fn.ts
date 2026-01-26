@@ -10,6 +10,7 @@ export function getProjectTargetsMetadataDetailsFn(
 
   project.structure.forEach(structure => {
     const { source, target } = structure.metadataEditor;
+    console.info('source:', source);
     targetResultset.push({
       type: 'metadata',
       source,
@@ -21,6 +22,7 @@ export function getProjectTargetsMetadataDetailsFn(
     if (structure.interlinearEditor) {
       structure.interlinearEditor.forEach(interlinear => {
         const { source, target } = interlinear;
+        console.info('source:', source);
         targetResultset.push({
           type: 'interlinear',
           source,
