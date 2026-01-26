@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { CurrentBook } from '@domain/current-book-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
+import { readJsonFileFn } from '@shared/project/read-json-file-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
+import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { open as openDialog } from '@tauri-apps/plugin-dialog';
 import { open as openFile } from '@tauri-apps/plugin-fs';
 import { Subject } from 'rxjs';
@@ -26,18 +28,11 @@ export class SystemService {
     });
 
     if (typeof selected === 'string') {
-      const file = await openFile(selected, { read: true });
+      const project = await readJsonFileFn<any>(selected);
 
-      if (file) {
-        const fileStat = await file.stat()
-        const buf = new Uint8Array(fileStat.size);
-        await file.read(buf);
-        const content = new TextDecoder().decode(buf);
-        await file.close();
-
+      if (project) {
         // TODO: incluir validação de schema para json do projeto
-        const project = JSON.parse(content);
-        project.path = selected;
+        project.path = selected.replace(/\/index.xenoglosproj$/, '');
         return Promise.resolve(project);
       }
     }
@@ -70,9 +65,7 @@ export class SystemService {
   }
 
   private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData): Promise<void> {
-    const file = await openFile(`${project.path}/target/${target}/${current.book}.json`, { write: true });
-    await file.write(new TextEncoder().encode(JSON.stringify(content[target], null, 2)));
-    await file.close();
+    await writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]);
   }
 
   async saveProjectConfig(): Promise<void> {

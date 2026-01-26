@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { firstValueFrom } from 'rxjs';
-import { readFileFn } from './read-file-fn';
+import { readJsonFileFn } from './read-json-file-fn';
 
 export async function loadSourceBookFn(project: Project, source: string, book: string): Promise<SourceBook | null> {
   const httpClient = inject(HttpClient);
@@ -31,6 +31,6 @@ export async function loadSourceBookFn(project: Project, source: string, book: s
       return null;
     });
   } else {
-    return readFileFn<SourceBook>(resourcePath);
+    return readJsonFileFn<SourceBook>(resourcePath);
   }
 }

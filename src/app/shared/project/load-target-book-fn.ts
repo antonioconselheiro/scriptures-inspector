@@ -5,7 +5,7 @@ import { KeyInterlinear } from '@domain/key-interlinear-type';
 import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
 import { Project } from '@domain/project-model';
-import { readFileFn } from './read-file-fn';
+import { readJsonFileFn } from './read-json-file-fn';
 
 export function loadTargetBookFn(project: Project, target: KeyMetadata, book: string): Promise<BookMetadataTarget | null>;
 export function loadTargetBookFn(project: Project, target: KeyTranslation, book: string): Promise<BookTranslationTarget | null>;
@@ -16,7 +16,7 @@ export function loadTargetBookFn(project: Project, target: KeyMetadata | KeyTran
 export async function loadTargetBookFn(project: Project, target: KeyMetadata | KeyTranslation | KeyInterlinear, book: string): Promise<
   BookMetadataTarget | BookInterlinearTarget | BookTranslationTarget | null
 > {
-  return readFileFn<BookMetadataTarget | BookInterlinearTarget | BookTranslationTarget>(
+  return readJsonFileFn<BookMetadataTarget | BookInterlinearTarget | BookTranslationTarget>(
     `${project.path}/targets/${target}/${book}.json`
   );
 }
