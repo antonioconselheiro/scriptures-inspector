@@ -18,7 +18,7 @@ import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
-import { getProjectTargets } from '@shared/project/get-project-targets-fn';
+import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -160,7 +160,7 @@ export class EditorComponent implements OnInit {
   }
 
   getProjectTargets(): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
-    return getProjectTargets(this.project);
+    return getProjectTargetsFn(this.project);
   }
 
   getProjectTargetsMetadataDetails(): Array<TargetMetadataDetail> {

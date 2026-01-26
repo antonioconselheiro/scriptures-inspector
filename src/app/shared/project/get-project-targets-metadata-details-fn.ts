@@ -7,10 +7,9 @@ export function getProjectTargetsMetadataDetailsFn(
   project: Project, codexMetadataRecord: Record<string, Codex<LanguageUnionType>>
 ): Array<TargetMetadataDetail> {
   const targetResultset: Array<TargetMetadataDetail> = [];
-  console.info('codexMetadataRecord:', codexMetadataRecord);
+
   project.structure.forEach(structure => {
     const { source, target } = structure.metadataEditor;
-    console.info('metadata source:', source);
     targetResultset.push({
       type: 'metadata',
       source,
@@ -22,7 +21,6 @@ export function getProjectTargetsMetadataDetailsFn(
     if (structure.interlinearEditor) {
       structure.interlinearEditor.forEach(interlinear => {
         const { source, target } = interlinear;
-        console.info('interlinear source:', source);
         targetResultset.push({
           type: 'interlinear',
           source,

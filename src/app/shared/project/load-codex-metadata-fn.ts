@@ -1,0 +1,40 @@
+import { HttpClient } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { Codex } from '@domain/codex-model';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { Project } from '@domain/project-model';
+import { firstValueFrom } from 'rxjs';
+import { readFileFn } from './read-file-fn';
+
+export async function loadCodexMetadataFn(project: Project, kind: 'source' | 'target', name: string): Promise<Codex<LanguageUnionType> | null> {
+  const httpClient = inject(HttpClient);
+  let resourcePath = '';
+
+  if (kind === 'source') {
+    if (/^@/.test(name)) {
+      const repository = Object.keys(project.repositories).find(path => path === name.replace(/^@|\/[^ ]+$/, '')) || '';
+      const folderName = name.replace(/^@[^ ]+\//, '');
+
+      if (repository) {
+        resourcePath = `${repository}/${folderName}/_.codex`;
+
+        if (!/^http/.test(repository)) {
+          resourcePath = `${project.path}/sources/${resourcePath}`;
+        }
+      }
+    } else {
+      resourcePath = `${project.path}/sources/${name}/_.codex`;
+    }
+  } else {
+    resourcePath = `${project.path}/targets/${name}/_.codex`;
+  }
+
+  if (/^http/.test(resourcePath)) {
+    return firstValueFrom(httpClient.get<Codex<LanguageUnionType>>(resourcePath)).catch(e => {
+      console.error(e);
+      return null;
+    });
+  } else {
+    return readFileFn<Codex<LanguageUnionType>>(resourcePath);
+  }
+}

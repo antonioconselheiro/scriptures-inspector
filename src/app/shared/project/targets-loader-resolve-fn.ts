@@ -1,7 +1,7 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { ProjectData } from '@domain/project-data-model';
 import { getProjectFn } from './get-project-fn';
-import { getProjectTargets } from './get-project-targets-fn';
+import { getProjectTargetsFn } from './get-project-targets-fn';
 import { isKeyInterlinearFn } from './is-key-interlinear-fn';
 import { isKeyMetadataFn } from './is-key-metadata-fn';
 import { isKeyTranslationFn } from './is-key-translation-fn';
@@ -16,7 +16,7 @@ export function targetsLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
     const targetsCodex: ProjectData = {};
 
     if (project && book) {
-      const targets = getProjectTargets(project);
+      const targets = getProjectTargetsFn(project);
       await Promise.all(
         targets
           .map(target => {

@@ -3,7 +3,7 @@ import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
 import { Project } from '@domain/project-model';
 
-export function getProjectTargets(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
+export function getProjectTargetsFn(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
   return project.structure.map(structure => {
     if (structure.interlinearEditor) {
       return [
