@@ -12,7 +12,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN apt update && apt install -y \
     curl wget file ca-certificates gnupg chromium \
-    build-essential pkg-config libxdo-dev libssl-dev libwebkit2gtk-4.1-dev \
+    build-essential pkg-config libxdo-dev libssl-dev libwebkit2gtk-4.1-0 libwebkit2gtk-4.1-dev \
     libglib2.0-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt install -y nodejs \
