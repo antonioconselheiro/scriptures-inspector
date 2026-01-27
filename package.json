@@ -2,9 +2,9 @@
   "name": "scriptures-inspector",
   "version": "0.0.0",
   "scripts": {
-    "dev": "tauri dev",
     "dev:web": "CI=TRUE ng serve --host 0.0.0.0",
-    "build": "rm -rf dist; CI=TRUE ng build; mv dist/browser/** dist; rm -rf dist/browser",
+    "build:web": "rm -rf dist; CI=TRUE ng build; mv dist/browser/** dist; rm -rf dist/browser",
+    "build:lnx": "electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png",
     "test": "CI=TRUE ng test --watch=false --browsers=ChromeHeadlessNoSandbox"
   },
   "prettier": {
@@ -26,10 +26,6 @@
     "@angular/router": "^20.3.16",
     "@belomonte/async-modal-ngx": "^20.0.0",
     "@belomonte/iterable-string": "^1.0.2",
-    "@hebcal/core": "^6.0.5",
-    "@tauri-apps/api": "^2.9.1",
-    "@tauri-apps/plugin-dialog": "^2.6.0",
-    "@tauri-apps/plugin-fs": "^2.4.5",
     "hebrew-transliteration": "^2.9.1",
     "jsdom": "^27.4.0",
     "rxjs": "~7.8.0",

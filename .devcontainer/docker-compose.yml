@@ -2,6 +2,7 @@ services:
   scriptures-inspector-dev:
     image: scriptures-inspector-dev
     container_name: scriptures-inspector-dev
+    privileged: true
     build:
       context: ../.
       dockerfile: ./.devcontainer/Dockerfile
@@ -11,5 +12,6 @@ services:
     volumes:
       - ..:/scriptures-inspector:cached
       - ../home:/root/bible-translation
+      - /tmp/.X11-unix:/tmp/.X11-unix
       - /var/run/docker.sock:/var/run/docker.sock
     tty: true
