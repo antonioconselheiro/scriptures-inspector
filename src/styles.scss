@@ -1,7 +1,27 @@
 @font-face {
   font-family: 'hebrew';
-  src: url("/font/hebrew.woff2") format("woff2"),
-    url("/font/hebrew.woff") format("woff");
+  src: url('/font/hebrew.woff2') format('woff2'),
+    url('/font/hebrew.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'paleo-hebrew';
+  src: url('/font/phoenician.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'greek';
+  src: url('/font/greek.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'geez';
+  src: url('/font/menbere.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'gentium-transliteration';
+  src: url('/font/gentium-transliteration.ttf') format('truetype');
 }
 
 body {
@@ -9,6 +29,19 @@ body {
   padding: 0;
   height: 100%;
   display: block;
+}
+
+body,
+select,
+option,
+::selection,
+::placeholder {
+  font-family: 'gentium-transliteration', 'hebrew', 'paleo-hebrew', 'greek', 'geez', serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 a {
@@ -19,9 +52,8 @@ a {
   display: none !important;
 }
 
-[lang="hebraic"] [class^="prisma"] {
-  font-family: 'hebrew';
-  font-size: 25px;
+[class^="prisma"] {
+  font-size: 20px;
 }
 
 input[type=checkbox], button {

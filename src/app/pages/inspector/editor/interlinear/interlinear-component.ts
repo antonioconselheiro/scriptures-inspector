@@ -73,7 +73,14 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const map = this.bookTarget.chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex];
+    const map = this.bookTarget.chapters[this.current.chapter] &&
+      this.bookTarget.chapters[this.current.chapter][this.sourceVerse.verse.index] &&
+      this.bookTarget.chapters[this.current.chapter][this.sourceVerse.verse.index][wordIndex] || null;
+
+    if (!map) {
+      return '0';
+    }
+
     return String(map.origin.index % 7 + 1);
   }
 

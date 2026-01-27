@@ -101,6 +101,9 @@ export class EditorComponent implements OnInit {
       next: params => {
         const book = params['book'].toUpperCase();
         const chapter = Number(params['chapter']) - 1;
+        
+        this.formSelectedBook = book;
+        this.formSelectedChapter = chapter;
 
         if (!this.current) {
           this.current = {

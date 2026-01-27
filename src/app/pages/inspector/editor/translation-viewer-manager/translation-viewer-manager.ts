@@ -17,7 +17,7 @@ export class TranslationViewerManager implements OnInit {
   @Output()
   addViewingTranslation = new EventEmitter<string>();
 
-  repositories!: RepositoryRecord;
+  repositories: RepositoryRecord = {};
   readonly languageMetadataRecord = languageMetadataRecord;
 
   constructor(
@@ -32,7 +32,7 @@ export class TranslationViewerManager implements OnInit {
     this.activatedRoute.data.subscribe({
       next: data => {
         const repositories = this.repositories = data['repositories'];
-
+console.info('repositories:', repositories);
         Object.keys(repositories).forEach(repository => {
           const languageMetadataRecord: any = this.languageMetadataRecord;
           if (!languageMetadataRecord[repository]) {

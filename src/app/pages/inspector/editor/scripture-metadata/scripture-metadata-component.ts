@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
@@ -32,7 +32,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   templateUrl: './scripture-metadata-component.html',
   styleUrl: './scripture-metadata-component.scss'
 })
-export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
+export class ScriptureMetadataComponent extends AbstractInspectorDiretive implements OnInit {
 
   @Input()
   current!: CurrentChapter;
@@ -79,6 +79,11 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     protected projectMetadataService: ProjectMetadataService
   ) {
     super();
+  }
+
+  ngOnInit(): void {
+    console.info('languageMetadataRecord:', this.languageMetadataRecord);
+    console.info('sourceLanguage:', this.sourceLanguage);
   }
 
   private getCurrent(currentIndex: number): CurrentVerseIndex {

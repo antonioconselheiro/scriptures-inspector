@@ -90,7 +90,7 @@ strong.verseTitle {
   height: 8px;
 }
 
-.minimized fieldset {
+.minimized form > :not(.sidebuttons) {
   visibility: hidden;
   max-height: 0px;
 }
