@@ -7,9 +7,7 @@ ENV TZ=America/Sao_Paulo
 ENV DEBUG_COLORS=true
 ENV FORCE_COLOR=true
 ENV CHROME_BIN=/usr/bin/chromium
-ENV DEBUG=*
 ENV DISPLAY=:99
-ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && \
     apt install -y libxss1 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libgtk-3-0 libgbm1 \

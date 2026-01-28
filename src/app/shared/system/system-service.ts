@@ -5,8 +5,6 @@ import { Project } from '@domain/project-model';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
-import { open as openDialog } from '@tauri-apps/plugin-dialog';
-import { open as openFile } from '@tauri-apps/plugin-fs';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -19,13 +17,7 @@ export class SystemService {
   static project: Project | null = null;
 
   async loadProject(): Promise<Project | null> {
-    const selected = await openDialog({
-      multiple: false,
-      filters: [{
-        name: 'index',
-        extensions: ['xenoglosproj']
-      }]
-    });
+    const selected = await window.api.openProject();
 
     if (typeof selected === 'string') {
       const project = await readJsonFileFn<any>(selected);
@@ -74,8 +66,7 @@ export class SystemService {
       delete project.path;
       setProjectFn(project);
 
-      const file = await openFile(SystemService.project.path, { write: true });
-      file.write(new TextEncoder().encode(JSON.stringify(project, null, 2)));
+      writeJsonFileFn(`${SystemService.project.path}/index.xenoglosproj`, project);
     }
 
     return Promise.resolve();
