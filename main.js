@@ -21,7 +21,7 @@ function createWindow () {
 //  if (isDev) {
     // DEV
     mainWindow.loadURL('http://localhost:4205');
-    //mainWindow.webContents.openDevTools({ mode: 'detach' });
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
 //  } else {
 //    // PROD
 //    mainWindow.loadFile(
