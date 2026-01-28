@@ -1,21 +1,5 @@
-import { FileHandle, open as openFile } from '@tauri-apps/plugin-fs';
+import { promises as fs } from 'fs';
 
 export async function readJsonFileFn<T>(filePath: string): Promise<T | null> {
-  let file: FileHandle | null = null;
-
-  try {
-    file = await openFile(filePath, { read: true });
-    const fileStat = await file.stat();
-    const buf = new Uint8Array(fileStat.size);
-    await file.read(buf);
-    const content = new TextDecoder().decode(buf);
-  
-    return JSON.parse(content);
-  } catch (e) {
-    return null;
-  } finally {
-    if (file) {
-      await file.close();
-    }
-  }
+  fs.readFile(filePath).then(JSON.parse);
 }
