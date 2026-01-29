@@ -1,16 +1,5 @@
-import { dialog, contextBridge } from 'electron';
-import { readFile, writeFile } from 'fs/promises';
-
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
-
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type])
-  }
-});
+const { dialog, contextBridge } = require('electron');
+const { readFile, writeFile } = require('fs/promises');
 
 contextBridge.exposeInMainWorld('api', {
   readJsonFile: async path => {

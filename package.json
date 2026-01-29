@@ -4,7 +4,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "concurrently -k \"npm run dev:web\" \"npm run dev:electron\"",
-    "dev:electron": "wait-on http://localhost:4205 && su node -c \"electron-forge start -- --no-sandbox --enable-features=UseOzonePlatform --ozone-platform=x11 --disable-gpu --ignore-gpu-blacklist --enable-software-rendering\"",
+    "dev:electron": "wait-on http://localhost:4205 && su node -c \"electron-forge start\"",
     "dev:web": "CI=TRUE ng serve --host 0.0.0.0",
     "build:web": "rm -rf dist; CI=TRUE ng build; mv dist/browser/** dist; rm -rf dist/browser",
     "build:lnx": "electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png",

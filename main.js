@@ -2,32 +2,25 @@ const { app, BrowserWindow } = require('electron/main');
 const path = require('node:path');
 
 const isDev = !app.isPackaged;
-// if (isDev) {
-app.commandLine.appendSwitch('disable-gpu');
-app.commandLine.appendSwitch('disable-software-rasterizer');
-app.commandLine.appendSwitch('no-sandbox');
-  app.disableHardwareAcceleration();
-// }
-
-function createWindow () {
+function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false
     }
   });
 
-//  if (isDev) {
-    // DEV
+  if (isDev) {
     mainWindow.loadURL('http://localhost:4205');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
-//  } else {
-//    // PROD
-//    mainWindow.loadFile(
-//      path.join(__dirname, 'dist/index.html')
-//    );
-//  }
+  } else {
+    mainWindow.loadFile(
+      path.join(__dirname, 'dist/index.html')
+    );
+  }
 }
 
 app.whenReady().then(() => {
