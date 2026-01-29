@@ -4,7 +4,6 @@ import { Codex } from '@domain/codex-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { getProjectFn } from './get-project-fn';
 import { getProjectSourcesFn } from './get-project-sources-fn';
-import { getProjectTargetsFn } from './get-project-targets-fn';
 import { loadCodexMetadataFn } from './load-codex-metadata-fn';
 
 export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<LanguageUnionType>>> {
@@ -15,17 +14,10 @@ export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<Langu
 
     if (project) {
       const sources = getProjectSourcesFn(project);
-      const targets = getProjectTargetsFn(project);
 
-      await sources.map(source => loadCodexMetadataFn(httpClient, project, 'source', source).then(data => {
+      await sources.map(source => loadCodexMetadataFn(httpClient, project, source).then(data => {
         if (data) {
           codexRecord[source] = data;
-        }
-      }));
-
-      await targets.map(target => loadCodexMetadataFn(httpClient, project, 'target', target).then(data => {
-        if (data) {
-          codexRecord[target] = data;
         }
       }));
     }

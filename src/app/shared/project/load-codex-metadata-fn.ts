@@ -5,26 +5,22 @@ import { Project } from '@domain/project-model';
 import { firstValueFrom } from 'rxjs';
 import { readJsonFileFn } from './read-file-json-fn';
 
-export async function loadCodexMetadataFn(httpClient: HttpClient, project: Project, kind: 'source' | 'target', name: string): Promise<Codex<LanguageUnionType> | null> {
+export async function loadCodexMetadataFn(httpClient: HttpClient, project: Project, name: string): Promise<Codex<LanguageUnionType> | null> {
   let resourcePath = '';
 
-  if (kind === 'source') {
-    if (/^@/.test(name)) {
-      const repository = Object.keys(project.repositories).find(path => path === name.replace(/^@|\/[^ ]+$/, '')) || '';
-      const folderName = name.replace(/^@[^ ]+\//, '');
+  if (/^@/.test(name)) {
+    const repository = Object.keys(project.repositories).find(path => path === name.replace(/^@|\/[^ ]+$/, '')) || '';
+    const folderName = name.replace(/^@[^ ]+\//, '');
 
-      if (repository) {
-        resourcePath = `${repository}/${folderName}/_.codex`;
+    if (repository) {
+      resourcePath = `${repository}/${folderName}/_.codex`;
 
-        if (!/^http/.test(repository)) {
-          resourcePath = `${project.path}/sources/${resourcePath}`;
-        }
+      if (!/^http/.test(repository)) {
+        resourcePath = `${project.path}/${resourcePath}`;
       }
-    } else {
-      resourcePath = `${project.path}/sources/${name}/_.codex`;
     }
   } else {
-    resourcePath = `${project.path}/targets/${name}/_.codex`;
+    resourcePath = `${project.path}/sources/${name}/_.codex`;
   }
 
   if (/^http/.test(resourcePath)) {
