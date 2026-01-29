@@ -45,16 +45,16 @@ a {
   cursor: pointer;
 }
 
-.hidden {
-  display: none !important;
+input[type=checkbox], button {
+  cursor: pointer;
+}
+
+table[border="1"] {
+  margin: 1rem auto;
 }
 
 [class^="prisma"] {
   font-size: 20px;
-}
-
-input[type=checkbox], button {
-  cursor: pointer;
 }
 
 .prisma1 {
@@ -104,4 +104,8 @@ input[type=checkbox], button {
 
 .metaamount {
   background-color: yellow;
+}
+
+.hidden {
+  display: none !important;
 }
