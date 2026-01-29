@@ -57,11 +57,51 @@ input[type=checkbox], button {
   cursor: pointer;
 }
 
-.buttonGroup {
-  display: flex;
-  justify-content: center;
+.prisma1 {
+  color: rgb(211, 1, 1);
 }
 
-.buttonGroup button {
-  margin: .5rem;
+.prisma2 {
+  color: rgb(236, 106, 0);
+}
+
+.prisma3 {
+  color: rgb(206, 203, 0);
+}
+
+.prisma4 {
+  color: rgb(77, 187, 5);
+}
+
+.prisma5 {
+  color: rgb(1, 146, 165);
+}
+
+.prisma6 {
+  color: rgb(59, 0, 168);
+}
+
+.prisma7 {
+  color: rgb(206, 1, 179);
+}
+
+.metagodsaid {
+  color: red;
+}
+
+.metagodname {
+  text-transform: uppercase;
+  font-style: italic;
+}
+
+.metakeyword {
+  font-weight: bold;
+}
+
+.metacharacter {
+  text-decoration: underline;
+}
+
+.metaamount {
+  background-color: yellow;
 }

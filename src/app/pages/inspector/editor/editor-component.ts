@@ -185,7 +185,7 @@ export class EditorComponent implements OnInit {
   go(): void {
     if (this.formSelectedBook && this.formSelectedChapter) {
       this.router.navigate([
-        '/book',
+        '/editor/book',
         this.formSelectedBook,
         'chapter',
         (+this.formSelectedChapter) + 1
@@ -201,7 +201,7 @@ export class EditorComponent implements OnInit {
 
     const nextChapter = chapter - 1;
     this.router.navigate([
-      '/book',
+      '/editor/book',
       book,
       'chapter',
       nextChapter
@@ -216,7 +216,7 @@ export class EditorComponent implements OnInit {
 
     const nextChapter = chapter + 1;
     this.router.navigate([
-      '/book',
+      '/editor/book',
       book.toLowerCase(),
       'chapter',
       nextChapter

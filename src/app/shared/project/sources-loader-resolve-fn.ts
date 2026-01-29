@@ -7,6 +7,7 @@ import { loadSourceBookFn } from './load-source-book-fn';
 export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Promise<Record<string, Book>> {
   return async (route: ActivatedRouteSnapshot) => {
     const book = route.paramMap.get('book');
+    const codex = route.data['codex'];
     const project = getProjectFn();
     const sourcesCodex: Record<string, Book> = {};
 
@@ -14,15 +15,17 @@ export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
       const sources = getProjectSourcesFn(project);
       await Promise.all(
         [...sources, ...project.translationViewer]
+          .filter(source => codex[source] && codex[source].data[book])
           .map(source => loadSourceBookFn(project, source, book)
           .then(sourceBook => {
             if (sourceBook) {
-              sourcesCodex[source] = sourceBook
+              sourcesCodex[source] = sourceBook;
             }
           }))
       );
     }
 
+    console.info('sources loaded:', sourcesCodex);
     return Promise.resolve(sourcesCodex);
   };
 }

@@ -33,6 +33,7 @@ export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
       });
     }
 
+    console.info('repositories loaded:', mergedRepositories);
     return Promise.resolve(mergedRepositories);
   };
 }

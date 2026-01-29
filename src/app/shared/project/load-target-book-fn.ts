@@ -18,5 +18,8 @@ export async function loadTargetBookFn(project: Project, target: KeyMetadata | K
 > {
   return readJsonFileFn<BookMetadataTarget | BookInterlinearTarget | BookTranslationTarget>(
     `${project.path}/targets/${target}/${book}.json`
-  );
+  ).catch(e => {
+    console.warn(e);
+    return null;
+  });
 }

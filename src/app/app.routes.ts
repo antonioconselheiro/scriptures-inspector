@@ -13,15 +13,22 @@ export const routes: Routes = [
   },
 
   {
-    path: 'book/:book/chapter/:chapter',
-    runGuardsAndResolvers: 'pathParamsChange',
+    path: 'editor',
     resolve: {
-      sources: sourcesLoaderResolveFn(),
-      targets: targetsLoaderResolveFn(),
       repositories: repositoriesLoaderResolveFn(),
       codex: codexLoaderResolveFn()
     },
-    component: EditorComponent
+    children: [
+      {
+        path: 'book/:book/chapter/:chapter',
+        runGuardsAndResolvers: 'pathParamsChange',
+        resolve: {
+          sources: sourcesLoaderResolveFn(),
+          targets: targetsLoaderResolveFn()
+        },
+        component: EditorComponent
+      },
+    ]
   },
 
   {

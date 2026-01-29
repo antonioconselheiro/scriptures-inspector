@@ -1,0 +1,12 @@
+.buttonGroup {
+  display: flex;
+  justify-content: center;
+}
+
+.buttonGroup button {
+  margin: .5rem;
+}
+
+.customTranslation {
+  width: calc(100% - 7px);
+}
