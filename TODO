@@ -3,7 +3,7 @@ TODO
 [ ] - Uma palavra na tradução personalizada pode conter cores de mais de um segmento de palavra dos textos originais
 [ ] - (não mvp) Incluir possibilidade de adição de notas em metadado explicando o por que sim e os por que não das palavras escolhidas no lexico, mas podendo incluir outros detalhes informativos
 [ ] - validar gematria com falseamento
-[ ] - incluir e falsear gematria ordinal
+[ ] - (não mvp) incluir e falsear gematria ordinal
 [ ] - completar transliterações geez com todas disponiveis no canone
 [ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
 [ ] - baixar tradução geez para comparação
@@ -11,16 +11,12 @@ TODO
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
 [ ] - estruturar para o grego, testar funcionamento com todos idiomas e interlineares
-[ ] - criar forma de importar e exportar o conteúdo trabalhado como um arquivo json
 [ ] - botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
 [ ] - criar função final que valida livro inteiro, se não há metadados armazenados sem relação com o texto após a identificação de todos os patterns
 [ ] - após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
 [ ] - tornar scriptures inspector abstrato para receber todo tipo de texto antigo
-[ ] - botão para limpar toda associação de metadados da tradução personalizada
 [ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
 [ ] - incluir forma da tradução personalizada conseguir associar diferentes pedaços de palavras dos escritos originais em uma única palavra para a tradução
-[ ] - incluir configurações de idiomas, configurar: label, direção de escrita, fonte, dicionário, algoritmos numerológicos, tratamento de caracteres (como no caso de delimitações como as massoréticas) 
-[ ] - embarcar em tauri, salvar projeto em arquivos locais, tela inicial para selecionar o projeto salvo localmente, salvar versões do projeto com um git local
 [ ] - fazer com que prisma dê continuidade da cor em que o último versículo terminou
 [ ] - livro de enoque em ge'ez não parece estar com todos os capitulos
 
