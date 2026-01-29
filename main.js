@@ -1,5 +1,25 @@
-const { app, BrowserWindow } = require('electron/main');
-const path = require('node:path');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron/main');
+const path = require('path');
+const fs = require('fs/promises');
+
+ipcMain.handle('read-json-file', async (_, path) => {
+  const data = await fs.readFile(path, 'utf-8');
+  return JSON.parse(data);
+});
+
+ipcMain.handle('write-json-file', async (_, path, data) => {
+  //  FIXME: remover formatação do JSON
+  await fs.writeFile(path, JSON.stringify(data, null, 2));
+});
+
+ipcMain.handle('open-project', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [{ name: 'index', extensions: ['xenoglosproj'] }]
+  });
+
+  return result.canceled ? null : result.filePaths[0];
+});
 
 const isDev = !app.isPackaged;
 function createWindow() {
