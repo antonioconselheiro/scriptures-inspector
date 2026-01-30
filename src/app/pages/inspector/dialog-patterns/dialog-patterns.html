@@ -37,7 +37,7 @@
     <tr>
       <th colspan="3">{{languageMetadataRecord[language].name}}</th>
     </tr>
-    @for (pattern of patterns.prefix.keys(); track $index) {
+    @for (pattern of patterns.prefix; track $index) {
     <tr>
       <td>prefix</td>
       <td>{{pattern}}</td>
@@ -45,7 +45,7 @@
     </tr>
     }
 
-    @for (pattern of patterns.suffix.keys(); track $index) {
+    @for (pattern of patterns.suffix; track $index) {
     <tr>
       <td>suffix</td>
       <td>{{pattern}}</td>

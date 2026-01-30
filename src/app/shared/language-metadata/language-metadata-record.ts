@@ -1,10 +1,10 @@
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { Language } from "../../domain/language-model";
 import { LanguageUnionType } from "../../domain/language-union-type";
-import { demassoretifier } from "./demassoretifier-fn";
+import { demassoretifierFn } from "./demassoretifier-fn";
 import { geezTransliterateFn } from "./geez-transliterate-fn";
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
-import { massoretifier } from "./massoretifier-fn";
+import { massoretifierFn } from "./massoretifier-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
 
 export const languageMetadataRecord: {
@@ -34,8 +34,8 @@ export const languageMetadataRecord: {
         parse: (text: string) => paleoHebrewSpellingFn(text)
       }
     ],
-    normalizeFn: (text: string) => demassoretifier(text),
-    prefetchNormalizedToMatcher: (text: string) => massoretifier(text),
+    normalizeFn: (text: string) => massoretifierFn(text),
+    prefetchNormalizedToMatcher: (text: string) => demassoretifierFn(text),
     externalDictionaryLink: 'https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s'
   },
   'geez': {

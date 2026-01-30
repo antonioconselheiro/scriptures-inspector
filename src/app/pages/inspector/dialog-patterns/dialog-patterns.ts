@@ -40,7 +40,7 @@ export class DialogPatterns extends ModalableDirective<{ language: string, patte
   }
 
   deletePattern(type: 'prefix' | 'suffix', index: number): void {
-    delete this.patterns[type][index];
+    this.patterns[type].splice(index, 1);
   }
 
   onAddPatternSubmit(): void {

@@ -249,6 +249,4 @@ export class ProjectMetadataService {
 
     return { prefix, suffix }
   }
-
-
 }
