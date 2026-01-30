@@ -2,14 +2,16 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron/main');
 const path = require('path');
 const fs = require('fs/promises');
 
-ipcMain.handle('read-json-file', async (_, path) => {
-  const data = await fs.readFile(path, 'utf-8');
+ipcMain.handle('read-json-file', async (_, fileName) => {
+  const data = await fs.readFile(fileName, 'utf-8');
   return JSON.parse(data);
 });
 
-ipcMain.handle('write-json-file', async (_, path, data) => {
+ipcMain.handle('write-json-file', async (_, fileName, data) => {
   //  FIXME: remover formatação do JSON
-  await fs.writeFile(path, JSON.stringify(data, null, 2));
+  const dir = path.dirname(fileName);
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(fileName, JSON.stringify(data, null, 2));
 });
 
 ipcMain.handle('open-project', async () => {

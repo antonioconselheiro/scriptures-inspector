@@ -12,6 +12,7 @@ import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
+import { CurrentBook } from '@domain/current-book-model';
 
 @Injectable({
   providedIn: 'root'
@@ -107,7 +108,7 @@ export class ProjectMetadataService {
       }
     }
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   cleanScriptureMetadata(
@@ -130,7 +131,7 @@ export class ProjectMetadataService {
       metadata[key].kind = '';
     });
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   // word of God methods
@@ -152,7 +153,7 @@ export class ProjectMetadataService {
       }
     });
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   getScriptureMetadataWordOfGod(
@@ -185,12 +186,13 @@ export class ProjectMetadataService {
 
   //
   updateLexical(
+    current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
     word: string,
     lexicalValue: string
   ): void {
     bookMetadata.lexical[word] = lexicalValue;
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   getLexical(
@@ -201,6 +203,7 @@ export class ProjectMetadataService {
   }
 
   cleanLexicalInterlinear(
+    current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
     eachWord: Array<Array<{ index: number; word: string; }>>
   ): void {
@@ -210,7 +213,7 @@ export class ProjectMetadataService {
       });
     });
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   //
@@ -239,7 +242,7 @@ export class ProjectMetadataService {
       delete metadata[key].isWordOfGod;
     });
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {

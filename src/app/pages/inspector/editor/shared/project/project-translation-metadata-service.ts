@@ -53,7 +53,7 @@ export class ProjectTranslationMetadataService {
       }
     };
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   getInterlinear(
@@ -93,7 +93,7 @@ export class ProjectTranslationMetadataService {
       interlinearTarget.chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
 }

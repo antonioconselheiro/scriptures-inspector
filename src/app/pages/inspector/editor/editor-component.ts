@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
@@ -21,6 +21,7 @@ import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 import { SystemService } from '@shared/system/system-service';
+import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
@@ -44,7 +45,7 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
   templateUrl: './editor-component.html',
   styleUrl: './editor-component.scss'
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit, OnDestroy {
 
   project!: Project;
 
@@ -72,6 +73,9 @@ export class EditorComponent implements OnInit {
   } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
+  readonly autoSaveDebounceTime = 5000;
+
+  private subscriptions = new Subscription();
 
   constructor(
     private router: Router,
@@ -85,6 +89,12 @@ export class EditorComponent implements OnInit {
     this.readProjectFromSession();
     this.subscribeData();
     this.subscribeParams();
+    this.subscribeSaveProject();
+    this.subscribeSaveBook();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   private readProjectFromSession(): void {
@@ -97,11 +107,11 @@ export class EditorComponent implements OnInit {
   }
 
   private subscribeParams(): void {
-    this.activatedRoute.params.subscribe({
+    this.subscriptions.add(this.activatedRoute.params.subscribe({
       next: params => {
         const book = params['book'].toUpperCase();
         const chapter = Number(params['chapter']) - 1;
-        
+
         this.formSelectedBook = book;
         this.formSelectedChapter = chapter;
 
@@ -114,17 +124,37 @@ export class EditorComponent implements OnInit {
           this.current.chapter = chapter;
         }
       }
-    });
+    }));
   }
 
   private subscribeData(): void {
-    this.activatedRoute.data.subscribe({
+    this.subscriptions.add(this.activatedRoute.data.subscribe({
       next: data => {
         this.readBookSourceFromData(data);
         this.readBookTranslationViewerFromData(data);
         this.readBookTargetsFromData(data);
       }
-    });
+    }));
+  }
+
+  private subscribeSaveProject(): void {
+    this.subscriptions.add(SystemService
+      .saveCurrentProject
+      .asObservable()
+      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .subscribe({
+        next: () => this.systemService.saveProjectConfig()
+      }));
+  }
+
+  private subscribeSaveBook(): void {
+    this.subscriptions.add(SystemService
+      .saveCurrentBook
+      .asObservable()
+      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .subscribe({
+        next: currentBook => this.systemService.saveCurrentBook(this.project, currentBook, this.projectData)
+      }));
   }
 
   private readBookSourceFromData(data: Data): void {
@@ -255,15 +285,15 @@ export class EditorComponent implements OnInit {
         })
         .build()
         .subscribe({
-          next: () => this.systemService.autoSaveCurrentProject()
+          next: () => this.systemService.triggerSaveCurrentBook({ book })
         });
     }
   }
 
   openDialogLexicalDictionary(detail: TargetMetadataDetail): void {
-    const bookName = this.current?.book;
+    const book = this.current?.book;
 
-    if (bookName) {
+    if (book) {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(DialogLexicalDictionary)
@@ -271,14 +301,14 @@ export class EditorComponent implements OnInit {
         .setData(bookMetadata)
         .build()
         .subscribe({
-          next: () => this.systemService.autoSaveCurrentProject()
+          next: () => this.systemService.triggerSaveCurrentBook({ book })
         });
     }
   }
 
   onAddViewingTranslation(viewingTranslation: string): void {
     this.project.translationViewer.push(viewingTranslation);
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentProject();
   }
 
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {

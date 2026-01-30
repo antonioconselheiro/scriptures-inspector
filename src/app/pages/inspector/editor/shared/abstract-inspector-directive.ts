@@ -30,7 +30,7 @@ export abstract class AbstractInspectorDiretive {
 
     //  lexical
   updateLexical(input: HTMLInputElement, word: string): void {
-    this.projectMetadataService.updateLexical(this.bookTarget, word, input.value);
+    this.projectMetadataService.updateLexical(this.current, this.bookTarget, word, input.value);
 
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
@@ -45,7 +45,7 @@ export abstract class AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanLexicalInterlinear(this.bookTarget, eachWord);
+    this.projectMetadataService.cleanLexicalInterlinear(this.current, this.bookTarget, eachWord);
     this.pipeUpdaterController++;
   }
 }

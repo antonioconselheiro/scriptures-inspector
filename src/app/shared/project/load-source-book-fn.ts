@@ -4,25 +4,11 @@ import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { firstValueFrom } from 'rxjs';
 import { readJsonFileFn } from './read-file-json-fn';
+import { getSourcePathFn } from './get-source-path-fn';
 
 export async function loadSourceBookFn(project: Project, source: string, book: string): Promise<SourceBook | null> {
   const httpClient = inject(HttpClient);
-  let resourcePath = '';
-
-  if (/^@/.test(source)) {
-    const repository = Object.keys(project.repositories).find(path => path === source.replace(/^@|\/[^ ]+$/, '')) || '';
-    const folderName = source.replace(/^@[^ ]+\//, '');
-
-    if (repository) {
-      resourcePath = `${repository}/${folderName}/${book}.json`;
-
-      if (!/^http/.test(repository)) {
-        resourcePath = `${project.path}/sources/${resourcePath}`;
-      }
-    }
-  } else {
-    resourcePath = `${project.path}/sources/${source}/${book}.json`;
-  }
+  const resourcePath = getSourcePathFn(project, source, `${book}.json`);
 
   // TODO: incluir validação de schema para json do projeto
   if (/^http/.test(resourcePath)) {

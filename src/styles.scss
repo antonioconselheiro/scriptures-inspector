@@ -32,6 +32,8 @@ body {
 }
 
 body,
+select,
+select option,
 ::placeholder {
   font-family: 'gentium-transliteration', 'hebrew', 'paleo-hebrew', 'greek', 'geez', serif;
   font-synthesis: none;

@@ -4,20 +4,16 @@
     "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/repository.json"
   },
   "translationViewer": [
-    "@remote/bible-pt-acf",
-    "@remote/bible-pt-kja"
+    "@remote/bible-pt-acf"
   ],
   "target": {
     "language": "portuguese",
     "books": {
-      "EN1": {
-        "name": "Enoque"
-      },
-      "JUB": {
-        "name": "Jubileus"
-      },
       "GEN": {
         "name": "Gênesis"
+      },
+      "EN1": {
+        "name": "Enoque"
       },
       "EXO": {
         "name": "Êxodo"

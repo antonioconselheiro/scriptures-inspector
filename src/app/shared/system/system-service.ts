@@ -12,8 +12,8 @@ import { Subject } from 'rxjs';
 })
 export class SystemService {
 
-  static autoSaveCurrentProject = new Subject<void>();
-
+  static saveCurrentProject = new Subject<void>();
+  static saveCurrentBook = new Subject<CurrentBook>();
   static project: Project | null = null;
 
   async loadProject(): Promise<Project | null> {
@@ -30,10 +30,6 @@ export class SystemService {
     }
 
     return Promise.resolve(null);
-  }
-
-  chooseFolder(): Promise<string> {
-    return Promise.resolve('~/project');
   }
 
   async saveCurrentBook(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
@@ -72,7 +68,11 @@ export class SystemService {
     return Promise.resolve();
   }
 
-  autoSaveCurrentProject(): void {
-    SystemService.autoSaveCurrentProject.next();
+  triggerSaveCurrentProject(): void {
+    SystemService.saveCurrentProject.next();
+  }
+
+  triggerSaveCurrentBook(currentBook: CurrentBook): void {
+    SystemService.saveCurrentBook.next(currentBook);
   }
 }

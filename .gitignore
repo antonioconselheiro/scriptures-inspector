@@ -2,8 +2,10 @@
 
 # Test Resources
 /public/references
+/home/targets/
 
-# Git
+
+# Credential
 **/.ssh
 **/.gitconfig
 

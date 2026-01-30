@@ -55,7 +55,7 @@ export class ProjectCustomTranslationService {
       .map(word => this.projectService.getLexical(parsedBookMetadata, word.word))
       .join(' ');
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   private derivateInterlinearToCustom(
@@ -74,7 +74,7 @@ export class ProjectCustomTranslationService {
       }
     });
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   derivateAllToCustom(
@@ -120,7 +120,7 @@ export class ProjectCustomTranslationService {
       };
     }
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   cleanCustomTranslation(
@@ -144,7 +144,7 @@ export class ProjectCustomTranslationService {
       text: ''
     };
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   getCustomTranslationColor(
@@ -249,7 +249,7 @@ export class ProjectCustomTranslationService {
     const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     metadata[wordIndex] = value;
 
-    this.systemService.autoSaveCurrentProject();
+    this.systemService.triggerSaveCurrentBook(current);
   }
 
   cleanInterlinear(
