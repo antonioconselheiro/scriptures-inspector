@@ -188,10 +188,12 @@ export class ProjectMetadataService {
   updateLexical(
     current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
+    language: Language,
     word: string,
     lexicalValue: string
   ): void {
-    bookMetadata.lexical[word] = lexicalValue;
+    const normalizeFn = language.normalizeFn ? language.normalizeFn : (word: string) => word;
+    bookMetadata.lexical[normalizeFn(word)] = lexicalValue;
     this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
@@ -246,9 +248,9 @@ export class ProjectMetadataService {
   }
 
   parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {
-    const normalizedFn = language.normalizeFn ? language.normalizeFn : (t: string) => t;
-    let prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${normalizedFn(pattern)}`, 'u')]));
-    let suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${normalizedFn(pattern)}$`, 'u')]));
+    const prefetchMatcherFn = language.prefetchMatcherFn ? language.prefetchMatcherFn : (t: string) => t;
+    let prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}`, 'u')]));
+    let suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${prefetchMatcherFn(pattern)}$`, 'u')]));
 
     return { prefix, suffix }
   }

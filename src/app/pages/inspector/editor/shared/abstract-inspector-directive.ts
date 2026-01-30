@@ -2,6 +2,8 @@ import { Directive, Input } from '@angular/core';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
 
 @Directive()
@@ -16,6 +18,8 @@ export abstract class AbstractInspectorDiretive {
   @Input()
   abstract bookTarget: Book<BookMetadataAttributes, any>;
 
+  readonly languageMetadataRecord = languageMetadataRecord;
+
   protected abstract projectMetadataService: ProjectMetadataService;
 
   calcFieldSize(placeholder: string, value: string): number {
@@ -29,9 +33,9 @@ export abstract class AbstractInspectorDiretive {
   }
 
     //  lexical
-  updateLexical(input: HTMLInputElement, word: string): void {
-    this.projectMetadataService.updateLexical(this.current, this.bookTarget, word, input.value);
-
+  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, word: string): void {
+    const language = this.languageMetadataRecord[sourceLanguage];
+    this.projectMetadataService.updateLexical(this.current, this.bookTarget, language, word, input.value);
     input.style.width = `${this.calcFieldSize(word, input.value)}px`;
     this.pipeUpdaterController++;
   }

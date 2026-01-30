@@ -30,7 +30,7 @@ export class AddPatternContextMenu {
 
   onAddPattern(type: 'prefix' | 'suffix', word: string): void {
     const langMetadata = this.languageMetadataRecord[this.sourceLanguage];
-    const normalized = langMetadata.prefetchNormalizedToMatcher ? langMetadata.prefetchNormalizedToMatcher(word) : word;
+    const normalized = langMetadata.normalizeFn ? langMetadata.normalizeFn(word) : word;
 
     this.bookTarget.patterns[type].push(normalized);
     this.visible = false;

@@ -87,7 +87,7 @@
       @let lexical = word.word | lexical : bookTarget : pipeUpdaterController;
       <input type="text" [name]="'fieldLexical' + word.index" [placeholder]="word.word" #fieldLexical
         [style.width.px]="calcFieldSize(word.word, lexical)"
-        (input)="updateLexical(fieldLexical, word.word)" [value]="lexical" />
+        (input)="updateLexical(sourceLanguage, fieldLexical, word.word)" [value]="lexical" />
       }
     </td>
     }

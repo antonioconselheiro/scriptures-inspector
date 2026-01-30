@@ -45,7 +45,7 @@
       @for (word of sentence; track $index) {
       @let literal = word.word | lexical : parsedBook : pipeUpdaterController;
       <input type="text" [name]="'fieldTranslation' + word.index" [placeholder]="word.word" #field
-        [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLexical(field, word.word)"
+        [style.width.px]="calcFieldSize(word.word, literal)" (input)="updateLexical(sourceLanguage, field, word.word)"
         [value]="literal" />
       }
     </td>

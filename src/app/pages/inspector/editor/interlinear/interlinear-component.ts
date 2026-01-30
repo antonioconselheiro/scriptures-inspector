@@ -62,8 +62,6 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
-  readonly languageMetadataRecord = languageMetadataRecord;
-
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,

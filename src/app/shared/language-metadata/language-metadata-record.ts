@@ -34,8 +34,8 @@ export const languageMetadataRecord: {
         parse: (text: string) => paleoHebrewSpellingFn(text)
       }
     ],
-    normalizeFn: (text: string) => massoretifierFn(text),
-    prefetchNormalizedToMatcher: (text: string) => demassoretifierFn(text),
+    normalizeFn: (text: string) => demassoretifierFn(text),
+    prefetchMatcherFn: (text: string) => massoretifierFn(text),
     externalDictionaryLink: 'https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s'
   },
   'geez': {

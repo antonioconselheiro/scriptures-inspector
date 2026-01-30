@@ -44,10 +44,10 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   sourceBook!: SourceBook;
 
   @Input()
-  sourceLanguage!: LanguageUnionType;
+  parsedBook!: ParsedBookMetadata;
 
   @Input()
-  parsedBook!: ParsedBookMetadata;
+  sourceLanguage!: LanguageUnionType;
 
   @Input()
   sourceVerse!: BookVerse<{ text: string; }>;
@@ -71,8 +71,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Output()
   showLegend = new EventEmitter<boolean>();
-
-  readonly languageMetadataRecord = languageMetadataRecord;
 
   constructor(
     private projectService: ProjectDataService,
