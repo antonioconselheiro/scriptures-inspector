@@ -10,7 +10,7 @@ import { ProjectDataService } from './project-data-service';
 @Injectable({
   providedIn: 'root'
 })
-export class ProjectTranslationMetadataService {
+export class ProjectInterlinearService {
 
   constructor(
     private projectService: ProjectDataService,
@@ -53,7 +53,7 @@ export class ProjectTranslationMetadataService {
       }
     };
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
 
   getInterlinear(
@@ -71,8 +71,8 @@ export class ProjectTranslationMetadataService {
       if (interlinear) {
         return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);
       }
-    } catch {
-
+    } catch (e) {
+      console.error(e);
     }
 
     return '';
@@ -93,7 +93,7 @@ export class ProjectTranslationMetadataService {
       interlinearTarget.chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
 
 }

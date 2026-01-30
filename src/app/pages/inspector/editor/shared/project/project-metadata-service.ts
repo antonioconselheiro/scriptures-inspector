@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
+import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
+import { Book } from '@domain/book-model';
+import { CurrentBook } from '@domain/current-book-model';
 import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
@@ -10,9 +13,6 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
-import { Book } from '@domain/book-model';
-import { CurrentBook } from '@domain/current-book-model';
 
 @Injectable({
   providedIn: 'root'
@@ -108,7 +108,7 @@ export class ProjectMetadataService {
       }
     }
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   cleanScriptureMetadata(
@@ -131,7 +131,7 @@ export class ProjectMetadataService {
       metadata[key].kind = '';
     });
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   // word of God methods
@@ -153,7 +153,7 @@ export class ProjectMetadataService {
       }
     });
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   getScriptureMetadataWordOfGod(
@@ -192,7 +192,7 @@ export class ProjectMetadataService {
     lexicalValue: string
   ): void {
     bookMetadata.lexical[word] = lexicalValue;
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   getLexical(
@@ -213,7 +213,7 @@ export class ProjectMetadataService {
       });
     });
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   //
@@ -242,7 +242,7 @@ export class ProjectMetadataService {
       delete metadata[key].isWordOfGod;
     });
 
-    this.systemService.triggerSaveCurrentBook(current);
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {

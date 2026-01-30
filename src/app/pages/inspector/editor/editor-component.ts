@@ -90,7 +90,9 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.subscribeData();
     this.subscribeParams();
     this.subscribeSaveProject();
-    this.subscribeSaveBook();
+    this.subscribeSaveBookMetadata();
+    this.subscribeSaveBookInterlinear();
+    this.subscribeSaveBookCustomTranslation();
   }
 
   ngOnDestroy(): void {
@@ -147,13 +149,33 @@ export class EditorComponent implements OnInit, OnDestroy {
       }));
   }
 
-  private subscribeSaveBook(): void {
+  private subscribeSaveBookMetadata(): void {
     this.subscriptions.add(SystemService
-      .saveCurrentBook
+      .saveCurrentBookMetadata
       .asObservable()
       .pipe(debounceTime(this.autoSaveDebounceTime))
       .subscribe({
-        next: currentBook => this.systemService.saveCurrentBook(this.project, currentBook, this.projectData)
+        next: currentBook => this.systemService.saveCurrentBookMetadata(this.project, currentBook, this.projectData)
+      }));
+  }
+
+  private subscribeSaveBookInterlinear(): void {
+    this.subscriptions.add(SystemService
+      .saveCurrentBookInterlinear
+      .asObservable()
+      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .subscribe({
+        next: currentBook => this.systemService.saveCurrentBookInterlinear(this.project, currentBook, this.projectData)
+      }));
+  }
+
+  private subscribeSaveBookCustomTranslation(): void {
+    this.subscriptions.add(SystemService
+      .saveCurrentBookCustomTranslations
+      .asObservable()
+      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .subscribe({
+        next: currentBook => this.systemService.saveCurrentBookCustomTranslation(this.project, currentBook, this.projectData)
       }));
   }
 
@@ -285,7 +307,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         })
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBook({ book })
+          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
         });
     }
   }
@@ -301,7 +323,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         .setData(bookMetadata)
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBook({ book })
+          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
         });
     }
   }

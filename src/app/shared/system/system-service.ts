@@ -13,7 +13,10 @@ import { Subject } from 'rxjs';
 export class SystemService {
 
   static saveCurrentProject = new Subject<void>();
-  static saveCurrentBook = new Subject<CurrentBook>();
+  static saveCurrentBookMetadata = new Subject<CurrentBook>();
+  static saveCurrentBookInterlinear = new Subject<CurrentBook>();
+  static saveCurrentBookCustomTranslations = new Subject<CurrentBook>();
+
   static project: Project | null = null;
 
   async loadProject(): Promise<Project | null> {
@@ -32,18 +35,26 @@ export class SystemService {
     return Promise.resolve(null);
   }
 
-  async saveCurrentBook(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => {
-      await this.saveFile(project, structure.metadataEditor.target, current, data);
+  async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
+    project.structure.forEach(async structure => await this.saveFile(project, structure.metadataEditor.target, current, data));
+  }
 
+  async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
+    project.structure.forEach(async structure => {
+      if (structure.interlinearEditor) {
+        structure.interlinearEditor.forEach(async interlinear => await this.saveFile(project, interlinear.target, current, data));
+      }
+    });
+  }
+
+  async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
+    project.structure.forEach(async structure => {
       if (structure.metadataEditor.customTranslationEditor) {
         await this.saveFile(project, structure.metadataEditor.customTranslationEditor, current, data);
       }
 
       if (structure.interlinearEditor) {
         structure.interlinearEditor.forEach(async interlinear => {
-          await this.saveFile(project, interlinear.target, current, data);
-
           if (interlinear.customTranslationEditor) {
             await this.saveFile(project, interlinear.customTranslationEditor, current, data);
           }
@@ -72,7 +83,15 @@ export class SystemService {
     SystemService.saveCurrentProject.next();
   }
 
-  triggerSaveCurrentBook(currentBook: CurrentBook): void {
-    SystemService.saveCurrentBook.next(currentBook);
+  triggerSaveCurrentBookMetadata(currentBook: CurrentBook): void {
+    SystemService.saveCurrentBookMetadata.next(currentBook);
+  }
+
+  triggerSaveCurrentBookInterlinear(currentBook: CurrentBook): void {
+    SystemService.saveCurrentBookInterlinear.next(currentBook);
+  }
+
+  triggerSaveCurrentBookTranslations(currentBook: CurrentBook): void {
+    SystemService.saveCurrentBookCustomTranslations.next(currentBook);
   }
 }

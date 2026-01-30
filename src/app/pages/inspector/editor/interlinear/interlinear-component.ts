@@ -17,8 +17,8 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
+import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { ProjectTranslationMetadataService } from '../shared/project/project-translation-metadata-service';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -67,7 +67,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
-    private projectTranslationMetadataService: ProjectTranslationMetadataService
+    private projectTranslationMetadataService: ProjectInterlinearService
   ) {
     super();
   }
