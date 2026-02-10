@@ -10,7 +10,6 @@ ENV CHROME_BIN=/usr/bin/chromium
 ENV ELECTRON_ENABLE_LOGGING=true
 ENV ELECTRON_DISABLE_SANDBOX=true
 ENV DBUS_SESSION_BUS_ADDRESS=/dev/null
-ENV DISPLAY=:0
 
 RUN apt update && \
     apt install -y dbus libnss3 libnss3-dev libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 \

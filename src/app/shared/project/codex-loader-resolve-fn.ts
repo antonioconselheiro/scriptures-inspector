@@ -22,7 +22,6 @@ export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<Langu
       }));
     }
 
-    console.info('codex loaded:', codexRecord);
     return codexRecord;
   }
 }

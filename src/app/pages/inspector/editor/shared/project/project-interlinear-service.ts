@@ -66,7 +66,9 @@ export class ProjectInterlinearService {
     let interlinear: TranslationInterlinearVerse;
 
     try {
-      interlinear = interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
+      interlinear = interlinearTarget.chapters[current.chapter] &&
+        interlinearTarget.chapters[current.chapter][translationVerse.verse.index] && 
+        interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
         return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);

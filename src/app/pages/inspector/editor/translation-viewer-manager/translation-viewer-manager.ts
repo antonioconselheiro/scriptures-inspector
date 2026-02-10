@@ -32,7 +32,7 @@ export class TranslationViewerManager implements OnInit {
     this.activatedRoute.data.subscribe({
       next: data => {
         const repositories = this.repositories = data['repositories'];
-console.info('repositories:', repositories);
+
         Object.keys(repositories).forEach(repository => {
           const languageMetadataRecord: any = this.languageMetadataRecord;
           if (!languageMetadataRecord[repository]) {

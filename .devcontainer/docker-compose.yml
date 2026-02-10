@@ -8,6 +8,8 @@ services:
     working_dir: /scriptures-inspector
     ports:
       - "4205:4205"
+    environment:
+      - DISPLAY=$DISPLAY
     volumes:
       - ..:/scriptures-inspector:cached
       - ../home:/home/node/bible-translation

@@ -25,7 +25,6 @@ export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
       );
     }
 
-    console.info('sources loaded:', sourcesCodex);
     return Promise.resolve(sourcesCodex);
   };
 }
