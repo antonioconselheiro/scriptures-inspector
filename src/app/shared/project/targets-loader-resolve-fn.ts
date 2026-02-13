@@ -36,7 +36,6 @@ export function targetsLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
       );
     }
 
-    console.info('target loaded:', targetsCodex);
     return Promise.resolve(targetsCodex);
   };
 }

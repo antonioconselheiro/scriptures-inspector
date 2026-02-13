@@ -9,7 +9,6 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
@@ -96,11 +95,11 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   }
 
-  splitIntoMatrix(parsedBook: ParsedBookMetadata, text: string): Array<Array<{
+  splitIntoMatrix(text: string): Array<Array<{
     index: number;
     word: string;
   }>> {
-    return this.projectService.splitIntoMatrix(parsedBook, text);
+    return this.projectService.splitIntoMatrix(this.parsedBook, text);
   }
 
   //  word of God

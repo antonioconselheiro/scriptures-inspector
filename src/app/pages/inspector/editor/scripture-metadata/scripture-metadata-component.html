@@ -1,5 +1,5 @@
 @let wordList = sourceVerse.text.split(' ');
-@let eachWord = splitIntoMatrix(parsedBook, sourceVerse.text);
+@let eachWord = splitIntoMatrix(sourceVerse.text);
 @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
 
 <table border="1">
@@ -84,7 +84,7 @@
     @for (sentence of eachWord; track $index) {
     <td>
       @for (word of sentence; track $index) {
-      @let lexical = word.word | lexical : bookTarget : pipeUpdaterController;
+      @let lexical = word.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
       <input type="text" [name]="'fieldLexical' + word.index" [placeholder]="word.word" #fieldLexical
         [style.width.px]="calcFieldSize(word.word, lexical)"
         (input)="updateLexical(sourceLanguage, fieldLexical, word.word)" [value]="lexical" />

@@ -64,7 +64,7 @@ export class SystemService {
   }
 
   private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData): Promise<void> {
-    await writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]);
+    return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
   }
 
   async saveProjectConfig(): Promise<void> {
