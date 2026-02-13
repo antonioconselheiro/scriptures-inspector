@@ -76,7 +76,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {
       this.projectCustomTranslationService.derivateAllToCustom(
-        this.translationSourceLanguage, this.parsedBook, this.customTranslation, this.current, this.sourceVerse
+        this.translationSourceLanguage,
+        this.parsedBook,
+        this.customTranslation,
+        this.current,
+        this.languageMetadataRecord[this.translationSourceLanguage],
+        this.sourceVerse
       );
     }
   }
@@ -116,7 +121,13 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): string {
     return this.projectCustomTranslationService.getCustomTranslationStyleRole(
-      this.translationSourceLanguage, this.bookTarget, this.interlinear, this.customTranslation, this.current, this.sourceVerse, wordIndex
+      this.translationSourceLanguage,
+      this.bookTarget,
+      this.interlinear,
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      wordIndex
     );
   }
 

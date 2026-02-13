@@ -56,7 +56,7 @@
     <td [colSpan]="wordList.length">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track word.index) {
-      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | literalizate : parsedBook : pipeUpdaterController}}</span>
+      <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | literalizate : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
       }
       }

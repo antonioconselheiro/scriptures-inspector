@@ -97,7 +97,7 @@
     <td [colSpan]="wordList.length">
       @for (sentence of eachWord; track $index) {
       @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook : pipeUpdaterController}}</span>
+      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
       <span>&nbsp;</span>
       }
       }

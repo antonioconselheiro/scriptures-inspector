@@ -199,9 +199,10 @@ export class ProjectMetadataService {
 
   getLexical(
     data: Book<BookMetadataAttributes, any>,
+    sourceLanguage: Language,
     word: string
   ): string {
-    return this.projectService.getLexical(data, word);
+    return this.projectService.getLexical(data, sourceLanguage, word);
   }
 
   cleanLexicalInterlinear(

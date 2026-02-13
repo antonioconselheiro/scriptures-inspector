@@ -40,10 +40,6 @@ export abstract class AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
-  getLexical(word: string): string {
-    return this.projectMetadataService.getLexical(this.bookTarget, word);
-  }
-
   cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>): void {
     if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
       return;

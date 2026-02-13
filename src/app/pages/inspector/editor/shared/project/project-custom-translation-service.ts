@@ -11,6 +11,7 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { Language } from '@domain/language-model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,12 +48,13 @@ export class ProjectCustomTranslationService {
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
+    sourceLanguage: Language,
     sourceVerse: SourceVerse
   ): void {
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     customTranslation.chapters[current.chapter][sourceVerse.verse.index].text = this.projectService.splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
       .flat()
-      .map(word => this.projectService.getLexical(parsedBookMetadata, word.word))
+      .map(word => this.projectService.getLexical(parsedBookMetadata, sourceLanguage, word.word))
       .join(' ');
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
@@ -63,13 +65,14 @@ export class ProjectCustomTranslationService {
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
+    sourceLanguage: Language,
     sourceVerse: SourceVerse
   ): void {
     const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     metadata.splice(0, metadata.length);
     const custom = customTranslation.chapters[current.chapter][sourceVerse.verse.index].text.split(' ');
     this.projectService.splitIntoMatrix(parsedBookMetadata, sourceVerse.text).flat().forEach(segment => {
-      if (custom[segment.index] === this.projectService.getLexical(parsedBookMetadata, segment.word)) {
+      if (custom[segment.index] === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
         metadata.push(this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment));
       }
     });
@@ -82,10 +85,18 @@ export class ProjectCustomTranslationService {
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
+    sourceLanguage: Language,
     sourceVerse: SourceVerse
   ): void {
-    this.derivateTranslationToCustom(parsedBookMetadata, customTranslation, current, sourceVerse);
-    setTimeout(() => this.derivateInterlinearToCustom(translationSourceLanguage, parsedBookMetadata, customTranslation, current, sourceVerse));
+    this.derivateTranslationToCustom(parsedBookMetadata, customTranslation, current, sourceLanguage, sourceVerse);
+    setTimeout(() => this.derivateInterlinearToCustom(
+      translationSourceLanguage,
+      parsedBookMetadata,
+      customTranslation,
+      current,
+      sourceLanguage,
+      sourceVerse
+    ));
   }
 
   getCustomTranslationVerse(

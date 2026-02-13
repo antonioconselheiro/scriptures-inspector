@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
@@ -70,8 +71,10 @@ export class ProjectDataService {
 
   getLexical(
     data: { lexical: Record<string, string> },
+    sourceLanguage: Language,
     word: string,
   ): string {
-    return data.lexical[word] || '';
+    const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
+    return data.lexical[normalizeFn(word)] || '';
   }
 }
