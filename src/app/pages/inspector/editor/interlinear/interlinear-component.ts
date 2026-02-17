@@ -87,11 +87,11 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitOriginIntoMatrix(): Array<Array<{
+  splitIntoMatrix(parsedBook: ParsedBookMetadata, sourceVerse: SourceVerse): Array<Array<{
     index: number;
     word: string;
   }>> {
-    return this.projectService.splitIntoMatrix(this.parsedOriginBook, this.originVerse.text);
+    return this.projectService.splitIntoMatrix(parsedBook, sourceVerse.text);
   }
 
   onSelectInterlinearGeezToScripture(

@@ -1,5 +1,6 @@
 @let wordList = sourceVerse.text.split(' ');
-@let eachWord = splitOriginIntoMatrix();
+@let eachWord = splitIntoMatrix(parsedBook, sourceVerse);
+@let eachOriginWord = splitIntoMatrix(parsedOriginBook, originVerse);
 @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
 
 <table border="1">
@@ -72,7 +73,7 @@
         [ngModel]="getInterlinear(translationWord.index)"
         [name]="'translationToSourceInterlinear' + $index + '-' + translationWord.word">
         <option value=""></option>
-        @for (wordSegments of eachWord; track $index) {
+        @for (wordSegments of eachOriginWord; track $index) {
         @for (segment of wordSegments; track $index) {
         <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
         </option>
