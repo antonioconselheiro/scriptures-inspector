@@ -44,10 +44,16 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   @Input()
-  parsedBook!: ParsedBookMetadata;
+  parsedOriginBook!: ParsedBookMetadata;
+
+  @Input()
+  originVerse!: SourceVerse;
 
   @Input()
   sourceBook!: SourceBook;
+
+  @Input()
+  parsedBook!: ParsedBookMetadata;
 
   @Input()
   sourceVerse!: SourceVerse;
@@ -81,11 +87,11 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix(text: string): Array<Array<{
+  splitOriginIntoMatrix(): Array<Array<{
     index: number;
     word: string;
   }>> {
-    return this.projectService.splitIntoMatrix(this.parsedBook, text);
+    return this.projectService.splitIntoMatrix(this.parsedOriginBook, this.originVerse.text);
   }
 
   onSelectInterlinearGeezToScripture(
