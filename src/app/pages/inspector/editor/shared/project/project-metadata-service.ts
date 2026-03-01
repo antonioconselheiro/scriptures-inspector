@@ -250,9 +250,10 @@ export class ProjectMetadataService {
 
   parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {
     const prefetchMatcherFn = language.prefetchMatcherFn ? language.prefetchMatcherFn : (t: string) => t;
-    let prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}`, 'u')]));
-    let suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${prefetchMatcherFn(pattern)}$`, 'u')]));
+    const prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}`, 'u')]));
+    const suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${prefetchMatcherFn(pattern)}$`, 'u')]));
+    const lexeme = new Map<string, RegExp>(serialized.lexeme.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}$`, 'u')]));
 
-    return { prefix, suffix }
+    return { prefix, suffix, lexeme }
   }
 }

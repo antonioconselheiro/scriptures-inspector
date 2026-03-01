@@ -6,4 +6,5 @@ cp .gitconfig ~/.gitconfig;
 chmod 500 ~/.ssh/id_ed25519;
 ssh-add -D;
 ssh-add ~/.ssh/id_ed25519;
+rm -rf /run/dbus/pid;
 dbus-daemon --system --fork;

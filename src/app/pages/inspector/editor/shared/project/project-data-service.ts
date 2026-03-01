@@ -32,7 +32,21 @@ export class ProjectDataService {
   splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
     return pharse.split(' ').map(word => {
       let matchPrefix = '',
-        matchSuffix = '';
+        matchSuffix = '',
+        matchLexeme = '';
+
+      for (let [, pattern] of patterns.lexeme) {
+        const match = word.match(pattern);
+        if (match) {
+          const [lexeme] = Array.from(match);
+          matchLexeme = lexeme;
+          break;
+        }
+      }
+
+      if (matchLexeme) {
+        return [ matchLexeme ];
+      }
 
       for (let [, pattern] of patterns.prefix) {
         const match = word.match(pattern);

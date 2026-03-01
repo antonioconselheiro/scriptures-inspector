@@ -13,7 +13,8 @@ import { Subject } from 'rxjs';
 export class DialogLexicalDictionary extends ModalableDirective<Book<BookMetadataAttributes, any>, boolean> implements OnInit {
 
   book: Book<BookMetadataAttributes, any> | null = null;
-  dictionary: Array<{ key: string; value: string; }> = [];
+  lexicals: Array<{ key: string; value: string; }> = [];
+
   override response = new Subject<boolean | void>();
 
   override onInjectData(book: Book<BookMetadataAttributes, any>): void {
@@ -21,7 +22,7 @@ export class DialogLexicalDictionary extends ModalableDirective<Book<BookMetadat
   }
 
   ngOnInit(): void {
-    this.dictionary = this.getLexicalDictionary();
+    this.lexicals = this.getLexicalDictionary();
   }
 
   getLexicalDictionary(): Array<{ key: string; value: string; }> {
@@ -35,10 +36,11 @@ export class DialogLexicalDictionary extends ModalableDirective<Book<BookMetadat
     return [];
   }
 
-  deleteFromDictionary(key: string): void {
+  deleteLexical(key: string): void {
     if (this.book) {
       delete this.book.lexical[key];
     }
-    this.dictionary = this.getLexicalDictionary();
+
+    this.lexicals = this.getLexicalDictionary();
   }
 }

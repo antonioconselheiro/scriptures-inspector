@@ -6,6 +6,7 @@ ENV LC_ALL=C.UTF-8
 ENV TZ=America/Sao_Paulo
 ENV DEBUG_COLORS=true
 ENV FORCE_COLOR=true
+ENV CI=TRUE
 ENV CHROME_BIN=/usr/bin/chromium
 ENV ELECTRON_ENABLE_LOGGING=true
 ENV ELECTRON_DISABLE_SANDBOX=true
@@ -27,4 +28,3 @@ WORKDIR /scriptures-inspector
 EXPOSE 4205
 
 CMD ["/bin/bash"]
-

@@ -28,7 +28,7 @@ export class AddPatternContextMenu {
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
-  onAddPattern(type: 'prefix' | 'suffix', word: string): void {
+  onAddPattern(type: 'prefix' | 'suffix' | 'lexeme', word: string): void {
     const langMetadata = this.languageMetadataRecord[this.sourceLanguage];
     const normalized = langMetadata.normalizeFn ? langMetadata.normalizeFn(word) : word;
 

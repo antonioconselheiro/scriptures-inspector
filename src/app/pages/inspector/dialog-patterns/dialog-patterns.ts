@@ -39,7 +39,7 @@ export class DialogPatterns extends ModalableDirective<{ language: string, patte
     this.language = data.language;
   }
 
-  deletePattern(type: 'prefix' | 'suffix', index: number): void {
+  deletePattern(type: 'prefix' | 'suffix' | 'lexeme', index: number): void {
     this.patterns[type].splice(index, 1);
   }
 
@@ -51,6 +51,8 @@ export class DialogPatterns extends ModalableDirective<{ language: string, patte
         this.patterns.prefix.push(word);
       } else if (type === 'sufix') {
         this.patterns.suffix.push(word);
+      } else if (type === 'lexeme') {
+        this.patterns.lexeme.push(word);
       }
 
       this.form.reset();

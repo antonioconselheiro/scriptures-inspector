@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron/main');
+const { app, Menu, BrowserWindow, ipcMain, dialog } = require('electron/main');
 const path = require('path');
 const fs = require('fs/promises');
 
@@ -43,6 +43,8 @@ function createWindow() {
       path.join(__dirname, 'dist/index.html')
     );
   }
+
+  Menu.setApplicationMenu(menu);
 }
 
 app.whenReady().then(() => {

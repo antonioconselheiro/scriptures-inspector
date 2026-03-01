@@ -7,29 +7,36 @@ export function getProjectTargetsMetadataDetailsFn(
   project: Project, codexMetadataRecord: Record<string, Codex<LanguageUnionType>>
 ): Array<TargetMetadataDetail> {
   const targetResultset: Array<TargetMetadataDetail> = [];
+  const indexNotFound = -1;
 
   project.structure.forEach(structure => {
     const { source, target } = structure.metadataEditor;
+    const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
-    targetResultset.push({
-      type: 'metadata',
-      source,
-      target,
-      languageSource: codexMetadataRecord[source].language,
-      languageTarget: project.target.language
-    });
+    if (indexMetadata === indexNotFound) {
+      targetResultset.push({
+        type: 'metadata',
+        source,
+        target,
+        languageSource: codexMetadataRecord[source].language,
+        languageTarget: project.target.language
+      });
+    }
 
     if (structure.interlinearEditor) {
       structure.interlinearEditor.forEach(interlinear => {
         const { source, target } = interlinear;
+        const indexInterlinear = targetResultset.findIndex(target => target.source === source);
 
-        targetResultset.push({
-          type: 'interlinear',
-          source,
-          target,
-          languageSource: codexMetadataRecord[source].language,
-          languageTarget: project.target.language
-        });
+        if (indexInterlinear === indexNotFound) {
+          targetResultset.push({
+            type: 'interlinear',
+            source,
+            target,
+            languageSource: codexMetadataRecord[source].language,
+            languageTarget: project.target.language
+          });
+        }
       });
     }
   });

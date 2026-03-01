@@ -6,7 +6,8 @@
     <ul>
       <li (click)="onAddPattern('prefix', selectedWord)">define {{ selectedWord }} as prefix</li>
       <li (click)="onAddPattern('suffix', selectedWord)">define {{ selectedWord }} as suffix</li>
-      <li>list occurrences</li>
+      <li (click)="onAddPattern('lexeme', selectedWord)">define {{ selectedWord }} as lexeme</li>
+    <!-- <li>list occurrences</li> -->
     </ul>
   </div>
 }

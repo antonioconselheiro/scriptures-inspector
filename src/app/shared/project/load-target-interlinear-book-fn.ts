@@ -13,7 +13,8 @@ export async function loadTargetInterlinearBookFn(project: Project, target: KeyI
     chapters: [],
     patterns: {
       prefix: [],
-      suffix: []
+      suffix: [],
+      lexeme: []
     },
     lexical: {}
   };
