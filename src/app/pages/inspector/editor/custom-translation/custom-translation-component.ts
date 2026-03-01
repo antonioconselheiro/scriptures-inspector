@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
+import { Book } from '@domain/book-model';
+import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { CustomTranslationVerse } from '@domain/custom-translation-verse-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -13,8 +16,6 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
-import { Book } from '@domain/book-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -65,11 +66,19 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     super();
   }
 
-  splitTextBySpacesAndPunctuation(value: string, pipeUpdaterController: number): string[] {
+  splitCustomTranslation(
+    customTranslationObj: BookVerse<{
+      text: string;
+      metadata: Array<BookTranslationTargetMetadata>;
+    }> | undefined,
+    pipeUpdaterController: number
+  ): string[] {
     pipeUpdaterController;
-    return [...value.matchAll(/(\s*)(\S+?)(\.{3}|…|[.!?]+)?(?=\s|$)/g)]
-      .flatMap(m => m[3] ? [`${m[1]}${m[2]}`, m[3]] : [`${m[1]}${m[2]}`])
-      .map(m => m.trim());
+    if (!customTranslationObj) {
+      return [];
+    }
+
+    return this.projectCustomTranslationService.splitCustomTranslation(customTranslationObj);
   }
 
   derivateAllToCustom(): void {
@@ -92,7 +101,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
   }
 
-  getCustomTranslationVerse(): CustomTranslationVerse | null {
+  getCustomTranslationVerse(): { text: string } | null {
     return this.projectCustomTranslationService.getCustomTranslationVerse(
       this.customTranslation, this.current, this.sourceVerse
     );
@@ -132,10 +141,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   getCustomTranslationInterlinearValue(
-    wordIndex: number
+    wordSpanIndex: number
   ): string {
     return this.projectCustomTranslationService.getCustomTranslationInterlinearValue(
-      this.customTranslation, this.current, this.sourceVerse, wordIndex
+      this.customTranslation, this.current, this.sourceVerse, wordSpanIndex
     );
   }
 

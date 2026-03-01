@@ -5,6 +5,7 @@ import { Project } from '@domain/project-model';
 
 export async function loadTargetInterlinearBookFn(project: Project, target: KeyInterlinear, book: string): Promise<BookInterlinearTarget> {
   const interlinear = await loadTargetBookFn(project, target, book);
+
   if (interlinear) {
     return interlinear;
   }

@@ -22,14 +22,14 @@ export const languageMetadataRecord: {
     transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
     numerology: [
       {
-        name: 'Gematria',
+        name: 'gematria',
         label: 'gematria',
         calc: (text: string) => hebrewGematriaFn(text)
       }
     ],
     alternativeSpelling: [
       {
-        name: 'Hypothetical Paleo',
+        name: 'hypothetical paleo',
         label: 'hypothetical-paleo',
         parse: (text: string) => paleoHebrewSpellingFn(text)
       }

@@ -3,7 +3,7 @@
 </div>
 
 <table border="1">
-  @let splittedCustomTranslation = splitTextBySpacesAndPunctuation(customTranslationEl.value, pipeUpdaterController) || [];
+  @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][sourceVerse.verse.index], pipeUpdaterController) || [];
   <tr>
     <th rowspan="3">custom</th>
     <td [colSpan]="splittedCustomTranslation.length">
@@ -31,6 +31,18 @@
       <span>&nbsp;</span>
       }
     </td>
+  </tr>
+
+  <tr>
+    <th>word span</th>
+    @for (sentence of splittedCustomTranslation; track $index) {
+    <td>
+      <input
+        type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
+        [value]="customTranslation.chapters[current.chapter][sourceVerse.verse.index].metadata[$index].size"
+      />
+    </td>
+    }
   </tr>
 
   <tr>
