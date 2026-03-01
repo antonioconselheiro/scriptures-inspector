@@ -81,6 +81,18 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return this.projectCustomTranslationService.splitCustomTranslation(customTranslationObj);
   }
 
+  onChangeWordSpan(verse: {
+    text: string;
+    metadata: Array<BookTranslationTargetMetadata>;
+  }, index: number, size: string): void {
+    const sizeNumber = Number(size);
+    if (sizeNumber === 0) {
+      delete verse.metadata[index];
+    } else {
+      verse.metadata[index].size = sizeNumber;
+    }
+  }
+
   derivateAllToCustom(): void {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {

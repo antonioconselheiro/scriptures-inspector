@@ -40,6 +40,7 @@
       <input
         type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
         [value]="customTranslation.chapters[current.chapter][sourceVerse.verse.index].metadata[$index].size"
+        (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][sourceVerse.verse.index], $index, wordSpanEl.value)"
       />
     </td>
     }
