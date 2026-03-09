@@ -7,6 +7,7 @@
 # Credential
 **/.ssh
 **/.gitconfig
+en-US-10-1.bdic
 
 # Compiled output
 /dist

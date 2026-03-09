@@ -84,13 +84,20 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   onChangeWordSpan(verse: {
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
-  }, index: number, size: string): void {
-    const sizeNumber = Number(size);
+  }, index: number, wordSpanEl: { value: string }): void {
+    const sizeNumber = Number(wordSpanEl.value);
     if (sizeNumber === 0) {
-      delete verse.metadata[index];
+      const remove = confirm('remove it slot?');
+      if (remove) {
+        delete verse.metadata[index];
+      } else {
+        wordSpanEl.value = String(verse.metadata[index].size = 1);
+      }
     } else {
       verse.metadata[index].size = sizeNumber;
     }
+
+    // trigger save
   }
 
   derivateAllToCustom(): void {
