@@ -12,6 +12,7 @@ import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { WordFragment } from '@domain/word-fragment-model';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,7 @@ export class ProjectCustomTranslationService {
       .splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
       .flat()
       .forEach(segment => {
-        if (customTranslationSplitted[segment.index] === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
+        if (customTranslationSplitted[segment.index].fragment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
           metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment);
         }
       });
@@ -92,20 +93,28 @@ export class ProjectCustomTranslationService {
   splitCustomTranslation(customTranslationObj: BookVerse<{
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
-  }>): string[] {
-    const sentenceList: string[] = [];
+  }>): Array<WordFragment> {
+    const sentenceList: Array<WordFragment> = [];
     let start = 0;
     customTranslationObj.metadata.forEach(metadata => {
-      sentenceList.push(customTranslationObj.text.slice(start, start + metadata.size));
+      const fragment = customTranslationObj.text.slice(start, start + metadata.size);
+      const sentence: WordFragment = {
+        fragment
+      };
+
+      sentenceList.push(sentence);
       start += metadata.size;
 
       const [startSpaces] = customTranslationObj.text.slice(start).match(/^[ ]*/) || [''];
+      if (startSpaces.length) {
+        sentence.hasTrailingSpace = true;
+      }
       start += startSpaces.length;
     });
 
     const finalSentence = customTranslationObj.text.slice(start).trim();
     if (finalSentence.length) {
-      sentenceList.push(finalSentence);
+      sentenceList.push({ fragment: finalSentence });
     }
 
     return sentenceList;

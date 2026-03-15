@@ -16,6 +16,7 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { WordFragment } from '@domain/word-fragment-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -72,7 +73,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       metadata: Array<BookTranslationTargetMetadata>;
     }> | undefined,
     pipeUpdaterController: number
-  ): string[] {
+  ): Array<WordFragment> {
     pipeUpdaterController;
     if (!customTranslationObj) {
       return [];

@@ -18,8 +18,10 @@
   <tr>
     <td [colSpan]="splittedCustomTranslation.length">
       @for (sentence of splittedCustomTranslation; track $index) {
-      <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence}}</span>
-      <span>&nbsp;</span>
+      <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+        @if (sentence.hasTrailingSpace) {
+          <span>&nbsp;</span>
+        }
       }
     </td>
   </tr>
@@ -27,8 +29,10 @@
   <tr>
     <td [colSpan]="splittedCustomTranslation.length">
       @for (sentence of splittedCustomTranslation; track $index) {
-      <span [class]="getCustomTranslationStyleRole($index)">{{sentence}}</span>
-      <span>&nbsp;</span>
+      <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
+        @if (sentence.hasTrailingSpace) {
+          <span>&nbsp;</span>
+        }
       }
     </td>
   </tr>
@@ -50,7 +54,7 @@
     <th>interlinear</th>
     @for (sentence of splittedCustomTranslation; track $index) {
     <td>
-      {{sentence}}
+      {{sentence.fragment}}
     </td>
     }
     <td></td>
