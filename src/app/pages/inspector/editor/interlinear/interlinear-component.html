@@ -65,13 +65,13 @@
   </tr>
   <tr>
     <th>scriptures</th>
-    @for (sentence of eachWord; track $index) {
+    @for (sentence of eachWord; track $index; let y = $index) {
     <td>
       @for (translationWord of sentence; track $index) {
       <select #interlinear
         (change)="onSelectInterlinearGeezToScripture(translationWord.index, translationWord.word, interlinear.value)"
         [ngModel]="getInterlinear(translationWord.index)"
-        [name]="'translationToSourceInterlinear' + $index + '-' + translationWord.word">
+        [name]="'translationToSourceInterlinear' + $index">
         <option value=""></option>
         @for (wordSegments of eachOriginWord; track $index) {
         @for (segment of wordSegments; track $index) {

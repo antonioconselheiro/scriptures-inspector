@@ -39,19 +39,24 @@ export class ProjectInterlinearService {
       interlinearTarget.chapters[current.chapter][translationVerse.verse.index] = [];
     }
 
-    interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
-      origin: {
-        verse: scriptureVerseNumber,
-        index: scriptureWordIndex,
-        word: scriptureWord
-      },
+    if (scriptureWordIndex === 0 && scriptureWord === undefined) {
+      interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = null;
+    } else {
+      interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex] = {
+        origin: {
+          verse: scriptureVerseNumber,
+          index: scriptureWordIndex,
+          word: scriptureWord
+        },
 
-      translation: {
-        verse: geezVerseNumber,
-        index: translationWordIndex,
-        word: translationWord
-      }
-    };
+        translation: {
+          verse: geezVerseNumber,
+          index: translationWordIndex,
+          word: translationWord
+        }
+      };
+    }
+
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
@@ -63,11 +68,11 @@ export class ProjectInterlinearService {
     translationVerse: SourceVerse,
     translationWordIndex: number
   ): string {
-    let interlinear: TranslationInterlinearVerse;
+    let interlinear: TranslationInterlinearVerse | null = null;
 
     try {
       interlinear = interlinearTarget.chapters[current.chapter] &&
-        interlinearTarget.chapters[current.chapter][translationVerse.verse.index] && 
+        interlinearTarget.chapters[current.chapter][translationVerse.verse.index] &&
         interlinearTarget.chapters[current.chapter][translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {

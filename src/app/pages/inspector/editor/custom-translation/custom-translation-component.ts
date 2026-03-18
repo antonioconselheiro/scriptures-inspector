@@ -11,12 +11,13 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
+import { WordFragment } from '@domain/word-fragment-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { SystemService } from '@shared/system/system-service';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { WordFragment } from '@domain/word-fragment-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -62,7 +63,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
-    private projectCustomTranslationService: ProjectCustomTranslationService
+    private projectCustomTranslationService: ProjectCustomTranslationService,
+    private systemService: SystemService
   ) {
     super();
   }
@@ -87,18 +89,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     metadata: Array<BookTranslationTargetMetadata>;
   }, index: number, wordSpanEl: { value: string }): void {
     const sizeNumber = Number(wordSpanEl.value);
-    if (sizeNumber === 0) {
-      const remove = confirm('remove it slot?');
-      if (remove) {
-        delete verse.metadata[index];
-      } else {
-        wordSpanEl.value = String(verse.metadata[index].size = 1);
-      }
-    } else {
-      verse.metadata[index].size = sizeNumber;
-    }
+    verse.metadata[index].size = sizeNumber;
 
-    // trigger save
+    this.systemService.triggerSaveCurrentBookTranslations(this.current);
   }
 
   derivateAllToCustom(): void {
