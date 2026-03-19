@@ -83,7 +83,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   }
 
   getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>> }> {
-    debugger;
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
       return {
         source,

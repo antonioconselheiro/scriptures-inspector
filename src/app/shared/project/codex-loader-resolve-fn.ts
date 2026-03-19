@@ -15,11 +15,12 @@ export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<Langu
     if (project) {
       const sources = getProjectSourcesFn(project);
 
-      await [...sources, ...project.translationViewer].map(source => loadCodexMetadataFn(httpClient, project, source).then(data => {
-        if (data) {
-          codexRecord[source] = data;
-        }
-      }));
+      await [...new Set([...sources, ...project.translationViewer])]
+        .map(source => loadCodexMetadataFn(httpClient, project, source).then(data => {
+          if (data) {
+            codexRecord[source] = data;
+          }
+        }));
     }
 
     return codexRecord;
