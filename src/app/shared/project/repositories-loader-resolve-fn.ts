@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { getProjectFn } from './get-project-fn';
+import { RepositoryTranslationRecord } from '@domain/repository-translation-record';
 
 export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
   return async () => {
@@ -12,22 +13,39 @@ export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
     
     if (project) {
       //  TODO: preciso fazer validação do schema retornado para garantir a segurança
-      //  TODO: preciso incluir o header de application/json para garantir o formato do json
       const allRepositories: { [repository: string]: RepositoryRecord } = {};
+      const httpOptions = {
+        headers: {
+          'Accept': 'application/json'
+        }
+      };
       const queeue = await Object
         .keys(project.repositories)
         .filter(repositoryKey => /^https:\/\/[^ ]+repository.json$/.test(project.repositories[repositoryKey]))
-        .map(repositoryKey => firstValueFrom(http.get<RepositoryRecord>(project.repositories[repositoryKey])).then(data => [ repositoryKey, data ] as const));
+        .map(repositoryKey => firstValueFrom(http
+          .get<RepositoryRecord>(project.repositories[repositoryKey], httpOptions))
+          .then(data => [ repositoryKey, data ] as const)
+        );
 
       const resultset = await Promise.all(queeue);
       resultset.forEach(([key, data]) => allRepositories[key] = data);
 
       Object.keys(project.repositories).forEach(repositoryKey => {
         Object.keys(allRepositories[repositoryKey]).forEach(langKey => {
+          const langTranslations = allRepositories[repositoryKey][langKey];
+          const translations: RepositoryTranslationRecord = {};
+          Object.keys(langTranslations.translations).forEach(translationKey => {
+            translations[`@${repositoryKey}/${translationKey}`] = langTranslations.translations[translationKey];
+          });
+
+          langTranslations.translations = translations;
           if (mergedRepositories[langKey]) {
-            mergedRepositories[langKey].translations = { ...mergedRepositories[langKey].translations, ...allRepositories[repositoryKey][langKey].translations };
+            mergedRepositories[langKey].translations = {
+              ...mergedRepositories[langKey].translations,
+              ...langTranslations.translations
+            };
           } else {
-            mergedRepositories[langKey] = allRepositories[repositoryKey][langKey];
+            mergedRepositories[langKey] = langTranslations;
           }
         });
       });
