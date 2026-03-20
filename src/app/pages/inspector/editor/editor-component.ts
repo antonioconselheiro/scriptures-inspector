@@ -31,6 +31,7 @@ import { ProjectMetadataService } from './shared/project/project-metadata-servic
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 import { BookVerse } from '@domain/book-verse-model';
+import { TranslationViewing } from '@domain/translation-viewing-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -70,12 +71,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   } = {};
 
   translationBookRecord: {
-    readonly [source: string]: {
-      translation: string;
-      verse: Readonly<BookVerse<{
-        text: string;
-      }>>;
-    };
+    readonly [source: string]: TranslationViewing;
   } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
@@ -199,19 +195,14 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   private readBookTranslationViewerFromData(data: Data): void {
     const translationBookRecord: {
-      [source: string]: {
-        translation: string;
-        verse: Readonly<BookVerse<{
-          text: string;
-        }>>;
-      };
+      [source: string]: TranslationViewing;
     } = {};
 
-    //  FIXME: entender o que está errado
     this.project.translationViewer.forEach(source => {
       translationBookRecord[source] = data['sources'][source];
+      translationBookRecord[source].name = data['codex'][source].name;
+      translationBookRecord[source].source = source;
       this.codexMetadataRecord[source] = data['codex'][source];
-      translationBookRecord[source].translation = source;
     });
 
     this.translationBookRecord = translationBookRecord;

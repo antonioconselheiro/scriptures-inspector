@@ -5,8 +5,11 @@
 <table border="1">
   @for (translationInformation of getTranslations(); track $index) {
   <tr>
-    <th><span>{{translationInformation.translation}}</span> <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button></th>
-    <td [colSpan]="wordList.length">{{translationInformation.verse.text}}</td>
+    <th class="translationName">
+      <span>{{translationInformation.name}}</span>
+      <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
+    </th>
+    <td [colSpan]="wordList.length">{{translationInformation.verses[sourceVerse.verse.index].text}}</td>
     <td></td>
   </tr>
   }

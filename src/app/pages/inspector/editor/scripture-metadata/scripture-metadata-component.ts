@@ -18,6 +18,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { TranslationViewing } from '@domain/translation-viewing-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -59,10 +60,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   @Input()
   viewingTranslationBookRecord: {
-    readonly [source: string]: {
-      translation: string;
-      verse: Readonly<BookVerse<{ text: string }>>
-    }
+    readonly [source: string]: TranslationViewing;
   } = {};
 
   @Input()
@@ -82,12 +80,20 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
-  getTranslations(): Array<{ source: string, translation: string, verse: Readonly<BookVerse<{ text: string }>> }> {
+  getTranslations(): Array<{
+    source: string;
+    name: string;
+    verses: any;
+  }> {
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
+      const name = this.viewingTranslationBookRecord[source].name;
+      const verses = this.viewingTranslationBookRecord[source].chapters[this.current.chapter];
+
       return {
         source,
-        ...this.viewingTranslationBookRecord[source]
-      };
+        name,
+        verses
+      }
     });
   }
 
