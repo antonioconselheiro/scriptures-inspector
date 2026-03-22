@@ -8,7 +8,7 @@
     <fieldset>
       <legend>Change chapter</legend>
 
-      <select name="selectedBook" placeholder="Book" [ngModel]="formSelectedBook">
+      <select name="selectedBook" placeholder="Book" [(ngModel)]="formSelectedBook">
         @for (book of listBookNames(); track $index) {
           <option [value]="book.key">{{ book.name }}</option>
         }

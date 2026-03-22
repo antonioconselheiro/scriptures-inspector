@@ -246,43 +246,44 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   go(): void {
     if (this.formSelectedBook && this.formSelectedChapter) {
+      const book = this.formSelectedBook;
+      const goTo = (+this.formSelectedChapter) + 1;
+
       this.router.navigate([
         '/editor/book',
-        this.formSelectedBook,
+        book,
         'chapter',
-        (+this.formSelectedChapter) + 1
+        goTo
       ]);
     }
   }
 
   back(): void {
-    const book = this.activatedRoute.snapshot.paramMap.get('book');
-    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
+    if (this.formSelectedBook && this.formSelectedChapter) {
+      const previousChapter = this.formSelectedChapter - 1;
+      const book = this.formSelectedBook;
 
-    if (!book || !chapter) return;
-
-    const nextChapter = chapter - 1;
-    this.router.navigate([
-      '/editor/book',
-      book,
-      'chapter',
-      nextChapter
-    ]);
+      this.router.navigate([
+        '/editor/book',
+        book,
+        'chapter',
+        previousChapter
+      ]);
+    }
   }
 
   next(): void {
-    const book = this.activatedRoute.snapshot.paramMap.get('book');
-    const chapter = Number(this.activatedRoute.snapshot.paramMap.get('chapter'));
+    if (this.formSelectedBook && this.formSelectedChapter) {
+      const nextChapter = this.formSelectedChapter + 1;
+      const book = this.formSelectedBook;
 
-    if (!book || !chapter) return;
-
-    const nextChapter = chapter + 1;
-    this.router.navigate([
-      '/editor/book',
-      book.toLowerCase(),
-      'chapter',
-      nextChapter
-    ]);
+      this.router.navigate([
+        '/editor/book',
+        book,
+        'chapter',
+        nextChapter
+      ]);
+    }
   }
 
   openExternalDictionary(detail: TargetMetadataDetail): void {
