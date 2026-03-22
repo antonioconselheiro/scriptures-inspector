@@ -8,6 +8,7 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
+import { TranslationViewing } from '@domain/translation-viewing-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
@@ -18,7 +19,6 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { TranslationViewing } from '@domain/translation-viewing-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -69,6 +69,9 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   @Output()
   showLegend = new EventEmitter<boolean>();
 
+  @Output()
+  removeTranslation = new EventEmitter<string>();
+
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService
@@ -80,14 +83,20 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
-  getTranslations(): Array<{
+  getTranslations(
+    viewingTranslationBookRecord: {
+      readonly [source: string]: TranslationViewing;
+    }
+  ): Array<{
     source: string;
     name: string;
-    verses: any;
+    verses: Readonly<BookVerse<{
+      text: string;
+    }>>[];
   }> {
-    return Object.keys(this.viewingTranslationBookRecord).map(source => {
-      const name = this.viewingTranslationBookRecord[source].name;
-      const verses = this.viewingTranslationBookRecord[source].chapters[this.current.chapter];
+    return Object.keys(viewingTranslationBookRecord).map(source => {
+      const name = viewingTranslationBookRecord[source].name;
+      const verses = viewingTranslationBookRecord[source].chapters[this.current.chapter];
 
       return {
         source,
@@ -98,7 +107,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   }
 
   removeTranslationViewing(source: string): void {
-
+    this.removeTranslation.emit(source);
   }
 
   splitIntoMatrix(text: string): Array<Array<{

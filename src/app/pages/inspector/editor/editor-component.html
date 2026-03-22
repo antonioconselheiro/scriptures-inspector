@@ -109,6 +109,7 @@
         [addPatternMenuRef]="addPatternMenuRef"
         [viewingTranslationBookRecord]="translationBookRecord"
         (showLegend)="showLegend = $event"
+        (removeTranslation)="onRemoveTranslation($event)"
         [pipeUpdaterController]="pipeUpdaterController"
       ></app-scripture-metadata-component>
   

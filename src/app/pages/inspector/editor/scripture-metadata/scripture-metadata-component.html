@@ -1,16 +1,16 @@
 @let wordList = sourceVerse.text.split(' ');
 @let eachWord = splitIntoMatrix(sourceVerse.text);
 @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
+@let translations = getTranslations(viewingTranslationBookRecord);
 
 <table border="1">
-  @for (translationInformation of getTranslations(); track $index) {
+  @for (translationInformation of translations; track $index) {
   <tr>
-    <th class="translationName">
-      <span>{{translationInformation.name}}</span>
-      <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
-    </th>
+    <th class="translationName">{{translationInformation.name}}</th>
     <td [colSpan]="wordList.length">{{translationInformation.verses[sourceVerse.verse.index].text}}</td>
-    <td></td>
+    <td>
+      <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
+    </td>
   </tr>
   }
   <tr>

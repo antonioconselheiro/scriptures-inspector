@@ -17,8 +17,6 @@ export class SystemService {
   static saveCurrentBookInterlinear = new Subject<CurrentBook>();
   static saveCurrentBookCustomTranslations = new Subject<CurrentBook>();
 
-  static project: Project | null = null;
-
   async loadProject(): Promise<Project | null> {
     const selected = await window.api.openProject();
 
@@ -67,13 +65,13 @@ export class SystemService {
     return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
   }
 
-  async saveProjectConfig(): Promise<void> {
-    if (SystemService.project) {
-      const project: any = { ...SystemService.project };
-      delete project.path;
+  async saveProjectConfig(project: Project): Promise<void> {
+    if (project) {
+      const projectClonedObject: any = { ...project };
+      delete projectClonedObject.path;
       setProjectFn(project);
 
-      writeJsonFileFn(`${SystemService.project.path}/index.xenoglosproj`, project);
+      writeJsonFileFn(`${project.path}/index.xenoglosproj`, projectClonedObject);
     }
 
     return Promise.resolve();

@@ -15,6 +15,7 @@ import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
+import { TranslationViewing } from '@domain/translation-viewing-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
@@ -30,8 +31,9 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { BookVerse } from '@domain/book-verse-model';
-import { TranslationViewing } from '@domain/translation-viewing-model';
+import { HttpClient } from '@angular/common/http';
+import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
+import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -59,6 +61,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   showLegend = false;
   minimized = true;
   pipeUpdaterController = 1;
+  translationsUpdaterController = 1;
 
   projectData: ProjectData = {};
 
@@ -71,7 +74,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   } = {};
 
   translationBookRecord: {
-    readonly [source: string]: TranslationViewing;
+    [source: string]: TranslationViewing;
   } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
@@ -81,6 +84,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
     private systemService: SystemService,
@@ -147,7 +151,9 @@ export class EditorComponent implements OnInit, OnDestroy {
       .asObservable()
       .pipe(debounceTime(this.autoSaveDebounceTime))
       .subscribe({
-        next: () => this.systemService.saveProjectConfig()
+        next: () => {
+          this.systemService.saveProjectConfig(this.project);
+        }
       }));
   }
 
@@ -194,18 +200,16 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   private readBookTranslationViewerFromData(data: Data): void {
-    const translationBookRecord: {
-      [source: string]: TranslationViewing;
-    } = {};
+    this.translationBookRecord = {};
+    this.project.translationViewer
+      .forEach(source => this.applyViewingTranslation(source, data['sources'][source], data['codex'][source]));
+  }
 
-    this.project.translationViewer.forEach(source => {
-      translationBookRecord[source] = data['sources'][source];
-      translationBookRecord[source].name = data['codex'][source].name;
-      translationBookRecord[source].source = source;
-      this.codexMetadataRecord[source] = data['codex'][source];
-    });
-
-    this.translationBookRecord = translationBookRecord;
+  private applyViewingTranslation(source: string, translationViewing: TranslationViewing, codex: Codex<LanguageUnionType>): void {
+    this.translationBookRecord[source] = { ...translationViewing };
+    this.translationBookRecord[source].name = codex.name;
+    this.translationBookRecord[source].source = source;
+    this.codexMetadataRecord[source] = codex;
   }
 
   private readBookTargetsFromData(data: Data): void {
@@ -216,6 +220,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       projectData[target] = data['targets'][target];
       this.codexMetadataRecord[target] = data['codex'][target];
     });
+
     this.projectData = projectData;
   }
 
@@ -334,11 +339,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onAddViewingTranslation(viewingTranslation: string): void {
-    this.project.translationViewer.push(viewingTranslation);
-    this.systemService.triggerSaveCurrentProject();
-  }
-
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
     const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, language);
@@ -347,5 +347,42 @@ export class EditorComponent implements OnInit, OnDestroy {
       lexical: book.lexical,
       patterns: parsedPatterns
     };
+  }
+
+  onAddViewingTranslation(source: string): void {
+    const book = this.current?.book;
+
+    if (book) {
+      loadCodexMetadataFn(this.httpClient, this.project, source)
+        .then(codex => {
+          if (codex) {
+            loadSourceBookFn(this.project, source, book).then(sourceBook => {
+              if (sourceBook?.chapters) {
+                const translationViewing: TranslationViewing = {
+                  ...sourceBook,
+                  source,
+                  name: codex.name
+                };
+
+                this.applyViewingTranslation(source, translationViewing, codex);
+              } else {
+                console.warn('Can\'t show added translation, chapters is null');
+              }
+            });
+          } else {
+            console.warn('Can\'t show added translation, codex is null');
+          }
+        });
+    } else {
+      console.warn('Can\'t load translation, current book is not set');
+    }
+
+    this.project.translationViewer.push(source);
+    this.systemService.triggerSaveCurrentProject();
+  }
+
+  onRemoveTranslation(source: string): void {
+    this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
+    this.systemService.triggerSaveCurrentProject();
   }
 }
