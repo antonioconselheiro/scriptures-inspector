@@ -19,6 +19,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-scripture-metadata-component',

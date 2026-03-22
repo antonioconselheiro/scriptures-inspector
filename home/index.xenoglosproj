@@ -3,10 +3,7 @@
   "repositories": {
     "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/repository.json"
   },
-  "translationViewer": [
-    "@remote/bible-pt-acf",
-    "@remote/bible-pt-ntlh"
-  ],
+  "translationViewer": [],
   "target": {
     "language": "portuguese",
     "books": {

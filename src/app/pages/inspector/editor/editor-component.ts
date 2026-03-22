@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
@@ -21,6 +22,8 @@ import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
+import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
+import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -31,9 +34,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { HttpClient } from '@angular/common/http';
-import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
-import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -61,7 +61,6 @@ export class EditorComponent implements OnInit, OnDestroy {
   showLegend = false;
   minimized = true;
   pipeUpdaterController = 1;
-  translationsUpdaterController = 1;
 
   projectData: ProjectData = {};
 
@@ -356,7 +355,7 @@ export class EditorComponent implements OnInit, OnDestroy {
       loadCodexMetadataFn(this.httpClient, this.project, source)
         .then(codex => {
           if (codex) {
-            loadSourceBookFn(this.project, source, book).then(sourceBook => {
+            loadSourceBookFn(this.httpClient, this.project, source, book).then(sourceBook => {
               if (sourceBook?.chapters) {
                 const translationViewing: TranslationViewing = {
                   ...sourceBook,
@@ -366,7 +365,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
                 this.applyViewingTranslation(source, translationViewing, codex);
               } else {
-                console.warn('Can\'t show added translation, chapters is null');
+                console.warn('Can\'t show added translation, codex is null');
               }
             });
           } else {
@@ -382,7 +381,10 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   onRemoveTranslation(source: string): void {
-    this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
-    this.systemService.triggerSaveCurrentProject();
+    if (confirm('Confirm removing this translation viewing?')) {
+      delete this.translationBookRecord[source];
+      this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
+      this.systemService.triggerSaveCurrentProject();
+    }
   }
 }
