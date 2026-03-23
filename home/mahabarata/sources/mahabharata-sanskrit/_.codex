@@ -1,0 +1,24 @@
+{
+  "name": "Mahabarata",
+  "language": "sanskrit",
+  "data": {
+    "ADI": {"name": "Adi Parva"},
+    "SAB": {"name": "Sabha Parva"},
+    "VAN": {"name": "Vana Parva"},
+    "VIR": {"name": "Virata Parva"},
+    "UDY": {"name": "Udyoga Parva"},
+    "BHI": {"name": "Bhishma Parva"},
+    "DRO": {"name": "Drona Parva"},
+    "KAR": {"name": "Karna Parva"},
+    "SHA": {"name": "Shalya Parva"},
+    "SAU": {"name": "Sauptika Parva"},
+    "STR": {"name": "Stri Parva"},
+    "SAN": {"name": "Santi Parva"},
+    "ANU": {"name": "Anusasana Parva"},
+    "ASW": {"name": "Aswamedha Parva"},
+    "ASR": {"name": "Asramavasika Parva"},
+    "MAU": {"name": "Mausala Parva"},
+    "MAH": {"name": "Mahaprasthanika Parva"},
+    "SVA": {"name": "Svargarohanika Parva"}
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Mahabarata Translation",
+  "target": {
+    "language": "portuguese",
+    "books": {
+      "ADI": {"name": "Livro das Origens"},
+      "SAB": {"name": "Livro da Assembleia"},
+      "VAN": {"name": "Livro da Floresta"},
+      "VIR": {"name": "Livro de Virata"},
+      "UDY": {"name": "Livro dos Esforços"},
+      "BHI": {"name": "Livro de Bhishma"},
+      "DRO": {"name": "Livro de Drona"},
+      "KAR": {"name": "Livro de Karna"},
+      "SHA": {"name": "Livro de Shalya"},
+      "SAU": {"name": "Livro do Ataque Noturno"},
+      "STR": {"name": "Livro das Mulheres"},
+      "SAN": {"name": "Livro da Paz"},
+      "ANU": {"name": "Livro das Instruções"},
+      "ASW": {"name": "Livro do Sacrifício do Cavalo"},
+      "ASR": {"name": "Livro da Vida no Ashram"},
+      "MAU": {"name": "Livro dos Clavas"},
+      "MAH": {"name": "Livro da Grande Jornada"},
+      "SVA": {"name": "Livro da Ascensão ao Céu"}
+    }
+  },
+  "structure": [
+    {
+      "metadataEditor": {
+        "source": "mahabharata-sanskrit",
+        "target": "mahabharata-sanskrit-portuguese-metadata",
+        "customTranslationEditor": "mahabharata-sanskrit-custom-portuguese-translation"
+      }
+    }
+  ]
+}
