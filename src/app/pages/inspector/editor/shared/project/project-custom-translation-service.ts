@@ -261,7 +261,7 @@ export class ProjectCustomTranslationService {
       const scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
       verseMetadata = scriptureChapterMetadata[sourceVerse.verse.index] || null;
       const translationChapterMetadata = customTranslation.chapters[current.chapter] || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[sourceVerse.verse.index]?.metadata || [])?.[wordIndex].value || '');
+      customTranslationMetadataKey = ((translationChapterMetadata[sourceVerse.verse.index]?.metadata || [])?.[wordIndex]?.value || '');
     }
 
     if (!verseMetadata || !customTranslationMetadataKey) {

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
@@ -34,6 +34,7 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { LoadingObservable } from '@shared/loading/loading-service';
 
 @Component({
   selector: 'app-editor-component',
@@ -83,6 +84,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
+    private cdr: ChangeDetectorRef,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
@@ -110,8 +112,11 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.project = project;
     } else {
       const path = ['open'];
-      console.log(`[navigate]`, path.join('\\'));
-      this.router.navigate(path).catch(e => console.error(e));
+      console.log(`[navigate]`, path.join('/'));
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.waitThenStopLoading(() => this.cdr.markForCheck()));
     }
   }
 
@@ -247,40 +252,67 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   private notNullLike<T>(value: T | null | undefined): value is T {
-    return !(value === undefined && value === null);
+    if (value === undefined || value === null) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   go(): void {
     if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const book = this.formSelectedBook;
       const goTo = (+this.formSelectedChapter) + 1;
-      const path = [ '/editor/book', book, 'chapter', goTo ];
-      console.log(`[navigate]`, path.join('\\'));
+      const path = ['/editor/book', book, 'chapter', goTo];
+      console.log(`[navigate]`, path.join('/'));
 
-      this.router.navigate(path).catch(e => console.error(e));
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.waitThenStopLoading(() => this.cdr.markForCheck()));
     }
   }
 
   back(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
-      const previousChapter = this.formSelectedChapter - 1;
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 0) {
+      this.formSelectedChapter--;
+      const previousChapter = this.formSelectedChapter;
       const book = this.formSelectedBook;
-      const path = [ '/editor/book', book, 'chapter', previousChapter ];
-      console.log(`[navigate]`, path.join('\\'));
+      const path = ['/editor/book', book, 'chapter', previousChapter];
+      console.log(`[navigate]`, path.join('/'));
 
-      this.router.navigate(path).catch(e => console.error(e));
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.waitThenStopLoading(() => this.cdr.markForCheck()));
     }
   }
 
   next(): void {
     if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
-      const nextChapter = this.formSelectedChapter + 1;
+      this.formSelectedChapter++;
+      const nextChapter = this.formSelectedChapter;
       const book = this.formSelectedBook;
-      const path = [ '/editor/book', book, 'chapter', nextChapter ];
-      console.log(`[navigate]`, path.join('\\'));
+      const path = ['/editor/book', book, 'chapter', nextChapter];
+      console.log(`[navigate]`, path.join('/'));
 
-      this.router.navigate(path).catch(e => console.error(e));
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.waitThenStopLoading(() => this.cdr.markForCheck()));
     }
+  }
+
+  save(): void {
+    const book = this.current?.book;
+
+    if (book) {
+      this.systemService.triggerSaveCurrentBookMetadata({ book });
+      this.systemService.triggerSaveCurrentBookInterlinear({ book });
+      this.systemService.triggerSaveCurrentBookTranslations({ book });
+    }
+
+    this.systemService.triggerSaveCurrentProject();
   }
 
   openExternalDictionary(detail: TargetMetadataDetail): void {
@@ -294,11 +326,15 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   getChapters(): number[] {
     if (!this.formSelectedBook) return [];
-    const length = Math.max(...Object.keys(this.sourceBookRecord).map(
-      key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
-    ));
+    const length = this.getChaptersLength();
 
     return Array.from({ length }, (_, i) => i + 1);
+  }
+
+  getChaptersLength(): number {
+    return Math.max(...Object.keys(this.sourceBookRecord).map(
+      key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
+    ));
   }
 
   openDialogPatterns(detail: TargetMetadataDetail): void {

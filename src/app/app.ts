@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
 import { MainDialogComponent } from './shared/main-dialog/main-dialog';
+import { Subscription } from 'rxjs';
+import { LoadingObservable } from '@shared/loading/loading-service';
 
 @Component({
   selector: 'app-root',
@@ -13,5 +15,23 @@ import { MainDialogComponent } from './shared/main-dialog/main-dialog';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
+export class App implements OnInit, OnDestroy {
+
+  private subscriptions = new Subscription();
+  loading = false;
+
+  ngOnInit(): void {
+    this.subscribeLoading();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  private subscribeLoading(): void {
+    this.subscriptions.add(
+      LoadingObservable.loading$
+        .subscribe(loading => this.loading = loading)
+    );
+  }
 }

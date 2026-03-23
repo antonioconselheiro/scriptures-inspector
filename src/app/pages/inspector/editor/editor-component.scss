@@ -15,11 +15,29 @@ header.tools {
   background: #f8f8f8;
   box-shadow: gray 0 0 15px;
 
-  img.logo {
-    float: left;
-    padding: .5rem 1rem;
-    align-self: center;
-    width: 24px;
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border: 1px solid;
+    border-right: 0px;
+
+    img.logo {
+      float: left;
+      padding: .5rem 1rem;
+      align-self: center;
+      width: 24px;
+    }
+  
+    button.save {
+      background-image: url('/save.png');
+      width: 24px;
+      height: 24px;
+      border: 0;
+      cursor: pointer;
+      background-size: 100%;
+    }
   }
 
   >form {
@@ -78,8 +96,8 @@ strong.verseTitle {
   transition: transform 1s;
 }
 
-.minimized .logo {
-  display: none;
+.minimized .buttonGroup {
+  display: none !important;
 }
 
 .minimized form {

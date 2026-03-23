@@ -1,16 +1,20 @@
 @let targetMetadataDetails = getProjectTargetsMetadataDetails();
 
 <header [class.minimized]="minimized" class="tools">
-  <img class="logo" src="script.png" />
+  <div class="buttonGroup">
+    <img class="logo" src="script.png" />
+    <button class="save" type="button" (click)="save()"></button>
+  </div>
   <form>
-    <app-translation-viewer-manager (addViewingTranslation)="onAddViewingTranslation($event)"></app-translation-viewer-manager>
+    <app-translation-viewer-manager
+      (addViewingTranslation)="onAddViewingTranslation($event)"></app-translation-viewer-manager>
 
     <fieldset>
       <legend>Change chapter</legend>
 
       <select name="selectedBook" placeholder="Book" [(ngModel)]="formSelectedBook">
         @for (book of listBookNames(); track $index) {
-          <option [value]="book.key">{{ book.name }}</option>
+        <option [value]="book.key">{{ book.name }}</option>
         }
       </select>
 
@@ -21,15 +25,17 @@
       </select>
 
       <button type="button" (click)="go()">Go</button>
-      <button type="button" (click)="back()">Back</button>
-      <button type="button" (click)="next()">Next</button>
+      <button type="button" [attr.disabled]="formSelectedChapter === 0 ? 'disabled': null"
+        (click)="back()">Back</button>
+      <button type="button" [attr.disabled]="formSelectedChapter === getChaptersLength() ? 'disabled': null"
+        (click)="next()">Next</button>
     </fieldset>
 
     <fieldset>
       <legend>Patterns</legend>
 
       @for (detail of targetMetadataDetails; track $index) {
-        <button type="button" (click)="openDialogPatterns(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+      <button type="button" (click)="openDialogPatterns(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
@@ -37,7 +43,8 @@
       <legend>Lexical</legend>
 
       @for (detail of targetMetadataDetails; track $index) {
-        <button type="button" (click)="openDialogLexicalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+      <button type="button"
+        (click)="openDialogLexicalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
@@ -45,7 +52,8 @@
       <legend>Dictionary</legend>
 
       @for (detail of targetMetadataDetails; track $index) {
-        <button type="button" (click)="openExternalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+      <button type="button"
+        (click)="openExternalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
@@ -85,59 +93,44 @@
 <app-add-pattern-context-menu #addPatternMenuRef></app-add-pattern-context-menu>
 
 @for (structure of project.structure; track $index) {
-  @let sourceCodex = codexMetadataRecord[structure.metadataEditor.source];
-  @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
-  @let bookMetadata = projectData[structure.metadataEditor.target];
-  @let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ? projectData[structure.metadataEditor.customTranslationEditor] : undefined;
+@let sourceCodex = codexMetadataRecord[structure.metadataEditor.source];
+@let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
+@let bookMetadata = projectData[structure.metadataEditor.target];
+@let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ?
+projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 
-  @if (current && selectedSourceBook) {
-    @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
-      @let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
+@if (current && selectedSourceBook) {
+@for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
+@let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
 
-      <strong class="verseTitle">
-        {{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
-      </strong>
+<strong class="verseTitle">
+  {{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+</strong>
 
-      <app-scripture-metadata-component
-        [current]="current"
-        [sourceLanguage]="sourceCodex.language"
-        [bookTarget]="bookMetadata"
-        [parsedBook]="parsedBook"
-        [sourceBook]="selectedSourceBook"
-        [sourceVerse]="verse"
-        [customTranslation]="bookCustomTranslation"
-        [addPatternMenuRef]="addPatternMenuRef"
-        (showLegend)="showLegend = $event"
-        [viewingTranslationBookRecord]="translationBookRecord"
-        (removeTranslation)="onRemoveTranslation($event)"
-        [pipeUpdaterController]="pipeUpdaterController"
-      ></app-scripture-metadata-component>
-  
-      @for (item of structure.interlinearEditor; track $index) {
-        @let bookInterlinearSource = sourceBookRecord[item.source];
-        @let bookInterlinearTarget = projectData[item.target];
-        @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
+<app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
+  [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook" [sourceVerse]="verse"
+  [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef" (showLegend)="showLegend = $event"
+  [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation($event)"
+  [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
 
-        @if (bookInterlinearSource) {
-          @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
-          @let langInterlinearSource = codexMetadataRecord[item.source].language;
-          @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+@for (item of structure.interlinearEditor; track $index) {
+@let bookInterlinearSource = sourceBookRecord[item.source];
+@let bookInterlinearTarget = projectData[item.target];
+@let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
-          <app-interlinear-component
-            [current]="current"
-            [sourceLanguage]="langInterlinearSource"
-            [pipeUpdaterController]="pipeUpdaterController"
-            [parsedOriginBook]="parsedBook"
-            [originVerse]="verse"
-            [sourceBook]="bookInterlinearSource"
-            [sourceVerse]="verseInterlinearSource"
-            [parsedBook]="parsedInterlinearBook"
-            [bookTarget]="bookInterlinearTarget"
-            [customTranslation]="bookCustomTranslationTarget"
-            [addPatternMenuRef]="addPatternMenuRef"
-          ></app-interlinear-component>
-        }
-      }
-    }
-  }
+@if (bookInterlinearSource) {
+@let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
+@let langInterlinearSource = codexMetadataRecord[item.source].language;
+@let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource],
+pipeUpdaterController);
+
+<app-interlinear-component [current]="current" [sourceLanguage]="langInterlinearSource"
+  [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook" [originVerse]="verse"
+  [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
+  [bookTarget]="bookInterlinearTarget" [customTranslation]="bookCustomTranslationTarget"
+  [addPatternMenuRef]="addPatternMenuRef"></app-interlinear-component>
+}
+}
+}
+}
 }
