@@ -109,7 +109,9 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (project) {
       this.project = project;
     } else {
-      this.router.navigate(['open']);
+      const path = ['open'];
+      console.log(`[navigate]`, path.join('\\'));
+      this.router.navigate(path).catch(e => console.error(e));
     }
   }
 
@@ -244,45 +246,40 @@ export class EditorComponent implements OnInit, OnDestroy {
     });
   }
 
+  private notNullLike<T>(value: T | null | undefined): value is T {
+    return !(value === undefined && value === null);
+  }
+
   go(): void {
-    if (this.formSelectedBook && this.formSelectedChapter) {
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const book = this.formSelectedBook;
       const goTo = (+this.formSelectedChapter) + 1;
+      const path = [ '/editor/book', book, 'chapter', goTo ];
+      console.log(`[navigate]`, path.join('\\'));
 
-      this.router.navigate([
-        '/editor/book',
-        book,
-        'chapter',
-        goTo
-      ]);
+      this.router.navigate(path).catch(e => console.error(e));
     }
   }
 
   back(): void {
-    if (this.formSelectedBook && this.formSelectedChapter) {
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const previousChapter = this.formSelectedChapter - 1;
       const book = this.formSelectedBook;
+      const path = [ '/editor/book', book, 'chapter', previousChapter ];
+      console.log(`[navigate]`, path.join('\\'));
 
-      this.router.navigate([
-        '/editor/book',
-        book,
-        'chapter',
-        previousChapter
-      ]);
+      this.router.navigate(path).catch(e => console.error(e));
     }
   }
 
   next(): void {
-    if (this.formSelectedBook && this.formSelectedChapter) {
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const nextChapter = this.formSelectedChapter + 1;
       const book = this.formSelectedBook;
+      const path = [ '/editor/book', book, 'chapter', nextChapter ];
+      console.log(`[navigate]`, path.join('\\'));
 
-      this.router.navigate([
-        '/editor/book',
-        book,
-        'chapter',
-        nextChapter
-      ]);
+      this.router.navigate(path).catch(e => console.error(e));
     }
   }
 

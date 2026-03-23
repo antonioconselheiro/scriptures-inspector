@@ -1,7 +1,6 @@
 TODO
 
 [ ] - validar gematria com falseamento
-[X] - completar transliterações geez com todas disponiveis no canone
 [ ] - baixar tradução geez para comparação
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
@@ -11,7 +10,6 @@ TODO
 [ ] - botão para deletar em um versículo associação do geez com o grego ou o hebraico
 [ ] - fazer com que prisma dê continuidade da cor em que o último versículo terminou
 [ ] - livro de enoque em ge'ez não parece estar com todos os capitulos
-[X] - incluir transliteração do grego
 [ ] - incluir loading com bloqueio de tela na troca de página
 [ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
 [ ] - (não mvp) incluir e falsear gematria ordinal

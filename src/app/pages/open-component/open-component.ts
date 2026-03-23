@@ -39,7 +39,10 @@ export class OpenComponent implements OnInit {
   redirect(project: Project): void {
     const [book] = Object.keys(project.target.books);
     if (book) {
-      this.router.navigate(['editor', 'book', book, 'chapter', 1]);
+      const path = [ 'editor', 'book', book, 'chapter', 1 ];
+      console.log(`[navigate]`, path.join('\\'));
+
+      this.router.navigate(path).catch(e => console.error(e));
     }
   }
 }
