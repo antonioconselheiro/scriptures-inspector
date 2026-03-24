@@ -6,6 +6,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { VerseNumberInterlinear } from '@domain/verse-number-interlinear-model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +21,8 @@ export class ProjectInterlinearService {
   onSelectInterlinearGeezToScripture(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
-    translationVerse: SourceVerse,
+    sourceVerse: SourceVerse<VerseNumberInterlinear>,
+    translationVerse: SourceVerse<VerseNumberInterlinear>,
     translationWordIndex: number,
     translationWord: string,
     interlinearOptionValue: string
@@ -65,7 +66,7 @@ export class ProjectInterlinearService {
     language: LanguageUnionType,
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    translationVerse: SourceVerse,
+    translationVerse: SourceVerse<VerseNumberInterlinear>,
     translationWordIndex: number
   ): string {
     let interlinear: TranslationInterlinearVerse | null = null;
@@ -88,7 +89,7 @@ export class ProjectInterlinearService {
   cleanTranslationInterlinear(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    translationVerse: SourceVerse
+    translationVerse: SourceVerse<VerseNumberInterlinear>
   ): void {
     if (
       !interlinearTarget.chapters[current.chapter]

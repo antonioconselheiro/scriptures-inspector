@@ -44,6 +44,9 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   sourceBook!: SourceBook;
 
   @Input()
+  verseIndex!: number;
+
+  @Input()
   parsedBook!: ParsedBookMetadata;
 
   @Input()
@@ -123,7 +126,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       input.checked,
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.sourceVerse.verse.index),
+      this.getCurrent(this.verseIndex),
       this.sourceVerse,
       segments
     );
@@ -133,7 +136,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return this.projectMetadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.sourceVerse.verse.index),
+      this.getCurrent(this.verseIndex),
       segments
     );
   }
@@ -143,7 +146,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.sourceVerse.verse.index));
+    this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
   }
 
   //  metadata
@@ -151,18 +154,18 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return this.projectMetadataService.getScriptureMetadataDefinedKind(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.sourceVerse.verse.index),
+      this.getCurrent(this.verseIndex),
       segment
     );
   }
 
-  updateScripturesMetadata(select: HTMLSelectElement, source: SourceVerse, segment: WordSegment): void {
+  updateScripturesMetadata(select: HTMLSelectElement, segment: WordSegment): void {
     this.projectMetadataService.updateScripturesMetadata(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(source.verse.index),
+      this.getCurrent(this.verseIndex),
       select.value,
-      source,
+      this.sourceVerse,
       segment
     );
   }

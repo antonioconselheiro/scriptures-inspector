@@ -108,7 +108,8 @@ projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 </strong>
 
 <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
-  [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook" [sourceVerse]="verse"
+  [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"
+  [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
   [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef" (showLegend)="showLegend = $event"
   [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation($event)"
   [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
@@ -118,7 +119,7 @@ projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 @let bookInterlinearTarget = projectData[item.target];
 @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
-@if (bookInterlinearSource) {
+@if (bookInterlinearSource && isVerseInterlinearFormat(verse.verse)) {
 @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
 @let langInterlinearSource = codexMetadataRecord[item.source].language;
 @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource],
