@@ -70,7 +70,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
-    private projectTranslationMetadataService: ProjectInterlinearService
+    private projectInterlinearService: ProjectInterlinearService
   ) {
     super();
   }
@@ -99,7 +99,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     translationWord: string,
     interlinearValue: string
   ): void {
-    this.projectTranslationMetadataService.onSelectInterlinearGeezToScripture(
+    this.projectInterlinearService.onSelectInterlinearGeezToScripture(
       this.bookTarget,
       this.current,
       this.sourceVerse,
@@ -111,7 +111,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getInterlinear(wordIndex: number): string {
-    return this.projectTranslationMetadataService.getInterlinear(
+    return this.projectInterlinearService.getInterlinear(
       this.sourceLanguage,
       this.bookTarget,
       this.current,
@@ -129,9 +129,8 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectTranslationMetadataService.cleanTranslationInterlinear(
+    this.projectInterlinearService.cleanTranslationInterlinear(
       this.bookTarget, this.current, this.sourceVerse
     );
   }
-
 }

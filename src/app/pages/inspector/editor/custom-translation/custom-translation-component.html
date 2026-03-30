@@ -1,9 +1,11 @@
+@let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
+
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
 </div>
 
 <table border="1">
-  @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][sourceVerse.verse.index], pipeUpdaterController) || [];
+  @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
   <tr>
     <th rowspan="3">custom</th>
     <td [colSpan]="splittedCustomTranslation.length">
@@ -43,8 +45,8 @@
     <td>
       <input
         type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
-        [value]="customTranslation.chapters[current.chapter][sourceVerse.verse.index].metadata[$index].size"
-        (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][sourceVerse.verse.index], $index, wordSpanEl)"
+        [value]="customTranslation.chapters[current.chapter][verseIndex].metadata[$index].size"
+        (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][verseIndex], $index, wordSpanEl)"
       />
     </td>
     }

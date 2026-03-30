@@ -1,5 +1,5 @@
-import { VerseNumber } from './verse-number-model';
+import { VerseNumberInterlinear } from './verse-number-interlinear-model';
 
 export type BookVerse<Data extends object = object> = {
-  verse: VerseNumber;
+  verse: VerseNumberInterlinear;
 } & Data;

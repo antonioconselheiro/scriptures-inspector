@@ -119,7 +119,7 @@ projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 @let bookInterlinearTarget = projectData[item.target];
 @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
-@if (bookInterlinearSource && isVerseInterlinearFormat(verse.verse)) {
+@if (bookInterlinearSource) {
 @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
 @let langInterlinearSource = codexMetadataRecord[item.source].language;
 @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource],

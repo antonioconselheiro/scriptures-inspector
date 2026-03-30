@@ -18,6 +18,7 @@ import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
@@ -34,11 +35,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { LoadingObservable } from '@shared/loading/loading-service';
-import { SourceVerse } from '@domain/source-verse-model';
-import { VerseNumber } from '@domain/verse-number-model';
-import { VerseNumberInterlinear } from '@domain/verse-number-interlinear-model';
-import { isVerseInterlinearFormatFn } from '@shared/verse/is-verse-interlinear-format-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -339,10 +335,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     return Math.max(...Object.keys(this.sourceBookRecord).map(
       key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
     ));
-  }
-
-  isVerseInterlinearFormat(value: VerseNumber): value is VerseNumberInterlinear {
-    return isVerseInterlinearFormatFn(value);
   }
 
   openDialogPatterns(detail: TargetMetadataDetail): void {

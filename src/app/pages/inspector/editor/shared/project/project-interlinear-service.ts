@@ -21,8 +21,8 @@ export class ProjectInterlinearService {
   onSelectInterlinearGeezToScripture(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse<VerseNumberInterlinear>,
-    translationVerse: SourceVerse<VerseNumberInterlinear>,
+    sourceVerse: SourceVerse,
+    translationVerse: SourceVerse,
     translationWordIndex: number,
     translationWord: string,
     interlinearOptionValue: string
@@ -66,7 +66,7 @@ export class ProjectInterlinearService {
     language: LanguageUnionType,
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    translationVerse: SourceVerse<VerseNumberInterlinear>,
+    translationVerse: SourceVerse,
     translationWordIndex: number
   ): string {
     let interlinear: TranslationInterlinearVerse | null = null;
@@ -89,7 +89,7 @@ export class ProjectInterlinearService {
   cleanTranslationInterlinear(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
-    translationVerse: SourceVerse<VerseNumberInterlinear>
+    translationVerse: SourceVerse
   ): void {
     if (
       !interlinearTarget.chapters[current.chapter]
@@ -103,5 +103,4 @@ export class ProjectInterlinearService {
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
-
 }
