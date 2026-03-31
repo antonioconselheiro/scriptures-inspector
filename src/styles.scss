@@ -20,6 +20,11 @@
 }
 
 @font-face {
+  font-family: 'sanskrit';
+  src: url('/font/sanskrit.ttf') format('truetype');
+}
+
+@font-face {
   font-family: 'gentium-transliteration';
   src: url('/font/gentium-transliteration.ttf') format('truetype');
 }
@@ -35,7 +40,7 @@ body,
 select,
 select option,
 ::placeholder {
-  font-family: 'gentium-transliteration', 'hebrew', 'paleo-hebrew', 'greek', 'geez', serif;
+  font-family: 'gentium-transliteration', 'hebrew', 'paleo-hebrew', 'greek', 'geez', 'sanskrit', serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

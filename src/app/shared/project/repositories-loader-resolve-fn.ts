@@ -11,7 +11,7 @@ export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
     const project = getProjectFn();
     let mergedRepositories: RepositoryRecord = {};
     
-    if (project) {
+    if (project && project.repositories) {
       //  TODO: preciso fazer validação do schema retornado para garantir a segurança
       const allRepositories: { [repository: string]: RepositoryRecord } = {};
       const httpOptions = {
@@ -21,9 +21,9 @@ export function repositoriesLoaderResolveFn(): () => Promise<RepositoryRecord> {
       };
       const queeue = await Object
         .keys(project.repositories)
-        .filter(repositoryKey => /^https:\/\/[^ ]+repository.json$/.test(project.repositories[repositoryKey]))
+        .filter(repositoryKey => /^https:\/\/[^ ]+repository.json$/.test(project.repositories && project.repositories[repositoryKey] || ''))
         .map(repositoryKey => firstValueFrom(http
-          .get<RepositoryRecord>(project.repositories[repositoryKey], httpOptions))
+          .get<RepositoryRecord>(project.repositories && project.repositories[repositoryKey] || '', httpOptions))
           .then(data => [ repositoryKey, data ] as const)
         );
 

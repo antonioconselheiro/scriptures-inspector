@@ -207,6 +207,10 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   private readBookTranslationViewerFromData(data: Data): void {
     this.translationBookRecord = {};
+    if (!this.project.translationViewer) {
+      return;
+    }
+
     this.project.translationViewer
       .forEach(source => this.applyViewingTranslation(source, data['sources'][source], data['codex'][source]));
   }
@@ -410,6 +414,10 @@ export class EditorComponent implements OnInit, OnDestroy {
       console.warn('Can\'t load translation, current book is not set');
     }
 
+    if (!this.project.translationViewer) {
+      this.project.translationViewer = [];
+    }
+
     this.project.translationViewer.push(source);
     this.systemService.triggerSaveCurrentProject();
   }
@@ -417,7 +425,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   onRemoveTranslation(source: string): void {
     if (confirm('Confirm removing this translation viewing?')) {
       delete this.translationBookRecord[source];
-      this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
+      if (this.project.translationViewer) {
+        this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
+      }
       this.systemService.triggerSaveCurrentProject();
     }
   }

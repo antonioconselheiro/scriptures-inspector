@@ -14,7 +14,8 @@ export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<Langu
 
     if (project) {
       const sources = getProjectSourcesFn(project);
-      const projectSources = [...new Set([...sources, ...project.translationViewer])];
+      const translationViewer = project.translationViewer || [];
+      const projectSources = [...new Set([...sources, ...translationViewer])];
 
       await Promise.all(projectSources.map(source => loadCodexMetadataFn(httpClient, project, source).then(data => {
         if (data) {

@@ -3,7 +3,7 @@ import { Project } from '@domain/project-model';
 export function getSourcePathFn(project: Project, sourceName: string, fileName: string): string {
     let resourcePath = '';
 
-  if (/^@/.test(sourceName)) {
+  if (/^@/.test(sourceName) && project.repositories) {
     const repositoryKey = Object.keys(project.repositories).find(path => path === sourceName.replace(/^@|\/[^ ]+$/g, '')) || '';
     const folderName = sourceName.replace(/^@[^ ]+\//, '');
 

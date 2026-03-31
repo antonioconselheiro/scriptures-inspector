@@ -16,7 +16,7 @@ export class LoadingObservable {
   }
 
   static waitThenStopLoading(callback?: Function): void {
-    const waitTime = 1500;
+    const waitTime = 0;
     setTimeout(() => {
       this.stopLoading();
       callback && callback();
