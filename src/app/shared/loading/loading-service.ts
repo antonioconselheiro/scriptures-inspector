@@ -14,12 +14,4 @@ export class LoadingObservable {
   static stopLoading(): void {
     this.loading$.next(false);
   }
-
-  static waitThenStopLoading(callback?: Function): void {
-    const waitTime = 0;
-    setTimeout(() => {
-      this.stopLoading();
-      callback && callback();
-    }, waitTime);
-  }
 }

@@ -2,6 +2,9 @@ TODO
 
 [ ] - validar gematria com falseamento
 [ ] - baixar tradução geez para comparação
+[ ] - componente para associar com imagem do texto original
+[ ] - incluir meio de registrar o nome de um personagem em uma versão tranduzida e outra transliterada
+[ ] - pode-se marcar palavras que representam quantitativos, mas é necessário associar a estes quantitativos qual dos elementos do texto são os números representando esta quantidade, o campo que for marcado como quantitativo deve disponibilizar um select que indica qual quantitativo do livro este número se relaciona 
 [ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
 [ ] - botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico

@@ -47,7 +47,7 @@ export class OpenComponent implements OnInit {
       LoadingObservable.startLoading();
       this.router.navigate(path)
         .catch(e => console.error(e))
-        .finally(() => LoadingObservable.waitThenStopLoading(() => this.cdr.markForCheck()));
+        .finally(() => LoadingObservable.stopLoading());
     }
   }
 }
