@@ -1,4 +1,4 @@
-<form>
+<form [formGroup]="form" (ngSubmit)="onImportFromBookSubmit()">
   <fieldset>
     <legend>Import patterns and lexicals from another book</legend>
 
@@ -11,7 +11,7 @@
     </div>
 
     <div>
-      <input id="overridePatternsAndLexicals" type="checkbox">
+      <input name="override" id="overridePatternsAndLexicals" type="checkbox">
       <label for="overridePatternsAndLexicals">Override existing configs</label>
     </div>
 
