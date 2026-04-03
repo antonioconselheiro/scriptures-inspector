@@ -28,6 +28,7 @@ import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
+import { DialogImportFromBook } from '../dialog-import-from-book/dialog-import-from-book';
 import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
 import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
 import { InterlinearComponent } from './interlinear/interlinear-component';
@@ -35,7 +36,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { DialogImportFromBook } from '../dialog-import-from-book/dialog-import-from-book';
 
 @Component({
   selector: 'app-editor-component',
@@ -332,7 +332,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     ));
   }
 
-  openDialogImportFromBook(): void {
+  openDialogImportFromBook(targetMetadataDetails: TargetMetadataDetail[]): void {
     const book = this.current?.book;
 
     if (book) {
@@ -340,7 +340,9 @@ export class EditorComponent implements OnInit, OnDestroy {
         .createModal(DialogImportFromBook)
         .setOutletName('main')
         .setData({
+          targetMetadataDetails,
           project: this.project,
+          projectData: this.projectData,
           book: book
         })
         .build()

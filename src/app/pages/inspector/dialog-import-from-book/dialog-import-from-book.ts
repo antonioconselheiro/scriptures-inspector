@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
+import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
+import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -12,10 +14,17 @@ import { Subject } from 'rxjs';
   templateUrl: './dialog-import-from-book.html',
   styleUrl: './dialog-import-from-book.scss',
 })
-export class DialogImportFromBook extends ModalableDirective<{ project: Project, book: string }, void> {
+export class DialogImportFromBook extends ModalableDirective<{
+  targetMetadataDetails: TargetMetadataDetail[],
+  project: Project,
+  projectData: ProjectData,
+  book: string
+}, void> {
 
   book!: string;
   project!: Project;
+  projectData!: ProjectData;
+  targetMetadataDetails!: TargetMetadataDetail[];
 
   form!: FormGroup<any>;
 
@@ -31,9 +40,16 @@ export class DialogImportFromBook extends ModalableDirective<{ project: Project,
     });
   }
 
-  override onInjectData(data: { project: Project, book: string }): void {
+  override onInjectData(data: {
+    targetMetadataDetails: TargetMetadataDetail[],
+    project: Project,
+    projectData: ProjectData,
+    book: string
+  }): void {
     this.book = data.book;
     this.project = data.project;
+    this.projectData = data.projectData;
+    this.targetMetadataDetails = data.targetMetadataDetails;
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
@@ -49,14 +65,14 @@ export class DialogImportFromBook extends ModalableDirective<{ project: Project,
     if (this.form.valid) {
       const { selectedBook, override } = this.form.value;
 
-      if (confirm(`Are you sure you want to import ${override ? 'and override': ''} patterns and lexicals from "${selectedBook}"?`)) {
-
+      if (confirm(`Are you sure you want to import ${override ? 'and override' : ''} patterns and lexicals from "${selectedBook}"?`)) {
+        this.project.target.books[this.book]
+        this.projectData
       }
 
       this.form.reset();
     } else {
       this.form.markAllAsTouched();
     }
-  }
   }
 }
