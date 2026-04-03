@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
@@ -35,6 +35,7 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { DialogImportFromBook } from '../dialog-import-from-book/dialog-import-from-book';
 
 @Component({
   selector: 'app-editor-component',
@@ -84,7 +85,6 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
@@ -319,15 +319,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     this.systemService.triggerSaveCurrentProject();
   }
 
-  openExternalDictionary(detail: TargetMetadataDetail): void {
-    const languageMetadata = languageMetadataRecord[detail.languageSource];
-    if (languageMetadata.externalDictionaryLink) {
-      open(languageMetadata.externalDictionaryLink, '_BLANK');
-    } else {
-      alert(`${languageMetadata.name} external dictionary not configured`);
-    }
-  }
-
   getChapters(): number[] {
     if (!this.formSelectedBook) return [];
     const length = this.getChaptersLength();
@@ -339,6 +330,24 @@ export class EditorComponent implements OnInit, OnDestroy {
     return Math.max(...Object.keys(this.sourceBookRecord).map(
       key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
     ));
+  }
+
+  openDialogImportFromBook(): void {
+    const book = this.current?.book;
+
+    if (book) {
+      this.modalService
+        .createModal(DialogImportFromBook)
+        .setOutletName('main')
+        .setData({
+          project: this.project,
+          book: book
+        })
+        .build()
+        .subscribe({
+          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
+        });
+    }
   }
 
   openDialogPatterns(detail: TargetMetadataDetail): void {

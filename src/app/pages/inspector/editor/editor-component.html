@@ -32,6 +32,11 @@
     </fieldset>
 
     <fieldset>
+      <legend>Import configs</legend>
+      <button type="button" (click)="openDialogImportFromBook()">Import from book</button>
+    </fieldset>
+
+    <fieldset>
       <legend>Patterns</legend>
 
       @for (detail of targetMetadataDetails; track $index) {
@@ -45,15 +50,6 @@
       @for (detail of targetMetadataDetails; track $index) {
       <button type="button"
         (click)="openDialogLexicalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-      }
-    </fieldset>
-
-    <fieldset>
-      <legend>Dictionary</legend>
-
-      @for (detail of targetMetadataDetails; track $index) {
-      <button type="button"
-        (click)="openExternalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 

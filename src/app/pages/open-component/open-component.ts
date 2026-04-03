@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Project } from '@domain/project-model';
 import { LoadingObservable } from '@shared/loading/loading-service';
@@ -16,7 +16,6 @@ export class OpenComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef,
     private systemService: SystemService
   ) { }
 

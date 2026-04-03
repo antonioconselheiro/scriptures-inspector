@@ -1,0 +1,20 @@
+<form>
+  <fieldset>
+    <legend>Import patterns and lexicals from another book</legend>
+
+    <div>
+      <select name="selectedBook" placeholder="Book">
+        @for (book of listBookNames(); track $index) {
+        <option [value]="book.key">{{ book.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <input id="overridePatternsAndLexicals" type="checkbox">
+      <label for="overridePatternsAndLexicals">Override existing configs</label>
+    </div>
+
+    <button type="submit">Import</button>
+  </fieldset>
+</form>
