@@ -5,6 +5,7 @@ import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
+import { WordSegment } from '@domain/word-segment-model';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {
@@ -22,21 +23,21 @@ export abstract class AbstractInspectorDiretive {
 
   protected abstract projectMetadataService: ProjectMetadataService;
 
-  calcFieldSize(placeholder: string, value: string): number {
+  calcFieldSize(segment: WordSegment, value: string): number {
     if (value.length) {
       return Math.floor(value.length * 8.5);
-    } else if (placeholder.length) {
-      return Math.floor(placeholder.length * 5);
+    } else if (segment.word.length) {
+      return Math.floor(segment.word.length * 5);
     }
 
     return 30;
   }
 
     //  lexical
-  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, word: string): void {
+  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment): void {
     const language = this.languageMetadataRecord[sourceLanguage];
-    this.projectMetadataService.updateLexical(this.current, this.bookTarget, language, word, input.value);
-    input.style.width = `${this.calcFieldSize(word, input.value)}px`;
+    this.projectMetadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value);
+    input.style.width = `${this.calcFieldSize(segment, input.value)}px`;
     this.pipeUpdaterController++;
   }
 

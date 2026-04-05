@@ -87,13 +87,15 @@
 
   <tr>
     <th rowspan="2">interlinear</th>
-    @for (sentence of eachWord; track $index) {
+    @for (word of eachWord; track $index) {
     <td>
-      @for (word of sentence; track $index) {
-      @let lexical = word.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
-      <input type="text" [name]="'fieldLexical' + word.index" [placeholder]="word.word" #fieldLexical
-        [style.width.px]="calcFieldSize(word.word, lexical)"
-        (input)="updateLexical(sourceLanguage, fieldLexical, word.word)" [value]="lexical" />
+      @for (segment of word; track $index) {
+      @let lexical = segment.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
+      <span [class]="getScriptureMetadataDefinedKind(segment) ? 'configurableLexical' : ''">
+        <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
+          #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
+          (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
+      </span>
       }
     </td>
     }
