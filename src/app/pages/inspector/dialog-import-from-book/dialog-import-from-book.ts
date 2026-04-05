@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
+import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
+import { Book } from '@domain/book-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
+import { targetsLoaderFn } from '@shared/project/targets-loader-fn';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -65,14 +68,45 @@ export class DialogImportFromBook extends ModalableDirective<{
     if (this.form.valid) {
       const { selectedBook, override } = this.form.value;
 
-      if (confirm(`Are you sure you want to import ${override ? 'and override' : ''} patterns and lexicals from "${selectedBook}"?`)) {
-        this.project.target.books[this.book]
-        this.projectData
+      if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedBook}"?`)) {
+        targetsLoaderFn(selectedBook).then(projectData => {
+          this.joinProjectData(projectData, override);
+          alert('Patterns and lexicals imported successfully');
+        }).catch(e => {
+          alert('Not possible to load book to import');
+          console.error(e);
+        });
       }
 
       this.form.reset();
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  private joinProjectData(projectData: ProjectData, override: boolean): void {
+    Object.keys(projectData).forEach(target => {
+      const importFromBook = projectData[target];
+      const toBook = this.projectData[target];
+      if (this.hasConfigs(toBook) && this.hasConfigs(importFromBook)) {
+        this.importConfigs(toBook, importFromBook, override);
+      }
+    });
+  }
+
+  private hasConfigs(book: Book<object, object>): book is Book<BookMetadataAttributes> {
+    return 'lexical' in book && 'patterns' in book;
+  }
+
+  private importConfigs(toBook: Book<BookMetadataAttributes>, importFromBook: Book<BookMetadataAttributes>, override: boolean) {
+    Object.keys(importFromBook.lexical).forEach(key => {
+      if (importFromBook.lexical[key] && (override || !override && !toBook.lexical[key])) {
+        toBook.lexical[key] = importFromBook.lexical[key];
+      }
+    });
+
+    toBook.patterns.lexeme = [ ...new Set([ ...toBook.patterns.lexeme, ...importFromBook.patterns.lexeme ]) ];
+    toBook.patterns.prefix = [ ...new Set([ ...toBook.patterns.prefix, ...importFromBook.patterns.prefix ]) ];
+    toBook.patterns.suffix = [ ...new Set([ ...toBook.patterns.suffix, ...importFromBook.patterns.suffix ]) ];
   }
 }

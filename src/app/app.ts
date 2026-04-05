@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
-import { MainDialogComponent } from './shared/main-dialog/main-dialog';
-import { Subscription } from 'rxjs';
 import { LoadingObservable } from '@shared/loading/loading-service';
+import { Subscription } from 'rxjs';
+import { MainDialogComponent } from './shared/main-dialog/main-dialog';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +20,10 @@ export class App implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   loading = false;
 
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) { }
+
   ngOnInit(): void {
     this.subscribeLoading();
   }
@@ -31,7 +35,10 @@ export class App implements OnInit, OnDestroy {
   private subscribeLoading(): void {
     this.subscriptions.add(
       LoadingObservable.loading$
-        .subscribe(loading => this.loading = loading)
+        .subscribe(loading => {
+          this.loading = loading;
+          this.cdr.markForCheck();
+        })
     );
   }
 }

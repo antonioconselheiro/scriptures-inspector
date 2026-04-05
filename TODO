@@ -3,7 +3,6 @@ TODO
 [ ] - validar gematria com falseamento
 [ ] - componente para associar com imagem do texto original
 [ ] - incluir meio de registrar o nome de um personagem em uma versão traduzida e outra transliterada
-[ ] - separar a quebra de patterns em patterns do livro e patterns do canon, permitir que um livro herde os patterns de outros
 [ ] - desenhar modelagem ideal final para tradução personalizada
 [ ] - botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
 [ ] - criar função final que valida livro inteiro, se não há metadados armazenados sem relação com o texto após a identificação de todos os patterns
@@ -12,7 +11,6 @@ TODO
 [ ] - livro de enoque em ge'ez não parece estar com todos os capitulos
 [ ] - (não mvp) pode-se marcar palavras que representam quantitativos, mas é necessário associar a estes quantitativos qual dos elementos do texto são os números representando esta quantidade, o campo que for marcado como quantitativo deve disponibilizar um select que indica qual quantitativo do livro este número se relaciona 
 [ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
-[ ] - (não mvp) incluir e falsear gematria ordinal
 
 Referências auxiliares:
 Livro de Enoque, ge'ez, interlinear:
