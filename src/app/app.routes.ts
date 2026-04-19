@@ -4,12 +4,12 @@ import { repositoriesLoaderResolveFn } from '@shared/project/repositories-loader
 import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
 import { EditorComponent } from './pages/inspector/editor/editor-component';
-import { OpenComponent } from './pages/open-component/open-component';
+import { WelcomeScreenComponent } from './pages/welcome-screen-component/welcome-screen-component';
 
 export const routes: Routes = [
   {
-    path: 'open',
-    component: OpenComponent
+    path: 'welcome',
+    component: WelcomeScreenComponent
   },
 
   {
@@ -34,6 +34,6 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: '/open'
+    redirectTo: '/welcome'
   }
 ];

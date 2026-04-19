@@ -28,9 +28,9 @@ import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
-import { DialogImportFromBook } from '../dialog-import-from-book/dialog-import-from-book';
-import { DialogLexicalDictionary } from '../dialog-lexical-dictionary/dialog-lexical-dictionary';
-import { DialogPatterns } from '../dialog-patterns/dialog-patterns';
+import { ImportFromBookDialog } from '../import-from-book-dialog/import-from-book-dialog';
+import { LexicalDictionaryDialog } from '../lexical-dictionary-dialog/lexical-dictionary-dialog';
+import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
@@ -337,7 +337,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
     if (book) {
       this.modalService
-        .createModal(DialogImportFromBook)
+        .createModal(ImportFromBookDialog)
         .setOutletName('main')
         .setData({
           targetMetadataDetails,
@@ -358,7 +358,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (book) {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
-        .createModal(DialogPatterns)
+        .createModal(PatternsDialog)
         .setOutletName('main')
         .setData({
           language: detail.languageSource,
@@ -377,7 +377,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (book) {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
-        .createModal(DialogLexicalDictionary)
+        .createModal(LexicalDictionaryDialog)
         .setOutletName('main')
         .setData(bookMetadata)
         .build()

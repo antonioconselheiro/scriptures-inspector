@@ -8,14 +8,14 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-dialog-patterns',
+  selector: 'app-patterns-dialog',
   imports: [
     ReactiveFormsModule
 ],
-  templateUrl: './dialog-patterns.html',
-  styleUrl: './dialog-patterns.scss'
+  templateUrl: './patterns-dialog.html',
+  styleUrl: './patterns-dialog.scss'
 })
-export class DialogPatterns extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> {
+export class PatternsDialog extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> {
 
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
   patterns!: PatternsSerialized;

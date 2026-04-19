@@ -5,12 +5,12 @@ import { Book } from '@domain/book-model';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-dialog-lexical-dictionary',
+  selector: 'app-lexical-dictionary-dialog',
   imports: [],
-  templateUrl: './dialog-lexical-dictionary.html',
-  styleUrl: './dialog-lexical-dictionary.scss'
+  templateUrl: './lexical-dictionary-dialog.html',
+  styleUrl: './lexical-dictionary-dialog.scss'
 })
-export class DialogLexicalDictionary extends ModalableDirective<Book<BookMetadataAttributes, any>, boolean> implements OnInit {
+export class LexicalDictionaryDialog extends ModalableDirective<Book<BookMetadataAttributes, any>, boolean> implements OnInit {
 
   book: Book<BookMetadataAttributes, any> | null = null;
   lexicals: Array<{ key: string; value: string; }> = [];

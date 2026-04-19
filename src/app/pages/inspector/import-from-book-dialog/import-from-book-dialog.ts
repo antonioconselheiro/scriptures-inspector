@@ -10,14 +10,14 @@ import { targetsLoaderFn } from '@shared/project/targets-loader-fn';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-dialog-import-from-book',
+  selector: 'app-import-from-book-dialog',
   imports: [
     ReactiveFormsModule
   ],
-  templateUrl: './dialog-import-from-book.html',
-  styleUrl: './dialog-import-from-book.scss',
+  templateUrl: './import-from-book-dialog.html',
+  styleUrl: './import-from-book-dialog.scss',
 })
-export class DialogImportFromBook extends ModalableDirective<{
+export class ImportFromBookDialog extends ModalableDirective<{
   targetMetadataDetails: TargetMetadataDetail[],
   project: Project,
   projectData: ProjectData,

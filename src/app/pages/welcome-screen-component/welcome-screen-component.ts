@@ -1,21 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ModalService } from '@belomonte/async-modal-ngx';
 import { Project } from '@domain/project-model';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { SystemService } from '@shared/system/system-service';
+import { CreateProjectDialog } from './create-project-dialog/create-project-dialog';
 
 @Component({
-  selector: 'app-open-component',
+  selector: 'welcome-screen-component',
   imports: [],
-  templateUrl: './open-component.html',
-  styleUrl: './open-component.scss',
+  templateUrl: './welcome-screen-component.html',
+  styleUrl: './welcome-screen-component.scss',
 })
-export class OpenComponent implements OnInit {
+export class WelcomeScreenComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private modalService: ModalService,
     private systemService: SystemService
   ) { }
 
@@ -35,6 +38,14 @@ export class OpenComponent implements OnInit {
           this.redirect(project);
         }
       });
+  }
+
+  createProject(): void {
+      this.modalService
+        .createModal(CreateProjectDialog)
+        .setOutletName('main')
+        .build();
+        //  TODO: redirecionar para o editor?
   }
 
   redirect(project: Project): void {

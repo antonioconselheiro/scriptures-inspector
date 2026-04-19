@@ -3,12 +3,12 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-dialog-config-segment-variations',
+  selector: 'app-config-segment-variations-dialog',
   imports: [],
-  templateUrl: './dialog-config-segment-variations.html',
-  styleUrl: './dialog-config-segment-variations.scss',
+  templateUrl: './config-segment-variations-dialog.html',
+  styleUrl: './config-segment-variations-dialog.scss',
 })
-export class DialogConfigSegmentVariations extends ModalableDirective<object, object> {
+export class ConfigSegmentVariationsDialog extends ModalableDirective<object, object> {
   override response = new Subject<object | void>();
 
   override onInjectData(book: object): void {
