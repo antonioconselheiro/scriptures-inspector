@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalService } from '@belomonte/async-modal-ngx';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { Project } from '@domain/project-model';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
@@ -10,7 +10,9 @@ import { CreateProjectDialog } from './create-project-dialog/create-project-dial
 
 @Component({
   selector: 'welcome-screen-component',
-  imports: [],
+  imports: [
+    AsyncModalModule
+  ],
   templateUrl: './welcome-screen-component.html',
   styleUrl: './welcome-screen-component.scss',
 })

@@ -15,5 +15,6 @@ services:
       - ../home:/home/node/bible-translation
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /var/run/docker.sock:/var/run/docker.sock
+      - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket
       - ${HOME}/.Xauthority:/root/.Xauthority:ro
     tty: true
