@@ -91,11 +91,9 @@
     <td>
       @for (segment of word; track $index) {
       @let lexical = segment.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
-      <span [class]="getScriptureMetadataDefinedKind(segment) ? 'configurableLexical' : ''">
-        <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
-          #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
-          (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
-      </span>
+      <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
+        #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
+        (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
       }
     </td>
     }

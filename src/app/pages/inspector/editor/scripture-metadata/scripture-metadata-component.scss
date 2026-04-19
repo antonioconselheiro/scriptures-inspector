@@ -1,25 +1,3 @@
 .translationName {
   padding: 0 1rem;
 }
-
-.configurableLexical {
-  position: relative;
-}
-
-.configurableLexical:after {
-  content: "";
-  cursor: pointer;
-  filter: contrast(0.1);
-  background-image: url(/config.png);
-  width: 14px;
-  height: 14px;
-  display: block;
-  background-size: cover;
-  position: absolute;
-  right: 4px;
-  top: 6px;
-}
-
-.configurableLexical input {
-  padding-right: 22px;
-}

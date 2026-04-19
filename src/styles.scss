@@ -60,17 +60,6 @@ table[border="1"] {
   margin: 1rem auto;
 }
 
-input[type="text"].configurable:after {
-  background-image: url('/config.png');
-  content: '';
-  display: block;
-  width: 22px;
-  height: 22px;
-  background-color: red;
-  position: relative;
-  left: -10px;
-}
-
 [class^="prisma"] {
   font-size: 20px;
 }
