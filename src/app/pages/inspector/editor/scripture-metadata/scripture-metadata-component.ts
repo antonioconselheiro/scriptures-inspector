@@ -149,6 +149,27 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
   }
 
+  hasAmountKindInMetadata(): boolean {
+    const bookMetadata = this.bookTarget;
+    const current = this.getCurrent(this.verseIndex);
+
+    if (
+      !bookMetadata.chapters[current.chapter] ||
+      !bookMetadata.chapters[current.chapter][current.verseIndex]
+    ) {
+      return false;
+    }
+
+    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
+    if (!metadata) {
+      return false;
+    }
+
+    const hasAmount = Object.keys(metadata).find(key => metadata[key].kind === 'amount');
+
+    return !!hasAmount;
+  }
+
   //  metadata
   getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
     return this.projectMetadataService.getScriptureMetadataDefinedKind(

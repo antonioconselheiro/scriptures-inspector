@@ -3,6 +3,7 @@
 @let eachWord = splitIntoMatrix(sourceVerse.text);
 @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
 @let translations = getTranslations(viewingTranslationBookRecord);
+@let hasAmount = hasAmountKindInMetadata();
 
 <table border="1">
   @for (translationInformation of translations; track $index) {
@@ -66,7 +67,7 @@
   </tr>
 
   <tr>
-    <th>metadata</th>
+    <th [attr.rowspan]="hasAmount ? '2' : '1'">metadata</th>
     @for (word of eachWord; track $index; let wordIndex = $index) {
     <td>
       @for (segment of word; track $index; let segmentIndex = $index) {
@@ -84,6 +85,22 @@
     }
     <td><button (click)="cleanScriptureMetadata(verseIndex)" type="button">×</button></td>
   </tr>
+
+  @if (hasAmount) {
+    <tr>
+      @for (word of eachWord; track $index; let wordIndex = $index) {
+      <td>
+        @for (segment of word; track $index; let segmentIndex = $index) {
+          @if (getScriptureMetadataDefinedKind(segment) === 'amount') {
+            <select>
+              TODOING: Listagem de keywords 
+            </select>
+          }
+        }
+      </td>
+      }
+    </tr>
+  }
 
   <tr>
     <th rowspan="2">interlinear</th>
