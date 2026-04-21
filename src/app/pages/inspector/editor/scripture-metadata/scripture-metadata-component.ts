@@ -197,11 +197,23 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   }
 
   getAmountRelatedKeyword(segment: WordSegment) {
-
+    return this.projectMetadataService.getAmountRelatedKeyword(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.getCurrent(this.verseIndex),
+      segment
+    );
   }
 
-  updateAmountRelatedKeyword(amountRelatedKeywordEl: HTMLSelectElement, segment: WordSegment) {
-
+  updateAmountRelatedKeyword(select: HTMLSelectElement, segment: WordSegment) {
+    return this.projectMetadataService.updateAmountRelatedKeyword(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.getCurrent(this.verseIndex),
+      select.value,
+      this.sourceVerse,
+      segment
+    );
   }
 
   //  metadata
