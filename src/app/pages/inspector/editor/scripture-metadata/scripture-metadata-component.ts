@@ -196,6 +196,14 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       });
   }
 
+  getAmountRelatedKeyword(segment: WordSegment) {
+
+  }
+
+  updateAmountRelatedKeyword(amountRelatedKeywordEl: HTMLSelectElement, segment: WordSegment) {
+
+  }
+
   //  metadata
   getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
     return this.projectMetadataService.getScriptureMetadataDefinedKind(

@@ -94,7 +94,9 @@
         @for (segment of word; track $index; let segmentIndex = $index) {
           @if (getScriptureMetadataDefinedKind(segment) === 'amount') {
             @let keywords = listKeywordsInMetadata();
-            <select>
+            <select #amountRelatedKeywordEl
+              [value]="getAmountRelatedKeyword(segment)" (change)="updateAmountRelatedKeyword(amountRelatedKeywordEl, segment)"
+            >
                 <option value=""></option>
               @for (keyword of keywords; track $index) {
                 <option [value]="keyword.value">{{keyword.label}}</option>
