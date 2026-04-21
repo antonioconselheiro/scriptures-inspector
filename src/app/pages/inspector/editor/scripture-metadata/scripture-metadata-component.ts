@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
@@ -7,7 +8,6 @@ import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
-import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
@@ -24,6 +24,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   selector: 'app-scripture-metadata-component',
   imports: [
     LexicalPipe,
+    FormsModule,
     LiteralizatePipe,
     FunctionProxyPipe,
     CustomTranslationComponent,
@@ -196,7 +197,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       });
   }
 
-  getAmountRelatedKeyword(segment: WordSegment) {
+  getAmountRelatedKeyword(segment: WordSegment): { keyword: string } {
     return this.projectMetadataService.getAmountRelatedKeyword(
       this.bookTarget,
       this.sourceLanguage,
@@ -205,7 +206,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     );
   }
 
-  updateAmountRelatedKeyword(select: HTMLSelectElement, segment: WordSegment) {
+  updateAmountRelatedKeyword(select: HTMLSelectElement, segment: WordSegment): void {
     return this.projectMetadataService.updateAmountRelatedKeyword(
       this.bookTarget,
       this.sourceLanguage,

@@ -94,8 +94,10 @@
         @for (segment of word; track $index; let segmentIndex = $index) {
           @if (getScriptureMetadataDefinedKind(segment) === 'amount') {
             @let keywords = listKeywordsInMetadata();
-            <select #amountRelatedKeywordEl
-              [value]="getAmountRelatedKeyword(segment)" (change)="updateAmountRelatedKeyword(amountRelatedKeywordEl, segment)"
+            <select
+              #amountRelatedKeywordEl
+              [ngModel]="getAmountRelatedKeyword(segment).keyword"
+              (change)="updateAmountRelatedKeyword(amountRelatedKeywordEl, segment)"
             >
                 <option value=""></option>
               @for (keyword of keywords; track $index) {

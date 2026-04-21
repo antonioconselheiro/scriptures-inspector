@@ -65,25 +65,26 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     segment: { index: number; word: string; }
-  ): string {
+  ): { keyword: string } {
     if (
       !bookMetadata.chapters[current.chapter] ||
       !bookMetadata.chapters[current.chapter][current.verseIndex]
     ) {
-      return '';
+      return { keyword: '' };
     }
 
     const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
     if (!metadata) {
-      return '';
+      return { keyword: '' };
     }
 
     const metadataKey = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment)
     if (!metadata[metadataKey]) {
-      return '';
+      return { keyword: '' };
     }
 
-    return metadata[metadataKey].keyword || '';
+    const keyword = metadata[metadataKey].keyword || '';
+    return { keyword };
   }
 
   updateAmountRelatedKeyword(
