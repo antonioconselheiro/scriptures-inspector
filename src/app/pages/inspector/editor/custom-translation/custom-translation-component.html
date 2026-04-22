@@ -59,7 +59,18 @@
       {{sentence.fragment}}
     </td>
     }
-    <td></td>
+    <td>
+      <button title="Add variation" alt="Add variation" type="button">+</button>
+    </td>
+  </tr>
+
+  <tr>
+    <th><input type="text" placeholder="variation name"></th>
+    @for (sentence of splittedCustomTranslation; track $index) {
+    <td>
+      <input type="text" #variation [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variation.value)">
+    </td>
+    }
   </tr>
 
   <tr>
