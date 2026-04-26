@@ -1,0 +1,14 @@
+<table border="1">
+
+  <tr>
+    <th>Translation Variants</th>
+    <th></th>
+  </tr>
+
+  @for (variant of getVariations(); track $index) {
+    <tr>
+      <td><input type="text" [value]="variant.name"></td>
+      <td (click)="deleteVariant(variant.key)">×</td>
+    </tr>
+  }
+</table>

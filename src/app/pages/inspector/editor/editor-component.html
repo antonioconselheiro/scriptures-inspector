@@ -1,4 +1,5 @@
 @let targetMetadataDetails = getProjectTargetsMetadataDetails();
+@let customTranslationsDetais = getProjectTranslationsDetails();
 
 <header [class.minimized]="minimized" class="tools">
   <div class="buttonGroup">
@@ -37,14 +38,14 @@
 
     <fieldset>
       <legend>Import configs</legend>
-      <button type="button" (click)="openDialogImportFromBook(targetMetadataDetails)">Import from book</button>
+      <button type="button" (click)="openImportFromBookDialog(targetMetadataDetails)">Import from book</button>
     </fieldset>
 
     <fieldset>
       <legend>Patterns</legend>
 
       @for (detail of targetMetadataDetails; track $index) {
-      <button type="button" (click)="openDialogPatterns(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+      <button type="button" (click)="openPatternsDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
 
@@ -53,9 +54,20 @@
 
       @for (detail of targetMetadataDetails; track $index) {
       <button type="button"
-        (click)="openDialogLexicalDictionary(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+        (click)="openLexicalDictionaryDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
       }
     </fieldset>
+
+    @if (customTranslationsDetais) {
+      <fieldset>
+        <legend>Translation Variations</legend>
+  
+        @for (detail of targetMetadataDetails; track $index) {
+        <button type="button"
+          (click)="openTranslationVariationsConfigDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+        }
+      </fieldset>
+    }
 
     <div class="sidebuttons">
       <button (click)="minimized = !minimized" class="minimize" type="button">▲</button>

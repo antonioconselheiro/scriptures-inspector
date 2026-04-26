@@ -36,6 +36,9 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
+import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
 
 @Component({
   selector: 'app-editor-component',
@@ -246,6 +249,10 @@ export class EditorComponent implements OnInit, OnDestroy {
     return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
   }
 
+  getProjectTranslationsDetails(): Array<BookTranslationTarget> {
+    return getProjectTranslationsDetailsFn();
+  }
+
   listBookNames(): Array<{ key: string, name: string }> {
     return Object.keys(this.project.target.books).map(book => {
       return {
@@ -332,7 +339,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     ));
   }
 
-  openDialogImportFromBook(targetMetadataDetails: TargetMetadataDetail[]): void {
+  openImportFromBookDialog(targetMetadataDetails: TargetMetadataDetail[]): void {
     const book = this.current?.book;
 
     if (book) {
@@ -352,7 +359,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  openDialogPatterns(detail: TargetMetadataDetail): void {
+  openPatternsDialog(detail: TargetMetadataDetail): void {
     const book = this.current?.book;
 
     if (book) {
@@ -371,7 +378,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  openDialogLexicalDictionary(detail: TargetMetadataDetail): void {
+  openLexicalDictionaryDialog(detail: TargetMetadataDetail): void {
     const book = this.current?.book;
 
     if (book) {
@@ -383,6 +390,22 @@ export class EditorComponent implements OnInit, OnDestroy {
         .build()
         .subscribe({
           next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
+        });
+    }
+  }
+
+  openTranslationVariationsConfigDialog(detail: TargetMetadataDetail): void {
+    const book = this.current?.book;
+
+    if (book) {
+      const bookMetadata = this.projectData[detail.target];
+      this.modalService
+        .createModal(TranslationVariationConfigDialog)
+        .setOutletName('main')
+        .setData(bookMetadata)
+        .build()
+        .subscribe({
+          next: () => this.systemService.triggerSaveCurrentBookTranslations({ book })
         });
     }
   }
