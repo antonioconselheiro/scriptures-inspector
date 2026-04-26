@@ -60,55 +60,6 @@ export class ProjectMetadataService {
     return metadata;
   }
 
-  getAmountRelatedKeyword(
-    bookMetadata: BookMetadataTarget,
-    sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
-    segment: { index: number; word: string; }
-  ): { keyword: string } {
-    if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
-    ) {
-      return { keyword: '' };
-    }
-
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
-    if (!metadata) {
-      return { keyword: '' };
-    }
-
-    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment)
-    if (!metadata[metadataKey]) {
-      return { keyword: '' };
-    }
-
-    const keyword = metadata[metadataKey].keyword || '';
-    return { keyword };
-  }
-
-  updateAmountRelatedKeyword(
-    bookMetadata: BookMetadataTarget,
-    sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
-    keyword: string,
-    verse: SourceVerse,
-    segment: { index: number; word: string; }
-  ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, [segment]);
-    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
-
-    if (wordMetadata[metadataIndex]) {
-      if (keyword) {
-        wordMetadata[metadataIndex].keyword = keyword;
-      } else {
-        delete wordMetadata[metadataIndex].keyword;
-      }
-    }
-
-    this.systemService.triggerSaveCurrentBookMetadata(current);
-  }
-
   //  source text metadata methods
   getScriptureMetadataDefinedKind(
     bookMetadata: BookMetadataTarget,

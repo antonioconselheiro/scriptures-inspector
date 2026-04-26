@@ -197,26 +197,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       });
   }
 
-  getAmountRelatedKeyword(segment: WordSegment): { keyword: string } {
-    return this.projectMetadataService.getAmountRelatedKeyword(
-      this.bookTarget,
-      this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
-      segment
-    );
-  }
-
-  updateAmountRelatedKeyword(select: HTMLSelectElement, segment: WordSegment): void {
-    return this.projectMetadataService.updateAmountRelatedKeyword(
-      this.bookTarget,
-      this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
-      select.value,
-      this.sourceVerse,
-      segment
-    );
-  }
-
   //  metadata
   getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
     return this.projectMetadataService.getScriptureMetadataDefinedKind(

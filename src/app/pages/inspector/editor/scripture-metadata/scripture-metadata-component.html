@@ -3,8 +3,6 @@
 @let eachWord = splitIntoMatrix(sourceVerse.text);
 @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
 @let translations = getTranslations(viewingTranslationBookRecord);
-@let hasAmountSelected = hasKindInMetadata('amount');
-@let hasKeywordSelected = hasKindInMetadata('keyword');
 
 <table border="1">
   @for (translationInformation of translations; track $index) {
@@ -68,7 +66,7 @@
   </tr>
 
   <tr>
-    <th [attr.rowspan]="hasAmountSelected && hasKeywordSelected ? '2' : '1'">metadata</th>
+    <th>metadata</th>
     @for (word of eachWord; track $index; let wordIndex = $index) {
     <td>
       @for (segment of word; track $index; let segmentIndex = $index) {
@@ -86,30 +84,6 @@
     }
     <td><button (click)="cleanScriptureMetadata(verseIndex)" type="button">×</button></td>
   </tr>
-
-  @if (hasAmountSelected && hasKeywordSelected) {
-    <tr>
-      @for (word of eachWord; track $index; let wordIndex = $index) {
-      <td>
-        @for (segment of word; track $index; let segmentIndex = $index) {
-          @if (getScriptureMetadataDefinedKind(segment) === 'amount') {
-            @let keywords = listKeywordsInMetadata();
-            <select
-              #amountRelatedKeywordEl
-              [ngModel]="getAmountRelatedKeyword(segment).keyword"
-              (change)="updateAmountRelatedKeyword(amountRelatedKeywordEl, segment)"
-            >
-                <option value=""></option>
-              @for (keyword of keywords; track $index) {
-                <option [value]="keyword.value">{{keyword.label}}</option>
-              }
-            </select>
-          }
-        }
-      </td>
-      }
-    </tr>
-  }
 
   <tr>
     <th rowspan="2">interlinear</th>
