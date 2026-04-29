@@ -39,6 +39,7 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
 import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
+import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -249,8 +250,8 @@ export class EditorComponent implements OnInit, OnDestroy {
     return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
   }
 
-  getProjectTranslationsDetails(): Array<BookTranslationTarget> {
-    return getProjectTranslationsDetailsFn();
+  getProjectTranslationsDetails(): Array<TargetTranslationMetadataDetail> {
+    return getProjectTranslationsDetailsFn(this.project, this.codexMetadataRecord);
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
@@ -394,7 +395,7 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  openTranslationVariationsConfigDialog(detail: TargetMetadataDetail): void {
+  openTranslationVariationsConfigDialog(detail: TargetTranslationMetadataDetail): void {
     const book = this.current?.book;
 
     if (book) {

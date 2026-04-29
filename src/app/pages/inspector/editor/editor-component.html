@@ -1,5 +1,5 @@
 @let targetMetadataDetails = getProjectTargetsMetadataDetails();
-@let customTranslationsDetais = getProjectTranslationsDetails();
+@let customTranslationsDetails = getProjectTranslationsDetails();
 
 <header [class.minimized]="minimized" class="tools">
   <div class="buttonGroup">
@@ -58,7 +58,7 @@
       }
     </fieldset>
 
-    @if (customTranslationsDetais) {
+    @if (customTranslationsDetails) {
       <fieldset>
         <legend>Translation Variations</legend>
   
