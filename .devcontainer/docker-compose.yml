@@ -12,7 +12,7 @@ services:
       - DISPLAY=$DISPLAY
     volumes:
       - ..:/scriptures-inspector:cached
-      - ../home:/home/node
+      - ../projects:/home/node/projects
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /var/run/docker.sock:/var/run/docker.sock
       - ${HOME}/.Xauthority:/root/.Xauthority:ro

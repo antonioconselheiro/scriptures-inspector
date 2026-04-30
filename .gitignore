@@ -1,8 +1,9 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
 # Local Resources
-/home/bible/references
-/home/bible/targets/
+/projects/bible/references
+/projects/bible/targets/
+/projects/mahabarata/targets/
 
 # Credential
 **/.ssh
