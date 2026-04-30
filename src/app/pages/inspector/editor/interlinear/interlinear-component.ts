@@ -18,6 +18,7 @@ import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -63,6 +64,9 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
 
   @Input()
   customTranslation: BookTranslationTarget | undefined;
+
+  @Input()
+  variations: Array<TargetTranslationMetadataDetail> = [];
   
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
