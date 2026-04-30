@@ -10,6 +10,7 @@ export async function loadTargetTranslationBookFn(project: Project, target: KeyT
   }
 
   return {
-    chapters: []
+    chapters: [],
+    variations: {}
   };
 }

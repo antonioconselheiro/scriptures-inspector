@@ -13,6 +13,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { WordFragment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,10 +36,7 @@ export class ProjectCustomTranslationService {
     }
 
     if (!customTranslation.chapters[current.chapter][verseIndex]) {
-      customTranslation.chapters[current.chapter][verseIndex] = {
-        ...sourceVerse,
-        metadata: []
-      };
+      customTranslation.chapters[current.chapter][verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
     }
 
     const metadata = customTranslation.chapters[current.chapter][verseIndex].metadata || [];
@@ -164,18 +162,10 @@ export class ProjectCustomTranslationService {
       if (input.value) {
         chapter[verseIndex].text = input.value;
       } else {
-        chapter[verseIndex] = {
-          ...sourceVerse,
-          text: '',
-          metadata: []
-        };
+        chapter[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
       }
     } else {
-      chapter[verseIndex] = {
-        ...sourceVerse,
-        text: input.value,
-        metadata: []
-      };
+      chapter[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
@@ -197,13 +187,17 @@ export class ProjectCustomTranslationService {
       return;
     }
 
-    customTranslation.chapters[current.chapter][verseIndex] = {
+    customTranslation.chapters[current.chapter][verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
+  factoryCustomTranslationVerse(sourceVerse: SourceVerse): BookVerseTranslationTarget {
+    return {
       ...sourceVerse,
+      variations: {},
       metadata: [],
       text: ''
-    };
-
-    this.systemService.triggerSaveCurrentBookTranslations(current);
+    }
   }
 
   getCustomTranslationColor(

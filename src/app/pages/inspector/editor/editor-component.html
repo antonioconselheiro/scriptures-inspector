@@ -62,7 +62,7 @@
       <fieldset>
         <legend>Translation Variations</legend>
   
-        @for (detail of targetMetadataDetails; track $index) {
+        @for (detail of customTranslationsDetails; track $index) {
         <button type="button"
           (click)="openTranslationVariationsConfigDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
         }
