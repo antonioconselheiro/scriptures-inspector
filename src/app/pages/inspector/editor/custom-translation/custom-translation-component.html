@@ -39,6 +39,17 @@
     </td>
   </tr>
 
+  @for (variation of variations; track $index) {
+    <tr>
+      <th>{{variation}}</th>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <td>
+        <input type="text" #variation placeholder="empty" [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variation.value)">
+      </td>
+      }
+    </tr>
+  }
+
   <tr>
     <th>word span</th>
     @for (sentence of splittedCustomTranslation; track $index) {
@@ -61,15 +72,6 @@
     }
     <td>
     </td>
-  </tr>
-
-  <tr>
-    <th><input type="text" placeholder="variation name"></th>
-    @for (sentence of splittedCustomTranslation; track $index) {
-    <td>
-      <input type="text" #variation [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variation.value)">
-    </td>
-    }
   </tr>
 
   <tr>

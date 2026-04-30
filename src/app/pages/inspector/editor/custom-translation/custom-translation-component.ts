@@ -18,10 +18,13 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-custom-translation-component',
   imports: [
+    CommonModule,
     FormsModule
   ],
   templateUrl: './custom-translation-component.html',
@@ -57,6 +60,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input()
   customTranslation!: BookTranslationTarget;
+
+  @Input()
+  variations: Array<TargetTranslationMetadataDetail> = [];
 
   pipeUpdaterController = 0;
 

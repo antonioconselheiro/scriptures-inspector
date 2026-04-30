@@ -1,148 +1,148 @@
 @if (sourceVerse) {
-@let wordList = sourceVerse.text.split(' ');
-@let eachWord = splitIntoMatrix(sourceVerse.text);
-@let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
-@let translations = getTranslations(viewingTranslationBookRecord);
+  @let wordList = sourceVerse.text.split(' ');
+  @let eachWord = splitIntoMatrix(sourceVerse.text);
+  @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
+  @let translations = getTranslations(viewingTranslationBookRecord);
 
-<table border="1">
-  @for (translationInformation of translations; track $index) {
-  <tr>
-    <th class="translationName">{{translationInformation.name}}</th>
-    <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
-    <td>
-      <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
-    </td>
-  </tr>
-  }
-  <tr>
-    <th rowspan="2">scriptures</th>
-    <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
-      [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
+  <table border="1">
+    @for (translationInformation of translations; track $index) {
+      <tr>
+        <th class="translationName">{{translationInformation.name}}</th>
+        <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
+        <td>
+          <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
+        </td>
+      </tr>
+    }
+    <tr>
+      <th rowspan="2">scriptures</th>
+      <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
+        [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
+        [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+        @for (sentence of eachWord; track $index) {
+          @for (word of sentence; track $index) {
+          <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+          }
+          <span>&nbsp;</span>
+        }
+      </td>
+      <td></td>
+    </tr>
+    <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
       [attr.lang]="languageMetadataRecord[sourceLanguage].label">
       @for (sentence of eachWord; track $index) {
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+      <td>
+        @for (word of sentence; track $index) {
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+        }
+      </td>
       }
-      <span>&nbsp;</span>
-      }
-    </td>
-    <td></td>
-  </tr>
-  <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
-    [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-    @for (sentence of eachWord; track $index) {
-    <td>
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
-      }
-    </td>
-    }
-    <td></td>
-  </tr>
+      <td></td>
+    </tr>
 
-  @if (transliteration) {
-  <tr>
-    <th>transliteration</th>
-    @for (sentence of eachWord; track $index) {
-    <td>
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : transliteration}}</span>
-      }
-    </td>
-    }
-    <td></td>
-  </tr>
-  }
-  <tr>
-    <th>God said</th>
-    @for (word of wordList; track $index; let wordIndex = $index) {
-    <td>
-      <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-        (change)="setAsWordOfGod(wordOfGodEl, eachWord[wordIndex])"
-        [checked]="getScriptureMetadataWordOfGod(eachWord[wordIndex])" />
-    </td>
-    }
-    <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
-  </tr>
-
-  <tr>
-    <th rowspan="2">interlinear</th>
-    @for (word of eachWord; track $index) {
-    <td>
-      @for (segment of word; track $index) {
-      @let lexical = segment.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
-      <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
-        #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
-        (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
-      }
-    </td>
-    }
-    <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord)" type="button">×</button></td>
-  </tr>
-  <tr>
-    <td [colSpan]="wordList.length">
+    @if (transliteration) {
+    <tr>
+      <th>transliteration</th>
       @for (sentence of eachWord; track $index) {
-      @for (word of sentence; track $index) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook :
-        languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
-      <span>&nbsp;</span>
+      <td>
+        @for (word of sentence; track $index) {
+        <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : transliteration}}</span>
+        }
+      </td>
       }
-      }
-    </td>
-  </tr>
-
-  @if (languageMetadataRecord[sourceLanguage].numerology) {
-  @for (algorythm of languageMetadataRecord[sourceLanguage].numerology; track $index) {
-  <tr>
-    <th>{{algorythm.name}}</th>
-    @for (word of wordList; track $index) {
-    <td>{{word | functionProxy : algorythm.calc}}</td>
+      <td></td>
+    </tr>
     }
-    <td></td>
-  </tr>
-  }
-  }
-
-  @if (languageMetadataRecord[sourceLanguage].alternativeSpelling) {
-  @for (spelling of languageMetadataRecord[sourceLanguage].alternativeSpelling; track $index) {
-  <tr>
-    <th rowspan="2">{{spelling.name}}</th>
-
-    @for (sentence of eachWord; track $index) {
-    <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-      @for (word of sentence; track $index) {
-      @if (spelling.parse) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
-      } @else {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+    <tr>
+      <th>God said</th>
+      @for (word of wordList; track $index; let wordIndex = $index) {
+      <td>
+        <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
+          (change)="setAsWordOfGod(wordOfGodEl, eachWord[wordIndex])"
+          [checked]="getScriptureMetadataWordOfGod(eachWord[wordIndex])" />
+      </td>
       }
+      <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
+    </tr>
+
+    <tr>
+      <th rowspan="2">interlinear</th>
+      @for (word of eachWord; track $index) {
+      <td>
+        @for (segment of word; track $index) {
+        @let lexical = segment.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
+        <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
+          #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
+          (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
+        }
+      </td>
       }
-    </td>
+      <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord)" type="button">×</button></td>
+    </tr>
+    <tr>
+      <td [colSpan]="wordList.length">
+        @for (sentence of eachWord; track $index) {
+          @for (word of sentence; track $index) {
+          <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook :
+            languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
+          <span>&nbsp;</span>
+          }
+        }
+      </td>
+    </tr>
+
+    @if (languageMetadataRecord[sourceLanguage].numerology) {
+      @for (algorythm of languageMetadataRecord[sourceLanguage].numerology; track $index) {
+      <tr>
+        <th>{{algorythm.name}}</th>
+        @for (word of wordList; track $index) {
+          <td>{{word | functionProxy : algorythm.calc}}</td>
+        }
+        <td></td>
+      </tr>
+      }
     }
-    <td rowspan="2"></td>
-  </tr>
 
-  <tr>
-    <td [colSpan]="wordList.length">
-      @for (sentence of eachWord; track $index) {
-      @for (word of sentence; track $index) {
-      @if (spelling.parse) {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
-      } @else {
-      <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
-      }
-      }
-      <span>&nbsp;</span>
-      }
-    </td>
-  </tr>
-  }
-  }
-</table>
+    @if (languageMetadataRecord[sourceLanguage].alternativeSpelling) {
+      @for (spelling of languageMetadataRecord[sourceLanguage].alternativeSpelling; track $index) {
+      <tr>
+        <th rowspan="2">{{spelling.name}}</th>
 
-@if (customTranslation) {
-<app-custom-translation-component [bookTarget]="bookTarget" [translationSourceLanguage]="sourceLanguage"
-  [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
-  [eachWord]="eachWord" [customTranslation]="customTranslation"></app-custom-translation-component>
-}
+        @for (sentence of eachWord; track $index) {
+        <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+          @for (word of sentence; track $index) {
+            @if (spelling.parse) {
+            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+            } @else {
+            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+            }
+          }
+        </td>
+        }
+        <td rowspan="2"></td>
+      </tr>
+
+      <tr>
+        <td [colSpan]="wordList.length">
+          @for (sentence of eachWord; track $index) {
+            @for (word of sentence; track $index) {
+              @if (spelling.parse) {
+                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+              } @else {
+                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+              }
+            }
+            <span>&nbsp;</span>
+          }
+        </td>
+      </tr>
+      }
+    }
+  </table>
+
+  @if (customTranslation) {
+  <app-custom-translation-component [bookTarget]="bookTarget" [translationSourceLanguage]="sourceLanguage"
+    [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
+    [eachWord]="eachWord" [customTranslation]="customTranslation" [variations]="variations"></app-custom-translation-component>
+  }
 }
