@@ -64,7 +64,6 @@ export class EditorComponent implements OnInit, OnDestroy {
   formSelectedBook: string = '';
   formSelectedChapter: number | null = null;
 
-  showLegend = false;
   minimized = true;
   pipeUpdaterController = 1;
 

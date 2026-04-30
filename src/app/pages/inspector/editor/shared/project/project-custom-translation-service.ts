@@ -277,7 +277,7 @@ export class ProjectCustomTranslationService {
       return '';
     }
 
-    return [dataObj.kind, dataObj.isWordOfGod ? 'godsaid' : ''].filter(t => t).map(d => `meta${d}`).join(' ');
+    return dataObj.isWordOfGod ? 'godsaid' : '';
   }
 
   getCustomTranslationInterlinearValue(

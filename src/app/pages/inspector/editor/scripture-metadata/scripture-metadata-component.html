@@ -66,26 +66,6 @@
   </tr>
 
   <tr>
-    <th>metadata</th>
-    @for (word of eachWord; track $index; let wordIndex = $index) {
-    <td>
-      @for (segment of word; track $index; let segmentIndex = $index) {
-      <select #metadataEl [name]="'fieldMetadata' + segment.index" [value]="getScriptureMetadataDefinedKind(segment)"
-        (change)="updateScripturesMetadata(metadataEl, segment)" (focus)="showLegend.emit(true)"
-        (blur)="showLegend.emit(false)">
-        <option value="">-</option>
-        <option value="godname">G</option>
-        <option value="character">C</option>
-        <option value="keyword">K</option>
-        <option value="amount">A</option>
-      </select>
-      }
-    </td>
-    }
-    <td><button (click)="cleanScriptureMetadata(verseIndex)" type="button">×</button></td>
-  </tr>
-
-  <tr>
     <th rowspan="2">interlinear</th>
     @for (word of eachWord; track $index) {
     <td>

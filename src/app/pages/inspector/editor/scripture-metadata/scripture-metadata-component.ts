@@ -71,9 +71,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Output()
-  showLegend = new EventEmitter<boolean>();
-
-  @Output()
   removeTranslation = new EventEmitter<string>();
 
   constructor(
@@ -148,81 +145,5 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     }
 
     this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
-  }
-
-  hasKindInMetadata(kind: 'godname' | 'keyword' | 'character' | 'amount'): boolean {
-    const bookMetadata = this.bookTarget;
-    const current = this.getCurrent(this.verseIndex);
-
-    if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
-    ) {
-      return false;
-    }
-
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
-    if (!metadata) {
-      return false;
-    }
-
-    const has = Object.keys(metadata).find(key => metadata[key].kind === kind);
-    return !!has;
-  }
-
-  listKeywordsInMetadata(): Array<{ value: string, label: string }> {
-    const bookMetadata = this.bookTarget;
-    const current = this.getCurrent(this.verseIndex);
-
-    if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
-    ) {
-      return [];
-    }
-
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
-    if (!metadata) {
-      return [];
-    }
-
-    return Object
-      .keys(metadata)
-      .filter(key => metadata[key].kind === 'keyword')
-      .map(key => {
-        return {
-          value: key,
-          label: key.replace(/\-/, ' - ')
-        }
-      });
-  }
-
-  //  metadata
-  getScriptureMetadataDefinedKind(segment: WordSegment): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    return this.projectMetadataService.getScriptureMetadataDefinedKind(
-      this.bookTarget,
-      this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
-      segment
-    );
-  }
-
-  updateScripturesMetadata(select: HTMLSelectElement, segment: WordSegment): void {
-    this.projectMetadataService.updateScripturesMetadata(
-      this.bookTarget,
-      this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
-      select.value,
-      this.sourceVerse,
-      segment
-    );
-  }
-
-  cleanScriptureMetadata(sourceVerseIndex: number): void {
-    if (!confirm('remove metadata?')) {
-      return;
-    }
-
-    this.projectMetadataService.cleanScriptureMetadata(this.bookTarget, this.getCurrent(sourceVerseIndex));
   }
 }

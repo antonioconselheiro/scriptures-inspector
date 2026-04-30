@@ -51,87 +51,12 @@ export class ProjectMetadataService {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (!metadata[key]) {
         metadata[key] = {
-          kind: '',
           segment: segment.word
         };
       }
     });
 
     return metadata;
-  }
-
-  //  source text metadata methods
-  getScriptureMetadataDefinedKind(
-    bookMetadata: BookMetadataTarget,
-    sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
-    segment: { index: number; word: string; }
-  ): '' | 'godname' | 'keyword' | 'character' | 'amount' {
-    if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
-    ) {
-      return '';
-    }
-
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
-    if (!metadata) {
-      return '';
-    }
-
-    const metadataKey = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment)
-    if (!metadata[metadataKey]) {
-      return '';
-    }
-
-    return metadata[metadataKey].kind;
-  }
-
-  updateScripturesMetadata(
-    bookMetadata: BookMetadataTarget,
-    sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
-    kind: string,
-    verse: SourceVerse,
-    segment: { index: number; word: string; }
-  ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, [segment]);
-    const metadataIndex = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
-
-    if (this.isWordSegmentMetadataGuard(kind)) {
-      wordMetadata[metadataIndex].kind = kind;
-    } else {
-      if (wordMetadata[metadataIndex].isWordOfGod) {
-        wordMetadata[metadataIndex].kind = '';
-      } else {
-        delete wordMetadata[metadataIndex];
-      }
-    }
-
-    this.systemService.triggerSaveCurrentBookMetadata(current);
-  }
-
-  cleanScriptureMetadata(
-    bookMetadata: BookMetadataTarget,
-    current: CurrentVerseIndex
-  ): void {
-    if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
-    ) {
-      return;
-    }
-
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
-    if (!metadata) {
-      return;
-    }
-
-    Object.keys(metadata).forEach(key => {
-      metadata[key].kind = '';
-    });
-
-    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   // word of God methods
@@ -217,11 +142,6 @@ export class ProjectMetadataService {
     });
 
     this.systemService.triggerSaveCurrentBookMetadata(current);
-  }
-
-  //
-  isWordSegmentMetadataGuard(value: string): value is 'godname' | 'keyword' | 'character' | 'amount' {
-    return ['godname', 'keyword', 'character', 'amount'].includes(value);
   }
 
   cleanWordOfGodFromVerse(
