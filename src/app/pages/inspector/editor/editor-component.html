@@ -82,7 +82,6 @@
   @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
   @let bookMetadata = projectData[structure.metadataEditor.target];
   @let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ? projectData[structure.metadataEditor.customTranslationEditor] : undefined;
-  @let variations = getCustomTranslationVariations(customTranslationsDetails, structure.metadataEditor.customTranslationEditor);
 
   @if (current && selectedSourceBook) {
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
@@ -97,7 +96,7 @@
         [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
         [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
         [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation($event)"
-        [pipeUpdaterController]="pipeUpdaterController" [variations]="variations"></app-scripture-metadata-component>
+        [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
 
       @for (item of structure.interlinearEditor; track $index) {
         @let bookInterlinearSource = sourceBookRecord[item.source];
@@ -108,13 +107,12 @@
           @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
           @let langInterlinearSource = codexMetadataRecord[item.source].language;
           @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
-          @let variationsInterlinar = getCustomTranslationVariations(customTranslationsDetails, item.customTranslationEditor);
 
           <app-interlinear-component [current]="current" [sourceLanguage]="langInterlinearSource"
             [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook" [originVerse]="verse"
             [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
             [bookTarget]="bookInterlinearTarget" [customTranslation]="bookCustomTranslationTarget"
-            [addPatternMenuRef]="addPatternMenuRef" [variations]="variationsInterlinar"></app-interlinear-component>
+            [addPatternMenuRef]="addPatternMenuRef"></app-interlinear-component>
         }
       }
     }

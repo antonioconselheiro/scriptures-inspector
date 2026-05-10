@@ -253,16 +253,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     return getProjectTranslationsDetailsFn(this.project, this.codexMetadataRecord);
   }
 
-  getCustomTranslationVariations(
-    customTranslationsDetails: Array<TargetTranslationMetadataDetail>, customTranslationEditor: `${string}-translation` | null
-  ): Array<TargetTranslationMetadataDetail> {
-    if (!customTranslationEditor) {
-      return [];
-    }
-
-    return customTranslationsDetails.filter(variationDetails => variationDetails.target === customTranslationEditor);
-  }
-
   listBookNames(): Array<{ key: string, name: string }> {
     return Object.keys(this.project.target.books).map(book => {
       return {

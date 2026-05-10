@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
@@ -18,8 +19,6 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -60,9 +59,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input()
   customTranslation!: BookTranslationTarget;
-
-  @Input()
-  variations: Array<TargetTranslationMetadataDetail> = [];
 
   pipeUpdaterController = 0;
 
@@ -165,6 +161,16 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return this.projectCustomTranslationService.getCustomTranslationInterlinearValue(
       this.customTranslation, this.current, this.sourceVerse, wordSpanIndex
     );
+  }
+
+  getVariations(): Array<{ id: string; name: string; }> {
+    return Object.keys(this.customTranslation.variations || {}).map(key => {
+      const variation = this.customTranslation.variations[key];
+      return {
+        id: key,
+        ...variation
+      }
+    });
   }
 
   saveCustomTranslationInterlinearMetadata(

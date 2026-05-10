@@ -1,5 +1,8 @@
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
+@let chapterVariations = customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex].variations;
+
+Chapter: {{chapterVariations|json}}
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
@@ -39,12 +42,12 @@
     </td>
   </tr>
 
-  @for (variation of variations; track $index) {
+  @for (variation of getVariations(); track $index) {
     <tr>
-      <th>{{variation}}</th>
+      <th>Variation: {{variation.name}}</th>
       @for (sentence of splittedCustomTranslation; track $index) {
       <td>
-        <input type="text" #variation placeholder="empty" [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variation.value)">
+        <input type="text" #variationEl placeholder="empty" [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
       </td>
       }
     </tr>
