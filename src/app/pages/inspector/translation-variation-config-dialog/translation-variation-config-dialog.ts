@@ -79,10 +79,4 @@ export class TranslationVariationConfigDialog extends ModalableDirective<BookTra
       }
     }
   }
-
-  override close(): void {
-    debugger;
-    super.close();
-    this.response.complete();
-  }
 }

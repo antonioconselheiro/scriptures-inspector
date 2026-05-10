@@ -42,7 +42,7 @@
     <tr>
       <td>prefix</td>
       <td>{{pattern}}</td>
-      <td><a (click)="deletePattern('prefix', $index)">×</a></td>
+      <td><button type="button" (click)="deletePattern('prefix', $index)">×</button></td>
     </tr>
     }
 
@@ -50,7 +50,7 @@
     <tr>
       <td>suffix</td>
       <td>{{pattern}}</td>
-      <td><a (click)="deletePattern('suffix', $index)">×</a></td>
+      <td><button type="button" (click)="deletePattern('suffix', $index)">×</button></td>
     </tr>
     }
 
@@ -58,7 +58,7 @@
     <tr>
       <td>lexeme</td>
       <td>{{pattern}}</td>
-      <td><a (click)="deletePattern('lexeme', $index)">×</a></td>
+      <td><button type="button" (click)="deletePattern('lexeme', $index)">×</button></td>
     </tr>
     }
   </tbody>

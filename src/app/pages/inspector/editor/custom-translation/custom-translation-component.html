@@ -1,11 +1,11 @@
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
+@let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
 </div>
 
 <table border="1">
-  @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
   <tr>
     <th rowspan="3">custom</th>
     <td [colSpan]="splittedCustomTranslation.length">

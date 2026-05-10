@@ -91,6 +91,7 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  
   splitCustomTranslation(customTranslationObj: BookVerse<{
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
