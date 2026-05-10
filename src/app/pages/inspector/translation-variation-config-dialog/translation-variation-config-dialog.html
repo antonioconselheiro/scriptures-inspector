@@ -1,3 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onAddVariantSubmit()">
+  <fieldset>
+    <legend>Create variant</legend>
+
+    <div>
+      <label for="variant">Variant</label>
+      <input id="variant" type="text" formControlName="variant" placeholder="variant" />
+      @if (form.get('variant')?.invalid && form.get('variant')?.touched) {
+      <small class="error">Variant value is required</small>
+      }
+    </div>
+
+    <button type="submit" [disabled]="form.invalid">Create</button>
+  </fieldset>
+</form>
+
 <table border="1">
 
   <tr>

@@ -42,6 +42,6 @@ export class MainDialogComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown.escape')
   close(): void {
-    this.modal.close();
+    this.modal.closeModal();
   }
 }

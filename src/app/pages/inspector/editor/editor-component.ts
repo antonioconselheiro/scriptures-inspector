@@ -415,7 +415,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         .setData(bookMetadata)
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBookTranslations({ book })
+          complete: () => this.systemService.triggerSaveCurrentBookTranslations({ book })
         });
     }
   }
