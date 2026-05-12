@@ -173,6 +173,14 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     });
   }
 
+  getVariationValue(chapterVariations: Record<string, Record<string, string>>, variationId: string, scriptureWordSpanIndex: number): string {
+    const scripture = this.projectCustomTranslationService.getCustomTranslationInterlinearValue(
+      this.customTranslation, this.current, this.sourceVerse, scriptureWordSpanIndex
+    );
+
+    return chapterVariations[variationId] && chapterVariations[variationId][scripture] || '';
+  }
+
   saveCustomTranslationInterlinearMetadata(
     value: string,
     wordIndex: number

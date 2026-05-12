@@ -2,8 +2,6 @@
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
 @let chapterVariations = customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex].variations;
 
-Chapter: {{chapterVariations|json}}
-
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
 </div>
@@ -47,7 +45,9 @@ Chapter: {{chapterVariations|json}}
       <th>Variation: {{variation.name}}</th>
       @for (sentence of splittedCustomTranslation; track $index) {
       <td>
-        <input type="text" #variationEl placeholder="empty" [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
+        <input type="text" #variationEl placeholder="empty"
+          [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
+          [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
       </td>
       }
     </tr>
