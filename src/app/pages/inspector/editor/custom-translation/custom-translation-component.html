@@ -1,6 +1,6 @@
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
-@let chapterVariations = customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex].variations;
+@let chapterVariations = customTranslation.chapters[current.chapter]?.[verseIndex]?.variations;
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
@@ -40,17 +40,35 @@
     </td>
   </tr>
 
-  @for (variation of getVariations(); track $index) {
-    <tr>
-      <th>Variation: {{variation.name}}</th>
-      @for (sentence of splittedCustomTranslation; track $index) {
-      <td>
-        <input type="text" #variationEl placeholder="empty"
-          [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
-          [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
-      </td>
-      }
-    </tr>
+  @if (chapterVariations) {
+    @for (variation of getVariations(); track $index) {
+      <tr>
+        <th rowspan="2">Variation: {{variation.name}}</th>
+        @for (sentence of splittedCustomTranslation; track $index) {
+        <td>
+          <input type="text" #variationEl placeholder="empty"
+            [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
+            [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
+        </td>
+        }
+      </tr>
+  
+      <tr>
+        <td [colSpan]="splittedCustomTranslation.length">
+          @for (sentence of splittedCustomTranslation; track $index) {
+            @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
+            @if (hasVariation.length) {
+              <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+            } @else {
+              <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+            }
+            @if (sentence.hasTrailingSpace) {
+              <span>&nbsp;</span>
+            }
+          }
+        </td>
+      </tr>
+    }
   }
 
   <tr>
