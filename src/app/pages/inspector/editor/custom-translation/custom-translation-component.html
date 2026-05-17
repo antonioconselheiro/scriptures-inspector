@@ -48,6 +48,7 @@
         <td>
           <input type="text" #variationEl placeholder="empty"
             [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
+            (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
             [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value)">
         </td>
         }

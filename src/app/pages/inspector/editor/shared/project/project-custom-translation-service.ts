@@ -310,6 +310,45 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  getVariationValue(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    scriptureWordSpanIndex: number,
+    chapterVariations: Record<string, Record<string, string>>,
+    variationId: string
+  ): string {
+    const scripture = this.getCustomTranslationInterlinearValue(
+      customTranslation, current, sourceVerse, scriptureWordSpanIndex
+    );
+
+    return chapterVariations[variationId] && chapterVariations[variationId][scripture] || '';
+  }
+
+  updateVariationValue(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    scriptureWordSpanIndex: number,
+    chapterVariations: Record<string, Record<string, string>>,
+    variationId: string,
+    value: string
+  ): void {
+    const scripture = this.getCustomTranslationInterlinearValue(customTranslation, current, sourceVerse, scriptureWordSpanIndex);
+
+    if (!scripture) {
+      return;
+    }
+
+    if (!chapterVariations[variationId]) {
+      chapterVariations[variationId] = {};
+    }
+
+    chapterVariations[variationId][scripture] = value;
+
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
   cleanInterlinear(
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,

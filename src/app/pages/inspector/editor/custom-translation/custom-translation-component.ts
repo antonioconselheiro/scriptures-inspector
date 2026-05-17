@@ -174,11 +174,31 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   getVariationValue(chapterVariations: Record<string, Record<string, string>>, variationId: string, scriptureWordSpanIndex: number): string {
-    const scripture = this.projectCustomTranslationService.getCustomTranslationInterlinearValue(
-      this.customTranslation, this.current, this.sourceVerse, scriptureWordSpanIndex
+    return this.projectCustomTranslationService.getVariationValue(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      scriptureWordSpanIndex,
+      chapterVariations,
+      variationId
     );
+  }
 
-    return chapterVariations[variationId] && chapterVariations[variationId][scripture] || '';
+  updateVariationValue(
+    chapterVariations: Record<string, Record<string, string>>,
+    variationId: string,
+    scriptureWordSpanIndex: number,
+    value: string,
+  ): void {
+    this.projectCustomTranslationService.updateVariationValue(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      scriptureWordSpanIndex,
+      chapterVariations,
+      variationId,
+      value
+    );
   }
 
   saveCustomTranslationInterlinearMetadata(
