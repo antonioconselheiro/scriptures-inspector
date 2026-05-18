@@ -184,6 +184,30 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
   }
 
+  getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
+    const chapters = this.customTranslation.chapters;
+    const suggestions = new Array<string>();
+
+    if (interlinearValue) {
+      const value = interlinearValue.replace(/^\d+\-/, '');
+      chapters.forEach(chapter => {
+        chapter.forEach(verse => {
+          if (verse.variations) {
+            const variationsRecord = verse.variations[variationId] || {};
+            Object.keys(variationsRecord).forEach(key => {
+              const thermValue = key.replace(/^\d+\-/, '');
+              if (thermValue === value) {
+                suggestions.push(variationsRecord[key]);
+              }
+            });
+          }
+        });
+      });
+    }
+
+    return suggestions;
+  }
+
   updateVariationValue(
     chapterVariations: Record<string, Record<string, string>>,
     variationId: string,

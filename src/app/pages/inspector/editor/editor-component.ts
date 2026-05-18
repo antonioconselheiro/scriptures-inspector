@@ -147,6 +147,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   private subscribeData(): void {
     this.subscriptions.add(this.activatedRoute.data.subscribe({
       next: data => {
+        console.info('data:', data);
         this.readBookSourceFromData(data);
         this.readBookTranslationViewerFromData(data);
         this.readBookTargetsFromData(data);
