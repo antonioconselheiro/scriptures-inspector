@@ -40,47 +40,6 @@
     </td>
   </tr>
 
-  @if (chapterVariations) {
-    @for (variation of getVariations(); track $index) {
-      <tr>
-        <th rowspan="2">Variation: {{variation.name}}</th>
-        @for (sentence of splittedCustomTranslation; track $index) {
-        <td>
-          @let dataListId = 'datalist'+variation.id+$index;
-          <input type="text" #variationEl placeholder="empty"
-            [attr.list]="dataListId"
-            [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
-            (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
-            [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value) + 20">
-
-            <datalist [id]="dataListId">
-              @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                <option [value]="suggestion"></option>
-              }
-            </datalist>
-        </td>
-        }
-      </tr>
-  
-      <tr>
-        <td [colSpan]="splittedCustomTranslation.length">
-          @for (sentence of splittedCustomTranslation; track $index) {
-            @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
-            @if (hasVariation.length) {
-              <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
-            } @else {
-              <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
-            }
-
-            @if (sentence.hasTrailingSpace) {
-              <span>&nbsp;</span>
-            }
-          }
-        </td>
-      </tr>
-    }
-  }
-
   <tr>
     <th>word span</th>
     @for (sentence of splittedCustomTranslation; track $index) {
@@ -130,4 +89,45 @@
     }
     <td><button type="button" (click)="cleanInterlinear()">×</button></td>
   </tr>
+
+    @if (chapterVariations) {
+    @for (variation of getVariations(); track $index) {
+      <tr>
+        <th rowspan="2">Variation: {{variation.name}}</th>
+        @for (sentence of splittedCustomTranslation; track $index) {
+        <td>
+          @let dataListId = 'datalist'+variation.id+$index;
+          <input type="text" #variationEl placeholder="empty"
+            [attr.list]="dataListId"
+            [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
+            (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
+            [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value) + 20">
+
+            <datalist [id]="dataListId">
+              @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
+                <option [value]="suggestion"></option>
+              }
+            </datalist>
+        </td>
+        }
+      </tr>
+  
+      <tr>
+        <td [colSpan]="splittedCustomTranslation.length">
+          @for (sentence of splittedCustomTranslation; track $index) {
+            @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
+            @if (hasVariation.length) {
+              <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+            } @else {
+              <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+            }
+
+            @if (sentence.hasTrailingSpace) {
+              <span>&nbsp;</span>
+            }
+          }
+        </td>
+      </tr>
+    }
+  }
 </table>
