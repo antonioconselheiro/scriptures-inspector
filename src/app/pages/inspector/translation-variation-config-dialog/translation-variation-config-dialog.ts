@@ -50,6 +50,14 @@ export class TranslationVariationConfigDialog extends ModalableDirective<BookTra
     });
   }
 
+  onChangeVariantName(id: string, value: string): void {
+    if (this.book) {
+      this.book.variations[id] = {
+        name: value
+      };
+    }
+  }
+
   onAddVariantSubmit(): void {
     if (this.form.valid && this.book) {
       const { variant } = this.form.value;

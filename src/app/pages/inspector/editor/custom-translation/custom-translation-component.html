@@ -93,7 +93,7 @@
     @if (chapterVariations) {
     @for (variation of getVariations(); track $index) {
       <tr>
-        <th rowspan="2">Variation: {{variation.name}}</th>
+        <th rowspan="2" class="variationName">Variation: {{variation.name}}</th>
         @for (sentence of splittedCustomTranslation; track $index) {
         <td>
           @let dataListId = 'datalist'+variation.id+$index;
@@ -117,7 +117,9 @@
           @for (sentence of splittedCustomTranslation; track $index) {
             @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
             @if (hasVariation.length) {
-              <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+              @if (hasVariation.trim().length) {
+                <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+              }
             } @else {
               <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
             }

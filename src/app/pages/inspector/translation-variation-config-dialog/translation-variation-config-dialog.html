@@ -23,7 +23,7 @@
 
   @for (variant of getVariations(); track $index) {
     <tr>
-      <td><input type="text" [value]="variant.name"></td>
+      <td><input type="text" #variantName [value]="variant.name" (input)="onChangeVariantName(variant.key, variantName.value)"></td>
       <td><button type="button" (click)="deleteVariant(variant.key)">×</button></td>
     </tr>
   }

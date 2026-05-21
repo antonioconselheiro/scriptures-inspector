@@ -5,8 +5,6 @@ TODO
 [ ] - após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
 [ ] - remover variação quando o valor for alterado para string vazia;
 [ ] - herdar ids das variações em 'import from book';
-[ ] - renomear variações das configurações;
-[ ] - campos de variação que contiverem uma unidade de espaço devem substituir a palavra original por string vazia;
 [ ] - Tornar tradução personalizada minificável;
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
