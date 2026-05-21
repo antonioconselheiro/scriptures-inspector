@@ -87,6 +87,8 @@ export class ImportFromBookDialog extends ModalableDirective<{
   }
 
   private joinProjectData(projectData: ProjectData, variations: boolean, override: boolean): void {
+    console.info('projectData:', projectData);
+    console.info('this.projectData:', this.projectData);
     Object.keys(projectData).forEach(target => {
       const importFromBook = projectData[target];
       const toBook = this.projectData[target];
@@ -94,18 +96,22 @@ export class ImportFromBookDialog extends ModalableDirective<{
         this.importConfigs(toBook, importFromBook, override);
       }
 
+      console.info('target:', target);
       if (variations && this.isTranslation(toBook, target) && this.hasVariations(importFromBook)) {
-        toBook
+
+        Object.keys(importFromBook.variations).forEach(variationId => {
+          toBook.variations[variationId] = { ...importFromBook.variations[variationId] };
+        });
       }
     });
   }
 
   private isTranslation(toBook: Book<object, object>, target: string): toBook is BookTranslationTarget {
-    return /-translation$/.test(target);
+    return /\-translation$/.test(target);
   }
 
   private hasVariations(importFromBook: Book<object, object>): importFromBook is BookTranslationTarget {
-    return 'varitions' in importFromBook;
+    return 'variations' in importFromBook;
   }
 
   private hasConfigs(book: Book<object, object>): book is Book<BookMetadataAttributes> {

@@ -3,7 +3,6 @@ TODO
 [ ] - validar gematria com falseamento
 [ ] - criar função final que valida livro inteiro, se não há metadados armazenados sem relação com o texto após a identificação de todos os patterns
 [ ] - após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
-[ ] - herdar ids das variações em 'import from book';
 [ ] - Tornar tradução personalizada minificável;
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
