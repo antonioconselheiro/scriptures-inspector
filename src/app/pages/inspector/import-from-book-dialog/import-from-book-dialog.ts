@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
+import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
@@ -39,7 +40,8 @@ export class ImportFromBookDialog extends ModalableDirective<{
     super();
     this.form = fb.group({
       selectedBook: ['', [Validators.required]],
-      override: [false]
+      override: [false],
+      variations: [true]
     });
   }
 
@@ -66,11 +68,11 @@ export class ImportFromBookDialog extends ModalableDirective<{
 
   onImportFromBookSubmit(): void {
     if (this.form.valid) {
-      const { selectedBook, override } = this.form.value;
+      const { selectedBook, override, variations } = this.form.value;
 
       if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedBook}"?`)) {
         targetsLoaderFn(selectedBook).then(projectData => {
-          this.joinProjectData(projectData, override);
+          this.joinProjectData(projectData, variations, override);
           alert('Patterns and lexicals imported successfully');
         }).catch(e => {
           alert('Not possible to load book to import');
@@ -84,14 +86,26 @@ export class ImportFromBookDialog extends ModalableDirective<{
     }
   }
 
-  private joinProjectData(projectData: ProjectData, override: boolean): void {
+  private joinProjectData(projectData: ProjectData, variations: boolean, override: boolean): void {
     Object.keys(projectData).forEach(target => {
       const importFromBook = projectData[target];
       const toBook = this.projectData[target];
       if (this.hasConfigs(toBook) && this.hasConfigs(importFromBook)) {
         this.importConfigs(toBook, importFromBook, override);
       }
+
+      if (variations && this.isTranslation(toBook, target) && this.hasVariations(importFromBook)) {
+        toBook
+      }
     });
+  }
+
+  private isTranslation(toBook: Book<object, object>, target: string): toBook is BookTranslationTarget {
+    return /-translation$/.test(target);
+  }
+
+  private hasVariations(importFromBook: Book<object, object>): importFromBook is BookTranslationTarget {
+    return 'varitions' in importFromBook;
   }
 
   private hasConfigs(book: Book<object, object>): book is Book<BookMetadataAttributes> {

@@ -344,7 +344,11 @@ export class ProjectCustomTranslationService {
       chapterVariations[variationId] = {};
     }
 
-    chapterVariations[variationId][scripture] = value;
+    if (value.length) {
+      chapterVariations[variationId][scripture] = value;
+    } else {
+      delete chapterVariations[variationId][scripture];
+    }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
