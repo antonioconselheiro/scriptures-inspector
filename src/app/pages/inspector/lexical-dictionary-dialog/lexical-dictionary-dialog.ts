@@ -75,6 +75,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       const bookMetadata = this.bookMetadata;
       const bookSource = this.bookSource;
       const language = this.language;
+      const normalizeFn = language.normalizeFn ? language.normalizeFn : (t: string) => t;
 
       const lexicalFoundInText: { [lexical: string]: number } = {};
       Object.keys(bookMetadata.lexical).map(lexical => { lexicalFoundInText[lexical] = 0; });
@@ -90,8 +91,10 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
           const eachWord = this.projectService.splitIntoMatrix(parsedBook, verse.text);
           eachWord.forEach(wordFragments => {
             wordFragments.forEach(fragment => {
-              if (fragment.word in lexicalFoundInText) {
-                lexicalFoundInText[fragment.word]++;
+              const word = normalizeFn(fragment.word);
+
+              if (word in lexicalFoundInText) {
+                lexicalFoundInText[word]++;
               }
             })
           });
@@ -101,6 +104,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       Object.keys(lexicalFoundInText).forEach(lexical => {
         if (!lexicalFoundInText[lexical]) {
           delete bookMetadata.lexical[lexical];
+          this.lexicals[this.lexicals.findIndex(value => value.key === lexical)];
         }
       });
     }
