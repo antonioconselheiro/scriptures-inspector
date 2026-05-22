@@ -16,6 +16,7 @@ import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
+import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { LoadingObservable } from '@shared/loading/loading-service';
@@ -23,6 +24,7 @@ import { getProjectFn } from '@shared/project/get-project-fn';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
+import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
 import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
 import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 import { SystemService } from '@shared/system/system-service';
@@ -31,15 +33,12 @@ import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-c
 import { ImportFromBookDialog } from '../import-from-book-dialog/import-from-book-dialog';
 import { LexicalDictionaryDialog } from '../lexical-dictionary-dialog/lexical-dictionary-dialog';
 import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
+import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
 import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
-import { BookTranslationTarget } from '@domain/book-translation-target-model';
-import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
-import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 
 @Component({
   selector: 'app-editor-component',
@@ -380,13 +379,18 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   openLexicalDictionaryDialog(detail: TargetMetadataDetail): void {
     const book = this.current?.book;
+    const bookSource = this.sourceBookRecord[detail.source];
 
-    if (book) {
+    if (book && bookSource) {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(LexicalDictionaryDialog)
         .setOutletName('main')
-        .setData(bookMetadata)
+        .setData({
+          bookMetadata,
+          bookSource,
+          language: this.languageMetadataRecord[detail.languageSource]
+        })
         .build()
         .subscribe({
           next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
