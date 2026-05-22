@@ -119,7 +119,21 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   }
 
   //  word of God
-  setAsWordOfGod(input: HTMLInputElement, segments: Array<WordSegment>): void {
+  setAsWordOfGod(
+    input: HTMLInputElement,
+    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordIndex: number
+  ): void {
+    const segments: Array<WordSegment> = eachWord[wordIndex];
+    this.projectMetadataService.removeUnusedMetadata(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.getCurrent(this.verseIndex),
+      this.sourceVerse,
+      eachWord,
+      wordIndex
+    );
+
     this.projectMetadataService.setAsWordOfGod(
       input.checked,
       this.bookTarget,
@@ -130,7 +144,11 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     );
   }
 
-  getScriptureMetadataWordOfGod(segments: Array<WordSegment>): boolean {
+  getScriptureMetadataWordOfGod(
+    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordIndex: number
+  ): boolean {
+    const segments: Array<WordSegment> = eachWord[wordIndex];
     return this.projectMetadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,

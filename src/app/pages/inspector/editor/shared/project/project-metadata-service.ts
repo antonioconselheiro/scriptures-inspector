@@ -59,6 +59,25 @@ export class ProjectMetadataService {
     return metadata;
   }
 
+  removeUnusedMetadata(
+    bookMetadata: BookMetadataTarget,
+    sourceLanguage: LanguageUnionType,
+    current: CurrentVerseIndex,
+    verse: SourceVerse,
+    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordIndex: number
+  ): void {
+    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, eachWord[wordIndex]);
+    const keys = eachWord.flat().map(word => `${word.index}-${word.word}`);
+    Object.keys(wordMetadata).forEach(key => {
+      if (!keys.includes(key)) {
+        delete wordMetadata[key];
+      }
+    });
+
+    this.systemService.triggerSaveCurrentBookMetadata(current);
+  }
+
   // word of God methods
   setAsWordOfGod(
     checked: boolean,
@@ -74,7 +93,7 @@ export class ProjectMetadataService {
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
-        delete wordMetadata[key].isWordOfGod;
+        delete wordMetadata[key];
       }
     });
 

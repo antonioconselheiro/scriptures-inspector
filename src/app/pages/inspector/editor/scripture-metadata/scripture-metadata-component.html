@@ -58,8 +58,8 @@
       @for (word of wordList; track $index; let wordIndex = $index) {
       <td>
         <input type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-          (change)="setAsWordOfGod(wordOfGodEl, eachWord[wordIndex])"
-          [checked]="getScriptureMetadataWordOfGod(eachWord[wordIndex])" />
+          (change)="setAsWordOfGod(wordOfGodEl, eachWord, wordIndex)"
+          [checked]="getScriptureMetadataWordOfGod(eachWord, wordIndex)" />
       </td>
       }
       <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
