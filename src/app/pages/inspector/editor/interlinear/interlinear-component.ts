@@ -71,6 +71,8 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
+  minified = false;
+
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,

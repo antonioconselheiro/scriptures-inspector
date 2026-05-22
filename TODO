@@ -1,9 +1,7 @@
 TODO
 
-[ ] - validar gematria com falseamento
-[ ] - criar função final que valida livro inteiro, se não há metadados armazenados sem relação com o texto após a identificação de todos os patterns
-[ ] - após criar um novo pattern de prefixo/sufixo e segmentar palavras, vários metadados irão perder sua relação em vários pontos, é importante incluir tags de warning avisando que há metadados sem uso para determinado verso
-[ ] - Tornar tradução personalizada minificável;
+[ ] - Validar gematria com falseamento
+[ ] - Limpar custom translation precisa limpar as variações;
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
@@ -13,7 +11,6 @@ TODO
 [ ] - (não mvp) Repositório com mahabarata em sanscrito, hindi e inglês, comparáveis;
 [ ] - (não mvp) Repositório com os manuscritos do mar morto (transcrição, tradução);
 [ ] - (não mvp) Repositório com apocrifos com suas versões em seus idiomas mais antigos e também as traduções para o português;
-[ ] - (não mvp) incluir na linha de metadados relação genealogica de personagens citados no verso de relações apresentadas no verso, podendo ser: casamento dos personagens, filhos, idade do pai quando o filho nasce, total de anos de vida, 
 
 Referências auxiliares:
 Livro de Enoque, ge'ez, interlinear:

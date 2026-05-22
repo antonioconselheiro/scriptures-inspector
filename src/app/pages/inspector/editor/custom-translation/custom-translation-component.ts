@@ -60,6 +60,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   @Input()
   customTranslation!: BookTranslationTarget;
 
+  minified = false;
+
   pipeUpdaterController = 0;
 
   constructor(

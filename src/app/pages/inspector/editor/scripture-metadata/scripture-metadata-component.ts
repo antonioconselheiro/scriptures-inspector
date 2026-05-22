@@ -73,6 +73,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   @Output()
   removeTranslation = new EventEmitter<string>();
 
+  minified = false;
+
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService

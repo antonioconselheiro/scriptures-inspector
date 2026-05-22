@@ -1,3 +1,5 @@
+<h3>Custom Translation</h3>
+
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
 @let chapterVariations = customTranslation.chapters[current.chapter]?.[verseIndex]?.variations;
@@ -5,131 +7,133 @@
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
 </div>
+<div [class.minified]="minified" class="tableMinifiable">
+  <table border="1">
+    <tr>
+      <th rowspan="3">custom</th>
+      <td [colSpan]="splittedCustomTranslation.length">
+        <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
+          placeholder="custom translation"
+          (input)="updateCustomTranslation(customTranslationEl)"
+          [value]="getCustomTranslationVerse()?.text" />
+      </td>
+      <td rowspan="3"><button (click)="cleanCustomTranslation(customTranslationEl)" type="button">×</button></td>
+    </tr>
 
-<table border="1">
-  <tr>
-    <th rowspan="3">custom</th>
-    <td [colSpan]="splittedCustomTranslation.length">
-      <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
-        placeholder="custom translation"
-        (input)="updateCustomTranslation(customTranslationEl)"
-        [value]="getCustomTranslationVerse()?.text" />
-    </td>
-    <td rowspan="3"><button (click)="cleanCustomTranslation(customTranslationEl)" type="button">×</button></td>
-  </tr>
-
-  <tr>
-    <td [colSpan]="splittedCustomTranslation.length">
-      @for (sentence of splittedCustomTranslation; track $index) {
-      <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
-        @if (sentence.hasTrailingSpace) {
-          <span>&nbsp;</span>
-        }
-      }
-    </td>
-  </tr>
-
-  <tr>
-    <td [colSpan]="splittedCustomTranslation.length">
-      @for (sentence of splittedCustomTranslation; track $index) {
-      <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
-        @if (sentence.hasTrailingSpace) {
-          <span>&nbsp;</span>
-        }
-      }
-    </td>
-  </tr>
-
-  <tr>
-    <th>word span</th>
-    @for (sentence of splittedCustomTranslation; track $index) {
-    <td>
-      <input
-        type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
-        [value]="customTranslation.chapters[current.chapter][verseIndex].metadata[$index].size"
-        (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][verseIndex], $index, wordSpanEl)"
-      />
-    </td>
-    }
-  </tr>
-
-  <tr>
-    <th>interlinear</th>
-    @for (sentence of splittedCustomTranslation; track $index) {
-    <td>
-      {{sentence.fragment}}
-    </td>
-    }
-    <td>
-    </td>
-  </tr>
-
-  <tr>
-    <th>scriptures</th>
-    @for (sentence of splittedCustomTranslation; track $index) {
-    <td>
-      <select
-        #interlinearCustomTranslationEl
-        [name]="'selectInterlinearCustomTranslationEl' + $index"
-        [ngModel]="getCustomTranslationInterlinearValue($index)"
-        (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
-        <option value=""></option>
-        @for (wordSegments of eachWord; track $index) {
-        @for (segment of wordSegments; track $index) {
-        <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
-        </option>
-        }
-        }
-      </select>
-    </td>
-    }
-
-    @if (!splittedCustomTranslation.length) {
-      <td></td>
-    }
-    <td><button type="button" (click)="cleanInterlinear()">×</button></td>
-  </tr>
-
-    @if (chapterVariations) {
-    @for (variation of getVariations(); track $index) {
-      <tr>
-        <th rowspan="2" class="variationName">Variation: {{variation.name}}</th>
+    <tr>
+      <td [colSpan]="splittedCustomTranslation.length">
         @for (sentence of splittedCustomTranslation; track $index) {
-        <td>
-          @let dataListId = 'datalist'+variation.id+$index;
-          <input type="text" #variationEl placeholder="empty"
-            [attr.list]="dataListId"
-            [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
-            (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
-            [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value) + 20">
-
-            <datalist [id]="dataListId">
-              @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                <option [value]="suggestion"></option>
-              }
-            </datalist>
-        </td>
-        }
-      </tr>
-  
-      <tr>
-        <td [colSpan]="splittedCustomTranslation.length">
-          @for (sentence of splittedCustomTranslation; track $index) {
-            @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
-            @if (hasVariation.length) {
-              @if (hasVariation.trim().length) {
-                <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
-              }
-            } @else {
-              <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
-            }
-
-            @if (sentence.hasTrailingSpace) {
-              <span>&nbsp;</span>
-            }
+        <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+          @if (sentence.hasTrailingSpace) {
+            <span>&nbsp;</span>
           }
-        </td>
-      </tr>
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <td [colSpan]="splittedCustomTranslation.length">
+        @for (sentence of splittedCustomTranslation; track $index) {
+        <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
+          @if (sentence.hasTrailingSpace) {
+            <span>&nbsp;</span>
+          }
+        }
+      </td>
+    </tr>
+
+    <tr>
+      <th>word span</th>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <td>
+        <input
+          type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
+          [value]="customTranslation.chapters[current.chapter][verseIndex].metadata[$index]?.size"
+          (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][verseIndex], $index, wordSpanEl)"
+        />
+      </td>
+      }
+    </tr>
+
+    <tr>
+      <th>interlinear</th>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <td>
+        {{sentence.fragment}}
+      </td>
+      }
+      <td>
+      </td>
+    </tr>
+
+    <tr>
+      <th>scriptures</th>
+      @for (sentence of splittedCustomTranslation; track $index) {
+      <td>
+        <select
+          #interlinearCustomTranslationEl
+          [name]="'selectInterlinearCustomTranslationEl' + $index"
+          [ngModel]="getCustomTranslationInterlinearValue($index)"
+          (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
+          <option value=""></option>
+          @for (wordSegments of eachWord; track $index) {
+          @for (segment of wordSegments; track $index) {
+          <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
+          </option>
+          }
+          }
+        </select>
+      </td>
+      }
+
+      @if (!splittedCustomTranslation.length) {
+        <td></td>
+      }
+      <td><button type="button" (click)="cleanInterlinear()">×</button></td>
+    </tr>
+
+      @if (chapterVariations) {
+      @for (variation of getVariations(); track $index) {
+        <tr>
+          <th rowspan="2" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
+          @for (sentence of splittedCustomTranslation; track $index) {
+          <td>
+            @let dataListId = 'datalist'+variation.id+$index;
+            <input type="text" #variationEl placeholder="empty"
+              [attr.list]="dataListId"
+              [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
+              (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
+              [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value) + 20">
+
+              <datalist [id]="dataListId">
+                @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
+                  <option [value]="suggestion"></option>
+                }
+              </datalist>
+          </td>
+          }
+        </tr>
+    
+        <tr>
+          <td [colSpan]="splittedCustomTranslation.length">
+            @for (sentence of splittedCustomTranslation; track $index) {
+              @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
+              @if (hasVariation.length) {
+                @if (hasVariation.trim().length) {
+                  <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+                }
+              } @else {
+                <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+              }
+
+              @if (sentence.hasTrailingSpace) {
+                <span>&nbsp;</span>
+              }
+            }
+          </td>
+        </tr>
+      }
     }
-  }
-</table>
+  </table>
+  <button (click)="minified = !minified" type="button"></button>
+</div>

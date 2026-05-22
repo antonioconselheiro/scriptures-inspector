@@ -87,9 +87,9 @@
     @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
       @let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
 
-      <strong class="verseTitle">
+      <h2 class="verseTitle">
         {{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
-      </strong>
+      </h2>
 
       <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
         [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"

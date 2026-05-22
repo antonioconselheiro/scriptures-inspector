@@ -52,12 +52,36 @@ a {
   cursor: pointer;
 }
 
+h2,
+h3 {
+  text-align: center;
+}
+
 input[type=checkbox], button {
   cursor: pointer;
 }
 
-table[border="1"] {
+.tableMinifiable {
   margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+}
+
+.tableMinifiable > button {
+  height: 21px;
+}
+
+.tableMinifiable > button::before {
+  content: '-';
+}
+
+.tableMinifiable.minified {
+  max-height: 21px;
+  overflow: hidden;
+}
+
+.tableMinifiable.minified > button::before {
+  content: '+';
 }
 
 th {
