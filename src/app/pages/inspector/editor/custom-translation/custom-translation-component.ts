@@ -135,6 +135,21 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
+  cleanCustomTranslationVariation(
+    variation: { id: string; name: string; },
+    chapterVariations: Record<string, Record<string, string>>,
+    splittedCustomTranslation: WordFragment[]
+  ): void {
+    if (!confirm(`clean variation "${variation.name}" on this verse?`)) {
+      return;
+    }
+
+    for (let index = 0; index < splittedCustomTranslation.length; index++) {
+      this.updateVariationValue(chapterVariations, variation.id, index, '');
+    }
+    this.pipeUpdaterController++;
+  }
+
   getCustomTranslationColor(
     wordIndex: number
   ): string {

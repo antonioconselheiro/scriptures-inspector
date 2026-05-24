@@ -1,4 +1,4 @@
-<h3>Custom Translation</h3>
+<h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
@@ -107,11 +107,17 @@
 
               <datalist [id]="dataListId">
                 @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                  <option [value]="suggestion"></option>
+                  @if (suggestion !== variationEl.value) {
+                    <option [value]="suggestion"></option>
+                  }
                 }
               </datalist>
           </td>
           }
+
+          <td rowspan="2">
+            <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation)" type="button">×</button>
+          </td>
         </tr>
     
         <tr>
