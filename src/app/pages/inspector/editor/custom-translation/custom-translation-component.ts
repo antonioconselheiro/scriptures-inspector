@@ -154,7 +154,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): string {
     return this.projectCustomTranslationService.getCustomTranslationColor(
-      this.customTranslation, this.current, this.sourceVerse, wordIndex
+      this.customTranslation, this.interlinear, this.current, this.sourceVerse, wordIndex
     );
   }
 
@@ -164,8 +164,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return this.projectCustomTranslationService.getCustomTranslationStyleRole(
       this.translationSourceLanguage,
       this.bookTarget,
-      this.interlinear,
       this.customTranslation,
+      this.interlinear,
       this.current,
       this.sourceVerse,
       wordIndex

@@ -201,8 +201,10 @@ export class ProjectCustomTranslationService {
     }
   }
 
+  
   getCustomTranslationColor(
     customTranslation: BookTranslationTarget,
+    interlinear: BookInterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -221,9 +223,27 @@ export class ProjectCustomTranslationService {
       return '';
     }
 
-    const matches = translationMetadata[wordIndex] && translationMetadata[wordIndex].value.match(/^\d+/);
-    if (matches) {
-      return String(Number(Array.from(matches)[0]) % 7 + 1);
+    if (interlinear) {
+      const translationMetadataValue = translationMetadata[wordIndex].value || '';
+      const [translationWordIndex] = Array.from(translationMetadataValue.match(/^\d+/) || ['']);
+      if (!translationWordIndex) {
+        return '';
+      }
+
+      const interlinearSegmentOrigin = interlinear.chapters[current.chapter][verseIndex][Number(translationWordIndex)]?.origin || null;
+      if (!interlinearSegmentOrigin) {
+        return '';
+      }
+
+      const matches = translationMetadata[interlinearSegmentOrigin.index] && translationMetadata[interlinearSegmentOrigin.index].value.match(/^\d+/);
+      if (matches) {
+        return String(Number(Array.from(matches)[0]) % 7 + 1);
+      }
+    } else {
+      const matches = translationMetadata[wordIndex] && translationMetadata[wordIndex].value.match(/^\d+/);
+      if (matches) {
+        return String(Number(Array.from(matches)[0]) % 7 + 1);
+      }
     }
 
     return '';
@@ -232,37 +252,36 @@ export class ProjectCustomTranslationService {
   getCustomTranslationStyleRole(
     translationSourceLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
-    translation: BookInterlinearTarget | undefined,
     customTranslation: BookTranslationTarget,
+    interlinear: BookInterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
   ): string {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    let verseMetadata: BookVerse<BookChapterVerseMetadata> | null, customTranslationMetadataKey = '';
+    let verseMetadata: BookVerse<BookChapterVerseMetadata> | null,
+      customTranslationMetadataKey = '',
+      scriptureChapterMetadata: BookVerse<BookChapterVerseMetadata>[] = [];
 
-    if (translation) {
-      let scriptureChapterMetadata: BookVerse<BookChapterVerseMetadata>[] = [];
-
+    if (interlinear) {
       const translationMetadata = customTranslation.chapters[current.chapter] &&
         customTranslation.chapters[current.chapter][verseIndex]?.metadata?.[wordIndex].value || '';
-
-      scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
 
       const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
       if (!translationWordIndex) {
         return '';
       }
 
-      const scriptureSegmentOrigin = translation.chapters[current.chapter][verseIndex][Number(translationWordIndex)]?.origin || null;
-      if (!scriptureSegmentOrigin) {
+      const interlinearSegmentOrigin = interlinear.chapters[current.chapter][verseIndex][Number(translationWordIndex)]?.origin || null;
+      if (!interlinearSegmentOrigin) {
         return '';
       }
 
-      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, scriptureSegmentOrigin);
+      scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
+      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, interlinearSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
     } else {
-      const scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
+      scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
       verseMetadata = scriptureChapterMetadata[verseIndex] || null;
       const translationChapterMetadata = customTranslation.chapters[current.chapter] || [];
       customTranslationMetadataKey = ((translationChapterMetadata[verseIndex]?.metadata || [])?.[wordIndex]?.value || '');

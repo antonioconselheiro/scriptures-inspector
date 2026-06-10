@@ -100,12 +100,12 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return this.projectService.splitIntoMatrix(parsedBook, sourceVerse.text);
   }
 
-  onSelectInterlinearGeezToScripture(
+  onSelectInterlinearToBaseScripture(
     translationWordIndex: number,
     translationWord: string,
     interlinearValue: string
   ): void {
-    this.projectInterlinearService.onSelectInterlinearGeezToScripture(
+    this.projectInterlinearService.onSelectInterlinearToBaseScripture(
       this.bookTarget,
       this.current,
       this.sourceVerse,

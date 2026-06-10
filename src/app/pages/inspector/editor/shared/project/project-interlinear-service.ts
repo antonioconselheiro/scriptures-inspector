@@ -18,7 +18,7 @@ export class ProjectInterlinearService {
     private systemService: SystemService
   ) { }
 
-  onSelectInterlinearGeezToScripture(
+  onSelectInterlinearToBaseScripture(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,

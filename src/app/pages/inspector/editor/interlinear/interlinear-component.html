@@ -72,7 +72,7 @@
         <td>
           @for (translationWord of sentence; track $index) {
           <select #interlinear
-            (change)="onSelectInterlinearGeezToScripture(translationWord.index, translationWord.word, interlinear.value)"
+            (change)="onSelectInterlinearToBaseScripture(translationWord.index, translationWord.word, interlinear.value)"
             [ngModel]="getInterlinear(translationWord.index)"
             [name]="'translationToSourceInterlinear' + $index">
             <option value=""></option>
