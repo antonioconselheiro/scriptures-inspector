@@ -1,5 +1,5 @@
 {
-  "name": "scriptures-inspector",
+  "name": "Scriptures Inspector",
   "version": "0.0.0",
   "main": "main.js",
   "description": "allows the reading scriptures using different representations of the text",
@@ -15,6 +15,7 @@
     "dev:electron": "wait-on http://localhost:4205 && su node -c \"electron-forge start -- --no-sandbox --disable-gpu --disable-features=IsolateOrigins,site-per-process,EnableAccessibilityTreeForEverything --disable-blink-features=AutomationControlled\"",
     "dev:electron:root": "wait-on http://localhost:4205 && su root -c \"electron-forge start -- --no-sandbox --disable-gpu --disable-features=IsolateOrigins,site-per-process,EnableAccessibilityTreeForEverything --disable-blink-features=AutomationControlled\"",
     "dev:web": "ng serve --host 0.0.0.0",
+    "build": "npm run build:lnx",
     "build:web": "rm -rf dist; ng build --base-href ./ --deploy-url ./; mv dist/browser/** dist; rm -rf dist/browser",
     "build:lnx": "npm run build:web && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png",
     "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
