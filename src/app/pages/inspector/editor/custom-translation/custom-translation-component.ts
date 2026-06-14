@@ -92,8 +92,24 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
   }, index: number, wordSpanEl: { value: string }): void {
-    const sizeNumber = Number(wordSpanEl.value);
-    verse.metadata[index].size = sizeNumber;
+    let sizeNumber = Number(wordSpanEl.value);
+    if (sizeNumber === 0) {
+      if (verse.metadata[index]) {
+        if (confirm('remove?')) {
+          verse.metadata.splice(index, 1);
+          this.systemService.triggerSaveCurrentBookTranslations(this.current);
+          return;
+        } else {
+          sizeNumber = 1;
+        }
+      }
+    }
+    
+    if (!verse.metadata[index]) {
+      verse.metadata[index] = { size: sizeNumber, value: '' };
+    } else {
+      verse.metadata[index].size = sizeNumber;
+    }
 
     this.systemService.triggerSaveCurrentBookTranslations(this.current);
   }

@@ -1,7 +1,7 @@
 {
   "name": "Bible Translation",
   "repositories": {
-    "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/refs/heads/master/src/repository.json"
+    "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
   "translationViewer": [],
   "target": {
