@@ -1,7 +1,9 @@
 TODO
 
 [ ] - Validar gematria com falseamento
+[ ] - Lexema não está agrupando palavras com a mesma raiz
 [ ] - Quando derivar um custom translation do lexico, se houverem palavras entre [colchetes], elas não devem ser associadas a nada
+[ ] - Habilitar pesquisar por Ctrl + F
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
