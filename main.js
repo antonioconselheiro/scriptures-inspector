@@ -36,9 +36,14 @@ ipcMain.handle('open-project', async () => {
 const isDev = !app.isPackaged;
 
 function createWindow() {
+  const iconPath = isDev
+    ? path.join(__dirname, 'public', 'script.png')
+    : path.join(app.getAppPath(), 'public', 'script.png');
+
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -54,9 +59,10 @@ function createWindow() {
     mainWindow.loadURL('http://localhost:4205');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
-    mainWindow.loadFile(
-      path.join(__dirname, 'dist/index.html')
-    );
+    const appPath = app.getAppPath();
+    const indexPath = path.join(appPath, 'dist/index.html');
+    console.log('Loading:', indexPath);
+    mainWindow.loadFile(indexPath);
   }
 
   Menu.setApplicationMenu(menu);

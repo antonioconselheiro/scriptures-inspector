@@ -1,6 +1,11 @@
+const path = require('path');
+
+const iconPath = path.resolve(__dirname, 'public', 'script.png');
+
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: iconPath,
   },
   rebuildConfig: {},
   makers: [
@@ -14,11 +19,19 @@ module.exports = {
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        options: {
+          icon: iconPath,
+        },
+      },
     },
     {
       name: '@electron-forge/maker-rpm',
-      config: {},
+      config: {
+        options: {
+          icon: iconPath,
+        },
+      },
     },
   ],
   plugins: [

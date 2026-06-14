@@ -1,32 +1,32 @@
 @font-face {
   font-family: 'hebrew';
-  src: url('/font/hebrew.woff2') format('woff2'),
-    url('/font/hebrew.woff') format('woff');
+  src: url('../public/font/hebrew.woff2') format('woff2'),
+    url('../public/font/hebrew.woff') format('woff');
 }
 
 @font-face {
   font-family: 'paleo-hebrew';
-  src: url('/font/phoenician.ttf') format('truetype');
+  src: url('../public/font/phoenician.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'greek';
-  src: url('/font/greek.ttf') format('truetype');
+  src: url('../public/font/greek.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'geez';
-  src: url('/font/menbere.ttf') format('truetype');
+  src: url('../public/font/menbere.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'sanskrit';
-  src: url('/font/sanskrit.ttf') format('truetype');
+  src: url('../public/font/sanskrit.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'gentium-transliteration';
-  src: url('/font/gentium-transliteration.ttf') format('truetype');
+  src: url('../public/font/gentium-transliteration.ttf') format('truetype');
 }
 
 body {
@@ -65,6 +65,7 @@ input[type=checkbox], button {
   margin: 1rem auto;
   display: flex;
   justify-content: center;
+  overflow-x: auto;
   contain: layout style paint;
 }
 
