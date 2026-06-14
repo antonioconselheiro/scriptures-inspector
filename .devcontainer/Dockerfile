@@ -13,7 +13,7 @@ ENV ELECTRON_DISABLE_SANDBOX=true
 ENV XAUTHORITY=/root/.Xauthority
 
 RUN apt update && \
-    apt install -y dbus libnss3 libnss3-dev libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 \
+    apt install -y fakeroot dbus libnss3 libnss3-dev libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0 \
     libnspr4 libdbus-1-3 libcups2 libpci3 libdrm2 libexpat1 libpango-1.0-0 libharfbuzz0b \
     libxss1 libasound2 libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 libgbm1 \
     libgdk-pixbuf2.0-0 xinit x11-xserver-utils libcanberra-gtk-module libcanberra-gtk3-module && \

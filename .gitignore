@@ -13,6 +13,7 @@ en-US-10-1.bdic
 # Compiled output
 /dist
 /tmp
+/out
 /out-tsc
 /bazel-out
 
