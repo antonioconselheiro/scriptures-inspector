@@ -1,7 +1,6 @@
 TODO
 
 [ ] - Validar gematria com falseamento
-[ ] - Quando um ajuste é feito em um custom translation já fechado, no select não se exibe a listagem de associações possíveis com o texto original para os novos inputs de palavras
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
