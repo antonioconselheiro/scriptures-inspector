@@ -140,3 +140,11 @@ th {
 .hidden {
   display: none !important;
 }
+
+.save {
+  background-image: url('../public/save.png');
+}
+
+.loading {
+  background-image: url('../public/loading.gif');
+}

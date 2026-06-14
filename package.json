@@ -1,6 +1,6 @@
 {
   "name": "Scriptures Inspector",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "main.js",
   "description": "allows the reading scriptures using different representations of the text",
   "files": [
@@ -17,7 +17,7 @@
     "dev:web": "ng serve --host 0.0.0.0",
     "build": "npm run build:lnx",
     "build:web": "rm -rf dist; ng build --base-href ./ --deploy-url ./; mv dist/browser/** dist; rm -rf dist/browser",
-    "build:lnx": "npm run build:web && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png",
+    "build:lnx": "npm run build:web && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png && rm -rf dist && mkdir -p dist && cp -r out/make/deb/x64/* dist/ && rm -rf out",
     "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
     "package": "electron-forge package",
     "make": "electron-forge make"
