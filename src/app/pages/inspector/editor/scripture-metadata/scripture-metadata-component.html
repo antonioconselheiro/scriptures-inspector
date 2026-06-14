@@ -7,7 +7,7 @@
   @let translations = getTranslations(viewingTranslationBookRecord);
 
   <div [class.minified]="minified" class="tableMinifiable">
-    <table border="1">
+    <table border="1" role="presentation">
       @for (translationInformation of translations; track $index) {
         <tr>
           <th class="translationName">{{translationInformation.name}}</th>

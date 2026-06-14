@@ -65,6 +65,12 @@ input[type=checkbox], button {
   margin: 1rem auto;
   display: flex;
   justify-content: center;
+  contain: layout style paint;
+}
+
+.tableMinifiable > table {
+  border-collapse: collapse;
+  contain: content;
 }
 
 .tableMinifiable > button {

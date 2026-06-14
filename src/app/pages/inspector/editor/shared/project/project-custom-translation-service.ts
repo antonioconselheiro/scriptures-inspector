@@ -310,7 +310,7 @@ export class ProjectCustomTranslationService {
     const chapter = customTranslation.chapters[current.chapter];
     if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
       const metadata = chapter[verseIndex].metadata;
-      return metadata && metadata[wordSpanIndex].value || '';
+      return metadata && metadata[wordSpanIndex]?.value || '';
     }
 
     return '';

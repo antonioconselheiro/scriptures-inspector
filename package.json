@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "concurrently -k \"npm run dev:web\" \"npm run dev:electron\"",
     "root": "concurrently -k \"npm run dev:web\" \"npm run dev:electron:root\"",
-    "dev:electron": "wait-on http://localhost:4205 && su node -c \"electron-forge start -- --no-sandbox --disable-gpu --ozone-platform=x11\"",
-    "dev:electron:root": "wait-on http://localhost:4205 && su root -c \"electron-forge start -- --no-sandbox --disable-gpu --ozone-platform=x11\"",
+    "dev:electron": "wait-on http://localhost:4205 && su node -c \"electron-forge start -- --no-sandbox --disable-gpu --disable-features=IsolateOrigins,site-per-process,EnableAccessibilityTreeForEverything --disable-blink-features=AutomationControlled\"",
+    "dev:electron:root": "wait-on http://localhost:4205 && su root -c \"electron-forge start -- --no-sandbox --disable-gpu --disable-features=IsolateOrigins,site-per-process,EnableAccessibilityTreeForEverything --disable-blink-features=AutomationControlled\"",
     "dev:web": "ng serve --host 0.0.0.0",
     "build:web": "rm -rf dist; ng build; mv dist/browser/** dist; rm -rf dist/browser",
     "build:lnx": "electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png",

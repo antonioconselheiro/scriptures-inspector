@@ -91,30 +91,33 @@
         {{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
       </h2>
 
-      <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
-        [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"
-        [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
-        [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
-        [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation($event)"
-        [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
+      <fieldset>
+        <legend>{{sourceCodex.data[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}</legend>
+        <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
+          [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"
+          [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
+          [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
+          [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation($event)"
+          [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
 
-      @for (item of structure.interlinearEditor; track $index) {
-        @let bookInterlinearSource = sourceBookRecord[item.source];
-        @let bookInterlinearTarget = projectData[item.target];
-        @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
+        @for (item of structure.interlinearEditor; track $index) {
+          @let bookInterlinearSource = sourceBookRecord[item.source];
+          @let bookInterlinearTarget = projectData[item.target];
+          @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
-        @if (bookInterlinearSource) {
-          @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
-          @let langInterlinearSource = codexMetadataRecord[item.source].language;
-          @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+          @if (bookInterlinearSource) {
+            @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
+            @let langInterlinearSource = codexMetadataRecord[item.source].language;
+            @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
-          <app-interlinear-component [current]="current" [sourceLanguage]="langInterlinearSource"
-            [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook" [originVerse]="verse"
-            [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
-            [bookTarget]="bookInterlinearTarget" [customTranslation]="bookCustomTranslationTarget"
-            [addPatternMenuRef]="addPatternMenuRef"></app-interlinear-component>
+            <app-interlinear-component [current]="current" [sourceLanguage]="langInterlinearSource"
+              [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook" [originVerse]="verse"
+              [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
+              [bookTarget]="bookInterlinearTarget" [customTranslation]="bookCustomTranslationTarget"
+              [addPatternMenuRef]="addPatternMenuRef"></app-interlinear-component>
+          }
         }
-      }
+      </fieldset>
     }
   }
 }

@@ -6,7 +6,7 @@
   @let eachOriginWord = splitIntoMatrix(parsedOriginBook, originVerse);
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   <div [class.minified]="minified" class="tableMinifiable">
-    <table border="1">
+    <table border="1" role="presentation">
       <tr>
         <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
         <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">

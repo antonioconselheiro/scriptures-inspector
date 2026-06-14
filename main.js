@@ -3,15 +3,25 @@ const path = require('path');
 const fs = require('fs/promises');
 
 ipcMain.handle('read-json-file', async (_, fileName) => {
-  const data = await fs.readFile(fileName, 'utf-8');
-  return JSON.parse(data);
+  try {
+    const data = await fs.readFile(fileName, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error reading JSON file:', error);
+    throw error;
+  }
 });
 
 ipcMain.handle('write-json-file', async (_, fileName, data) => {
-  //  FIXME: remover formatação do JSON
-  const dir = path.dirname(fileName);
-  await fs.mkdir(dir, { recursive: true });
-  await fs.writeFile(fileName, JSON.stringify(data, null, 2));
+  try {
+    //  FIXME: remover formatação do JSON
+    const dir = path.dirname(fileName);
+    await fs.mkdir(dir, { recursive: true });
+    await fs.writeFile(fileName, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error('Error writing JSON file:', error);
+    throw error;
+  }
 });
 
 ipcMain.handle('open-project', async () => {
@@ -24,6 +34,7 @@ ipcMain.handle('open-project', async () => {
 });
 
 const isDev = !app.isPackaged;
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -31,7 +42,11 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      sandbox: true,
+      nodeIntegrationInWorker: false,
+      enableWebSQL: false
     }
   });
 
@@ -45,6 +60,13 @@ function createWindow() {
   }
 
   Menu.setApplicationMenu(menu);
+  mainWindow.webContents.on('crashed', () => {
+    console.error('Renderer process crashed');
+  });
+
+  mainWindow.webContents.on('render-process-gone', (event, details) => {
+    console.error('Render process gone:', details);
+  });
 }
 
 app.whenReady().then(() => {
