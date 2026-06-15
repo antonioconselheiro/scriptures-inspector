@@ -58,7 +58,6 @@ export class ProjectInterlinearService {
       };
     }
 
-
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
 

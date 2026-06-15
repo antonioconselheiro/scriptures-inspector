@@ -29,6 +29,9 @@ export class ProjectDataService {
     }));
   }
 
+  //  FIXME: lexemas que estão no meio das palavras estão dando problema,
+  //  preciso criar alguns teste unitários para garantir o funcionamento
+  //  esperado deste método
   splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
     return pharse.split(' ').map(word => {
       let matchPrefix = '',
@@ -56,6 +59,19 @@ export class ProjectDataService {
           word = word.replace(pattern, '');
           break;
         }
+      }
+
+      for (let [, pattern] of patterns.lexeme) {
+        const match = word.match(pattern);
+        if (match) {
+          const [lexeme] = Array.from(match);
+          matchLexeme = lexeme;
+          break;
+        }
+      }
+
+      if (matchLexeme) {
+        return [ matchPrefix, matchLexeme ];
       }
 
       for (let [, pattern] of patterns.suffix) {

@@ -353,7 +353,10 @@ export class EditorComponent implements OnInit, OnDestroy {
         })
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
+          next: () => {
+            this.systemService.triggerSaveCurrentBookMetadata({ book });
+            this.systemService.triggerSaveCurrentBookInterlinear({ book });
+          }
         });
     }
   }
@@ -372,7 +375,10 @@ export class EditorComponent implements OnInit, OnDestroy {
         })
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
+          next: () => {
+            this.systemService.triggerSaveCurrentBookMetadata({ book });
+            this.systemService.triggerSaveCurrentBookInterlinear({ book });
+          }
         });
     }
   }
@@ -393,7 +399,10 @@ export class EditorComponent implements OnInit, OnDestroy {
         })
         .build()
         .subscribe({
-          next: () => this.systemService.triggerSaveCurrentBookMetadata({ book })
+          next: () => {
+            this.systemService.triggerSaveCurrentBookMetadata({ book });
+            this.systemService.triggerSaveCurrentBookInterlinear({ book });
+          }
         });
     }
   }
