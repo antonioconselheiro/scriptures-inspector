@@ -99,8 +99,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
           verse.metadata.splice(index, 1);
           this.systemService.triggerSaveCurrentBookTranslations(this.current);
           return;
-        } else {
-          sizeNumber = 1;
         }
       }
     }
