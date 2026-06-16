@@ -29,74 +29,70 @@ export class ProjectDataService {
     }));
   }
 
-  //  FIXME: lexemas que estão no meio das palavras estão dando problema,
-  //  preciso criar alguns teste unitários para garantir o funcionamento
-  //  esperado deste método
   splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
-    return pharse.split(' ').map(word => {
-      let matchPrefix = '',
-        matchSuffix = '',
-        matchLexeme = '';
+    const splitWord = (word: string): string[] => {
+      if (!word) {
+        return [];
+      }
 
       for (let [, pattern] of patterns.lexeme) {
         const match = word.match(pattern);
         if (match) {
           const [lexeme] = Array.from(match);
-          matchLexeme = lexeme;
-          break;
+          if (lexeme) {
+            return [lexeme];
+          }
         }
       }
 
-      if (matchLexeme) {
-        return [ matchLexeme ];
+      let internalLexeme: { lexeme: string; index: number } | null = null;
+      for (let [lexeme] of patterns.lexeme) {
+        if (!lexeme) {
+          continue;
+        }
+
+        const index = word.indexOf(lexeme);
+        if (index < 0) {
+          continue;
+        }
+
+        if (!internalLexeme || lexeme.length > internalLexeme.lexeme.length) {
+          internalLexeme = { lexeme, index };
+        }
+      }
+
+      if (internalLexeme) {
+        const beforeLexeme = word.slice(0, internalLexeme.index);
+        const afterLexeme = word.slice(internalLexeme.index + internalLexeme.lexeme.length);
+        return [
+          ...splitWord(beforeLexeme),
+          internalLexeme.lexeme,
+          ...splitWord(afterLexeme)
+        ];
       }
 
       for (let [, pattern] of patterns.prefix) {
         const match = word.match(pattern);
         if (match) {
           const [prefix] = Array.from(match);
-          matchPrefix = prefix;
-          word = word.replace(pattern, '');
-          break;
+          const nextWord = word.replace(pattern, '');
+          return [prefix, ...splitWord(nextWord)].filter(eachWord => eachWord);
         }
-      }
-
-      for (let [, pattern] of patterns.lexeme) {
-        const match = word.match(pattern);
-        if (match) {
-          const [lexeme] = Array.from(match);
-          matchLexeme = lexeme;
-          break;
-        }
-      }
-
-      if (matchLexeme) {
-        return [ matchPrefix, matchLexeme ];
       }
 
       for (let [, pattern] of patterns.suffix) {
         const match = word.match(pattern);
         if (match) {
           const [suffix] = Array.from(match);
-          matchSuffix = suffix;
-          word = word.replace(pattern, '');
-          break;
+          const nextWord = word.replace(pattern, '');
+          return [...splitWord(nextWord), suffix].filter(eachWord => eachWord);
         }
       }
 
-      let words: string[] = [];
-      if (matchPrefix && matchSuffix) {
-        words = [matchPrefix, ...this.splitByPatterns(patterns, word), matchSuffix];
-      } else if (matchPrefix) {
-        words = [matchPrefix, ...this.splitByPatterns(patterns, word)];
-      } else if (matchSuffix) {
-        words = [...this.splitByPatterns(patterns, word), matchSuffix];
-      } else {
-        words = [word];
-      }
+      return [word];
+    };
 
-      return words.filter(word => word);
-    }).flat();
+    return pharse.split(' ').map(word => splitWord(word)).flat();
   }
 
   getLexical(

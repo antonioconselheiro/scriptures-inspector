@@ -65,4 +65,56 @@ describe('ProjectDataService', () => {
 
     expect(result).toEqual(['in', 'a', 'blabl', 'iv', 'el']);
   });
+
+  it('should split many prefixes and suffixes around one internal lexeme', () => {
+    const result = projectDataService.splitByPatterns(
+      projectMetadataService.parsePattern({
+        prefix: ['pre', 'anti', 'neo'],
+        suffix: ['tion', 'ism', 'ly', 'ness'],
+        lexeme: ['core']
+      }, language),
+      'preantineocoretionismlyness'
+    );
+
+    expect(result).toEqual(['pre', 'anti', 'neo', 'core', 'tion', 'ism', 'ly', 'ness']);
+  });
+
+  it('should split many prefixes and no suffix around one internal lexeme', () => {
+    const result = projectDataService.splitByPatterns(
+      projectMetadataService.parsePattern({
+        prefix: ['re', 'un', 'pre', 'anti'],
+        suffix: ['zz', 'yy'],
+        lexeme: ['root']
+      }, language),
+      'reunpreantiroot'
+    );
+
+    expect(result).toEqual(['re', 'un', 'pre', 'anti', 'root']);
+  });
+
+  it('should split many suffixes and no prefix around one internal lexeme', () => {
+    const result = projectDataService.splitByPatterns(
+      projectMetadataService.parsePattern({
+        prefix: ['xx', 'ww'],
+        suffix: ['able', 'istic', 'ally', 'ness', 'less'],
+        lexeme: ['root']
+      }, language),
+      'rootableisticallynessless'
+    );
+
+    expect(result).toEqual(['root', 'able', 'istic', 'ally', 'ness', 'less']);
+  });
+
+  it('should keep the largest internal lexeme when lexemes overlap', () => {
+    const result = projectDataService.splitByPatterns(
+      projectMetadataService.parsePattern({
+        prefix: ['pre'],
+        suffix: ['ly'],
+        lexeme: ['core', 'supercore']
+      }, language),
+      'presupercorely'
+    );
+
+    expect(result).toEqual(['pre', 'supercore', 'ly']);
+  });
 });
