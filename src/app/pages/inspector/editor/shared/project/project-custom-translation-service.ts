@@ -14,6 +14,7 @@ import { WordFragment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-validations-model';
 
 @Injectable({
   providedIn: 'root'
@@ -329,19 +330,67 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  getVariationSize(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    scriptureWordSpanIndex: number,
+    chapterVariations: BookVerseTranslationTargetVariations,
+    variationId: string
+  ): `${number}` | '' {
+    const scripture = this.getCustomTranslationInterlinearValue(
+      customTranslation, current, sourceVerse, scriptureWordSpanIndex
+    );
+
+    const size = chapterVariations[variationId] && chapterVariations[variationId][scripture]?.size || '';
+    return String(size) as `${number}` | '';
+  }
+
   getVariationValue(
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     scriptureWordSpanIndex: number,
-    chapterVariations: Record<string, Record<string, string>>,
+    chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string
   ): string {
     const scripture = this.getCustomTranslationInterlinearValue(
       customTranslation, current, sourceVerse, scriptureWordSpanIndex
     );
 
-    return chapterVariations[variationId] && chapterVariations[variationId][scripture] || '';
+    return chapterVariations[variationId] && chapterVariations[variationId][scripture]?.value || '';
+  }
+
+  updateVariationSize(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    scriptureWordSpanIndex: number,
+    chapterVariations: BookVerseTranslationTargetVariations,
+    variationId: string,
+    sizeValue: `${number}` | ''
+  ): void {
+    const scripture = this.getCustomTranslationInterlinearValue(customTranslation, current, sourceVerse, scriptureWordSpanIndex);
+    if (!scripture) {
+      return;
+    }
+
+    if (!chapterVariations[variationId]) {
+      chapterVariations[variationId] = {};
+    }
+
+    if (sizeValue.length) {
+      if (chapterVariations[variationId][scripture]) {
+        chapterVariations[variationId][scripture].size = Number(sizeValue);
+      } else {
+        chapterVariations[variationId][scripture] = { size: Number(sizeValue), value: '' };
+      }
+    } else {
+      delete chapterVariations[variationId][scripture];
+    }
+
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+
   }
 
   updateVariationValue(
@@ -349,12 +398,11 @@ export class ProjectCustomTranslationService {
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     scriptureWordSpanIndex: number,
-    chapterVariations: Record<string, Record<string, string>>,
+    chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
     value: string
   ): void {
     const scripture = this.getCustomTranslationInterlinearValue(customTranslation, current, sourceVerse, scriptureWordSpanIndex);
-
     if (!scripture) {
       return;
     }
@@ -364,7 +412,11 @@ export class ProjectCustomTranslationService {
     }
 
     if (value.length) {
-      chapterVariations[variationId][scripture] = value;
+      if (chapterVariations[variationId][scripture]) {
+        chapterVariations[variationId][scripture].value = value;
+      } else {
+        chapterVariations[variationId][scripture] = { value };
+      }
     } else {
       delete chapterVariations[variationId][scripture];
     }

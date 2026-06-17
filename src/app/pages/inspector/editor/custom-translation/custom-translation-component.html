@@ -92,22 +92,33 @@
       <td><button type="button" (click)="cleanInterlinear()">×</button></td>
     </tr>
 
-      @if (chapterVariations) {
+    @if (chapterVariations) {
       @for (variation of getVariations(); track $index) {
         <tr>
-          <th rowspan="2" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
+          <th rowspan="3" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
+
+          @for (sentence of splittedCustomTranslation; track $index) {
+            <td>
+              <input type="number" #variationSizeEl class="wordSpan" name="wordSpanOverride{{variation.id}}{{$index}}" placeholder="size override" title="size override"
+                [ngModel]="getVariationSize(chapterVariations, variation.id, $index)"
+                (input)="updateVariationSize(chapterVariations, variation.id, $index, variationSizeEl.value)">
+            </td>
+          }
+        </tr>
+
+        <tr>
           @for (sentence of splittedCustomTranslation; track $index) {
           <td>
             @let dataListId = 'datalist'+variation.id+$index;
-            <input type="text" #variationEl placeholder="empty"
+            <input type="text" #variationValueEl placeholder="empty"
               [attr.list]="dataListId"
               [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
-              (input)="updateVariationValue(chapterVariations, variation.id, $index, variationEl.value)"
-              [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationEl.value) + 20">
+              (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
+              [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationValueEl.value) + 20">
 
               <datalist [id]="dataListId">
                 @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                  @if (suggestion !== variationEl.value) {
+                  @if (suggestion !== variationValueEl.value) {
                     <option [value]="suggestion"></option>
                   }
                 }
@@ -115,7 +126,7 @@
           </td>
           }
 
-          <td rowspan="2">
+          <td rowspan="3">
             <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation)" type="button">×</button>
           </td>
         </tr>

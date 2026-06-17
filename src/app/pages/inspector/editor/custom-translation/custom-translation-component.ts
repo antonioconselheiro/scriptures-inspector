@@ -19,6 +19,7 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-validations-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -151,7 +152,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   cleanCustomTranslationVariation(
     variation: { id: string; name: string; },
-    chapterVariations: Record<string, Record<string, string>>,
+    chapterVariations: BookVerseTranslationTargetVariations,
     splittedCustomTranslation: WordFragment[]
   ): void {
     if (!confirm(`clean variation "${variation.name}" on this verse?`)) {
@@ -204,7 +205,18 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     });
   }
 
-  getVariationValue(chapterVariations: Record<string, Record<string, string>>, variationId: string, scriptureWordSpanIndex: number): string {
+  getVariationSize(chapterVariations: BookVerseTranslationTargetVariations, variationId: string, scriptureWordSpanIndex: number): `${number}` | '' {
+    return this.projectCustomTranslationService.getVariationSize(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      scriptureWordSpanIndex,
+      chapterVariations,
+      variationId
+    );
+  }
+
+  getVariationValue(chapterVariations: BookVerseTranslationTargetVariations, variationId: string, scriptureWordSpanIndex: number): string {
     return this.projectCustomTranslationService.getVariationValue(
       this.customTranslation,
       this.current,
@@ -228,7 +240,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
             Object.keys(variationsRecord).forEach(key => {
               const thermValue = key.replace(/^\d+\-/, '');
               if (thermValue === value) {
-                suggestions.push(variationsRecord[key]);
+                suggestions.push(variationsRecord[key].value);
               }
             });
           }
@@ -239,8 +251,25 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return suggestions;
   }
 
+  updateVariationSize(
+    chapterVariations: BookVerseTranslationTargetVariations,
+    variationId: string,
+    scriptureWordSpanIndex: number,
+    sizeValue: string,
+  ): void {
+    this.projectCustomTranslationService.updateVariationSize(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      scriptureWordSpanIndex,
+      chapterVariations,
+      variationId,
+      sizeValue as `${number}` | ''
+    );
+  }
+
   updateVariationValue(
-    chapterVariations: Record<string, Record<string, string>>,
+    chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
     scriptureWordSpanIndex: number,
     value: string,
