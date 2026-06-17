@@ -41,6 +41,10 @@ export abstract class AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
+  joinSentenceWords(sentence: Array<{ index: number; word: string }>): string {
+    return sentence.map((word) => word.word).join('');
+  }
+
   cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>): void {
     if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
       return;

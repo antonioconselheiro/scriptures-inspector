@@ -24,9 +24,12 @@
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
           @for (sentence of eachWord; track $index) {
             @for (word of sentence; track $index) {
-            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+              <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
             }
-            <span>&nbsp;</span>
+
+            @if (joinSentenceWords(sentence).length) {
+              <span>&nbsp;</span>
+            }
           }
         </td>
         <td></td>
@@ -86,9 +89,12 @@
         <td [colSpan]="wordList.length">
           @for (sentence of eachWord; track $index) {
             @for (word of sentence; track $index) {
-            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook :
-              languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
-            <span>&nbsp;</span>
+              <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook :
+                languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
+              
+              @if (word.word.length) {
+                <span>&nbsp;</span>
+              }
             }
           }
         </td>
@@ -135,7 +141,10 @@
                   <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
                 }
               }
-              <span>&nbsp;</span>
+
+              @if (joinSentenceWords(sentence).length) {
+                <span>&nbsp;</span>
+              }
             }
           </td>
         </tr>

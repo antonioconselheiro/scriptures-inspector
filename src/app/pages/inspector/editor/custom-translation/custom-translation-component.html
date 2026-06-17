@@ -24,7 +24,7 @@
       <td [colSpan]="splittedCustomTranslation.length">
         @for (sentence of splittedCustomTranslation; track $index) {
         <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
-          @if (sentence.hasTrailingSpace) {
+          @if (sentence.hasTrailingSpace && sentence.fragment) {
             <span>&nbsp;</span>
           }
         }
@@ -35,7 +35,7 @@
       <td [colSpan]="splittedCustomTranslation.length">
         @for (sentence of splittedCustomTranslation; track $index) {
         <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
-          @if (sentence.hasTrailingSpace) {
+          @if (sentence.hasTrailingSpace && sentence.fragment) {
             <span>&nbsp;</span>
           }
         }
@@ -127,13 +127,17 @@
               @if (hasVariation.length) {
                 @if (hasVariation.trim().length) {
                   <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+
+                  @if (sentence.hasTrailingSpace && hasVariation) {
+                    <span>&nbsp;</span>
+                  }
                 }
               } @else {
                 <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
-              }
 
-              @if (sentence.hasTrailingSpace) {
-                <span>&nbsp;</span>
+                @if (sentence.hasTrailingSpace && sentence.fragment) {
+                  <span>&nbsp;</span>
+                }
               }
             }
           </td>
