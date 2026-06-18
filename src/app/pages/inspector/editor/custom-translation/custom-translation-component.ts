@@ -75,18 +75,39 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   splitCustomTranslation(
-    customTranslationObj: BookVerse<{
-      text: string;
-      metadata: Array<BookTranslationTargetMetadata>;
-    }> | undefined,
+    customTranslation: BookTranslationTarget,
+    chapter: number,
+    verseIndex: number,
     pipeUpdaterController: number
-  ): Array<WordFragment> {
+  ): {
+    original: Array<WordFragment>,
+    variations: Record<string, Array<WordFragment>>
+  } {
     pipeUpdaterController;
+    const customTranslationObj = customTranslation.chapters[chapter]?.[verseIndex];
     if (!customTranslationObj) {
-      return [];
+      return { original: [], variations: {} };
     }
 
-    return this.projectCustomTranslationService.splitCustomTranslation(customTranslationObj);
+    const original = this.projectCustomTranslationService.splitCustomTranslation(customTranslationObj);
+    const variations: Record<string, Array<WordFragment>> = {};
+    Object.keys(customTranslation.variations).forEach(variationKey => {
+      const variationConfig = customTranslationObj.variations[variationKey];
+      if (variationConfig) {
+        const metadataVariation = structuredClone(customTranslationObj.metadata);
+        metadataVariation.forEach((metadata) => {
+          const sizeOverride = variationConfig[metadata.value]?.size;
+          if (sizeOverride) {
+            metadata.size = sizeOverride;
+          }
+        });
+        variations[variationKey] = this.projectCustomTranslationService.splitCustomTranslation({ ...customTranslationObj, metadata: metadataVariation });
+      } else {
+        variations[variationKey] = original;
+      }
+    });
+
+    return { original, variations };
   }
 
   onChangeWordSpan(verse: {

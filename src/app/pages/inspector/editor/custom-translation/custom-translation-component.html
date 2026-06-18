@@ -1,8 +1,8 @@
 <h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
-@let splittedCustomTranslation = splitCustomTranslation(customTranslation.chapters && customTranslation.chapters[current.chapter] && customTranslation.chapters[current.chapter][verseIndex], pipeUpdaterController) || [];
 @let chapterVariations = customTranslation.chapters[current.chapter]?.[verseIndex]?.variations;
+@let splittedCustomTranslation = splitCustomTranslation(customTranslation, current.chapter, verseIndex, pipeUpdaterController) || [];
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
@@ -11,7 +11,7 @@
   <table border="1" role="presentation">
     <tr>
       <th rowspan="3">custom</th>
-      <td [colSpan]="splittedCustomTranslation.length">
+      <td [colSpan]="splittedCustomTranslation.original.length">
         <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
           placeholder="custom translation"
           (input)="updateCustomTranslation(customTranslationEl)"
@@ -21,8 +21,8 @@
     </tr>
 
     <tr>
-      <td [colSpan]="splittedCustomTranslation.length">
-        @for (sentence of splittedCustomTranslation; track $index) {
+      <td [colSpan]="splittedCustomTranslation.original.length">
+        @for (sentence of splittedCustomTranslation.original; track $index) {
         <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
           @if (sentence.hasTrailingSpace && sentence.fragment) {
             <span>&nbsp;</span>
@@ -32,8 +32,8 @@
     </tr>
 
     <tr>
-      <td [colSpan]="splittedCustomTranslation.length">
-        @for (sentence of splittedCustomTranslation; track $index) {
+      <td [colSpan]="splittedCustomTranslation.original.length">
+        @for (sentence of splittedCustomTranslation.original; track $index) {
         <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
           @if (sentence.hasTrailingSpace && sentence.fragment) {
             <span>&nbsp;</span>
@@ -44,7 +44,7 @@
 
     <tr>
       <th>word span</th>
-      @for (sentence of splittedCustomTranslation; track $index) {
+      @for (sentence of splittedCustomTranslation.original; track $index) {
       <td>
         <input
           type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
@@ -57,7 +57,7 @@
 
     <tr>
       <th>interlinear</th>
-      @for (sentence of splittedCustomTranslation; track $index) {
+      @for (sentence of splittedCustomTranslation.original; track $index) {
       <td>
         {{sentence.fragment}}
       </td>
@@ -68,7 +68,7 @@
 
     <tr>
       <th>scriptures</th>
-      @for (sentence of splittedCustomTranslation; track $index) {
+      @for (sentence of splittedCustomTranslation.original; track $index) {
       <td>
         <select
           #interlinearCustomTranslationEl
@@ -86,7 +86,7 @@
       </td>
       }
 
-      @if (!splittedCustomTranslation.length) {
+      @if (!splittedCustomTranslation.original.length) {
         <td></td>
       }
       <td><button type="button" (click)="cleanInterlinear()">×</button></td>
@@ -97,7 +97,7 @@
         <tr>
           <th rowspan="3" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
 
-          @for (sentence of splittedCustomTranslation; track $index) {
+          @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
             <td>
               <input type="number" #variationSizeEl class="wordSpan" name="wordSpanOverride{{variation.id}}{{$index}}" placeholder="size override" title="size override"
                 [ngModel]="getVariationSize(chapterVariations, variation.id, $index)"
@@ -107,7 +107,7 @@
         </tr>
 
         <tr>
-          @for (sentence of splittedCustomTranslation; track $index) {
+          @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
           <td>
             @let dataListId = 'datalist'+variation.id+$index;
             <input type="text" #variationValueEl placeholder="empty"
@@ -127,13 +127,13 @@
           }
 
           <td rowspan="3">
-            <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation)" type="button">×</button>
+            <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])" type="button">×</button>
           </td>
         </tr>
     
         <tr>
-          <td [colSpan]="splittedCustomTranslation.length">
-            @for (sentence of splittedCustomTranslation; track $index) {
+          <td [colSpan]="splittedCustomTranslation.variations[variation.id].length">
+            @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
               @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
               @if (hasVariation.length) {
                 @if (hasVariation.length) {
