@@ -234,11 +234,8 @@ export class ProjectCustomTranslationService {
       const interlinearSegmentOrigin = interlinear.chapters[current.chapter][verseIndex][Number(translationWordIndex)]?.origin || null;
       if (!interlinearSegmentOrigin) {
         return '';
-      }
-
-      const matches = translationMetadata[interlinearSegmentOrigin.index]?.value.match(/^\d+/);
-      if (matches) {
-        return String(Number(Array.from(matches)[0]) % 7 + 1);
+      } else {
+        return String(interlinearSegmentOrigin.index % 7 + 1);
       }
     } else {
       const matches = translationMetadata[wordIndex]?.value.match(/^\d+/);
