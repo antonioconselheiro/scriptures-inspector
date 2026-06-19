@@ -3,6 +3,7 @@ TODO
 [ ] - Validar gematria com falseamento
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Trocar mecanismo de ocultação de fragmento de palavra na variação, de um espaço em value por 0 em size
+[ ] - Palavras entre colchetes que não estão associadas a nenhum elemento do texto original não estão sendo sobrescritas na tradução personalizada
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico

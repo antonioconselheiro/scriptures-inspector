@@ -61,7 +61,7 @@ export class ProjectCustomTranslationService {
       .flat()
       .map(word => this.projectService.getLexical(parsedBookMetadata, sourceLanguage, word.word))
 
-    customVerse.text = lexicalList.join(' ').replace(/ {2,}/g, " ");
+    customVerse.text = lexicalList.join(' ').replace(/ {2,}/g, ' ');
     customVerse.metadata = lexicalList.map(lexical => { return { size: lexical.length, value: '' } });
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
