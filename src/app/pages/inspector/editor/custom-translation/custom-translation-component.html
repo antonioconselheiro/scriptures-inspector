@@ -141,12 +141,12 @@
               @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
                 @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
                 @if (hasVariation.length) {
-                  @if (hasVariation.length) {
+                  @if (hasVariation.trim().length) {
                     <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
-  
-                    @if (sentence.hasTrailingSpace && hasVariation.trim().length) {
-                      <span>&nbsp;</span>
-                    }
+                  }
+
+                  @if (sentence.hasTrailingSpace) {
+                    <span>&nbsp;</span>
                   }
                 } @else {
                   <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>

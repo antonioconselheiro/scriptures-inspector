@@ -358,7 +358,7 @@ export class ProjectCustomTranslationService {
     const scripture = this.getCustomTranslationInterlinearValue(
       customTranslation, current, sourceVerse, scriptureWordSpanIndex
     );
-
+    
     return chapterVariations[variationId] && chapterVariations[variationId][scripture]?.value || '';
   }
 
