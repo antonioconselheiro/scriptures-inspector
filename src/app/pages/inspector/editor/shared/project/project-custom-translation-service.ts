@@ -225,7 +225,7 @@ export class ProjectCustomTranslationService {
     }
 
     if (interlinear) {
-      const translationMetadataValue = translationMetadata[wordIndex].value || '';
+      const translationMetadataValue = translationMetadata[wordIndex]?.value || '';
       const [translationWordIndex] = Array.from(translationMetadataValue.match(/^\d+/) || ['']);
       if (!translationWordIndex) {
         return '';
@@ -236,12 +236,12 @@ export class ProjectCustomTranslationService {
         return '';
       }
 
-      const matches = translationMetadata[interlinearSegmentOrigin.index] && translationMetadata[interlinearSegmentOrigin.index].value.match(/^\d+/);
+      const matches = translationMetadata[interlinearSegmentOrigin.index]?.value.match(/^\d+/);
       if (matches) {
         return String(Number(Array.from(matches)[0]) % 7 + 1);
       }
     } else {
-      const matches = translationMetadata[wordIndex] && translationMetadata[wordIndex].value.match(/^\d+/);
+      const matches = translationMetadata[wordIndex]?.value.match(/^\d+/);
       if (matches) {
         return String(Number(Array.from(matches)[0]) % 7 + 1);
       }
@@ -266,7 +266,7 @@ export class ProjectCustomTranslationService {
 
     if (interlinear) {
       const translationMetadata = customTranslation.chapters[current.chapter] &&
-        customTranslation.chapters[current.chapter][verseIndex]?.metadata?.[wordIndex].value || '';
+        customTranslation.chapters[current.chapter][verseIndex]?.metadata?.[wordIndex]?.value || '';
 
       const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
       if (!translationWordIndex) {
@@ -325,7 +325,11 @@ export class ProjectCustomTranslationService {
     wordIndex: number
   ): void {
     const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
-    metadata[wordIndex].value = value;
+    if (metadata[wordIndex]) {
+      metadata[wordIndex].value = value;
+    } else {
+      metadata[wordIndex] = { value, size: 0 };
+    }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
