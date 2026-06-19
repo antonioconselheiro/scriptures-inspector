@@ -2,7 +2,6 @@ TODO
 
 [ ] - Validar gematria com falseamento
 [ ] - Habilitar pesquisar por Ctrl + F
-[ ] - "Elohim" não foi sugerido em variação de GN 1.3 depois de já ter sido preenchido
 [ ] - Trocar mecanismo de ocultação de fragmento de palavra na variação, de um espaço em value por 0 em size
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original

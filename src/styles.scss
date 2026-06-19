@@ -69,7 +69,14 @@ input[type=checkbox], button {
   contain: layout style paint;
 }
 
-.tableMinifiable > table {
+.tableMinifiable > div {
+    max-width: calc(100vw - 6rem);
+    overflow: auto;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.tableMinifiable > div > table {
   border-collapse: collapse;
   contain: content;
 }
@@ -86,7 +93,7 @@ input[type=checkbox], button {
   overflow: hidden;
 }
 
-.tableMinifiable.minified > table {
+.tableMinifiable.minified > div > table {
   max-height: 4px;
   overflow: hidden;
   display: block;

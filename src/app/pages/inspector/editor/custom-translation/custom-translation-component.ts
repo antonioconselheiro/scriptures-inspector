@@ -124,7 +124,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
         }
       }
     }
-    
+
     if (!verse.metadata[index]) {
       verse.metadata[index] = { size: sizeNumber, value: '' };
     } else {
@@ -248,9 +248,16 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
   }
 
+  getDataListId(variation: {
+    id: string;
+    name: string;
+  }, index: number): string {
+    return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse.start}-${this.sourceVerse.verse.end}-${variation.id}-${index}`;
+  }
+
   getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
     const chapters = this.customTranslation.chapters;
-    const suggestions = new Array<string>();
+    const suggestions = new Set<string>();
 
     if (interlinearValue) {
       const value = interlinearValue.replace(/^\d+\-/, '');
@@ -261,7 +268,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
             Object.keys(variationsRecord).forEach(key => {
               const thermValue = key.replace(/^\d+\-/, '');
               if (thermValue === value) {
-                suggestions.push(variationsRecord[key].value);
+                suggestions.add(variationsRecord[key].value);
               }
             });
           }
@@ -269,7 +276,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       });
     }
 
-    return suggestions;
+    return Array.from(suggestions);
   }
 
   updateVariationSize(

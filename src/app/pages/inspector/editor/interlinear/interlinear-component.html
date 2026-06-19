@@ -6,95 +6,97 @@
   @let eachOriginWord = splitIntoMatrix(parsedOriginBook, originVerse);
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   <div [class.minified]="minified" class="tableMinifiable">
-    <table border="1" role="presentation">
-      <tr>
-        <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
-        <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
-          @for (sentence of eachWord; track $index) {
-            @for (word of sentence; track word.index) {
-              <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
-            }
-            
-            @if (joinSentenceWords(sentence).length) {
-              <span>&nbsp;</span>
-            }
-          }
-        </td>
-        <td rowspan="2"></td>
-      </tr>
-      <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
-        @for (sentence of eachWord; track $index) {
-        <td>
-          @for (word of sentence; track word.index) {
-            <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
-          }
-        </td>
-        }
-      </tr>
-    
-      @if (sourceLanguageAttributes.transliteration) {
+    <div>
+      <table border="1" role="presentation">
         <tr>
-          <th>transliteration</th>
-          @for (sentence of eachWord; track $index) {
-          <td>
-            @for (word of sentence; track word.index) {
-            <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | functionProxy : sourceLanguageAttributes.transliteration}}</span>
-            }
-          </td>
-          }
-          <td></td>
-        </tr>
-      }
-      <tr>
-        <th rowspan="2">interlinear</th>
-        @for (sentence of eachWord; track $index) {
-        <td>
-          @for (word of sentence; track $index) {
-          @let literal = word.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-          <input type="text" [name]="'fieldTranslation' + word.index" [placeholder]="word.word" #field
-            [style.width.px]="calcFieldSize(word, literal)" (input)="updateLexical(sourceLanguage, field, word)"
-            [value]="literal" />
-          }
-        </td>
-        }
-        <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(eachWord)">×</button></td>
-      </tr>
-      <tr>
-        <td [colSpan]="wordList.length">
-          @for (sentence of eachWord; track $index) {
-            @for (word of sentence; track word.index) {
-              @let value = word.word | literalizate : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-              <span [class]="'prisma'+getTranslationColor(word.index)">{{value}}</span>
-              @if (value.length) {
+          <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
+          <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
+            @for (sentence of eachWord; track $index) {
+              @for (word of sentence; track word.index) {
+                <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
+              }
+              
+              @if (joinSentenceWords(sentence).length) {
                 <span>&nbsp;</span>
               }
             }
-          }
-        </td>
-      </tr>
-      <tr>
-        <th>scriptures</th>
-        @for (sentence of eachWord; track $index; let y = $index) {
-        <td>
-          @for (translationWord of sentence; track $index) {
-          <select #interlinear
-            (change)="onSelectInterlinearToBaseScripture(translationWord.index, translationWord.word, interlinear.value)"
-            [ngModel]="getInterlinear(translationWord.index)"
-            [name]="'translationToSourceInterlinear' + $index">
-            <option value=""></option>
-            @for (wordSegments of eachOriginWord; track $index) {
-            @for (segment of wordSegments; track $index) {
-            <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
-            </option>
+          </td>
+          <td rowspan="2"></td>
+        </tr>
+        <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
+          @for (sentence of eachWord; track $index) {
+          <td>
+            @for (word of sentence; track word.index) {
+              <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word}}</span>
             }
-            }
-          </select>
+          </td>
           }
-        </td>
+        </tr>
+      
+        @if (sourceLanguageAttributes.transliteration) {
+          <tr>
+            <th>transliteration</th>
+            @for (sentence of eachWord; track $index) {
+            <td>
+              @for (word of sentence; track word.index) {
+              <span [class]="'prisma'+getTranslationColor(word.index)">{{word.word | functionProxy : sourceLanguageAttributes.transliteration}}</span>
+              }
+            </td>
+            }
+            <td></td>
+          </tr>
         }
-        <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
-      </tr>
-    </table>
+        <tr>
+          <th rowspan="2">interlinear</th>
+          @for (sentence of eachWord; track $index) {
+          <td>
+            @for (word of sentence; track $index) {
+            @let literal = word.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+            <input type="text" [name]="'fieldTranslation' + word.index" [placeholder]="word.word" #field
+              [style.width.px]="calcFieldSize(word, literal)" (input)="updateLexical(sourceLanguage, field, word)"
+              [value]="literal" />
+            }
+          </td>
+          }
+          <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(eachWord)">×</button></td>
+        </tr>
+        <tr>
+          <td [colSpan]="wordList.length">
+            @for (sentence of eachWord; track $index) {
+              @for (word of sentence; track word.index) {
+                @let value = word.word | literalizate : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+                <span [class]="'prisma'+getTranslationColor(word.index)">{{value}}</span>
+                @if (value.length) {
+                  <span>&nbsp;</span>
+                }
+              }
+            }
+          </td>
+        </tr>
+        <tr>
+          <th>scriptures</th>
+          @for (sentence of eachWord; track $index; let y = $index) {
+          <td>
+            @for (translationWord of sentence; track $index) {
+            <select #interlinear
+              (change)="onSelectInterlinearToBaseScripture(translationWord.index, translationWord.word, interlinear.value)"
+              [ngModel]="getInterlinear(translationWord.index)"
+              [name]="'translationToSourceInterlinear' + $index">
+              <option value=""></option>
+              @for (wordSegments of eachOriginWord; track $index) {
+              @for (segment of wordSegments; track $index) {
+              <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
+              </option>
+              }
+              }
+            </select>
+            }
+          </td>
+          }
+          <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
+        </tr>
+      </table>
+    </div>
     <button (click)="minified = !minified" type="button"></button>
   </div>
   @if (customTranslation) {
