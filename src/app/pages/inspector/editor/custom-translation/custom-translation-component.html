@@ -9,7 +9,7 @@
 </div>
 <div [class.minified]="minified" class="tableMinifiable">
   <div>
-    <table border="1" role="presentation">
+    <table border="1" frame="hsides" role="presentation">
       <tr>
         <th rowspan="3">custom</th>
         <td [colSpan]="splittedCustomTranslation.original.length">
@@ -48,7 +48,7 @@
         @for (sentence of splittedCustomTranslation.original; track $index) {
         <td>
           <input
-            type="number" #wordSpanEl class="wordSpan" name="wordSpan" placeholder="size"
+            type="number" #wordSpanEl class="wordSpan configField" name="wordSpan" placeholder="size"
             [value]="customTranslation.chapters[current.chapter][verseIndex].metadata[$index]?.size"
             (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][verseIndex], $index, wordSpanEl)"
           />
@@ -78,10 +78,9 @@
             (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
             <option value=""></option>
             @for (wordSegments of eachWord; track $index) {
-            @for (segment of wordSegments; track $index) {
-            <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
-            </option>
-            }
+              @for (segment of wordSegments; track $index) {
+                <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
+              }
             }
           </select>
         </td>
@@ -100,7 +99,7 @@
   
             @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
               <td>
-                <input type="number" #variationSizeEl class="wordSpan" name="wordSpanOverride{{variation.id}}{{$index}}" placeholder="size override" title="size override"
+                <input type="number" #variationSizeEl class="wordSpan configField" name="wordSpanOverride{{variation.id}}{{$index}}" placeholder="size override" title="size override"
                   [ngModel]="getVariationSize(chapterVariations, variation.id, $index)"
                   (input)="updateVariationSize(chapterVariations, variation.id, $index, variationSizeEl.value)">
               </td>
@@ -111,8 +110,13 @@
             @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
             <td>
               @let dataListId = getDataListId(variation, $index);
-              <input type="text" #variationValueEl placeholder="empty"
+              <input
+                type="text"
+                #variationValueEl
+                placeholder="empty"
+                class="configField"
                 [attr.list]="dataListId"
+                name="variationValue{{dataListId}}"
                 [ngModel]="getVariationValue(chapterVariations, variation.id, $index)"
                 (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
                 [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationValueEl.value) + 20">

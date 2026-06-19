@@ -57,8 +57,21 @@ h3 {
   text-align: center;
 }
 
-input[type=checkbox], button {
+input[type=checkbox],
+button {
   cursor: pointer;
+}
+
+td > .configField {
+  min-width: 90%;
+}
+
+.configFieldWrapper {
+  display: flex;
+}
+
+.configFieldWrapper > .configField {
+  flex: 1 1 0px;
 }
 
 .tableMinifiable {
@@ -70,10 +83,10 @@ input[type=checkbox], button {
 }
 
 .tableMinifiable > div {
-    max-width: calc(100vw - 6rem);
-    overflow: auto;
-    border-left: 1px solid;
-    border-right: 1px solid;
+  max-width: calc(100vw - 6rem);
+  overflow: auto;
+  border-left: 1px solid;
+  border-right: 1px solid;
 }
 
 .tableMinifiable > div > table {
@@ -91,6 +104,10 @@ input[type=checkbox], button {
 
 .tableMinifiable.minified {
   overflow: hidden;
+}
+
+.tableMinifiable.minified > div {
+  border: none;
 }
 
 .tableMinifiable.minified > div > table {

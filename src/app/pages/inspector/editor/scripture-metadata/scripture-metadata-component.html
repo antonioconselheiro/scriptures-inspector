@@ -8,7 +8,7 @@
 
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
-      <table border="1" role="presentation">
+      <table border="1" frame="hsides" role="presentation">
         @for (translationInformation of translations; track $index) {
           <tr>
             <th class="translationName">{{translationInformation.name}}</th>

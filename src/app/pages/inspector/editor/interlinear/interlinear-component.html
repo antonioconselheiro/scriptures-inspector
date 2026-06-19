@@ -7,7 +7,7 @@
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
-      <table border="1" role="presentation">
+      <table border="1" frame="hsides" role="presentation">
         <tr>
           <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
           <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
@@ -50,12 +50,20 @@
           <th rowspan="2">interlinear</th>
           @for (sentence of eachWord; track $index) {
           <td>
-            @for (word of sentence; track $index) {
-            @let literal = word.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-            <input type="text" [name]="'fieldTranslation' + word.index" [placeholder]="word.word" #field
-              [style.width.px]="calcFieldSize(word, literal)" (input)="updateLexical(sourceLanguage, field, word)"
-              [value]="literal" />
-            }
+            <div class="configFieldWrapper">
+              @for (word of sentence; track $index) {
+                @let literal = word.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+                <input
+                  #field
+                  type="text"
+                  class="configField"
+                  [name]="'fieldTranslation' + word.index"
+                  [placeholder]="word.word"
+                  [style.width.px]="calcFieldSize(word, literal)" (input)="updateLexical(sourceLanguage, field, word)"
+                  [value]="literal"
+                />
+              }
+            </div>
           </td>
           }
           <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(eachWord)">×</button></td>
