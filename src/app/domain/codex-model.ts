@@ -1,9 +1,14 @@
 export interface Codex<LanguageType = string> {
   name: string;
   language: LanguageType;
-  data: {
+  books?: {
     [book: string]: {
       name: string
+    }
+  };
+  fragments?: {
+    [fragment: string]: {
+      name: string;
     }
   };
 }

@@ -53,7 +53,7 @@ export class WelcomeScreenComponent implements OnInit {
   redirect(project: Project): void {
     const [book] = Object.keys(project.target.books);
     if (book) {
-      const path = [ 'editor', 'book', book, 'chapter', 1 ];
+      const path = [ 'translator', 'book', book, 'chapter', 1 ];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();

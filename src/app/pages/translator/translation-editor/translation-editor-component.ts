@@ -41,7 +41,7 @@ import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 
 @Component({
-  selector: 'app-editor-component',
+  selector: 'app-translation-editor-component',
   imports: [
     VerseNumberPipe,
     FormsModule,
@@ -51,10 +51,10 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
     TranslationViewerManager,
     InterlinearComponent
   ],
-  templateUrl: './editor-component.html',
-  styleUrl: './editor-component.scss'
+  templateUrl: './translation-editor-component.html',
+  styleUrl: './translation-editor-component.scss'
 })
-export class EditorComponent implements OnInit, OnDestroy {
+export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   project!: Project;
 

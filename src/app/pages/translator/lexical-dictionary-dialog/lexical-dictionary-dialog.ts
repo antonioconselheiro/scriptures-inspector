@@ -5,9 +5,9 @@ import { Book } from '@domain/book-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { Subject } from 'rxjs';
-import { ProjectDataService } from '../editor/shared/project/project-data-service';
+import { ProjectDataService } from '../translation-editor/shared/project/project-data-service';
 import { SourceBook } from '@domain/source-book-model';
-import { ProjectMetadataService } from '../editor/shared/project/project-metadata-service';
+import { ProjectMetadataService } from '../translation-editor/shared/project/project-metadata-service';
 import { Language } from '@domain/language-model';
 
 @Component({

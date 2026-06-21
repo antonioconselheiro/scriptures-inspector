@@ -3,8 +3,9 @@ import { codexLoaderResolveFn } from '@shared/project/codex-loader-resolve-fn';
 import { repositoriesLoaderResolveFn } from '@shared/project/repositories-loader-resolve-fn';
 import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-fn';
 import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
-import { EditorComponent } from './pages/inspector/editor/editor-component';
-import { WelcomeScreenComponent } from './pages/welcome-screen-component/welcome-screen-component';
+import { TranslationEditorComponent } from './pages/translator/translation-editor/translation-editor-component';
+import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen-component';
+import { TranscriptionEditor } from './pages/transcriptor/transcription-editor/transcription-editor';
 
 export const routes: Routes = [
   {
@@ -13,7 +14,17 @@ export const routes: Routes = [
   },
 
   {
-    path: 'editor',
+    path: 'transcriptor',
+    children: [
+      {
+        path: 'fragment/:fragment',
+        component: TranscriptionEditor
+      }
+    ]
+  },
+
+  {
+    path: 'translator',
     resolve: {
       repositories: repositoriesLoaderResolveFn(),
       codex: codexLoaderResolveFn()
@@ -26,7 +37,7 @@ export const routes: Routes = [
           sources: sourcesLoaderResolveFn(),
           targets: targetsLoaderResolveFn()
         },
-        component: EditorComponent
+        component: TranslationEditorComponent
       },
     ]
   },

@@ -1,7 +1,7 @@
 {
   "name": "Mahabarata",
   "language": "sanskrit",
-  "data": {
+  "books": {
     "ADI": {"name": "Adi Parva"},
     "SAB": {"name": "Sabha Parva"},
     "VAN": {"name": "Vana Parva"},
