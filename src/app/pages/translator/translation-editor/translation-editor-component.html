@@ -8,28 +8,35 @@
   </div>
   <form>
     <fieldset>
-      <legend>Change chapter</legend>
+      <legend>Change artifact</legend>
 
       <div>
-        <select name="selectedBook" placeholder="Book" [(ngModel)]="formSelectedBook">
-          @for (book of listBookNames(); track $index) {
-          <option [value]="book.key">{{ book.name }}</option>
+        @let bookNames = listBookNames();
+        @let fragmentNames = listFragmentNames();
+        <select name="selectedArtifact" placeholder="Artifact" [(ngModel)]="formSelectedArtifact">
+          @if (fragmentNames.length) {
+            <optgroup label="Fragments"></optgroup>
+            @for (fragment of fragmentNames; track $index) {
+              <option [value]="fragment.key">{{ fragment.name }}</option>
+            }
+          }
+
+          @if (bookNames.length) {
+            <optgroup label="Books"></optgroup>
+            @for (book of bookNames; track $index) {
+              <option [value]="book.key">{{ book.name }}</option>
+            }
           }
         </select>
   
-        <select name="selectedChapter" [(ngModel)]="formSelectedChapter">
-          @for (chapter of getChapters(); track $index) {
-          <option [value]="chapter - 1">{{ chapter }}</option>
-          }
-        </select>
+        <input name="selectedChapter" [(ngModel)]="formSelectedChapter" type="number" />
       </div>
 
       <div>
         <button type="button" (click)="go()">Go</button>
         <button type="button" [attr.disabled]="formSelectedChapter === 0 ? 'disabled': null"
           (click)="back()">Back</button>
-        <button type="button" [attr.disabled]="formSelectedChapter === getChaptersLength() ? 'disabled': null"
-          (click)="next()">Next</button>
+        <button type="button" (click)="next()">Next</button>
       </div>
     </fieldset>
 

@@ -1,6 +1,11 @@
 export interface ProjectTarget {
   language: string;
-  books: {
+  fragments?: {
+    [fragment: string]: {
+      name: string;
+    }
+  };
+  books?: {
     [book: string]: {
       name: string;
     }

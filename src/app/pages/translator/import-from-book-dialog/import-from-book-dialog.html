@@ -3,7 +3,7 @@
     <legend>Import to current book patterns and lexicals from another book</legend>
 
     <div>
-      <select name="selectedBook" formControlName="selectedBook" placeholder="Book">
+      <select name="selectedArtifact" formControlName="selectedArtifact" placeholder="Artifact">
         @for (book of listBookNames(); track $index) {
         <option [value]="book.key">{{ book.name }}</option>
         }

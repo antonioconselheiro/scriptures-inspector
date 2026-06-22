@@ -58,20 +58,21 @@ export class ImportFromBookDialog extends ModalableDirective<{
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
-    return Object.keys(this.project.target.books).map(book => {
+    const books = this.project.target.books || {};
+    return Object.keys(books).map(book => {
       return {
         key: book,
-        name: this.project.target.books[book].name
+        name: books[book].name
       };
     });
   }
 
   onImportFromBookSubmit(): void {
     if (this.form.valid) {
-      const { selectedBook, override, variations } = this.form.value;
+      const { selectedArtifact, override, variations } = this.form.value;
 
-      if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedBook}"?`)) {
-        targetsLoaderFn(selectedBook).then(projectData => {
+      if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedArtifact}"?`)) {
+        targetsLoaderFn(selectedArtifact).then(projectData => {
           this.joinProjectData(projectData, variations, override);
           alert('Patterns and lexicals imported successfully');
         }).catch(e => {

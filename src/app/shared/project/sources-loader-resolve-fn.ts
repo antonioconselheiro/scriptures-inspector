@@ -20,7 +20,7 @@ export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
 
       await Promise.all(
         [...new Set([...sources, ...translationViewer])]
-          .filter(source => codex[source] && codex[source].data[book])
+          .filter(source => codex[source] && codex[source].books[book])
           .map(source => loadSourceBookFn(httpClient, project, source, book)
           .then(sourceBook => {
             if (sourceBook) {

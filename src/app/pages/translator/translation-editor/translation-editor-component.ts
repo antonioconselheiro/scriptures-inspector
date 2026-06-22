@@ -60,7 +60,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   current: CurrentChapter | null = null;
 
-  formSelectedBook: string = '';
+  formSelectedArtifact: string = '';
   formSelectedChapter: number | null = null;
 
   minimized = true;
@@ -128,7 +128,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         const book = params['book'].toUpperCase();
         const chapter = Number(params['chapter']) - 1;
 
-        this.formSelectedBook = book;
+        this.formSelectedArtifact = book;
         this.formSelectedChapter = chapter;
 
         if (!this.current) {
@@ -253,10 +253,21 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   listBookNames(): Array<{ key: string, name: string }> {
-    return Object.keys(this.project.target.books).map(book => {
+    const books = this.project.target.books || {};
+    return Object.keys(books).map(book => {
       return {
         key: book,
-        name: this.project.target.books[book].name
+        name: books[book].name
+      };
+    });
+  }
+
+  listFragmentNames(): Array<{ key: string, name: string }> {
+    const fragments = this.project.target.fragments || {};
+    return Object.keys(fragments).map(fragment => {
+      return {
+        key: fragment,
+        name: fragments[fragment].name
       };
     });
   }
@@ -270,10 +281,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   go(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
-      const book = this.formSelectedBook;
+    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
+      const book = this.formSelectedArtifact;
       const goTo = (+this.formSelectedChapter) + 1;
-      const path = ['/editor/book', book, 'chapter', goTo];
+      const path = ['/translator/book', book, 'chapter', goTo];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
@@ -284,11 +295,11 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 0) {
+    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 0) {
       this.formSelectedChapter--;
       const previousChapter = this.formSelectedChapter;
-      const book = this.formSelectedBook;
-      const path = ['/editor/book', book, 'chapter', previousChapter];
+      const book = this.formSelectedArtifact;
+      const path = ['/translator/book', book, 'chapter', previousChapter];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
@@ -299,11 +310,11 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   next(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
+    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
       this.formSelectedChapter++;
       const nextChapter = this.formSelectedChapter;
-      const book = this.formSelectedBook;
-      const path = ['/editor/book', book, 'chapter', nextChapter];
+      const book = this.formSelectedArtifact;
+      const path = ['/translator/book', book, 'chapter', nextChapter];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
@@ -323,19 +334,6 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
 
     this.systemService.triggerSaveCurrentProject();
-  }
-
-  getChapters(): number[] {
-    if (!this.formSelectedBook) return [];
-    const length = this.getChaptersLength();
-
-    return Array.from({ length }, (_, i) => i + 1);
-  }
-
-  getChaptersLength(): number {
-    return Math.max(...Object.keys(this.sourceBookRecord).map(
-      key => this.sourceBookRecord[key]?.chapters.length ? this.sourceBookRecord[key].chapters.length + 1 : 0
-    ));
   }
 
   openImportFromBookDialog(targetMetadataDetails: TargetMetadataDetail[]): void {
