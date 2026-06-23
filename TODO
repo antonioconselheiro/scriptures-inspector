@@ -3,6 +3,9 @@ TODO
 [ ] - Validar gematria com falseamento
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Palavras entre colchetes que não estão associadas a nenhum elemento do texto original não estão sendo sobrescritas na tradução personalizada
+[ ] - Quando override size 0 é deletado a propriedade size continua existindo no json com valor 0
+[ ] - Se durante uma alteração uma palavra associada ao texto original sobrescrever o valor correspondente ao indice de uma palavra não associada ao texto original, mas associada a tradução, então a palavra deve ser removida
+[ ] - Palavras na tradução personalizada sem associação com o texto original devem receber colchetes ao redor automaticamente, palavras não associadas aproximadas devem ser envolvidas por colchetes de forma agrupada
 [ ] - (não mvp) componente para associar com imagem do texto original
 [ ] - (não mvp) componente para navegar imagem do texto original
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
