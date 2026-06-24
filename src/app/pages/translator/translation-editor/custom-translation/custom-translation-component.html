@@ -1,7 +1,8 @@
 <h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
-@let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index; 
-@let chapterVariations = customTranslation.chapters[current.chapter]?.[verseIndex]?.variations;
+@let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index;
+@let verse = customTranslation.chapters[current.chapter]?.[verseIndex];
+@let chapterVariations = verse?.variations;
 @let splittedCustomTranslation = splitCustomTranslation(customTranslation, current.chapter, verseIndex, pipeUpdaterController) || [];
 
 <div class="buttonGroup">
@@ -49,8 +50,8 @@
         <td>
           <input
             type="number" #wordSpanEl class="wordSpan configField" name="wordSpan" placeholder="size"
-            [value]="customTranslation.chapters[current.chapter][verseIndex].metadata[$index]?.size"
-            (change)="onChangeWordSpan(customTranslation.chapters[current.chapter][verseIndex], $index, wordSpanEl)"
+            [value]="verse.metadata[$index]?.size"
+            (change)="onChangeWordSpan(verse, $index, wordSpanEl)"
           />
         </td>
         }
@@ -122,7 +123,7 @@
                 [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationValueEl.value) + 20">
   
                 <datalist [id]="dataListId">
-                  @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
+                  @for (suggestion of getVariationDataListOptions(verse, getCustomTranslationInterlinearValue($index), variation.id); track $index) {
                     @if (suggestion !== variationValueEl.value) {
                       <option [value]="suggestion"></option>
                     }

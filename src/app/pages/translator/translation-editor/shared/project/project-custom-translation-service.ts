@@ -348,78 +348,59 @@ export class ProjectCustomTranslationService {
   }
 
   getVariationValue(
-    customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceVerse: SourceVerse,
-    scriptureWordSpanIndex: number,
+    translationWordSpanIndex: number,
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string
   ): string {
-    const scripture = this.getCustomTranslationInterlinearValue(
-      customTranslation, current, sourceVerse, scriptureWordSpanIndex
-    );
-    
-    return chapterVariations[variationId] && chapterVariations[variationId][scripture]?.value || '';
+    const translationWordSpanIndexString = String(translationWordSpanIndex);
+    return chapterVariations[variationId] && chapterVariations[variationId][translationWordSpanIndexString]?.value || '';
   }
 
   updateVariationSize(
-    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
-    scriptureWordSpanIndex: number,
+    translationWordSpanIndex: number,
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
     sizeValue: `${number}` | ''
   ): void {
-    const scripture = this.getCustomTranslationInterlinearValue(customTranslation, current, sourceVerse, scriptureWordSpanIndex);
-    if (!scripture) {
-      return;
-    }
-
+    const translationWordSpanIndexString = String(translationWordSpanIndex);
     if (!chapterVariations[variationId]) {
       chapterVariations[variationId] = {};
     }
 
     if (sizeValue.length) {
-      if (chapterVariations[variationId][scripture]) {
-        chapterVariations[variationId][scripture].size = Number(sizeValue);
+      if (chapterVariations[variationId][translationWordSpanIndexString]) {
+        chapterVariations[variationId][translationWordSpanIndexString].size = Number(sizeValue);
       } else {
-        chapterVariations[variationId][scripture] = { size: Number(sizeValue), value: '' };
+        chapterVariations[variationId][translationWordSpanIndexString] = { size: Number(sizeValue), value: '' };
       }
     } else {
-      delete chapterVariations[variationId][scripture];
+      delete chapterVariations[variationId][translationWordSpanIndexString];
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
-
   }
 
   updateVariationValue(
-    customTranslation: BookTranslationTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
-    scriptureWordSpanIndex: number,
+    translationWordSpanIndex: number,
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
     value: string
   ): void {
-    const scripture = this.getCustomTranslationInterlinearValue(customTranslation, current, sourceVerse, scriptureWordSpanIndex);
-    if (!scripture) {
-      return;
-    }
-
+    const translationWordSpanIndexString = String(translationWordSpanIndex);
     if (!chapterVariations[variationId]) {
       chapterVariations[variationId] = {};
     }
 
     if (value.length) {
-      if (chapterVariations[variationId][scripture]) {
-        chapterVariations[variationId][scripture].value = value;
+      if (chapterVariations[variationId][translationWordSpanIndexString]) {
+        chapterVariations[variationId][translationWordSpanIndexString].value = value;
       } else {
-        chapterVariations[variationId][scripture] = { value };
+        chapterVariations[variationId][translationWordSpanIndexString] = { value };
       }
     } else {
-      delete chapterVariations[variationId][scripture];
+      delete chapterVariations[variationId][translationWordSpanIndexString];
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);

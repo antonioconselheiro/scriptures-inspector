@@ -20,6 +20,7 @@ import { ProjectCustomTranslationService } from '../shared/project/project-custo
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-validations-model';
+import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -239,9 +240,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   getVariationValue(chapterVariations: BookVerseTranslationTargetVariations, variationId: string, scriptureWordSpanIndex: number): string {
     return this.projectCustomTranslationService.getVariationValue(
-      this.customTranslation,
-      this.current,
-      this.sourceVerse,
       scriptureWordSpanIndex,
       chapterVariations,
       variationId
@@ -255,21 +253,26 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse.start}-${this.sourceVerse.verse.end}-${variation.id}-${index}`;
   }
 
-  getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
-    const chapters = this.customTranslation.chapters;
+  getVariationDataListOptions(verse: BookVerseTranslationTarget, interlinearValue: string, variationId: string): Array<string> {
+    const bookChapters = this.customTranslation.chapters;
     const suggestions = new Set<string>();
-
+//  FIXME: certamente não está correto
     if (interlinearValue) {
       const value = interlinearValue.replace(/^\d+\-/, '');
-      chapters.forEach(chapter => {
-        chapter.forEach(verse => {
-          if (verse.variations) {
-            const variationsRecord = verse.variations[variationId] || {};
+      bookChapters.forEach(chapter => {
+        chapter.forEach(chapterVerse => {
+          if (chapterVerse.variations) {
+            const variationsRecord = chapterVerse.variations[variationId] || {};
             Object.keys(variationsRecord).forEach(key => {
-              const thermValue = key.replace(/^\d+\-/, '');
-              if (thermValue === value) {
-                suggestions.add(variationsRecord[key].value);
+              const metadata = chapterVerse.metadata[Number(variationsRecord[key])];
+              if (metadata && metadata.value) {
+                const thermValue = metadata.value.replace(/^\d+\-/, '');
+                console.info({ thermValue, value });
+                if (thermValue === value) {
+                  suggestions.add(variationsRecord[key].value);
+                }
               }
+
             });
           }
         });
@@ -286,9 +289,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     sizeValue: string,
   ): void {
     this.projectCustomTranslationService.updateVariationSize(
-      this.customTranslation,
       this.current,
-      this.sourceVerse,
       scriptureWordSpanIndex,
       chapterVariations,
       variationId,
@@ -299,14 +300,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   updateVariationValue(
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
-    scriptureWordSpanIndex: number,
+    translationWordSpanIndex: number,
     value: string,
   ): void {
     this.projectCustomTranslationService.updateVariationValue(
-      this.customTranslation,
       this.current,
-      this.sourceVerse,
-      scriptureWordSpanIndex,
+      translationWordSpanIndex,
       chapterVariations,
       variationId,
       value
