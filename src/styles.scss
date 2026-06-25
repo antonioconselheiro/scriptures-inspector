@@ -132,12 +132,17 @@ th {
 .prisma {
   color: #333;
   font-size: 16px;
-  &:not(.prisma + .prisma):not(.prisma + .prisma-gap + .prisma)::before {
-    content: "[";
-  }
 
-  &:not(:has(+ .prisma, + .prisma-gap + .prisma))::after {
-    content: "]";
+  &:not(:empty) {
+    &:not(.prisma:not(:empty) + .prisma:not(:empty)):not(.prisma:not(:empty) + .prisma-gap + .prisma:not(:empty), .prisma:not(:empty) + .prisma:empty + .prisma:not(:empty)) {
+      &::before {
+        content: "[";
+      }
+    }
+  
+    &:not(:has(+ .prisma:not(:empty), + .prisma-gap + .prisma:not(:empty), + .prisma:empty + .prisma:not(:empty)))::after {
+      content: "]";
+    }
   }
 }
 
