@@ -1,4 +1,4 @@
-import { BookVerseTranslationTargetVariations } from './book-verse-translation-target-validations-model';
+import { BookVerseTranslationTargetVariations } from './book-verse-translation-target-variations-model';
 import { BookTranslationTargetMetadata } from './book-translation-target-metadata-model';
 import { BookVerse } from './book-verse-model';
 

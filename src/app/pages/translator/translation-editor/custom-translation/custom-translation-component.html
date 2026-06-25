@@ -27,7 +27,7 @@
           @for (sentence of splittedCustomTranslation.original; track $index) {
           <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
             @if (sentence.hasTrailingSpace && sentence.fragment) {
-              <span>&nbsp;</span>
+              <span class="prisma-gap">&nbsp;</span>
             }
           }
         </td>
@@ -38,7 +38,7 @@
           @for (sentence of splittedCustomTranslation.original; track $index) {
           <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
             @if (sentence.hasTrailingSpace && sentence.fragment) {
-              <span>&nbsp;</span>
+              <span class="prisma-gap">&nbsp;</span>
             }
           }
         </td>
@@ -50,7 +50,7 @@
         <td>
           <input
             type="number" #wordSpanEl class="wordSpan configField" name="wordSpan" placeholder="size"
-            [value]="verse.metadata[$index]?.size"
+            [value]="verse?.metadata?.[$index]?.size"
             (change)="onChangeWordSpan(verse, $index, wordSpanEl)"
           />
         </td>
@@ -147,13 +147,13 @@
                   }
 
                   @if (sentence.hasTrailingSpace) {
-                    <span>&nbsp;</span>
+                    <span class="prisma-gap">&nbsp;</span>
                   }
                 } @else {
                   <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
   
                   @if (sentence.hasTrailingSpace && sentence.fragment) {
-                    <span>&nbsp;</span>
+                    <span class="prisma-gap">&nbsp;</span>
                   }
                 }
               }

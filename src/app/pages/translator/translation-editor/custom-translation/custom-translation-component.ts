@@ -19,7 +19,7 @@ import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directiv
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-validations-model';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
 
 @Component({
@@ -114,7 +114,11 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   onChangeWordSpan(verse: {
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
-  }, index: number, wordSpanEl: { value: string }): void {
+  } | undefined, index: number, wordSpanEl: { value: string }): void {
+    if (!verse) {
+      return;
+    }
+
     let sizeNumber = Number(wordSpanEl.value);
     if (sizeNumber === 0) {
       if (verse.metadata[index]) {
@@ -253,7 +257,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse.start}-${this.sourceVerse.verse.end}-${variation.id}-${index}`;
   }
 
-  getVariationDataListOptions(verse: BookVerseTranslationTarget, interlinearValue: string, variationId: string): Array<string> {
+  getVariationDataListOptions(verse: BookVerseTranslationTarget | undefined, interlinearValue: string, variationId: string): Array<string> {
     const bookChapters = this.customTranslation.chapters;
     const suggestions = new Set<string>();
 //  FIXME: certamente não está correto

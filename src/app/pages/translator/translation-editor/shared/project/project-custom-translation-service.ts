@@ -14,7 +14,7 @@ import { WordFragment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
-import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-validations-model';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 
 @Injectable({
   providedIn: 'root'

@@ -132,6 +132,13 @@ th {
 .prisma {
   color: #333;
   font-size: 16px;
+  &:not(.prisma + .prisma):not(.prisma + .prisma-gap + .prisma)::before {
+    content: "[";
+  }
+
+  &:not(:has(+ .prisma, + .prisma-gap + .prisma))::after {
+    content: "]";
+  }
 }
 
 .prisma1 {
