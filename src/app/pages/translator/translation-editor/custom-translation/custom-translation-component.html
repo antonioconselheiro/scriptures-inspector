@@ -25,7 +25,8 @@
       <tr>
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (sentence of splittedCustomTranslation.original; track $index) {
-          <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+          @let color = getCustomTranslationColor($index);
+          <span [attr.data-punctuation]="isPunctuation(color, sentence.fragment)" [class]="'prisma'+color">{{sentence.fragment}}</span>
             @if (sentence.hasTrailingSpace && sentence.fragment) {
               <span class="prisma-gap">&nbsp;</span>
             }
@@ -143,14 +144,16 @@
                 @let hasVariation = getVariationValue(chapterVariations, variation.id, $index);
                 @if (hasVariation.length) {
                   @if (hasVariation.trim().length) {
-                    <span [class]="'prisma'+getCustomTranslationColor($index)">{{hasVariation}}</span>
+                    @let color = getCustomTranslationColor($index);
+                    <span [attr.data-punctuation]="isPunctuation(color, hasVariation)" [class]="'prisma'+color">{{hasVariation}}</span>
                   }
 
                   @if (sentence.hasTrailingSpace) {
                     <span class="prisma-gap">&nbsp;</span>
                   }
                 } @else {
-                  <span [class]="'prisma'+getCustomTranslationColor($index)">{{sentence.fragment}}</span>
+                  @let color = getCustomTranslationColor($index);
+                  <span [attr.data-punctuation]="isPunctuation(color, sentence.fragment)" [class]="'prisma'+color">{{sentence.fragment}}</span>
   
                   @if (sentence.hasTrailingSpace && sentence.fragment) {
                     <span class="prisma-gap">&nbsp;</span>

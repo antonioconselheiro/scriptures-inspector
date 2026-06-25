@@ -133,7 +133,7 @@ th {
   color: #333;
   font-size: 16px;
 
-  &:not(:empty) {
+  &:not(:empty):not([data-punctuation]) {
     &:not(.prisma:not(:empty) + .prisma:not(:empty)):not(.prisma:not(:empty) + .prisma-gap + .prisma:not(:empty), .prisma:not(:empty) + .prisma:empty + .prisma:not(:empty)) {
       &::before {
         content: "[";

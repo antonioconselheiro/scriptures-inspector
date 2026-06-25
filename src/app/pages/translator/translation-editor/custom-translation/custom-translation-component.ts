@@ -191,6 +191,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
+  isPunctuation(color: string, word: string): '' | null {
+    return !color && /^\p{General_Category=Punctuation}+$/u.test(word) ? '' : null;
+  }
+
   getCustomTranslationColor(
     wordIndex: number
   ): string {
