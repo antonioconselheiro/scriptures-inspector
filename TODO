@@ -4,12 +4,13 @@ TODO
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - Quando override size 0 é deletado a propriedade size continua existindo no json com valor 0
-[ ] - (não mvp) componente para associar com imagem do texto original
-[ ] - (não mvp) componente para navegar imagem do texto original
+[ ] - Incluir nas configurações de override de variação a opção de incluir a palavra como "Palavra de Deus" 
+[ ] - (mvp fragmentator) componente para associar com imagem do texto original
+[ ] - (mvp fragmentator) componente para navegar imagem do texto original
+[ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
 [ ] - (não mvp) fazer com que prisma dê continuidade da cor em que o último versículo terminou
 [ ] - (não mvp) criar tela de versiculator para criação de novos projetos ou edição de projetos existentes
-[ ] - (não mvp) criar metadado que permita identificar lacuna
 [ ] - (não mvp) Repositório com mahabarata em sanscrito, hindi e inglês, comparáveis;
 [ ] - (não mvp) Falsear minha versão do mahabarata com esta outra versão: https://www.wisdomlib.org/hinduism/book/mahabharata-sanskrit
 [ ] - (não mvp) Repositório com os manuscritos do mar morto (transcrição, tradução);
