@@ -69,13 +69,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
-    private projectCustomTranslationService: ProjectCustomTranslationService,
-    private systemService: SystemService
+    private projectCustomTranslationService: ProjectCustomTranslationService
   ) {
     super();
   }
 
-  splitCustomTranslation(
+  splitCustomTranslationWithVariations(
     customTranslation: BookTranslationTarget,
     chapter: number,
     verseIndex: number,
@@ -85,58 +84,15 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     variations: Record<string, Array<WordFragment>>
   } {
     pipeUpdaterController;
-    const customTranslationObj = customTranslation.chapters[chapter]?.[verseIndex];
-    if (!customTranslationObj) {
-      return { original: [], variations: {} };
-    }
-
-    const original = this.projectCustomTranslationService.splitCustomTranslation(customTranslationObj);
-    const variations: Record<string, Array<WordFragment>> = {};
-    Object.keys(customTranslation.variations).forEach(variationKey => {
-      const variationConfig = customTranslationObj.variations[variationKey];
-      if (variationConfig) {
-        const metadataVariation = structuredClone(customTranslationObj.metadata);
-        metadataVariation.forEach((metadata) => {
-          const sizeOverride = variationConfig[metadata.value]?.size;
-          if (sizeOverride) {
-            metadata.size = sizeOverride;
-          }
-        });
-        variations[variationKey] = this.projectCustomTranslationService.splitCustomTranslation({ ...customTranslationObj, metadata: metadataVariation });
-      } else {
-        variations[variationKey] = original;
-      }
-    });
-
-    return { original, variations };
+    return this.projectCustomTranslationService.splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex);
   }
 
-  onChangeWordSpan(verse: {
-    text: string;
-    metadata: Array<BookTranslationTargetMetadata>;
-  } | undefined, index: number, wordSpanEl: { value: string }): void {
-    if (!verse) {
-      return;
-    }
-
-    let sizeNumber = Number(wordSpanEl.value);
-    if (sizeNumber === 0) {
-      if (verse.metadata[index]) {
-        if (confirm('remove?')) {
-          verse.metadata.splice(index, 1);
-          this.systemService.triggerSaveCurrentBookTranslations(this.current);
-          return;
-        }
-      }
-    }
-
-    if (!verse.metadata[index]) {
-      verse.metadata[index] = { size: sizeNumber, value: '' };
-    } else {
-      verse.metadata[index].size = sizeNumber;
-    }
-
-    this.systemService.triggerSaveCurrentBookTranslations(this.current);
+  onChangeWordSpan(
+    verse: { text: string; metadata: Array<BookTranslationTargetMetadata>; } | undefined,
+    index: number,
+    wordSpanEl: { value: string }
+  ): void {
+    this.projectCustomTranslationService.onChangeWordSpan(this.current, verse, index, wordSpanEl);
   }
 
   derivateAllToCustom(): void {
@@ -261,33 +217,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse.start}-${this.sourceVerse.verse.end}-${variation.id}-${index}`;
   }
 
-  getVariationDataListOptions(verse: BookVerseTranslationTarget | undefined, interlinearValue: string, variationId: string): Array<string> {
-    const bookChapters = this.customTranslation.chapters;
-    const suggestions = new Set<string>();
-//  FIXME: certamente não está correto
-    if (interlinearValue) {
-      const value = interlinearValue.replace(/^\d+\-/, '');
-      bookChapters.forEach(chapter => {
-        chapter.forEach(chapterVerse => {
-          if (chapterVerse.variations) {
-            const variationsRecord = chapterVerse.variations[variationId] || {};
-            Object.keys(variationsRecord).forEach(key => {
-              const metadata = chapterVerse.metadata[Number(variationsRecord[key])];
-              if (metadata && metadata.value) {
-                const thermValue = metadata.value.replace(/^\d+\-/, '');
-                console.info({ thermValue, value });
-                if (thermValue === value) {
-                  suggestions.add(variationsRecord[key].value);
-                }
-              }
-
-            });
-          }
-        });
-      });
-    }
-
-    return Array.from(suggestions);
+  getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
+    return this.projectCustomTranslationService.getVariationDataListOptions(this.customTranslation, interlinearValue, variationId);
   }
 
   updateVariationSize(

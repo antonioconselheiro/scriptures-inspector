@@ -123,6 +123,71 @@ export class ProjectCustomTranslationService {
     return sentenceList;
   }
 
+  splitCustomTranslationWithVariations(
+    customTranslation: BookTranslationTarget,
+    chapter: number,
+    verseIndex: number
+  ): {
+    original: Array<WordFragment>,
+    variations: Record<string, Array<WordFragment>>
+  } {
+    const customTranslationObj = customTranslation.chapters[chapter]?.[verseIndex];
+    if (!customTranslationObj) {
+      return { original: [], variations: {} };
+    }
+
+    const original = this.splitCustomTranslation(customTranslationObj);
+    const variations: Record<string, Array<WordFragment>> = {};
+    Object.keys(customTranslation.variations).forEach(variationKey => {
+      const variationConfig = customTranslationObj.variations[variationKey];
+      if (variationConfig) {
+        const metadataVariation = structuredClone(customTranslationObj.metadata);
+        Object.keys(variationConfig).forEach(key => {
+          const sizeOverride = variationConfig[key].size;
+          if (sizeOverride) {
+            metadataVariation[Number(key)].size = sizeOverride;
+          }
+        });
+
+        variations[variationKey] = this.splitCustomTranslation({ ...customTranslationObj, metadata: metadataVariation });
+      } else {
+        variations[variationKey] = original;
+      }
+    });
+
+    return { original, variations };
+  }
+
+  onChangeWordSpan(
+    current: CurrentChapter,  
+    verse: { text: string; metadata: Array<BookTranslationTargetMetadata>; } | undefined,
+    index: number,
+    wordSpanEl: { value: string }
+  ): void {
+    if (!verse) {
+      return;
+    }
+
+    let sizeNumber = Number(wordSpanEl.value);
+    if (sizeNumber === 0) {
+      if (verse.metadata[index]) {
+        if (confirm('remove?')) {
+          verse.metadata.splice(index, 1);
+          this.systemService.triggerSaveCurrentBookTranslations(current);
+          return;
+        }
+      }
+    }
+
+    if (!verse.metadata[index]) {
+      verse.metadata[index] = { size: sizeNumber, value: '' };
+    } else {
+      verse.metadata[index].size = sizeNumber;
+    }
+
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
   derivateAllToCustom(
     translationSourceLanguage: LanguageUnionType,
     parsedBookMetadata: ParsedBookMetadata,
@@ -354,6 +419,34 @@ export class ProjectCustomTranslationService {
   ): string {
     const translationWordSpanIndexString = String(translationWordSpanIndex);
     return chapterVariations[variationId] && chapterVariations[variationId][translationWordSpanIndexString]?.value || '';
+  }
+
+  getVariationDataListOptions(customTranslation: BookTranslationTarget, interlinearValue: string, variationId: string): Array<string> {
+    const bookChapters = customTranslation.chapters;
+    const suggestions = new Set<string>();
+
+    if (interlinearValue) {
+      const value = interlinearValue.replace(/^\d+\-/, '');
+      bookChapters.forEach(chapter => {
+        chapter.forEach(chapterVerse => {
+          if (chapterVerse.variations) {
+            const variationsRecord = chapterVerse.variations[variationId] || {};
+            Object.keys(variationsRecord).forEach(key => {
+              const metadata = chapterVerse.metadata[Number(key)];
+              if (metadata && metadata.value) {
+                const thermValue = metadata.value.replace(/^\d+\-/, '');
+                if (thermValue === value) {
+                  suggestions.add(variationsRecord[key].value);
+                }
+              }
+
+            });
+          }
+        });
+      });
+    }
+
+    return Array.from(suggestions);
   }
 
   updateVariationSize(
