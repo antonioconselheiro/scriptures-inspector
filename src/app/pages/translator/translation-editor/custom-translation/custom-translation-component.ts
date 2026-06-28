@@ -22,6 +22,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
 import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
+import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -158,6 +159,26 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return this.projectCustomTranslationService.getCustomTranslationColor(
       this.customTranslation, this.interlinear, this.current, this.sourceVerse, wordIndex
     );
+  }
+
+  getCurrent(currentIndex: number): CurrentVerseIndex {
+    return { ...this.current, verseIndex: currentIndex };
+  }
+
+  setAsWordOfGod(input: HTMLInputElement, sentence: WordFragment, current: CurrentVerseIndex, customTranslationIndex: number): void {
+    //  TODO: talvez eu precise de um método personalizado para tradução personalizada para inclusão dos metadados
+    this.projectMetadataService.setAsWordOfGod(
+      input.checked,
+      this.bookTarget,
+      this.translationSourceLanguage,
+      current,
+      this.sourceVerse,
+      [sentence]
+    );
+  }
+
+  getScriptureMetadataWordOfGod(sentence: WordFragment, current: CurrentVerseIndex, customTranslationIndex: number): boolean {
+
   }
 
   getCustomTranslationStyleRole(

@@ -68,6 +68,21 @@
         <td>
         </td>
       </tr>
+
+      <tr>
+        <th>God said</th>
+        @for (sentence of splittedCustomTranslation.original; track $index) {
+        <td>
+          <input
+            type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
+            (change)="setAsWordOfGod(wordOfGodEl, sentence, this.getCurrent(verseIndex), $index)"
+            [checked]="getScriptureMetadataWordOfGod(sentence, this.getCurrent(verseIndex), $index)"
+          />
+        </td>
+        }
+        <td>
+        </td>
+      </tr>
   
       <tr>
         <th>scriptures</th>
@@ -106,6 +121,10 @@
                   (input)="updateVariationSize(chapterVariations, variation.id, $index, variationSizeEl.value)">
               </td>
             }
+
+            <td rowspan="3">
+              <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])" type="button">×</button>
+            </td>
           </tr>
   
           <tr>
@@ -134,11 +153,8 @@
             </td>
             }
   
-            <td rowspan="3">
-              <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])" type="button">×</button>
-            </td>
           </tr>
-      
+
           <tr>
             <td [colSpan]="splittedCustomTranslation.variations[variation.id].length">
               @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
