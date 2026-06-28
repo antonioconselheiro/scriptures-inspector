@@ -397,6 +397,43 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  getScriptureMetadataWordOfGod(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    wordSpanIndex: number
+  ): boolean {
+    const verseIndex = this.getVerseIndex(sourceVerse);
+    const chapter = customTranslation.chapters[current.chapter];
+    if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
+      const metadata = chapter[verseIndex].metadata;
+      return metadata && metadata[wordSpanIndex]?.isWordOfGod || false;
+    }
+
+    return false;
+  }
+
+  setAsWordOfGod(
+    customTranslation: BookTranslationTarget,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    value: boolean,
+    wordIndex: number
+  ): void {
+    const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
+    if (metadata[wordIndex]) {
+      if (value) {
+        metadata[wordIndex].isWordOfGod = true;
+      } else {
+        delete metadata[wordIndex].isWordOfGod;
+      }
+    } else if (value) {
+      metadata[wordIndex] = { value: '', size: 0, isWordOfGod: true };
+    }
+
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
   getVariationSize(
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,

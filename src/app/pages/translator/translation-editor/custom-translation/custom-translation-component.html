@@ -75,8 +75,8 @@
         <td>
           <input
             type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
-            (change)="setAsWordOfGod(wordOfGodEl, sentence, this.getCurrent(verseIndex), $index)"
-            [checked]="getScriptureMetadataWordOfGod(sentence, this.getCurrent(verseIndex), $index)"
+            (change)="setAsWordOfGod(wordOfGodEl.checked, $index)"
+            [checked]="getScriptureMetadataWordOfGod($index)"
           />
         </td>
         }

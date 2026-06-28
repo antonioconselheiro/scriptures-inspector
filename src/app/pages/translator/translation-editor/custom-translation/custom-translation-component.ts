@@ -6,23 +6,20 @@ import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
-import { BookVerse } from '@domain/book-verse-model';
+import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { WordFragment } from '@domain/word-fragment-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { SystemService } from '@shared/system/system-service';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
-import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
-import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
-import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -165,20 +162,28 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
-  setAsWordOfGod(input: HTMLInputElement, sentence: WordFragment, current: CurrentVerseIndex, customTranslationIndex: number): void {
-    //  TODO: talvez eu precise de um método personalizado para tradução personalizada para inclusão dos metadados
-    this.projectMetadataService.setAsWordOfGod(
-      input.checked,
-      this.bookTarget,
-      this.translationSourceLanguage,
-      current,
+  getScriptureMetadataWordOfGod(
+    wordSpanIndex: number
+  ): boolean {
+    return this.projectCustomTranslationService.getScriptureMetadataWordOfGod(
+      this.customTranslation,
+      this.current,
       this.sourceVerse,
-      [sentence]
+      wordSpanIndex
     );
   }
-
-  getScriptureMetadataWordOfGod(sentence: WordFragment, current: CurrentVerseIndex, customTranslationIndex: number): boolean {
-
+  
+  setAsWordOfGod(
+    value: boolean,
+    wordIndex: number
+  ): void {
+    return this.projectCustomTranslationService.setAsWordOfGod(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      value,
+      wordIndex
+    );
   }
 
   getCustomTranslationStyleRole(

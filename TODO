@@ -3,7 +3,7 @@ TODO
 [ ] - Validar gematria com falseamento
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
-[ ] - Incluir nas configurações de override de variação a opção de incluir a palavra como "Palavra de Deus"
+[ ] - O override de "Palavra de Deus" na tradução personalizada precisa vir bloqueado caso o valor esteja checked no texto original
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
