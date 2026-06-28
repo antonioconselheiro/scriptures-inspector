@@ -13,6 +13,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Injectable({
   providedIn: 'root'
@@ -67,8 +68,9 @@ export class ProjectMetadataService {
     eachWord: Array<Array<{ index: number; word: string; }>>,
     wordIndex: number
   ): void {
+    const language = languageMetadataRecord[sourceLanguage];
     const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, eachWord[wordIndex]);
-    const keys = eachWord.flat().map(word => `${word.index}-${word.word}`);
+    const keys = eachWord.flat().map(word => `${word.index}-${language.normalizeFn && language.normalizeFn(word.word) || word.word}`);
     Object.keys(wordMetadata).forEach(key => {
       if (!keys.includes(key)) {
         delete wordMetadata[key];
