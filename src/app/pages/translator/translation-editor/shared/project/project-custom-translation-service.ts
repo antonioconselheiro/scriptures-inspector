@@ -15,6 +15,7 @@ import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
+import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
 
 @Injectable({
   providedIn: 'root'
@@ -412,13 +413,13 @@ export class ProjectCustomTranslationService {
     return String(size) as `${number}` | '';
   }
 
-  getVariationValue(
+  getVariation(
     translationWordSpanIndex: number,
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string
-  ): string {
+  ): BookVerseTranslationTargetVariation | undefined {
     const translationWordSpanIndexString = String(translationWordSpanIndex);
-    return chapterVariations[variationId] && chapterVariations[variationId][translationWordSpanIndexString]?.value || '';
+    return chapterVariations[variationId] && chapterVariations[variationId][translationWordSpanIndexString];
   }
 
   getVariationDataListOptions(customTranslation: BookTranslationTarget, interlinearValue: string, variationId: string): Array<string> {
@@ -468,7 +469,7 @@ export class ProjectCustomTranslationService {
         chapterVariations[variationId][translationWordSpanIndexString] = { size: Number(sizeValue), value: '' };
       }
     } else {
-      delete chapterVariations[variationId][translationWordSpanIndexString];
+      delete chapterVariations[variationId][translationWordSpanIndexString].size;
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);

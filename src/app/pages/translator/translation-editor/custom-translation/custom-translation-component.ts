@@ -21,6 +21,7 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
+import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -202,8 +203,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
   }
 
-  getVariationValue(chapterVariations: BookVerseTranslationTargetVariations, variationId: string, scriptureWordSpanIndex: number): string {
-    return this.projectCustomTranslationService.getVariationValue(
+  getVariation(
+    chapterVariations: BookVerseTranslationTargetVariations,
+    variationId: string,
+    scriptureWordSpanIndex: number
+  ): BookVerseTranslationTargetVariation | undefined {
+    return this.projectCustomTranslationService.getVariation(
       scriptureWordSpanIndex,
       chapterVariations,
       variationId
