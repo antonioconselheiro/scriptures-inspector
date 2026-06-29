@@ -37,7 +37,7 @@
       <tr>
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (sentence of splittedCustomTranslation.original; track $index) {
-          <span [class]="getCustomTranslationStyleRole($index)">{{sentence.fragment}}</span>
+          <span [class]="isCustomTranslationWordOfGod($index) ? 'godsaid' : ''">{{sentence.fragment}}</span>
             @if (sentence.hasTrailingSpace && sentence.fragment) {
               <span class="prisma-gap">&nbsp;</span>
             }
@@ -72,13 +72,15 @@
       <tr>
         <th>God said</th>
         @for (sentence of splittedCustomTranslation.original; track $index) {
-        <td>
-          <input
-            type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
-            (change)="setAsWordOfGod(wordOfGodEl.checked, $index)"
-            [checked]="getScriptureMetadataWordOfGod($index)"
-          />
-        </td>
+          @let wordOfGod = getScriptureMetadataWordOfGodOverriding($index);
+          <td>
+            <input
+              type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
+              (change)="setAsWordOfGodOverriding(wordOfGodEl.checked, $index)"
+              [checked]="wordOfGod.checked"
+              [attr.disabled]="wordOfGod.readonly ? true : null"
+            />
+          </td>
         }
         <td>
         </td>

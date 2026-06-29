@@ -162,40 +162,57 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return { ...this.current, verseIndex: currentIndex };
   }
 
-  getScriptureMetadataWordOfGod(
-    wordSpanIndex: number
-  ): boolean {
-    return this.projectCustomTranslationService.getScriptureMetadataWordOfGod(
-      this.customTranslation,
-      this.current,
-      this.sourceVerse,
-      wordSpanIndex
-    );
-  }
-  
-  setAsWordOfGod(
-    value: boolean,
-    wordIndex: number
-  ): void {
-    return this.projectCustomTranslationService.setAsWordOfGod(
-      this.customTranslation,
-      this.current,
-      this.sourceVerse,
-      value,
-      wordIndex
-    );
-  }
-
-  getCustomTranslationStyleRole(
-    wordIndex: number
-  ): string {
-    return this.projectCustomTranslationService.getCustomTranslationStyleRole(
+  isCustomTranslationWordOfGod(wordIndex: number): boolean {
+    const isWordOfGod = this.projectCustomTranslationService.isWordOfGod(
       this.translationSourceLanguage,
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
       this.current,
       this.sourceVerse,
+      wordIndex
+    );
+
+    if (isWordOfGod) {
+      return true;
+    }
+
+    const isWordOfGodOverriding = this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
+      this.translationSourceLanguage,
+      this.bookTarget,
+      this.customTranslation,
+      this.interlinear,
+      this.current,
+      this.sourceVerse,
+      wordIndex
+    );
+
+    return isWordOfGodOverriding.checked || false;
+  }
+
+  getScriptureMetadataWordOfGodOverriding(
+    wordSpanIndex: number
+  ): { checked: boolean, readonly: boolean } {
+    return this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
+      this.translationSourceLanguage,
+      this.bookTarget,
+      this.customTranslation,
+      this.interlinear,
+      this.current,
+      this.sourceVerse,
+      wordSpanIndex
+    );
+  }
+  
+  setAsWordOfGodOverriding(
+    value: boolean,
+    wordIndex: number
+  ): void {
+    return this.projectCustomTranslationService.setAsWordOfGodOverriding(
+      this.customTranslation,
+      this.current,
+      this.sourceVerse,
+      value,
       wordIndex
     );
   }

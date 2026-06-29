@@ -313,7 +313,7 @@ export class ProjectCustomTranslationService {
     return '';
   }
 
-  getCustomTranslationStyleRole(
+  isWordOfGod(
     translationSourceLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
@@ -321,7 +321,7 @@ export class ProjectCustomTranslationService {
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
-  ): string {
+  ): boolean {
     const verseIndex = this.getVerseIndex(sourceVerse);
     let verseMetadata: BookVerse<BookChapterVerseMetadata> | null,
       customTranslationMetadataKey = '',
@@ -333,12 +333,12 @@ export class ProjectCustomTranslationService {
 
       const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
       if (!translationWordIndex) {
-        return '';
+        return false;
       }
 
       const interlinearSegmentOrigin = interlinear.chapters[current.chapter][verseIndex][Number(translationWordIndex)]?.origin || null;
       if (!interlinearSegmentOrigin) {
-        return '';
+        return false;
       }
 
       scriptureChapterMetadata = bookMetadata.chapters[current.chapter] || [];
@@ -352,16 +352,16 @@ export class ProjectCustomTranslationService {
     }
 
     if (!verseMetadata || !customTranslationMetadataKey) {
-      return '';
+      return false;
     }
 
     const metadata = verseMetadata.metadata || {};
     const dataObj = metadata[customTranslationMetadataKey];
     if (!dataObj) {
-      return '';
+      return false;
     }
 
-    return dataObj.isWordOfGod ? 'godsaid' : '';
+    return dataObj.isWordOfGod || false;
   }
 
   getCustomTranslationInterlinearValue(
@@ -397,23 +397,49 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
-  getScriptureMetadataWordOfGod(
+  getScriptureMetadataWordOfGodOverriding(
+    translationSourceLanguage: LanguageUnionType,
+    bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
+    interlinear: BookInterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordSpanIndex: number
-  ): boolean {
+  ): { checked: boolean, readonly: boolean } {
+    const isWordOfGod = this.isWordOfGod(
+      translationSourceLanguage,
+      bookMetadata,
+      customTranslation,
+      interlinear,
+      current,
+      sourceVerse,
+      wordSpanIndex
+    );
+
+    if (isWordOfGod) {
+      return {
+        checked: true,
+        readonly: true
+      };
+    }
+
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapter = customTranslation.chapters[current.chapter];
     if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
       const metadata = chapter[verseIndex].metadata;
-      return metadata && metadata[wordSpanIndex]?.isWordOfGod || false;
+      return {
+        checked: metadata && metadata[wordSpanIndex]?.isWordOfGod || false,
+        readonly: false
+      };
     }
 
-    return false;
+    return {
+      checked: false,
+      readonly: false
+    };
   }
 
-  setAsWordOfGod(
+  setAsWordOfGodOverriding(
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
@@ -428,7 +454,11 @@ export class ProjectCustomTranslationService {
         delete metadata[wordIndex].isWordOfGod;
       }
     } else if (value) {
-      metadata[wordIndex] = { value: '', size: 0, isWordOfGod: true };
+      metadata[wordIndex] = {
+        value: '',
+        size: 0,
+        isWordOfGod: true
+      };
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
