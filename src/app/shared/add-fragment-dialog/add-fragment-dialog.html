@@ -3,17 +3,43 @@
     <legend>Project Fragment Collections</legend>
 
     <ul>
-      <li>Aramaic Dead Sea Scrolls</li>
-      <li>Hebraic Dead Sea Scrolls</li>
-      <li>Greek Dead Sea Scrolls</li>
-      <li>Pahlavi Turfan Manichaeism Fragments</li>
-      <li>Ge\'əz Mashafa Qeddus V Century New Testament</li>
+      @for (collection of collections; track $index) {
+        <li>{{ collection.name }}</li>
+      }
     </ul>
 
     <div>
-      <label for="projectAddFragmentCollections">Add Fragment Collection</label>
-      <input type="text" id="projectAddFragmentCollections" />
+      <label for="projectCreateFragmentCollections">Create Fragment Collection</label>
+      <input
+        #fragmentCollectionName
+        name="collectionName"
+        type="text"
+        id="projectCreateFragmentCollections"
+        placeholder="Collection name"
+      />
     </div>
+
+    <div>
+      <label>Folder name</label>
+      <input
+        type="text"
+        name="folderName"
+        readonly
+        placeholder="Folder name"
+        [ngModel]="derivateFolderName(fragmentCollectionName.value)"
+      />
+    </div>
+
+    <div>
+      <label>Collection description</label>
+      <textarea
+        #collectionDescription
+        name="collectionDescription"
+        placeholder="Collection description"
+      ></textarea>
+    </div>
+
+    <button type="button" (click)="createCollection(fragmentCollectionName, collectionDescription)">Create</button>
   </fieldset>
 
   <fieldset>

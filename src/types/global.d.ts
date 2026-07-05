@@ -4,7 +4,8 @@ declare global {
       readJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;
       openProject(): Promise<string>;
-      selectPng(): Promise<string>;
+      selectPngFiles(): Promise<Array<string>>;
+      listDirectories(folderPath: string): Promise<Array<string>>;
     };
   }
 }

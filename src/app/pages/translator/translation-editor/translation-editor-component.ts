@@ -422,16 +422,19 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  addArtifact(): void {
-    window.api.selectPng().then(fromFile => {
-      if (!fromFile) {
+  addFragment(): void {
+    window.api.selectPngFiles().then(fromFiles => {
+      if (!fromFiles) {
         return;
       }
 
       this.modalService
         .createModal(AddFragmentDialog)
         .setOutletName('main')
-        .setData({ fromFile })
+        .setData({
+          fromFiles,
+          project: this.project
+        })
         .build()
         .subscribe({
           complete: () => alert('TODO: save fragment to project')

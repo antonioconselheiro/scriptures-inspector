@@ -33,9 +33,9 @@ ipcMain.handle('open-project', async () => {
   return result.canceled ? null : result.filePaths[0];
 });
 
-ipcMain.handle('select-png', async () => {
+ipcMain.handle('select-png-files', async () => {
   const result = await dialog.showOpenDialog({
-    properties: ['openFile'],
+    properties: ['openFile', 'multiSelections'],
     filters: [
       {
         name: 'Imagens PNG',
@@ -48,7 +48,22 @@ ipcMain.handle('select-png', async () => {
     return null;
   }
 
-  return result.filePaths[0];
+  return result.filePaths;
+});
+
+ipcMain.handle('list-directories', async (_, folderPath) => {
+  try {
+    const entries = await fs.readdir(folderPath, {
+      withFileTypes: true,
+    });
+
+    return entries
+      .filter(entry => entry.isDirectory())
+      .map(entry => entry.name);
+  } catch (error) {
+    // Pasta não existe, não é acessível ou ocorreu outro erro.
+    return [];
+  }
 });
 
 const isDev = !app.isPackaged;
