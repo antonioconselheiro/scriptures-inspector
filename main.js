@@ -66,6 +66,20 @@ ipcMain.handle('list-directories', async (_, folderPath) => {
   }
 });
 
+ipcMain.handle("delete-directory", async (_, folderPath) => {
+  try {
+    await fs.rm(folderPath, {
+      recursive: true,
+      force: true,
+    });
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+});
+
 const isDev = !app.isPackaged;
 
 function createWindow() {

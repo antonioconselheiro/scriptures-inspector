@@ -1,4 +1,21 @@
 <form>
+
+  @if (project) {
+    <table>
+      <tr>
+        <th>Collection Name</th>
+        <th></th>
+      </tr>
+  
+      @for (collection of collections; track $index) {
+        <tr>
+          <td>{{ collection.name }}</td>
+          <td><button type="button" (click)="deleteCollection(project, collection.folder)">×</button></td>
+        </tr>
+      }
+    </table>
+  }
+
   <fieldset>
     <legend>Project Fragment Collections</legend>
 

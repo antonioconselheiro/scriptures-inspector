@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms'
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
+import { deleteDirectoryFn } from '@shared/project/delete-directory-fn';
 import { listDirectoriesFn } from '@shared/project/list-directories-fn';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
@@ -62,6 +63,21 @@ export class AddFragmentDialog extends ModalableDirective<{
         });
       })
       .catch(e => console.error(e));
+  }
+
+  deleteCollection(project: Project, folder: string): void {
+    if (confirm('Tem certeza que deseja excluir esta coleção?\nA deleção da pasta e todos os arquivos internos será permanente.')) {
+      deleteDirectoryFn(`${project.path}/fragments/${folder}`)
+        .then(success => {
+          if (success) {
+            this.collections = this.collections.filter(c => c.folder !== folder);
+            this.cdr.detectChanges();
+          } else {
+            console.error(`Failed to delete directory: ${folder}`);
+          }
+        })
+        .catch(e => console.error(e));
+    }
   }
 
   derivateFolderName(name: string): string {

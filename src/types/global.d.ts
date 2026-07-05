@@ -6,6 +6,7 @@ declare global {
       openProject(): Promise<string>;
       selectPngFiles(): Promise<Array<string>>;
       listDirectories(folderPath: string): Promise<Array<string>>;
+      deleteDirectory(folder: string): Promise<boolean>;
     };
   }
 }
