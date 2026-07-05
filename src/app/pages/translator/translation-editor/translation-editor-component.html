@@ -8,7 +8,7 @@
   </div>
   <form>
     <fieldset>
-      <legend>Change artifact</legend>
+      <legend>Artifacts Navigation</legend>
 
       <div>
         @let bookNames = listBookNames();
@@ -29,14 +29,18 @@
           }
         </select>
   
-        <input name="selectedChapter" [(ngModel)]="formSelectedChapter" type="number" />
+        <input name="selectedChapter" class="selectedChapter" [(ngModel)]="formSelectedChapter" type="number" />
       </div>
-
+      
       <div>
         <button type="button" (click)="go()">Go</button>
         <button type="button" [attr.disabled]="formSelectedChapter === 0 ? 'disabled': null"
           (click)="back()">Back</button>
         <button type="button" (click)="next()">Next</button>
+      </div>
+      <hr />
+      <div>
+        <button (click)="addArtifact()" type="button">Add artifact</button>
       </div>
     </fieldset>
 
@@ -51,28 +55,34 @@
     <fieldset>
       <legend>Patterns</legend>
 
-      @for (detail of targetMetadataDetails; track $index) {
-      <button type="button" (click)="openPatternsDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-      }
+      <div class="languageButtonGroup">
+        @for (detail of targetMetadataDetails; track $index) {
+          <button type="button" (click)="openPatternsDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+        }
+      </div>
     </fieldset>
 
     <fieldset>
       <legend>Lexical</legend>
 
-      @for (detail of targetMetadataDetails; track $index) {
-      <button type="button"
-        (click)="openLexicalDictionaryDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-      }
+      <div class="languageButtonGroup">
+        @for (detail of targetMetadataDetails; track $index) {
+          <button type="button"
+            (click)="openLexicalDictionaryDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+        }
+      </div>
     </fieldset>
 
     @if (customTranslationsDetails) {
       <fieldset>
         <legend>Translation Variations</legend>
   
-        @for (detail of customTranslationsDetails; track $index) {
-        <button type="button"
-          (click)="openTranslationVariationsConfigDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-        }
+        <div class="languageButtonGroup">
+          @for (detail of customTranslationsDetails; track $index) {
+            <button type="button"
+              (click)="openTranslationVariationsConfigDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+          }
+        </div>
       </fieldset>
     }
 

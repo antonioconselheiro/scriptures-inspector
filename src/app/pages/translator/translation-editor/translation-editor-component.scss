@@ -58,10 +58,19 @@ strong.verseTitle {
   margin-top: 1rem;
 }
 
+.selectedChapter {
+  width: 30px;
+}
+
 .sidebuttons {
   display: flex;
   flex: 1 1 0px;
   flex-direction: row-reverse;
+}
+
+.languageButtonGroup {
+  display: flex;
+  flex-direction: column;
 }
 
 .minimize {

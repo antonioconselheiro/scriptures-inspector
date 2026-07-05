@@ -39,6 +39,7 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { AddFragmentDialog } from '@shared/add-fragment-dialog/add-fragment-dialog';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -419,6 +420,23 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
           complete: () => this.systemService.triggerSaveCurrentBookTranslations({ book })
         });
     }
+  }
+
+  addArtifact(): void {
+    window.api.selectPng().then(fromFile => {
+      if (!fromFile) {
+        return;
+      }
+
+      this.modalService
+        .createModal(AddFragmentDialog)
+        .setOutletName('main')
+        .setData({ fromFile })
+        .build()
+        .subscribe({
+          complete: () => alert('TODO: save fragment to project')
+        });
+    }).catch(e => console.error(e));
   }
 
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {

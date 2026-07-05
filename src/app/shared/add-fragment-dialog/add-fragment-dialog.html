@@ -1,0 +1,38 @@
+<form>
+  <fieldset>
+    <legend>Project Fragment Collections</legend>
+
+    <ul>
+      <li>Aramaic Dead Sea Scrolls</li>
+      <li>Hebraic Dead Sea Scrolls</li>
+      <li>Greek Dead Sea Scrolls</li>
+      <li>Pahlavi Turfan Manichaeism Fragments</li>
+      <li>Ge\'əz Mashafa Qeddus V Century New Testament</li>
+    </ul>
+
+    <div>
+      <label for="projectAddFragmentCollections">Add Fragment Collection</label>
+      <input type="text" id="projectAddFragmentCollections" />
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Add Fragment</legend>
+  
+    <div>
+      <label for="addFragmentFragmentName">Fragment Name</label>
+      <input name="fragmentName" id="addFragmentFragmentName" type="text" />
+    </div>
+
+    <div>
+      <label for="relatesFragmentToCollection">Collection</label>
+      <select required id="relatesFragmentToCollection">
+        <option></option>
+      </select>
+    </div>
+  
+    <div class="fragmentPreview"></div>
+  </fieldset>
+
+  <button type="submit">Save</button>
+</form>

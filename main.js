@@ -33,6 +33,24 @@ ipcMain.handle('open-project', async () => {
   return result.canceled ? null : result.filePaths[0];
 });
 
+ipcMain.handle('select-png', async () => {
+  const result = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [
+      {
+        name: 'Imagens PNG',
+        extensions: ['png']
+      }
+    ]
+  });
+
+  if (result.canceled) {
+    return null;
+  }
+
+  return result.filePaths[0];
+});
+
 const isDev = !app.isPackaged;
 
 function createWindow() {

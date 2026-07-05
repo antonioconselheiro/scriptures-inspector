@@ -4,7 +4,13 @@ TODO
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - Adequar repositório de escrituras ao novo formato definido (separando livros de literatura fragmentária)
+[ ] - O mecanismo de alteração de capitulo está considerando o primeiro capitulo como 0
+[ ] - O projeto base tem textos geez pendentes
+[ ] - Incluir peshita ao projeto
+[ ] - Incluir torá samaritanico no projeto
+[ ] - Incluir septuaginta no projeto
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
+[ ] - (mvp fragmentator) no importador de imagens como referencia, o usuário deve selecionar a qual coleção de fragmentos aquele pertence e um título para aquele
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
