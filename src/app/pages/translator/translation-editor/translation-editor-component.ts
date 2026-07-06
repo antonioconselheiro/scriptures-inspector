@@ -18,6 +18,8 @@ import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
+import { AddArtifactCollectionDialog } from '@shared/add-artifact-collection-dialog/add-artifact-collection-dialog';
+import { AddArtifactDialog } from '@shared/add-artifact-dialog/add-artifact-dialog';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
@@ -27,6 +29,7 @@ import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-
 import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
 import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
 import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
+import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -39,7 +42,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { AddFragmentDialog } from '@shared/add-fragment-dialog/add-fragment-dialog';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -127,7 +129,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.add(this.activatedRoute.params.subscribe({
       next: params => {
         const book = params['book'].toUpperCase();
-        const chapter = Number(params['chapter']) - 1;
+        const chapter = Number(params['chapter']);
 
         this.formSelectedArtifact = book;
         this.formSelectedChapter = chapter;
@@ -284,8 +286,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   go(): void {
     if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
       const book = this.formSelectedArtifact;
-      const goTo = (+this.formSelectedChapter) + 1;
-      const path = ['/translator/book', book, 'chapter', goTo];
+      const path = ['/translator/book', book, 'chapter', this.formSelectedChapter];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
@@ -296,9 +297,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 0) {
-      this.formSelectedChapter--;
-      const previousChapter = this.formSelectedChapter;
+    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 1) {
+      const previousChapter = Number(this.formSelectedChapter) - 1;
       const book = this.formSelectedArtifact;
       const path = ['/translator/book', book, 'chapter', previousChapter];
       console.log(`[navigate]`, path.join('/'));
@@ -312,8 +312,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   next(): void {
     if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
-      this.formSelectedChapter++;
-      const nextChapter = this.formSelectedChapter;
+      const nextChapter = Number(this.formSelectedChapter) + 1;
       const book = this.formSelectedArtifact;
       const path = ['/translator/book', book, 'chapter', nextChapter];
       console.log(`[navigate]`, path.join('/'));
@@ -422,23 +421,32 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  addFragment(): void {
-    window.api.selectPngFiles().then(fromFiles => {
+  addArtifactCollection(): void {
+    if (this.project) {
+      this.modalService
+        .createModal(AddArtifactCollectionDialog)
+        .setOutletName('main')
+        .setData({
+          project: this.project
+        })
+        .build();
+    }
+  }
+
+  addArtifacts(): void {
+    selectPngFilesFn().then(fromFiles => {
       if (!fromFiles) {
         return;
       }
 
       this.modalService
-        .createModal(AddFragmentDialog)
+        .createModal(AddArtifactDialog)
         .setOutletName('main')
         .setData({
           fromFiles,
           project: this.project
         })
-        .build()
-        .subscribe({
-          complete: () => alert('TODO: save fragment to project')
-        });
+        .build();
     }).catch(e => console.error(e));
   }
 

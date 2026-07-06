@@ -1,9 +1,10 @@
 <h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index;
-@let verse = customTranslation.chapters[current.chapter]?.[verseIndex];
+@let chapter = current.chapter - 1;
+@let verse = customTranslation.chapters[chapter]?.[verseIndex];
 @let chapterVariations = verse?.variations;
-@let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, current.chapter, verseIndex, pipeUpdaterController) || [];
+@let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex, pipeUpdaterController) || [];
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>

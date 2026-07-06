@@ -17,7 +17,7 @@
   }
 
   <fieldset>
-    <legend>Project Fragment Collections</legend>
+    <legend>Project Artifact Collections</legend>
 
     <ul>
       @for (collection of collections; track $index) {
@@ -26,12 +26,12 @@
     </ul>
 
     <div>
-      <label for="projectCreateFragmentCollections">Create Fragment Collection</label>
+      <label for="projectCreateArtifactCollections">Create Artifact Collection</label>
       <input
-        #fragmentCollectionName
+        #artifactCollectionName
         name="collectionName"
         type="text"
-        id="projectCreateFragmentCollections"
+        id="projectCreateArtifactCollections"
         placeholder="Collection name"
       />
     </div>
@@ -43,38 +43,21 @@
         name="folderName"
         readonly
         placeholder="Folder name"
-        [ngModel]="derivateFolderName(fragmentCollectionName.value)"
+        [ngModel]="derivateFolderName(artifactCollectionName.value)"
       />
     </div>
 
     <div>
-      <label>Collection description</label>
+      <label for="projectCreateArtifactCollectionsDescription">Collection description</label>
       <textarea
         #collectionDescription
+        id="projectCreateArtifactCollectionsDescription"
         name="collectionDescription"
         placeholder="Collection description"
       ></textarea>
     </div>
 
-    <button type="button" (click)="createCollection(fragmentCollectionName, collectionDescription)">Create</button>
-  </fieldset>
-
-  <fieldset>
-    <legend>Add Fragment</legend>
-  
-    <div>
-      <label for="addFragmentFragmentName">Fragment Name</label>
-      <input name="fragmentName" id="addFragmentFragmentName" type="text" />
-    </div>
-
-    <div>
-      <label for="relatesFragmentToCollection">Collection</label>
-      <select required id="relatesFragmentToCollection">
-        <option></option>
-      </select>
-    </div>
-  
-    <div class="fragmentPreview"></div>
+    <button type="button" (click)="createCollection(artifactCollectionName, collectionDescription)">Create</button>
   </fieldset>
 
   <button type="submit">Save</button>

@@ -4,28 +4,25 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { deleteDirectoryFn } from '@shared/project/delete-directory-fn';
-import { listDirectoriesFn } from '@shared/project/list-directories-fn';
-import { readJsonFileFn } from '@shared/project/read-file-json-fn';
+import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-add-fragment-dialog',
+  selector: 'app-add-artifact-collection-dialog',
   imports: [
     FormsModule
   ],
-  templateUrl: './add-fragment-dialog.html',
-  styleUrl: './add-fragment-dialog.scss',
+  templateUrl: './add-artifact-collection-dialog.html',
+  styleUrl: './add-artifact-collection-dialog.scss',
 })
-export class AddFragmentDialog extends ModalableDirective<{
-  fromFiles: Array<string>;
+export class AddArtifactCollectionDialog extends ModalableDirective<{
   project: Project;
 }, void> {
 
   override response = new Subject<void>();
 
   form: FormGroup<any>;
-  fromFiles: Array<string> = [];
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
 
@@ -40,27 +37,17 @@ export class AddFragmentDialog extends ModalableDirective<{
   }
 
   override onInjectData(data: {
-    fromFiles: Array<string>;
     project: Project;
   }): void {
-    this.fromFiles = data.fromFiles;
     this.project = data.project;
     this.loadProjectCollections(data.project);
   }
 
   private loadProjectCollections(project: Project): void {
-    listDirectoriesFn(`${project.path}/fragments`)
-      .then(directories => {
-        directories.forEach(directory => {
-          readJsonFileFn<FragmentCollection>(`${project.path}/fragments/${directory}/metadata.json`)
-            .then(metadata => {
-              if (metadata) {
-                metadata.folder = directory;
-                this.collections.push(metadata);
-                this.cdr.detectChanges();
-              }
-            }).catch(e => console.error(e));
-        });
+    loadProjectCollectionsFn(project)
+      .then(collections => {
+        this.collections = collections;
+        this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
   }

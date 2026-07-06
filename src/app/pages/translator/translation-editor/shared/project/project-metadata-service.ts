@@ -34,19 +34,20 @@ export class ProjectMetadataService {
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    if (!bookMetadata.chapters[current.chapter]) {
-      bookMetadata.chapters[current.chapter] = [];
+    const chapterIndex = current.chapter - 1;
+    if (!bookMetadata.chapters[chapterIndex]) {
+      bookMetadata.chapters[chapterIndex] = [];
     }
 
-    if (!bookMetadata.chapters[current.chapter][current.verseIndex]) {
-      bookMetadata.chapters[current.chapter][current.verseIndex] = {
+    if (!bookMetadata.chapters[chapterIndex][current.verseIndex]) {
+      bookMetadata.chapters[chapterIndex][current.verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata || {};
-    bookMetadata.chapters[current.chapter][current.verseIndex].metadata = metadata;
+    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata || {};
+    bookMetadata.chapters[chapterIndex][current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
@@ -108,15 +109,16 @@ export class ProjectMetadataService {
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
   ): boolean {
+    const chapterIndex = current.chapter - 1;
     if (
       !bookMetadata.chapters ||
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters[chapterIndex] ||
+      !bookMetadata.chapters[chapterIndex][current.verseIndex]
     ) {
       return false;
     }
 
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata;
     if (!metadata || !segments[0]) {
       return false;
     }
@@ -169,15 +171,16 @@ export class ProjectMetadataService {
     bookMetadata: BookMetadataTarget,
     current: CurrentVerseIndex
   ): void {
+    const chapterIndex = current.chapter - 1;
     if (
-      !bookMetadata.chapters[current.chapter] ||
-      !bookMetadata.chapters[current.chapter][current.verseIndex]
+      !bookMetadata.chapters[chapterIndex] ||
+      !bookMetadata.chapters[chapterIndex][current.verseIndex]
     ) {
       return;
     }
 
 
-    const metadata = bookMetadata.chapters[current.chapter][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata;
     if (!metadata) {
       return;
     }

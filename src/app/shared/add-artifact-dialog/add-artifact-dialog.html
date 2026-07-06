@@ -1,0 +1,23 @@
+<form>
+  <fieldset>
+    <legend>Add Artifact</legend>
+  
+    <div>
+      <label for="addArtifactName">Artifact Name</label>
+      <input name="artifactName" id="addArtifactName" type="text" />
+    </div>
+
+    <div>
+      <label for="relatesArtifactToCollection">Collection</label>
+      <select required id="relatesArtifactToCollection">
+        @for (collection of collections; track $index) {
+          <option [value]="collection.folder">{{collection.name}}</option>
+        }
+      </select>
+    </div>
+  
+    <div class="artifactPreview"></div>
+  </fieldset>
+
+  <button type="submit">Save</button>
+</form>

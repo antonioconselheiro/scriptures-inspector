@@ -97,9 +97,10 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       text: string;
     }>>[];
   }> {
+    const chapter = this.current.chapter - 1;
     return Object.keys(viewingTranslationBookRecord).map(source => {
       const name = viewingTranslationBookRecord[source].name;
-      const verses = viewingTranslationBookRecord[source].chapters[this.current.chapter];
+      const verses = viewingTranslationBookRecord[source].chapters[chapter];
 
       return {
         source,

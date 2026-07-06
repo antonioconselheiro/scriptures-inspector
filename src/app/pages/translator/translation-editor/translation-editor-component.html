@@ -38,9 +38,11 @@
           (click)="back()">Back</button>
         <button type="button" (click)="next()">Next</button>
       </div>
-      <hr />
       <div>
-        <button (click)="addFragment()" type="button">Add fragment</button>
+        <hr />
+        <button (click)="addArtifactCollection()" type="button">Add collection</button>
+        <hr />
+        <button (click)="addArtifacts()" type="button">Add artifacts</button>
       </div>
     </fieldset>
 
@@ -101,15 +103,16 @@
   @let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ? projectData[structure.metadataEditor.customTranslationEditor] : undefined;
 
   @if (current && selectedSourceBook) {
-    @for (verse of selectedSourceBook.chapters[current.chapter]; track $index) {
+    @let chapter = current.chapter - 1;
+    @for (verse of selectedSourceBook.chapters[chapter]; track $index) {
       @let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
 
       <h2 class="verseTitle">
-        {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}
+        {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}
       </h2>
 
       <fieldset>
-        <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter + 1}}:{{verse | verseNumber}}</legend>
+        <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}</legend>
         <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
           [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"
           [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
@@ -123,7 +126,7 @@
           @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
           @if (bookInterlinearSource) {
-            @let verseInterlinearSource = bookInterlinearSource.chapters[current.chapter][verse.verse.index];
+            @let verseInterlinearSource = bookInterlinearSource.chapters[chapter][verse.verse.index];
             @let langInterlinearSource = codexMetadataRecord[item.source].language;
             @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 
