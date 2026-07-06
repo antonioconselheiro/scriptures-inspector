@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
@@ -11,6 +12,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-add-artifact-collection-dialog',
   imports: [
+    CommonModule,
     FormsModule
   ],
   templateUrl: './add-artifact-collection-dialog.html',

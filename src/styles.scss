@@ -66,6 +66,10 @@ td > .configField {
   min-width: 90%;
 }
 
+table {
+  contain: layout style paint;
+}
+
 .configFieldWrapper {
   display: flex;
 }
@@ -79,7 +83,6 @@ td > .configField {
   display: flex;
   justify-content: center;
   overflow-x: auto;
-  contain: layout style paint;
 }
 
 .tableMinifiable > div {

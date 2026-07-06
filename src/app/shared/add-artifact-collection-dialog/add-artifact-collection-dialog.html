@@ -1,7 +1,7 @@
 <form>
 
-  @if (project) {
-    <table>
+  @if (project && collections.length) {
+    <table border="1" frame="hsides" role="presentation">
       <tr>
         <th>Collection Name</th>
         <th></th>
@@ -18,12 +18,6 @@
 
   <fieldset>
     <legend>Project Artifact Collections</legend>
-
-    <ul>
-      @for (collection of collections; track $index) {
-        <li>{{ collection.name }}</li>
-      }
-    </ul>
 
     <div>
       <label for="projectCreateArtifactCollections">Create Artifact Collection</label>
@@ -59,6 +53,4 @@
 
     <button type="button" (click)="createCollection(artifactCollectionName, collectionDescription)">Create</button>
   </fieldset>
-
-  <button type="submit">Save</button>
 </form>
