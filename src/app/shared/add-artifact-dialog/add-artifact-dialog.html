@@ -6,7 +6,7 @@
       <label for="relatesArtifactToCollection">Collection</label>
       <select required id="relatesArtifactToCollection">
         @for (collection of collections; track $index) {
-          <option [value]="collection.folder">{{collection.name}}</option>
+          <option [value]="collection.folder">{{collection.name}} ({{collection.folder}})</option>
         }
       </select>
     </div>

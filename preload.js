@@ -7,4 +7,5 @@ contextBridge.exposeInMainWorld('api', {
   openProject: () => ipcRenderer.invoke('open-project'),
   selectPngFiles: () => ipcRenderer.invoke('select-png-files'),
   deleteDirectory: (folder) => ipcRenderer.invoke('delete-directory', folder),
+  importImages: (filePaths, destiny) => ipcRenderer.invoke('import-images', filePaths, destiny),
 });

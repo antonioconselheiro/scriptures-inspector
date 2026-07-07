@@ -7,6 +7,7 @@ declare global {
       selectPngFiles(): Promise<Array<string>>;
       listDirectories(folderPath: string): Promise<Array<string>>;
       deleteDirectory(folder: string): Promise<boolean>;
+      importImages(filePaths: Array<string>, destiny: string): Promise<void>;
     };
   }
 }

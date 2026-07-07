@@ -52,6 +52,17 @@ ipcMain.handle('select-png-files', async () => {
   return result.filePaths;
 });
 
+ipcMain.handle('import-images', async (_, filePaths, destiny) => {
+  await fs.mkdir(destiny, { recursive: true });
+
+  for (const file of filePaths) {
+    const name = path.basename(file);
+    await fs.copyFile(file, path.join(destiny, name));
+  }
+
+  return true;
+});
+
 ipcMain.handle('list-directories', async (_, folderPath) => {
   try {
     const entries = await fs.readdir(folderPath, {

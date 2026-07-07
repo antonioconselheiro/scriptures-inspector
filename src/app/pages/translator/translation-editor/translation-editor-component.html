@@ -8,6 +8,15 @@
   </div>
   <form>
     <fieldset>
+      <legend>Artifacts Management</legend>
+
+      <div>
+        <button (click)="addArtifactCollection()" type="button">Add collection</button>
+        <hr />
+        <button (click)="addArtifacts()" type="button">Add artifacts</button>
+      </div>
+    </fieldset>
+    <fieldset>
       <legend>Artifacts Navigation</legend>
 
       <div>
@@ -37,12 +46,6 @@
         <button type="button" [attr.disabled]="formSelectedChapter === 0 ? 'disabled': null"
           (click)="back()">Back</button>
         <button type="button" (click)="next()">Next</button>
-      </div>
-      <div>
-        <hr />
-        <button (click)="addArtifactCollection()" type="button">Add collection</button>
-        <hr />
-        <button (click)="addArtifacts()" type="button">Add artifacts</button>
       </div>
     </fieldset>
 
