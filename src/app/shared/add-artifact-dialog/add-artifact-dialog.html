@@ -1,12 +1,7 @@
 <form>
   <fieldset>
-    <legend>Add Artifact</legend>
+    <legend>Add Artifacts</legend>
   
-    <div>
-      <label for="addArtifactName">Artifact Name</label>
-      <input name="artifactName" id="addArtifactName" type="text" />
-    </div>
-
     <div>
       <label for="relatesArtifactToCollection">Collection</label>
       <select required id="relatesArtifactToCollection">
@@ -16,8 +11,8 @@
       </select>
     </div>
   
-    <div class="artifactPreview"></div>
+    <app-images-preview [fromFiles]="fromFiles"></app-images-preview>
   </fieldset>
 
-  <button type="submit">Save</button>
+  <button type="submit">Import</button>
 </form>

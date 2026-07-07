@@ -9,7 +9,7 @@
   
       @for (collection of collections; track $index) {
         <tr>
-          <td>{{ collection.name }}</td>
+          <td [title]="collection.folder">{{ collection.name }}</td>
           <td><button type="button" (click)="deleteCollection(project, collection.folder)">×</button></td>
         </tr>
       }
@@ -20,7 +20,7 @@
     <legend>Project Artifact Collections</legend>
 
     <div>
-      <label for="projectCreateArtifactCollections">Create Artifact Collection</label>
+      <label for="projectCreateArtifactCollections">Collection name</label>
       <input
         #artifactCollectionName
         name="collectionName"

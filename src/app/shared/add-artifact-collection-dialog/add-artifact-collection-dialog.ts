@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
@@ -12,7 +11,6 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-add-artifact-collection-dialog',
   imports: [
-    CommonModule,
     FormsModule
   ],
   templateUrl: './add-artifact-collection-dialog.html',
@@ -100,11 +98,14 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
     collectionNameEl.value = '';
     collectionDescriptionEl.value = '';
 
-    if (this.project) {
-      writeJsonFileFn(`${this.project.path}/fragments/${this.derivateFolderName(collectionName)}/metadata.json`, {
+    const project = this.project;
+    if (project) {
+      writeJsonFileFn(`${project.path}/fragments/${this.derivateFolderName(collectionName)}/metadata.json`, {
         name: collectionName,
         description: collectionDescription
-      }).catch(e => console.error(e));
+      })
+        .then(() => this.loadProjectCollections(project!))
+        .catch(e => console.error(e));
     }
   }
 }

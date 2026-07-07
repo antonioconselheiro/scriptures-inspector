@@ -1,0 +1,41 @@
+:host {
+  position: relative;
+}
+
+img {
+  max-width: 50vw;
+  max-height: 50vh;
+}
+
+.previewNavigation {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 1rem;
+  width: 100%;
+  opacity: 0.25;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  input[type="number"] {
+    width: 30px;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  .navigationButton {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background-color: #828282a1;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+}

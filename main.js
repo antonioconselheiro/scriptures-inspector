@@ -1,6 +1,7 @@
-const { app, Menu, BrowserWindow, ipcMain, dialog } = require('electron/main');
+const { app, protocol, net, Menu, BrowserWindow, ipcMain, dialog } = require('electron/main');
 const path = require('path');
 const fs = require('fs/promises');
+const { pathToFileURL } = require("url");
 
 ipcMain.handle('read-json-file', async (_, fileName) => {
   try {
@@ -123,6 +124,14 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  protocol.handle("local", (request) => {
+    const filePath = decodeURIComponent(
+      request.url.replace("local://", "")
+    );
+
+    return net.fetch(pathToFileURL(filePath).toString());
+  });
+
   createWindow();
 
   app.on('activate', () => {

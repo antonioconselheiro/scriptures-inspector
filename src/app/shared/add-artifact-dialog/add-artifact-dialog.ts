@@ -1,14 +1,17 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
+import { ImagesPreview } from '@shared/images-preview/images-preview';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-add-artifact-dialog',
-  imports: [],
+  imports: [
+    ImagesPreview
+  ],
   templateUrl: './add-artifact-dialog.html',
   styleUrl: './add-artifact-dialog.scss',
 })
@@ -18,7 +21,6 @@ export class AddArtifactDialog extends ModalableDirective<{
 }, void> {
   override response = new Subject<void>();
 
-  form: FormGroup<any>;
   fromFiles: Array<string> = [];
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
@@ -28,9 +30,6 @@ export class AddArtifactDialog extends ModalableDirective<{
     private cdr: ChangeDetectorRef
   ) {
     super();
-    this.form = fb.group({
-      variant: ['', [Validators.required]]
-    });
   }
 
   override onInjectData(data: {
