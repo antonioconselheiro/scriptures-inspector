@@ -13,30 +13,32 @@
 
     <app-images-preview [fromFiles]="fromFiles"></app-images-preview>
 
-    <table>
-
-      <thead>
-        <tr>
-          <th></th>
-          <th>File</th>
-        </tr>
-      </thead>
-
-      <tbody
-        cdkDropList
-        [cdkDropListData]="fromFiles"
-        (cdkDropListDropped)="drop($event)">
-
-        @for (file of fromFiles; track $index) {
-          <tr cdkDrag>
-            <td cdkDragHandle>☰</td>
-            <td>{{ file }}</td>
+    <div class="tableContainer">
+      <table>
+  
+        <thead>
+          <tr>
+            <th></th>
+            <th>File</th>
           </tr>
-        }
-
-      </tbody>
-
-    </table>
+        </thead>
+  
+        <tbody
+          cdkDropList
+          [cdkDropListData]="fromFiles"
+          (cdkDropListDropped)="drop($event)">
+  
+          @for (file of fromFiles; track $index) {
+            <tr cdkDrag>
+              <td cdkDragHandle>☰</td>
+              <td>{{ file | fileName }}</td>
+            </tr>
+          }
+  
+        </tbody>
+  
+      </table>
+    </div>
 
   </fieldset>
 

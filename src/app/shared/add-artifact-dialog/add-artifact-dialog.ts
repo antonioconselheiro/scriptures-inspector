@@ -8,12 +8,14 @@ import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { Subject } from 'rxjs';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { FileNamePipe } from './file-name-pipe';
 
 @Component({
   selector: 'app-add-artifact-dialog',
   imports: [
     ImagesPreview,
-    DragDropModule
+    DragDropModule,
+    FileNamePipe
   ],
   templateUrl: './add-artifact-dialog.html',
   styleUrl: './add-artifact-dialog.scss',
