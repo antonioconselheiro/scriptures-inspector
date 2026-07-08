@@ -4,15 +4,41 @@
   
     <div>
       <label for="relatesArtifactToCollection">Collection</label>
-      <select required id="relatesArtifactToCollection">
+      <select #collectionFolder required id="relatesArtifactToCollection">
         @for (collection of collections; track $index) {
           <option [value]="collection.folder">{{collection.name}} ({{collection.folder}})</option>
         }
       </select>
     </div>
-  
+
     <app-images-preview [fromFiles]="fromFiles"></app-images-preview>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th></th>
+          <th>File</th>
+        </tr>
+      </thead>
+
+      <tbody
+        cdkDropList
+        [cdkDropListData]="fromFiles"
+        (cdkDropListDropped)="drop($event)">
+
+        @for (file of fromFiles; track $index) {
+          <tr cdkDrag>
+            <td cdkDragHandle>☰</td>
+            <td>{{ file }}</td>
+          </tr>
+        }
+
+      </tbody>
+
+    </table>
+
   </fieldset>
 
-  <button type="submit">Import</button>
+  <button type="button" (click)="importArtifacts(collectionFolder.value)">Import</button>
 </form>

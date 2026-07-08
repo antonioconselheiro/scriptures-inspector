@@ -102,7 +102,8 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
     if (project) {
       writeJsonFileFn(`${project.path}/fragments/${this.derivateFolderName(collectionName)}/metadata.json`, {
         name: collectionName,
-        description: collectionDescription
+        description: collectionDescription || '',
+        order: []
       })
         .then(() => this.loadProjectCollections(project!))
         .catch(e => console.error(e));

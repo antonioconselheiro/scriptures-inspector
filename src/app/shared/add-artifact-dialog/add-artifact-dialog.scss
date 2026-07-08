@@ -1,3 +1,42 @@
 label {
   display: block;
 }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  
+  tr {
+    background: white;
+
+    td, th {
+      border: 1px solid #ddd;
+      padding: 12px;
+    }
+
+    td:first-child {
+      width: 40px;
+      cursor: move;
+      text-align: center;
+    }
+  }
+  
+  .cdk-drag-preview {
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    border-radius: 4px;
+    background: white;
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: .3;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms;
+  }
+  
+  tbody.cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
+    transition: transform 250ms;
+  }
+}
+

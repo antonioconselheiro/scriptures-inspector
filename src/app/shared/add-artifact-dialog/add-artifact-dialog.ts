@@ -1,16 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { ImagesPreview } from '@shared/images-preview/images-preview';
+import { LoadingObservable } from '@shared/loading/loading-service';
+import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { Subject } from 'rxjs';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-add-artifact-dialog',
   imports: [
-    ImagesPreview
+    ImagesPreview,
+    DragDropModule
   ],
   templateUrl: './add-artifact-dialog.html',
   styleUrl: './add-artifact-dialog.scss',
@@ -26,7 +29,6 @@ export class AddArtifactDialog extends ModalableDirective<{
   collections: Array<FragmentCollection> = [];
 
   constructor(
-    fb: FormBuilder,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -48,5 +50,29 @@ export class AddArtifactDialog extends ModalableDirective<{
         this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
+  }
+
+  drop(event: CdkDragDrop<Array<string>>): void {
+    moveItemInArray(
+      this.fromFiles,
+      event.previousIndex,
+      event.currentIndex
+    );
+  }
+
+  importArtifacts(collectionFolder: string): void {
+    LoadingObservable.startLoading();
+    importImagesFn(this.fromFiles, collectionFolder)
+      .then(() => {
+        alert('Arquivos importados com sucesso!');
+      })
+      .catch(e => {
+        alert('Ocorreu um erro ao importar os arquivos.');
+        console.error(e);
+      })
+      .finally(() => {
+        LoadingObservable.stopLoading();
+        this.close();
+      });
   }
 }
