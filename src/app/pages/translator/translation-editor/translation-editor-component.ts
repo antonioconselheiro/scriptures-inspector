@@ -19,7 +19,7 @@ import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { AddArtifactCollectionDialog } from '@shared/add-artifact-collection-dialog/add-artifact-collection-dialog';
-import { AddArtifactDialog } from '@shared/add-artifact-dialog/add-artifact-dialog';
+import { EditArtifactsInCollectionDialog } from '@shared/edit-artifacts-in-collection-dialog/edit-artifacts-in-collection-dialog';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
@@ -440,7 +440,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       }
 
       this.modalService
-        .createModal(AddArtifactDialog)
+        .createModal(EditArtifactsInCollectionDialog)
         .setOutletName('main')
         .setData({
           fromFiles,

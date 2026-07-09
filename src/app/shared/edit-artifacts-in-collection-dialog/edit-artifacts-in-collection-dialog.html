@@ -1,0 +1,83 @@
+<form>
+  <fieldset>
+    @if (fromFiles.length) {
+      <legend>Add Artifacts to Collection</legend>
+    } @else {
+      <legend>Edit Artifacts in Collection</legend>
+    }
+  
+    <div class="collectionFieldGroup">
+      <label for="relatesArtifactToCollection">Collection</label>
+      <select #collectionFolder required id="relatesArtifactToCollection" (click)="onCollectionChoose(collectionFolder.value)">
+        @for (collection of collections; track $index) {
+          <option [value]="collection.folder">{{collection.name}} ({{collection.folder}})</option>
+        }
+      </select>
+    </div>
+
+    <div class="orderAndPreviewWrapper">
+      <app-images-preview [fromFiles]="fromFiles"></app-images-preview>
+  
+      <div class="tableContainer">
+        <table>
+    
+          <thead>
+            <tr>
+              <th>
+                <div class="sortButtonWrapper">
+                  <button (click)="sortAZ()" class="sortButton sortDown" type="button" title="Sort A-Z">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M6 10l6 6l6 -6h-12" />
+                    </svg>
+                  </button>
+                  <button (click)="sortZA()" class="sortButton sortUp" type="button" title="Sort Z-A">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M18 14l-6 -6l-6 6h12" />
+                    </svg>
+                  </button>
+                </div>
+              </th>
+              <th>Order Files</th>
+            </tr>
+          </thead>
+    
+          <tbody
+            cdkDropList
+            [cdkDropListData]="selectedCollectionFiles"
+            (cdkDropListDropped)="drop($event)">
+    
+            @for (file of selectedCollectionFiles; track $index) {
+              <tr cdkDrag>
+                <td cdkDragHandle>☰</td>
+                <td>
+                  @if (isImportingFile(file)) {
+                    <svg title="importing file" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M19 22.5a4.75 4.75 0 0 1 3.5 -3.5a4.75 4.75 0 0 1 -3.5 -3.5a4.75 4.75 0 0 1 -3.5 3.5a4.75 4.75 0 0 1 3.5 3.5" />
+                      <path d="M14 3v4a1 1 0 0 0 1 1h4" />
+                      <path d="M12 21h-5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v3.5" />
+                    </svg>
+                  }
+
+                  {{ file | fileName }}
+                </td>
+              </tr>
+            }
+    
+          </tbody>
+    
+        </table>
+      </div>
+    </div>
+
+  </fieldset>
+
+    @if (fromFiles.length) {
+      <button type="button" (click)="importArtifacts(collectionFolder.value)">Import and Save</button>
+    } @else {
+      <button type="button" (click)="importArtifacts(collectionFolder.value)">Save</button>
+    }
+
+</form>

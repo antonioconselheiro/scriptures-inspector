@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -15,6 +15,10 @@ export class ImagesPreview {
 
   imageIndex = '0';
 
+  constructor(
+    private cdr: ChangeDetectorRef
+  ) {}
+
   getFileByIndex(index: string): string {
     if (!this.fromFiles || !this.fromFiles[+index]) {
       return '';
@@ -24,16 +28,22 @@ export class ImagesPreview {
   }
 
   previous(): void {
-    this.imageIndex = (parseInt(this.imageIndex) - 1).toString();
-    if (parseInt(this.imageIndex) < 0) {
-      this.imageIndex = (this.fromFiles.length - 1).toString();
+    let imageIndex = parseFloat(this.imageIndex);
+    imageIndex = imageIndex - 1;
+    if (imageIndex < 0) {
+      imageIndex = this.fromFiles.length - 1;
     }
+    this.imageIndex = imageIndex.toString();
+    this.cdr.detectChanges();
   }
 
   next(): void {
-    this.imageIndex = (parseInt(this.imageIndex) + 1).toString();
-    if (parseInt(this.imageIndex) >= this.fromFiles.length) {
-      this.imageIndex = '0';
+    let imageIndex = parseFloat(this.imageIndex);
+    imageIndex = imageIndex + 1;
+    if (imageIndex >= this.fromFiles.length) {
+      imageIndex = 0;
     }
+    this.imageIndex = imageIndex.toString();
+    this.cdr.detectChanges();
   }
 }
