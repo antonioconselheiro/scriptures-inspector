@@ -9,6 +9,7 @@ import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { Subject } from 'rxjs';
 import { FileNamePipe } from '../file-name/file-name-pipe';
+import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 
 @Component({
   selector: 'app-edit-artifacts-in-collection-dialog',
@@ -22,6 +23,7 @@ import { FileNamePipe } from '../file-name/file-name-pipe';
 })
 export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   fromFiles?: Array<string>;
+  collectionFolder?: string;
   project: Project;
 }, void> {
   override response = new Subject<void>();
@@ -29,6 +31,7 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   fromFiles: Array<string> = [];
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
+  collectionFolder?: string;
   selectedCollectionFiles: Array<string> = [];
 
   constructor(
@@ -39,10 +42,12 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
 
   override onInjectData(data: {
     fromFiles?: Array<string>;
+    collectionFolder?: string;
     project: Project;
   }): void {
     this.fromFiles = data.fromFiles || [];
     this.project = data.project;
+    this.collectionFolder = data.collectionFolder;
     this.loadProjectCollections(data.project);
   }
 
@@ -77,14 +82,45 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
     );
   }
 
+  saveCollectionMetadata(collectionFiles: Array<string>, collectionFolder: string): Promise<void> {
+    const collection = this.collections.find(c => c.folder === collectionFolder);
+    if (collection && this.project) {
+      collection.order = [...collectionFiles];
+      const { folder, ...metadata } = { ...collection };
+      return writeJsonFileFn(`${this.project.path}/fragments/${folder}/metadata.json`, metadata);
+    }
+    
+    return Promise.resolve();
+  }
+
   importArtifacts(collectionFolder: string): void {
     LoadingObservable.startLoading();
-    importImagesFn(this.selectedCollectionFiles, collectionFolder)
+
+    Promise.all([
+      this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder),
+      importImagesFn(this.selectedCollectionFiles, collectionFolder)
+    ])
       .then(() => {
         alert('Arquivos importados com sucesso!');
       })
       .catch(e => {
         alert('Ocorreu um erro ao importar os arquivos.');
+        console.error(e);
+      })
+      .finally(() => {
+        LoadingObservable.stopLoading();
+        this.close();
+      });
+  }
+
+  saveMetadata(collectionFolder: string): void {
+    LoadingObservable.startLoading();
+    this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder)
+      .then(() => {
+        alert('Alterações salvas com sucesso!');
+      })
+      .catch(e => {
+        alert('Ocorreu um erro ao salvar as alterações.');
         console.error(e);
       })
       .finally(() => {

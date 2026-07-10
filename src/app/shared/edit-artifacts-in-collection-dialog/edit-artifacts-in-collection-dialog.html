@@ -8,7 +8,14 @@
   
     <div class="collectionFieldGroup">
       <label for="relatesArtifactToCollection">Collection</label>
-      <select #collectionFolder required id="relatesArtifactToCollection" (click)="onCollectionChoose(collectionFolder.value)">
+      <select
+        #collectionFolderEl
+        required
+        id="relatesArtifactToCollection"
+        [value]="collectionFolder"
+        [attr.readonly]="collectionFolder ? true : null"
+        (click)="onCollectionChoose(collectionFolderEl.value)"
+      >
         @for (collection of collections; track $index) {
           <option [value]="collection.folder">{{collection.name}} ({{collection.folder}})</option>
         }
@@ -74,10 +81,10 @@
 
   </fieldset>
 
-    @if (fromFiles.length) {
-      <button type="button" (click)="importArtifacts(collectionFolder.value)">Import and Save</button>
-    } @else {
-      <button type="button" (click)="importArtifacts(collectionFolder.value)">Save</button>
-    }
+  @if (fromFiles.length) {
+    <button type="button" (click)="importArtifacts(collectionFolderEl.value)">Import and Save</button>
+  } @else if (collectionFolder) {
+    <button type="button" (click)="saveMetadata(collectionFolder)">Save</button>
+  }
 
 </form>
