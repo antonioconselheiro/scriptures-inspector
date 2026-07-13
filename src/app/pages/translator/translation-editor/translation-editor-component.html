@@ -19,6 +19,28 @@
 
     <fieldset>
       <legend>Artifacts Navigation</legend>
+
+      <div>
+        @let collectionNames = listArtifactCollectionsNames();
+        <select name="selectArtifactCollection" [(ngModel)]="formSelectedArtifactCollection">
+          @if (collectionNames.length) {
+            <optgroup label="Artifact Collections"></optgroup>
+            @for (collection of collectionNames; track $index) {
+              <option [value]="collection.key">{{ collection.name }}</option>
+            }
+          }
+        </select>
+  
+        <input name="selectedArtifact" class="selectedArtifact" [(ngModel)]="formSelectedArtifactNumber" type="number" />
+      </div>
+
+      <div>
+        <button type="button" (click)="openCollectionArtifact()">Go</button>
+        <button type="button"
+          [attr.disabled]="formSelectedArtifactNumber === 0 ? 'disabled': null"
+          (click)="backCollectionArtifact()">Back</button>
+        <button type="button" (click)="nextCollectionArtifact()">Next</button>
+      </div>
     </fieldset>
 
     <fieldset>
@@ -26,15 +48,7 @@
 
       <div>
         @let bookNames = listBookNames();
-        @let fragmentNames = listFragmentNames();
-        <select name="selectedArtifact" placeholder="Artifact" [(ngModel)]="formSelectedArtifact">
-          @if (fragmentNames.length) {
-            <optgroup label="Fragments"></optgroup>
-            @for (fragment of fragmentNames; track $index) {
-              <option [value]="fragment.key">{{ fragment.name }}</option>
-            }
-          }
-
+        <select name="selectedBook" [(ngModel)]="formSelectedBook">
           @if (bookNames.length) {
             <optgroup label="Books"></optgroup>
             @for (book of bookNames; track $index) {
@@ -47,10 +61,10 @@
       </div>
       
       <div>
-        <button type="button" (click)="go()">Go</button>
+        <button type="button" (click)="openBookChapter()">Go</button>
         <button type="button" [attr.disabled]="formSelectedChapter === 0 ? 'disabled': null"
-          (click)="back()">Back</button>
-        <button type="button" (click)="next()">Next</button>
+          (click)="backBookChapter()">Back</button>
+        <button type="button" (click)="nextBookChapter()">Next</button>
       </div>
     </fieldset>
 

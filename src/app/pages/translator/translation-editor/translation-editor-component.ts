@@ -63,7 +63,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   current: CurrentChapter | null = null;
 
-  formSelectedArtifact: string = '';
+  formSelectedBook = '';
+  formSelectedArtifact = '';
   formSelectedChapter: number | null = null;
 
   minimized = true;
@@ -131,7 +132,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         const book = params['book'].toUpperCase();
         const chapter = Number(params['chapter']);
 
-        this.formSelectedArtifact = book;
+        this.formSelectedBook = book;
         this.formSelectedChapter = chapter;
 
         if (!this.current) {
@@ -265,12 +266,12 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     });
   }
 
-  listFragmentNames(): Array<{ key: string, name: string }> {
-    const fragments = this.project.target.fragments || {};
-    return Object.keys(fragments).map(fragment => {
+  listArtifactCollectionsNames(): Array<{ key: string, name: string }> {
+    const collections = this.project.target.collections || {};
+    return Object.keys(collections).map(collection => {
       return {
-        key: fragment,
-        name: fragments[fragment].name
+        key: collection,
+        name: collections[collection].name
       };
     });
   }
@@ -284,8 +285,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   go(): void {
-    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
-      const book = this.formSelectedArtifact;
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
+      const book = this.formSelectedBook;
       const path = ['/translator/book', book, 'chapter', this.formSelectedChapter];
       console.log(`[navigate]`, path.join('/'));
 
@@ -297,9 +298,9 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   back(): void {
-    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 1) {
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 1) {
       const previousChapter = Number(this.formSelectedChapter) - 1;
-      const book = this.formSelectedArtifact;
+      const book = this.formSelectedBook;
       const path = ['/translator/book', book, 'chapter', previousChapter];
       console.log(`[navigate]`, path.join('/'));
 
@@ -311,9 +312,9 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   next(): void {
-    if (this.notNullLike(this.formSelectedArtifact) && this.notNullLike(this.formSelectedChapter)) {
+    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const nextChapter = Number(this.formSelectedChapter) + 1;
-      const book = this.formSelectedArtifact;
+      const book = this.formSelectedBook;
       const path = ['/translator/book', book, 'chapter', nextChapter];
       console.log(`[navigate]`, path.join('/'));
 
