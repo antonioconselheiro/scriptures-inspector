@@ -64,8 +64,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   current: CurrentChapter | null = null;
 
   formSelectedBook = '';
-  formSelectedArtifact = '';
   formSelectedChapter: number | null = null;
+
+  formSelectedArtifactCollection = '';
+  formSelectedArtifactNumber: number | null = null;
 
   minimized = true;
   pipeUpdaterController = 1;
@@ -284,7 +286,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  go(): void {
+  openBookChapter(): void {
     if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const book = this.formSelectedBook;
       const path = ['/translator/book', book, 'chapter', this.formSelectedChapter];
@@ -297,7 +299,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  back(): void {
+  backBookChapter(): void {
     if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 1) {
       const previousChapter = Number(this.formSelectedChapter) - 1;
       const book = this.formSelectedBook;
@@ -311,7 +313,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  next(): void {
+  nextBookChapter(): void {
     if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
       const nextChapter = Number(this.formSelectedChapter) + 1;
       const book = this.formSelectedBook;
@@ -323,6 +325,18 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .catch(e => console.error(e))
         .finally(() => LoadingObservable.stopLoading());
     }
+  }
+
+  openCollectionArtifact(): void {
+
+  }
+
+  backCollectionArtifact(): void {
+
+  }
+
+  nextCollectionArtifact(): void {
+
   }
 
   save(): void {
