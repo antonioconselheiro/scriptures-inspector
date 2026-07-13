@@ -137,13 +137,13 @@ th {
   font-size: 16px;
 
   &:not(:empty):not([data-punctuation]) {
-    &:not(.prisma:not(:empty) + .prisma:not(:empty)):not(.prisma:not(:empty) + .prisma-gap + .prisma:not(:empty), .prisma:not(:empty) + .prisma:empty + .prisma:not(:empty)) {
+    &:not(.prisma:not(:empty, [data-punctuation]) + .prisma:not(:empty, [data-punctuation])):not(.prisma:not(:empty, [data-punctuation]) + .prisma-gap + .prisma:not(:empty, [data-punctuation]), .prisma:not(:empty, [data-punctuation]) + .prisma:empty + .prisma:not(:empty, [data-punctuation])) {
       &::before {
         content: "[";
       }
     }
   
-    &:not(:has(+ .prisma:not(:empty), + .prisma-gap + .prisma:not(:empty), + .prisma:empty + .prisma:not(:empty)))::after {
+    &:not(:has(+ .prisma:not(:empty, [data-punctuation]), + .prisma-gap + .prisma:not(:empty, [data-punctuation]), + .prisma:empty + .prisma:not(:empty, [data-punctuation])))::after {
       content: "]";
     }
   }
