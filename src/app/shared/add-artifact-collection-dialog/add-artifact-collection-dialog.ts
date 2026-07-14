@@ -54,7 +54,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
 
   deleteCollection(project: Project, folder: string): void {
     if (confirm('Tem certeza que deseja excluir esta coleção?\nA deleção da pasta e todos os arquivos internos será permanente.')) {
-      deleteDirectoryFn(`${project.path}/fragments/${folder}`)
+      deleteDirectoryFn(`${project.path}/artifacts/${folder}`)
         .then(success => {
           if (success) {
             this.collections = this.collections.filter(c => c.folder !== folder);
@@ -100,7 +100,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
 
     const project = this.project;
     if (project) {
-      writeJsonFileFn(`${project.path}/fragments/${this.derivateFolderName(collectionName)}/metadata.json`, {
+      writeJsonFileFn(`${project.path}/artifacts/${this.derivateFolderName(collectionName)}/metadata.json`, {
         name: collectionName,
         description: collectionDescription || '',
         order: []

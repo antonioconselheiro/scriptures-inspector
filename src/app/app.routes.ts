@@ -17,7 +17,7 @@ export const routes: Routes = [
     path: 'transcriptor',
     children: [
       {
-        path: 'fragment/:fragment',
+        path: 'collection/:collection/artifact/:artifact',
         component: TranscriptionEditor
       }
     ]

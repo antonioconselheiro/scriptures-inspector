@@ -7,9 +7,9 @@ import { ImagesPreview } from '@shared/images-preview/images-preview';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
+import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { Subject } from 'rxjs';
 import { FileNamePipe } from '../file-name/file-name-pipe';
-import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 
 @Component({
   selector: 'app-edit-artifacts-in-collection-dialog',
@@ -87,7 +87,7 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
     if (collection && this.project) {
       collection.order = [...collectionFiles];
       const { folder, ...metadata } = { ...collection };
-      return writeJsonFileFn(`${this.project.path}/fragments/${folder}/metadata.json`, metadata);
+      return writeJsonFileFn(`${this.project.path}/artifacts/${folder}/metadata.json`, metadata);
     }
     
     return Promise.resolve();

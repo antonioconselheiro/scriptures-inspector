@@ -328,15 +328,45 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   openCollectionArtifact(): void {
+    const collection = this.formSelectedArtifactCollection;
+    const artifact = this.formSelectedArtifactNumber;
+    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
+      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
+      console.log(`[navigate]`, path.join('/'));
 
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.stopLoading());
+    }
   }
 
   backCollectionArtifact(): void {
+    const collection = this.formSelectedArtifactCollection;
+    const artifact = Number(this.formSelectedArtifactNumber) - 1;
+    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
+      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
+      console.log(`[navigate]`, path.join('/'));
 
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.stopLoading());
+    }
   }
 
   nextCollectionArtifact(): void {
+    const collection = this.formSelectedArtifactCollection;
+    const artifact = Number(this.formSelectedArtifactNumber) + 1;
+    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
+      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
+      console.log(`[navigate]`, path.join('/'));
 
+      LoadingObservable.startLoading();
+      this.router.navigate(path)
+        .catch(e => console.error(e))
+        .finally(() => LoadingObservable.stopLoading());
+    }
   }
 
   save(): void {
