@@ -20,13 +20,12 @@
     <fieldset>
       <legend>Artifacts Navigation</legend>
 
-      @let collectionNames = listArtifactCollectionsNames();
       <div>
         <select name="selectArtifactCollection" [(ngModel)]="formSelectedArtifactCollection">
-          @if (collectionNames.length) {
+          @if (collections.length) {
             <optgroup label="Artifact Collections"></optgroup>
-            @for (collection of collectionNames; track $index) {
-              <option [value]="collection.key">{{ collection.name }}</option>
+            @for (collection of collections; track $index) {
+              <option [value]="collection.folder">{{ collection.name }}</option>
             }
           }
         </select>
@@ -34,7 +33,7 @@
         <input name="selectedArtifact" class="selectedArtifact" [(ngModel)]="formSelectedArtifactNumber" type="number" />
       </div>
 
-      @if (collectionNames.length) {
+      @if (collections.length) {
         <div>
           <button type="button" (click)="openCollectionArtifact()">Go</button>
           <button type="button"

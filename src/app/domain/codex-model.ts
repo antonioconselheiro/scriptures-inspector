@@ -6,9 +6,4 @@ export interface Codex<LanguageType = string> {
       name: string
     }
   };
-  fragments?: {
-    [fragment: string]: {
-      name: string;
-    }
-  };
 }

@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
@@ -34,6 +34,9 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   collectionFolder?: string;
   selectedCollectionFiles: Array<string> = [];
 
+  @ViewChild(ImagesPreview)
+  imagesPreview!: ImagesPreview;
+
   constructor(
     private cdr: ChangeDetectorRef
   ) {
@@ -59,6 +62,10 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
         this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
+  }
+
+  viewFile(file: string): void {
+    this.imagesPreview.imageIndex = this.selectedCollectionFiles.indexOf(file).toString();
   }
 
   onCollectionChoose(collectionFolder: string): void {

@@ -10,8 +10,9 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './images-preview.scss',
 })
 export class ImagesPreview {
+
   @Input()
-  fromFiles: Array<string> = [];
+  files: Array<string> = [];
 
   imageIndex = '0';
 
@@ -20,18 +21,18 @@ export class ImagesPreview {
   ) {}
 
   getFileByIndex(index: string): string {
-    if (!this.fromFiles || !this.fromFiles[+index]) {
+    if (!this.files || !this.files[+index]) {
       return '';
     }
 
-    return 'local://'+encodeURIComponent(this.fromFiles[+index]);
+    return 'local://'+encodeURIComponent(this.files[+index]);
   }
 
   previous(): void {
     let imageIndex = parseFloat(this.imageIndex);
     imageIndex = imageIndex - 1;
     if (imageIndex < 0) {
-      imageIndex = this.fromFiles.length - 1;
+      imageIndex = this.files.length - 1;
     }
     this.imageIndex = imageIndex.toString();
     this.cdr.detectChanges();
@@ -40,7 +41,7 @@ export class ImagesPreview {
   next(): void {
     let imageIndex = parseFloat(this.imageIndex);
     imageIndex = imageIndex + 1;
-    if (imageIndex >= this.fromFiles.length) {
+    if (imageIndex >= this.files.length) {
       imageIndex = 0;
     }
     this.imageIndex = imageIndex.toString();

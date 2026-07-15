@@ -7,6 +7,7 @@ TODO
 [ ] - O projeto base tem textos geez pendentes
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Incluir septuaginta no projeto
+[ ] - Incluir configuração para quebrar palavras em sinais personalizados para o idioma, como "־" para o hebraico e "፡" para geez por exemplo
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) no importador de imagens como referencia, o usuário deve selecionar a qual coleção de fragmentos aquele pertence e um título para aquele
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original

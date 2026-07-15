@@ -42,6 +42,8 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
+import { FragmentCollection } from '@domain/fragment-collection-model';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -73,6 +75,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   pipeUpdaterController = 1;
 
   projectData: ProjectData = {};
+  collections: FragmentCollection[] = [];
 
   codexMetadataRecord: {
     [source: string]: Codex<LanguageUnionType>
@@ -102,6 +105,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.readProjectFromSession();
+    this.loadProjectCollections(this.project);
     this.subscribeData();
     this.subscribeParams();
     this.subscribeSaveProject();
@@ -126,6 +130,12 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .catch(e => console.error(e))
         .finally(() => LoadingObservable.stopLoading());
     }
+  }
+
+  private loadProjectCollections(project: Project): void {
+    loadProjectCollectionsFn(project)
+      .then(collections => this.collections = collections)
+      .catch(e => console.error(e));
   }
 
   private subscribeParams(): void {
@@ -264,16 +274,6 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       return {
         key: book,
         name: books[book].name
-      };
-    });
-  }
-
-  listArtifactCollectionsNames(): Array<{ key: string, name: string }> {
-    const collections = this.project.target.collections || {};
-    return Object.keys(collections).map(collection => {
-      return {
-        key: collection,
-        name: collections[collection].name
       };
     });
   }

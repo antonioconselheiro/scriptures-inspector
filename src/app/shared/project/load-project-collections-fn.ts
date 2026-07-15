@@ -6,10 +6,10 @@ import { readJsonFileFn } from './read-file-json-fn';
 export async function loadProjectCollectionsFn(project: Project): Promise<Array<FragmentCollection>> {
   const collections: Array<FragmentCollection> = [];
   const promises: Array<Promise<void>> = [];
-  const directories = await listDirectoriesFn(`${project.path}/fragments`);
+  const directories = await listDirectoriesFn(`${project.path}/artifacts`);
 
   directories.forEach(directory => {
-    const promise = readJsonFileFn<FragmentCollection>(`${project.path}/fragments/${directory}/metadata.json`)
+    const promise = readJsonFileFn<FragmentCollection>(`${project.path}/artifacts/${directory}/metadata.json`)
       .then(metadata => {
         if (metadata) {
           metadata.folder = directory;

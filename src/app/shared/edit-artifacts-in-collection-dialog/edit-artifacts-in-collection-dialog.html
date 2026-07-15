@@ -23,14 +23,14 @@
     </div>
 
     <div class="orderAndPreviewWrapper">
-      <app-images-preview [fromFiles]="fromFiles"></app-images-preview>
+      <app-images-preview [files]="selectedCollectionFiles"></app-images-preview>
   
       <div class="tableContainer">
         <table>
     
           <thead>
             <tr>
-              <th colspan="2">
+              <th colspan="3">
                 <div class="sortButtonWrapper">
                   <button (click)="sortAZ()" class="sortButton sortDown" type="button" title="Sort A-Z">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -58,18 +58,19 @@
             (cdkDropListDropped)="drop($event)">
     
             @for (file of selectedCollectionFiles; track $index) {
+              @let importingFile = isImportingFile(file);
               <tr cdkDrag>
                 <td cdkDragHandle>☰</td>
                 <td>
-                  <svg title="View file" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg (click)="viewFile(file)" title="View file" class="viewFileButton" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                     <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
                   </svg>
                 </td>
                 <td>
-                  @if (isImportingFile(file)) {
-                    <svg title="importing file" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  @if (importingFile) {
+                    <svg title="Importing file" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M19 22.5a4.75 4.75 0 0 1 3.5 -3.5a4.75 4.75 0 0 1 -3.5 -3.5a4.75 4.75 0 0 1 -3.5 3.5a4.75 4.75 0 0 1 3.5 3.5" />
                       <path d="M14 3v4a1 1 0 0 0 1 1h4" />
