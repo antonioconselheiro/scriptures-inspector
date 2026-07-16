@@ -6,7 +6,8 @@ TODO
 [ ] - Adequar repositório de escrituras ao novo formato definido (separando livros de literatura fragmentária)
 [ ] - O projeto base tem textos geez pendentes
 [ ] - Incluir torá samaritanico no projeto
-[ ] - Incluir septuaginta no projeto
+[ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
+[ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Incluir configuração para quebrar palavras em sinais personalizados para o idioma, como "־" para o hebraico e "፡" para geez por exemplo
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) no importador de imagens como referencia, o usuário deve selecionar a qual coleção de fragmentos aquele pertence e um título para aquele
