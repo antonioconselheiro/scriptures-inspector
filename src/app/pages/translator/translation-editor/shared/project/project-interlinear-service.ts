@@ -34,17 +34,20 @@ export class ProjectInterlinearService {
     const chapterIndex = current.chapter - 1;
 
     if (!interlinearTarget.chapters[chapterIndex]) {
-      interlinearTarget.chapters[chapterIndex] = [];
+      interlinearTarget.chapters[chapterIndex] = {
+        chapter: current.chapter,
+        verses: []
+      };
     }
 
-    if (!interlinearTarget.chapters[chapterIndex][translationVerse.verse.index]) {
-      interlinearTarget.chapters[chapterIndex][translationVerse.verse.index] = [];
+    if (!interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index]) {
+      interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index] = [];
     }
 
     if (scriptureWordIndex === 0 && scriptureWord === undefined) {
-      interlinearTarget.chapters[chapterIndex][translationVerse.verse.index][translationWordIndex] = null;
+      interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex] = null;
     } else {
-      interlinearTarget.chapters[chapterIndex][translationVerse.verse.index][translationWordIndex] = {
+      interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex] = {
         origin: {
           verse: scriptureVerseNumber,
           index: scriptureWordIndex,
@@ -74,8 +77,8 @@ export class ProjectInterlinearService {
 
     try {
       interlinear = interlinearTarget.chapters[chapterIndex] &&
-        interlinearTarget.chapters[chapterIndex][translationVerse.verse.index] &&
-        interlinearTarget.chapters[chapterIndex][translationVerse.verse.index][translationWordIndex];
+        interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index] &&
+        interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
         return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);
@@ -99,8 +102,8 @@ export class ProjectInterlinearService {
       return;
     }
 
-    if (interlinearTarget.chapters[chapterIndex][translationVerse.verse.index]) {
-      interlinearTarget.chapters[chapterIndex][translationVerse.verse.index] = [];
+    if (interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index]) {
+      interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index] = [];
     }
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);

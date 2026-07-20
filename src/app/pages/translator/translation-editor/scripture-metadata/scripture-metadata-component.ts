@@ -100,7 +100,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     const chapter = this.current.chapter - 1;
     return Object.keys(viewingTranslationBookRecord).map(source => {
       const name = viewingTranslationBookRecord[source].name;
-      const verses = viewingTranslationBookRecord[source].chapters[chapter];
+      const verses = viewingTranslationBookRecord[source].chapters[chapter].verses;
 
       return {
         source,

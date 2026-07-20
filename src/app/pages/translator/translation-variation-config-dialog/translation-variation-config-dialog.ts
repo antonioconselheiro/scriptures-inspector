@@ -78,7 +78,7 @@ export class TranslationVariationConfigDialog extends ModalableDirective<BookTra
       if (confirm('Are you sure you want to remove this variation? This deletion is irreversible.')) {
         delete this.book.variations[key];
         this.book.chapters.forEach(chapter => {
-          chapter.forEach(verse => {
+          chapter.verses.forEach(verse => {
             if (verse.variations) {
               delete verse.variations[key];
             }

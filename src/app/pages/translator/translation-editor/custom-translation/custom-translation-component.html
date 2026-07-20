@@ -2,7 +2,7 @@
 
 @let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index;
 @let chapter = current.chapter - 1;
-@let verse = customTranslation.chapters[chapter]?.[verseIndex];
+@let verse = customTranslation.chapters[chapter]?.verses?.[verseIndex];
 @let chapterVariations = verse?.variations;
 @let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex, pipeUpdaterController) || [];
 

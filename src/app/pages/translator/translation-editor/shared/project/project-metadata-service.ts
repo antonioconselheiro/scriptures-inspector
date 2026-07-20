@@ -36,18 +36,21 @@ export class ProjectMetadataService {
   } {
     const chapterIndex = current.chapter - 1;
     if (!bookMetadata.chapters[chapterIndex]) {
-      bookMetadata.chapters[chapterIndex] = [];
+      bookMetadata.chapters[chapterIndex] = {
+        chapter: current.chapter,
+        verses: []
+      };
     }
 
-    if (!bookMetadata.chapters[chapterIndex][current.verseIndex]) {
-      bookMetadata.chapters[chapterIndex][current.verseIndex] = {
+    if (!bookMetadata.chapters[chapterIndex].verses[current.verseIndex]) {
+      bookMetadata.chapters[chapterIndex].verses[current.verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata || {};
-    bookMetadata.chapters[chapterIndex][current.verseIndex].metadata = metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata || {};
+    bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata = metadata;
 
     segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
@@ -113,12 +116,12 @@ export class ProjectMetadataService {
     if (
       !bookMetadata.chapters ||
       !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex][current.verseIndex]
+      !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
     ) {
       return false;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
     if (!metadata || !segments[0]) {
       return false;
     }
@@ -174,13 +177,13 @@ export class ProjectMetadataService {
     const chapterIndex = current.chapter - 1;
     if (
       !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex][current.verseIndex]
+      !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
     ) {
       return;
     }
 
 
-    const metadata = bookMetadata.chapters[chapterIndex][current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
     if (!metadata) {
       return;
     }

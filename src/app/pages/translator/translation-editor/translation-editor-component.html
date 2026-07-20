@@ -127,7 +127,7 @@
 
   @if (current && selectedSourceBook) {
     @let chapter = current.chapter - 1;
-    @for (verse of selectedSourceBook.chapters[chapter]; track $index) {
+    @for (verse of selectedSourceBook.chapters[chapter].verses; track $index) {
       @let parsedBook = parseBook(bookMetadata, languageMetadataRecord[sourceCodex.language], pipeUpdaterController);
 
       <h2 class="verseTitle">
@@ -149,7 +149,7 @@
           @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
 
           @if (bookInterlinearSource) {
-            @let verseInterlinearSource = bookInterlinearSource.chapters[chapter][verse.verse.index];
+            @let verseInterlinearSource = bookInterlinearSource.chapters[chapter].verses[verse.verse.index];
             @let langInterlinearSource = codexMetadataRecord[item.source].language;
             @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
 

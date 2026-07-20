@@ -81,7 +81,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       Object.keys(bookMetadata.lexical).map(lexical => { lexicalFoundInText[lexical] = 0; });
 
       bookSource.chapters.forEach(chapter => {
-        chapter.forEach(verse => {
+        chapter.verses.forEach(verse => {
           const parsedPatterns = this.projectMetadataService.parsePattern(bookMetadata.patterns, language);
           const parsedBook: ParsedBookMetadata = {
             lexical: bookMetadata.lexical,

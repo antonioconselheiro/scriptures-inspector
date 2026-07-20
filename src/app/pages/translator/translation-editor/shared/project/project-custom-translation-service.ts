@@ -35,15 +35,18 @@ export class ProjectCustomTranslationService {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapter = current.chapter - 1;
     if (!customTranslation.chapters[chapter]) {
-      customTranslation.chapters[chapter] = [];
+      customTranslation.chapters[chapter] = {
+        chapter: current.chapter,
+        verses: []
+      };
     }
 
-    if (!customTranslation.chapters[chapter][verseIndex]) {
-      customTranslation.chapters[chapter][verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+    if (!customTranslation.chapters[chapter].verses[verseIndex]) {
+      customTranslation.chapters[chapter].verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
     }
 
-    const metadata = customTranslation.chapters[chapter][verseIndex].metadata || [];
-    customTranslation.chapters[chapter][verseIndex].metadata = metadata;
+    const metadata = customTranslation.chapters[chapter].verses[verseIndex].metadata || [];
+    customTranslation.chapters[chapter].verses[verseIndex].metadata = metadata;
 
     return metadata;
   }
@@ -58,7 +61,7 @@ export class ProjectCustomTranslationService {
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapterIndex = current.chapter - 1;
-    const customVerse = customTranslation.chapters[chapterIndex][verseIndex];
+    const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
     const lexicalList = this.projectService
       .splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
       .flat()
@@ -81,7 +84,7 @@ export class ProjectCustomTranslationService {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const chapterIndex = current.chapter - 1;
-    const customTranslationObj = customTranslation.chapters[chapterIndex][verseIndex];
+    const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
     const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
 
     this.projectService
@@ -135,7 +138,7 @@ export class ProjectCustomTranslationService {
     original: Array<WordFragment>,
     variations: Record<string, Array<WordFragment>>
   } {
-    const customTranslationObj = customTranslation.chapters[chapter]?.[verseIndex];
+    const customTranslationObj = customTranslation.chapters[chapter]?.verses[verseIndex];
     if (!customTranslationObj) {
       return { original: [], variations: {} };
     }
@@ -217,7 +220,7 @@ export class ProjectCustomTranslationService {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapterIndex = current.chapter - 1;
     return customTranslation.chapters[chapterIndex] &&
-      customTranslation.chapters[chapterIndex][verseIndex] || null;
+      customTranslation.chapters[chapterIndex].verses[verseIndex] || null;
   }
 
   updateCustomTranslation(
@@ -231,14 +234,14 @@ export class ProjectCustomTranslationService {
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const chapter = customTranslation.chapters[chapterIndex];
 
-    if (chapter[verseIndex]) {
+    if (chapter.verses[verseIndex]) {
       if (input.value) {
-        chapter[verseIndex].text = input.value;
+        chapter.verses[verseIndex].text = input.value;
       } else {
-        chapter[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+        chapter.verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
       }
     } else {
-      chapter[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+      chapter.verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);
@@ -256,12 +259,12 @@ export class ProjectCustomTranslationService {
 
     if (
       !customTranslation.chapters[chapterIndex] ||
-      !customTranslation.chapters[chapterIndex][verseIndex]
+      !customTranslation.chapters[chapterIndex].verses[verseIndex]
     ) {
       return;
     }
 
-    customTranslation.chapters[chapterIndex][verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+    customTranslation.chapters[chapterIndex].verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
@@ -287,12 +290,12 @@ export class ProjectCustomTranslationService {
 
     if (
       !customTranslation.chapters[chapterIndex] ||
-      !customTranslation.chapters[chapterIndex][verseIndex]
+      !customTranslation.chapters[chapterIndex].verses[verseIndex]
     ) {
       return '';
     }
 
-    const translationMetadata = customTranslation.chapters[chapterIndex][verseIndex]?.metadata;
+    const translationMetadata = customTranslation.chapters[chapterIndex].verses[verseIndex]?.metadata;
     if (!translationMetadata) {
       return '';
     }
@@ -304,7 +307,7 @@ export class ProjectCustomTranslationService {
         return '';
       }
 
-      const interlinearSegmentOrigin = interlinear.chapters[chapterIndex][verseIndex][Number(translationWordIndex)]?.origin || null;
+      const interlinearSegmentOrigin = interlinear.chapters[chapterIndex].verses[verseIndex][Number(translationWordIndex)]?.origin || null;
       if (!interlinearSegmentOrigin) {
         return '';
       } else {
@@ -337,25 +340,25 @@ export class ProjectCustomTranslationService {
 
     if (interlinear) {
       const translationMetadata = customTranslation.chapters[chapterIndex] &&
-        customTranslation.chapters[chapterIndex][verseIndex]?.metadata?.[wordIndex]?.value || '';
+        customTranslation.chapters[chapterIndex].verses[verseIndex]?.metadata?.[wordIndex]?.value || '';
 
       const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
       if (!translationWordIndex) {
         return false;
       }
 
-      const interlinearSegmentOrigin = interlinear.chapters[chapterIndex][verseIndex][Number(translationWordIndex)]?.origin || null;
+      const interlinearSegmentOrigin = interlinear.chapters[chapterIndex].verses[verseIndex][Number(translationWordIndex)]?.origin || null;
       if (!interlinearSegmentOrigin) {
         return false;
       }
 
-      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex] || [];
+      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
       customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, interlinearSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
     } else {
-      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex] || [];
+      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
       verseMetadata = scriptureChapterMetadata[verseIndex] || null;
-      const translationChapterMetadata = customTranslation.chapters[chapterIndex] || [];
+      const translationChapterMetadata = customTranslation.chapters[chapterIndex].verses || [];
       customTranslationMetadataKey = ((translationChapterMetadata[verseIndex]?.metadata || [])?.[wordIndex]?.value || '');
     }
 
@@ -380,7 +383,7 @@ export class ProjectCustomTranslationService {
   ): string {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapterIndex = current.chapter - 1;
-    const chapter = customTranslation.chapters[chapterIndex];
+    const chapter = customTranslation.chapters[chapterIndex].verses;
     if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
       const metadata = chapter[verseIndex].metadata;
       return metadata && metadata[wordSpanIndex]?.value || '';
@@ -434,7 +437,7 @@ export class ProjectCustomTranslationService {
 
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapterIndex = current.chapter - 1;
-    const chapter = customTranslation.chapters[chapterIndex];
+    const chapter = customTranslation.chapters[chapterIndex].verses;
     if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
       const metadata = chapter[verseIndex].metadata;
       return {
@@ -506,7 +509,7 @@ export class ProjectCustomTranslationService {
     if (interlinearValue) {
       const value = interlinearValue.replace(/^\d+\-/, '');
       bookChapters.forEach(chapter => {
-        chapter.forEach(chapterVerse => {
+        chapter.verses.forEach(chapterVerse => {
           if (chapterVerse.variations) {
             const variationsRecord = chapterVerse.variations[variationId] || {};
             Object.keys(variationsRecord).forEach(key => {
@@ -587,12 +590,12 @@ export class ProjectCustomTranslationService {
 
     if (
       !customTranslation.chapters[chapterIndex] ||
-      !customTranslation.chapters[chapterIndex][verseIndex]
+      !customTranslation.chapters[chapterIndex].verses[verseIndex]
     ) {
       return;
     }
 
-    customTranslation.chapters[chapterIndex][verseIndex].metadata.forEach(metadata => {
+    customTranslation.chapters[chapterIndex].verses[verseIndex].metadata.forEach(metadata => {
       metadata.value = '';
     });
   }
