@@ -65,11 +65,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   current: CurrentChapter | null = null;
 
-  formSelectedBook = '';
-  formSelectedChapter: number | null = null;
-
-  formSelectedArtifactCollection = '';
-  formSelectedArtifactNumber: number | null = null;
+  formSelectedCollectionOrBook = '';
+  formSelectedArtifactOrChapter: number | null = null;
 
   minimized = true;
   pipeUpdaterController = 1;
@@ -144,16 +141,18 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         const book = params['book'].toUpperCase();
         const chapter = Number(params['chapter']);
 
-        this.formSelectedBook = book;
-        this.formSelectedChapter = chapter;
-
-        if (!this.current) {
-          this.current = {
-            book, chapter
-          };
-        } else {
-          this.current.book = book;
-          this.current.chapter = chapter;
+        if (book) {
+          this.formSelectedCollectionOrBook = `book-${book}`;
+          this.formSelectedArtifactOrChapter = chapter;
+  
+          if (!this.current) {
+            this.current = {
+              book, chapter
+            };
+          } else {
+            this.current.book = book;
+            this.current.chapter = chapter;
+          }
         }
       }
     }));
@@ -286,10 +285,18 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  openBookChapter(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
-      const book = this.formSelectedBook;
-      const path = ['/translator/book', book, 'chapter', this.formSelectedChapter];
+  open(): void {
+    if (this.notNullLike(this.formSelectedCollectionOrBook) && this.notNullLike(this.formSelectedArtifactOrChapter)) {
+      const [type, key] = this.formSelectedCollectionOrBook.split('-');
+      const chapterOrArtifact = String(this.formSelectedArtifactOrChapter);
+      let path: string[] = [];
+
+      if (type === 'book') {
+        path = ['/translator/book', key, 'chapter', chapterOrArtifact];
+      } else if (type === 'collection') {
+        path = ['transcriptor/collection/', key, '/artifact/', chapterOrArtifact];
+      }
+
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
@@ -299,73 +306,23 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  backBookChapter(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter) && this.formSelectedChapter !== 1) {
-      const previousChapter = Number(this.formSelectedChapter) - 1;
-      const book = this.formSelectedBook;
-      const path = ['/translator/book', book, 'chapter', previousChapter];
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
+  back(): void {
+    if (this.notNullLike(this.formSelectedArtifactOrChapter)) {
+      const previous = Number(this.formSelectedArtifactOrChapter) - 1;
+      if (previous < 0) {
+        this.formSelectedArtifactOrChapter = 0;
+      } else {
+        this.formSelectedArtifactOrChapter = previous;
+      }
+      this.open();
     }
   }
 
-  nextBookChapter(): void {
-    if (this.notNullLike(this.formSelectedBook) && this.notNullLike(this.formSelectedChapter)) {
-      const nextChapter = Number(this.formSelectedChapter) + 1;
-      const book = this.formSelectedBook;
-      const path = ['/translator/book', book, 'chapter', nextChapter];
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
-    }
-  }
-
-  openCollectionArtifact(): void {
-    const collection = this.formSelectedArtifactCollection;
-    const artifact = this.formSelectedArtifactNumber;
-    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
-      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
-    }
-  }
-
-  backCollectionArtifact(): void {
-    const collection = this.formSelectedArtifactCollection;
-    const artifact = Number(this.formSelectedArtifactNumber) - 1;
-    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
-      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
-    }
-  }
-
-  nextCollectionArtifact(): void {
-    const collection = this.formSelectedArtifactCollection;
-    const artifact = Number(this.formSelectedArtifactNumber) + 1;
-    if (this.notNullLike(collection) && this.notNullLike(artifact)) {
-      const path = ['transcriptor/collection/', collection, '/artifact/', artifact];
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
+  next(): void {
+    if (this.notNullLike(this.formSelectedArtifactOrChapter)) {
+      const next = Number(this.formSelectedArtifactOrChapter) + 1;
+      this.formSelectedArtifactOrChapter = next;
+      this.open();
     }
   }
 

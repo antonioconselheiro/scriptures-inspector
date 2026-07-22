@@ -83,7 +83,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
 
   getTranslationColor(wordIndex: number): string {
     const chapter = this.current.chapter - 1;
-    const map = this.bookTarget.chapters[chapter].verses &&
+    const map = this.bookTarget.chapters[chapter]?.verses &&
       this.bookTarget.chapters[chapter].verses[this.sourceVerse.verse.index] &&
       this.bookTarget.chapters[chapter].verses[this.sourceVerse.verse.index][wordIndex] || null;
 

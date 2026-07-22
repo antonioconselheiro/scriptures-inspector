@@ -10,6 +10,7 @@ TODO
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Incluir configuração para quebrar palavras em sinais personalizados para o idioma, como "־" para o hebraico e "፡" para geez por exemplo
 [ ] - Navegação por capitulo deve agora verificar o número do capitulo no objeto
+[ ] - Agrupar navegador de artefato e de capitulo em um único navegador
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) no importador de imagens como referencia, o usuário deve selecionar a qual coleção de fragmentos aquele pertence e um título para aquele
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
