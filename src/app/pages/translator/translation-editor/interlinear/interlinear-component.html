@@ -2,9 +2,9 @@
   <h3>Interlinear</h3>
 
   @let wordList = sourceVerse.text.split(' ');
-  @let eachWord = splitIntoMatrix(parsedBook, sourceVerse);
-  @let eachOriginWord = splitIntoMatrix(parsedOriginBook, originVerse);
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
+  @let eachWord = splitIntoMatrix(sourceLanguageAttributes, parsedBook, sourceVerse);
+  @let eachOriginWord = splitIntoMatrix(sourceLanguageAttributes, parsedOriginBook, originVerse);
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
       <table border="1" frame="hsides" role="presentation">

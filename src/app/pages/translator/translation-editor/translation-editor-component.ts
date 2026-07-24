@@ -267,6 +267,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     return getProjectTranslationsDetailsFn(this.project, this.codexMetadataRecord);
   }
 
+  getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
+    return chapters.findIndex(chapter => chapter.chapter === current.chapter);
+  }
+
   listBookNames(): Array<{ key: string, name: string }> {
     const books = this.project.target.books || {};
     return Object.keys(books).map(book => {

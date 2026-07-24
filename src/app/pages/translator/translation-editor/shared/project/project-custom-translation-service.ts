@@ -22,6 +22,8 @@ import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translat
 })
 export class ProjectCustomTranslationService {
 
+  private readonly indexNotFound = -1;
+
   constructor(
     private projectService: ProjectDataService,
     private systemService: SystemService
@@ -33,22 +35,27 @@ export class ProjectCustomTranslationService {
     sourceVerse: SourceVerse
   ): Array<BookTranslationTargetMetadata> {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapter = current.chapter - 1;
-    if (!customTranslation.chapters[chapter]) {
-      customTranslation.chapters[chapter] = {
-        chapter: current.chapter,
-        verses: []
-      };
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
+    if (chapterIndex === this.indexNotFound) {
+      if (!customTranslation.chapters[chapterIndex]) {
+        customTranslation.chapters[chapterIndex] = {
+          chapter: current.chapter,
+          verses: []
+        };
+      }
+  
+      if (!customTranslation.chapters[chapterIndex].verses[verseIndex]) {
+        customTranslation.chapters[chapterIndex].verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
+      }
+  
+      const metadata = customTranslation.chapters[chapterIndex].verses[verseIndex].metadata || [];
+      customTranslation.chapters[chapterIndex].verses[verseIndex].metadata = metadata;
+  
+      return metadata;
     }
 
-    if (!customTranslation.chapters[chapter].verses[verseIndex]) {
-      customTranslation.chapters[chapter].verses[verseIndex] = this.factoryCustomTranslationVerse(sourceVerse);
-    }
-
-    const metadata = customTranslation.chapters[chapter].verses[verseIndex].metadata || [];
-    customTranslation.chapters[chapter].verses[verseIndex].metadata = metadata;
-
-    return metadata;
+    return [];
   }
 
   private derivateTranslationToCustom(
@@ -60,17 +67,20 @@ export class ProjectCustomTranslationService {
   ): void {
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
-    const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
-    const lexicalList = this.projectService
-      .splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
-      .flat()
-      .map(word => this.projectService.getLexical(parsedBookMetadata, sourceLanguage, word.word))
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
-    customVerse.text = lexicalList.join(' ').replace(/ {2,}/g, ' ');
-    customVerse.metadata = lexicalList.map(lexical => { return { size: lexical.length, value: '' } });
-
-    this.systemService.triggerSaveCurrentBookTranslations(current);
+    if (chapterIndex !== this.indexNotFound) {
+      const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
+      const lexicalList = this.projectService
+        .splitIntoMatrix(sourceLanguage, parsedBookMetadata, sourceVerse.text)
+        .flat()
+        .map(word => this.projectService.getLexical(parsedBookMetadata, sourceLanguage, word.word))
+  
+      customVerse.text = lexicalList.join(' ').replace(/ {2,}/g, ' ');
+      customVerse.metadata = lexicalList.map(lexical => { return { size: lexical.length, value: '' } });
+  
+      this.systemService.triggerSaveCurrentBookTranslations(current);
+    }
   }
 
   private derivateInterlinearToCustom(
@@ -83,23 +93,25 @@ export class ProjectCustomTranslationService {
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
-    const chapterIndex = current.chapter - 1;
-    const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
-    const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
-
-    this.projectService
-      .splitIntoMatrix(parsedBookMetadata, sourceVerse.text)
-      .flat()
-      .forEach(segment => {
-        if (customTranslationSplitted[segment.index].fragment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
-          metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment);
-        }
-      });
-
-    this.systemService.triggerSaveCurrentBookTranslations(current);
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    
+    if (chapterIndex !== this.indexNotFound) {
+      const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
+      const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
+  
+      this.projectService
+        .splitIntoMatrix(sourceLanguage, parsedBookMetadata, sourceVerse.text)
+        .flat()
+        .forEach(segment => {
+          if (customTranslationSplitted[segment.index].fragment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
+            metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment);
+          }
+        });
+  
+      this.systemService.triggerSaveCurrentBookTranslations(current);
+    }
   }
 
-  
   splitCustomTranslation(customTranslationObj: BookVerse<{
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
@@ -218,7 +230,8 @@ export class ProjectCustomTranslationService {
     customTranslation: BookTranslationTarget, current: CurrentChapter, sourceVerse: SourceVerse
   ): { text: string } | null {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
     return customTranslation.chapters[chapterIndex] &&
       customTranslation.chapters[chapterIndex].verses[verseIndex] || null;
   }
@@ -230,7 +243,11 @@ export class ProjectCustomTranslationService {
     sourceVerse: SourceVerse
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return;
+    }
+
     this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const chapter = customTranslation.chapters[chapterIndex];
 
@@ -254,8 +271,11 @@ export class ProjectCustomTranslationService {
     sourceVerse: SourceVerse
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
     input.value = '';
+    if (chapterIndex === this.indexNotFound) {
+      return;
+    }
 
     if (
       !customTranslation.chapters[chapterIndex] ||
@@ -277,7 +297,6 @@ export class ProjectCustomTranslationService {
     }
   }
 
-  
   getCustomTranslationColor(
     customTranslation: BookTranslationTarget,
     interlinear: BookInterlinearTarget | undefined,
@@ -286,9 +305,10 @@ export class ProjectCustomTranslationService {
     wordIndex: number
   ): string {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
     if (
+      chapterIndex === this.indexNotFound ||
       !customTranslation.chapters[chapterIndex] ||
       !customTranslation.chapters[chapterIndex].verses[verseIndex]
     ) {
@@ -333,7 +353,11 @@ export class ProjectCustomTranslationService {
     wordIndex: number
   ): boolean {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return false;
+    }
+
     let verseMetadata: BookVerse<BookChapterVerseMetadata> | null,
       customTranslationMetadataKey = '',
       scriptureChapterMetadata: BookVerse<BookChapterVerseMetadata>[] = [];
@@ -382,11 +406,14 @@ export class ProjectCustomTranslationService {
     wordSpanIndex: number
   ): string {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
-    const chapter = customTranslation.chapters[chapterIndex].verses;
-    if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
-      const metadata = chapter[verseIndex].metadata;
-      return metadata && metadata[wordSpanIndex]?.value || '';
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
+    if (chapterIndex !== this.indexNotFound) {
+      const verses = customTranslation.chapters[chapterIndex].verses;
+      if (verses && verses[verseIndex] && verses[verseIndex].metadata) {
+        const metadata = verses[verseIndex].metadata;
+        return metadata && metadata[wordSpanIndex]?.value || '';
+      }
     }
 
     return '';
@@ -436,10 +463,17 @@ export class ProjectCustomTranslationService {
     }
 
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
-    const chapter = customTranslation.chapters[chapterIndex].verses;
-    if (chapter && chapter[verseIndex] && chapter[verseIndex].metadata) {
-      const metadata = chapter[verseIndex].metadata;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return {
+        checked: false,
+        readonly: false
+      };
+    }
+
+    const verses = customTranslation.chapters[chapterIndex].verses;
+    if (verses && verses[verseIndex] && verses[verseIndex].metadata) {
+      const metadata = verses[verseIndex].metadata;
       return {
         checked: metadata && metadata[wordSpanIndex]?.isWordOfGod || false,
         readonly: false
@@ -586,7 +620,10 @@ export class ProjectCustomTranslationService {
     sourceVerse: SourceVerse
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return;
+    }
 
     if (
       !customTranslation.chapters[chapterIndex] ||

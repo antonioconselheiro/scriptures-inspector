@@ -97,15 +97,25 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       text: string;
     }>>[];
   }> {
-    const chapter = this.current.chapter - 1;
+    const indexNotFound = -1;
     return Object.keys(viewingTranslationBookRecord).map(source => {
+      const chapterIndex = viewingTranslationBookRecord[source].chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
       const name = viewingTranslationBookRecord[source].name;
-      const verses = viewingTranslationBookRecord[source].chapters[chapter].verses;
 
-      return {
-        source,
-        name,
-        verses
+      if (chapterIndex !== indexNotFound) {
+        const verses = viewingTranslationBookRecord[source].chapters[chapterIndex].verses;
+        
+        return {
+          source,
+          name,
+          verses
+        }
+      } else {
+        return {
+          source,
+          name,
+          verses: []
+        }
       }
     });
   }
@@ -118,7 +128,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     index: number;
     word: string;
   }>> {
-    return this.projectService.splitIntoMatrix(this.parsedBook, text);
+    const language = this.languageMetadataRecord[this.sourceLanguage];
+    return this.projectService.splitIntoMatrix(language, this.parsedBook, text);
   }
 
   //  word of God

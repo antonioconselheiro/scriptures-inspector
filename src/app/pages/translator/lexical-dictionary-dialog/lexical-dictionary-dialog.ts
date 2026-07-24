@@ -88,7 +88,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
             patterns: parsedPatterns
           };
 
-          const eachWord = this.projectService.splitIntoMatrix(parsedBook, verse.text);
+          const eachWord = this.projectService.splitIntoMatrix(language, parsedBook, verse.text);
           eachWord.forEach(wordFragments => {
             wordFragments.forEach(fragment => {
               const word = normalizeFn(fragment.word);

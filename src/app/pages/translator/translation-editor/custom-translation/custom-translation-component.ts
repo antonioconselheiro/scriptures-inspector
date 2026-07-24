@@ -73,6 +73,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     super();
   }
 
+  getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
+    return chapters.findIndex(chapter => chapter.chapter === current.chapter);
+  }
+
   splitCustomTranslationWithVariations(
     customTranslation: BookTranslationTarget,
     chapter: number,

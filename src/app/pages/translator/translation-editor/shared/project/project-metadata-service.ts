@@ -20,6 +20,8 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 })
 export class ProjectMetadataService {
 
+  private readonly indexNotFound = -1;
+
   constructor(
     private projectService: ProjectDataService,
     private systemService: SystemService
@@ -34,8 +36,8 @@ export class ProjectMetadataService {
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    const chapterIndex = current.chapter - 1;
-    if (!bookMetadata.chapters[chapterIndex]) {
+    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound || !bookMetadata.chapters[chapterIndex]) {
       bookMetadata.chapters[chapterIndex] = {
         chapter: current.chapter,
         verses: []
@@ -112,9 +114,11 @@ export class ProjectMetadataService {
     current: CurrentVerseIndex,
     segments: Array<WordSegment>
   ): boolean {
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
     if (
       !bookMetadata.chapters ||
+      chapterIndex === this.indexNotFound ||
       !bookMetadata.chapters[chapterIndex] ||
       !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
     ) {
@@ -174,14 +178,15 @@ export class ProjectMetadataService {
     bookMetadata: BookMetadataTarget,
     current: CurrentVerseIndex
   ): void {
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
     if (
+      chapterIndex === this.indexNotFound ||
       !bookMetadata.chapters[chapterIndex] ||
       !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
     ) {
       return;
     }
-
 
     const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
     if (!metadata) {

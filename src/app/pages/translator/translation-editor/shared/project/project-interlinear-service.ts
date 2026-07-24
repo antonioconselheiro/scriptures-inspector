@@ -13,6 +13,8 @@ import { VerseNumberInterlinear } from '@domain/verse-number-interlinear-model';
 })
 export class ProjectInterlinearService {
 
+  private readonly indexNotFound = -1;
+
   constructor(
     private projectService: ProjectDataService,
     private systemService: SystemService
@@ -30,10 +32,10 @@ export class ProjectInterlinearService {
     const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
     const scriptureVerseNumber = Number(sourceVerse.verse.start);
-    const geezVerseNumber = Number(translationVerse.verse.start);
-    const chapterIndex = current.chapter - 1;
+    const interlinearVerseNumber = Number(translationVerse.verse.start);
+    const chapterIndex = interlinearTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
-    if (!interlinearTarget.chapters[chapterIndex]) {
+    if (chapterIndex === this.indexNotFound || !interlinearTarget.chapters[chapterIndex]) {
       interlinearTarget.chapters[chapterIndex] = {
         chapter: current.chapter,
         verses: []
@@ -55,7 +57,7 @@ export class ProjectInterlinearService {
         },
 
         translation: {
-          verse: geezVerseNumber,
+          verse: interlinearVerseNumber,
           index: translationWordIndex,
           word: translationWord
         }
@@ -73,7 +75,10 @@ export class ProjectInterlinearService {
     translationWordIndex: number
   ): string {
     let interlinear: TranslationInterlinearVerse | null = null;
-    const chapterIndex = current.chapter - 1;
+    const chapterIndex = interlinearTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return '';
+    }
 
     try {
       interlinear = interlinearTarget.chapters[chapterIndex] &&
@@ -95,10 +100,8 @@ export class ProjectInterlinearService {
     current: CurrentChapter,
     translationVerse: SourceVerse
   ): void {
-    const chapterIndex = current.chapter - 1;
-    if (
-      !interlinearTarget.chapters[chapterIndex]
-    ) {
+    const chapterIndex = interlinearTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    if (!interlinearTarget.chapters[chapterIndex]) {
       return;
     }
 

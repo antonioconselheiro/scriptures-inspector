@@ -7,7 +7,6 @@ TODO
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
-[ ] - Navegação por capitulo deve agora verificar o número do capitulo no objeto e não usar como indice do array
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) no importador de imagens como referencia, o usuário deve selecionar a qual coleção de fragmentos aquele pertence e um título para aquele
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original

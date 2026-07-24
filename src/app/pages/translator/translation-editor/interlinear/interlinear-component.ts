@@ -19,6 +19,7 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
+import { Language } from '@domain/language-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -73,6 +74,8 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
 
   minified = false;
 
+  private readonly indexNotFound = -1;
+
   constructor(
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
@@ -82,10 +85,14 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const chapter = this.current.chapter - 1;
-    const map = this.bookTarget.chapters[chapter]?.verses &&
-      this.bookTarget.chapters[chapter].verses[this.sourceVerse.verse.index] &&
-      this.bookTarget.chapters[chapter].verses[this.sourceVerse.verse.index][wordIndex] || null;
+    const chapterIndex = this.bookTarget.chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
+    if (chapterIndex === this.indexNotFound) {
+      return '0';
+    }
+
+    const map = this.bookTarget.chapters[chapterIndex]?.verses &&
+      this.bookTarget.chapters[chapterIndex].verses[this.sourceVerse.verse.index] &&
+      this.bookTarget.chapters[chapterIndex].verses[this.sourceVerse.verse.index][wordIndex] || null;
 
     if (!map) {
       return '0';
@@ -94,11 +101,11 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix(parsedBook: ParsedBookMetadata, sourceVerse: SourceVerse): Array<Array<{
+  splitIntoMatrix(language: Language, parsedBook: ParsedBookMetadata, sourceVerse: SourceVerse): Array<Array<{
     index: number;
     word: string;
   }>> {
-    return this.projectService.splitIntoMatrix(parsedBook, sourceVerse.text);
+    return this.projectService.splitIntoMatrix(language, parsedBook, sourceVerse.text);
   }
 
   onSelectInterlinearToBaseScripture(
