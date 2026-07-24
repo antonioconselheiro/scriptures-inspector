@@ -20,11 +20,14 @@ export class ProjectDataService {
   }
 
   splitIntoMatrix(
+    language: Language,
     parsedBook: ParsedBookMetadata,
     text: string
   ): Array<Array<{ index: number, word: string }>> {
     let index = 0;
-    return text.split(' ').map(word => this.splitByPatterns(parsedBook.patterns, word).map(word => {
+    const splittingChars = [ ' ', ...(language.wordSeparator || []) ];
+    const wordSplitterPattern = new RegExp(`[${splittingChars.join('')}]`, 'g'); 
+    return text.split(wordSplitterPattern).map(word => this.splitByPatterns(parsedBook.patterns, word).map(word => {
       return { index: index++, word };
     }));
   }

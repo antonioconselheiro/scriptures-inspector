@@ -9,6 +9,7 @@ export interface Language {
   numerology?: Array<LanguageNumerology>;
   normalizeFn?: (text: string) => string;
   prefetchMatcherFn?: (text: string) => string;
+  wordSeparator?: Array<string>;
   alternativeSpelling?: Array<LanguageAlternativeSpelling>;
   externalDictionaryLink?: string;
 }

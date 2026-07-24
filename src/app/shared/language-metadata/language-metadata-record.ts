@@ -21,6 +21,7 @@ export const languageMetadataRecord: {
     label: 'hebraic',
     direction: 'rtl',
     transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
+    wordSeparator: ['־'],
     numerology: [
       {
         name: 'gematria',
@@ -43,6 +44,7 @@ export const languageMetadataRecord: {
     name: 'Ge\'əz',
     label: 'geez',
     transliteration: (geez) => transliterate(geez),
+    wordSeparator: ['፡'],
     externalDictionaryLink: 'https://www.geezexperience.com/index.php'
   },
   'syriac': {
