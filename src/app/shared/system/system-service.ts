@@ -12,6 +12,8 @@ import { Subject } from 'rxjs';
 })
 export class SystemService {
 
+  static readonly autoSaveDebounceTime = 5000; 
+
   static saveCurrentProject = new Subject<void>();
   static saveCurrentBookMetadata = new Subject<CurrentBook>();
   static saveCurrentBookInterlinear = new Subject<CurrentBook>();

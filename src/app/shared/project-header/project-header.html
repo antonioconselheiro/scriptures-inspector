@@ -1,0 +1,55 @@
+<header [class.minimized]="minimized" class="tools">
+  <div class="buttonGroup">
+    <img class="logo" src="script.png" />
+    <button class="save" type="button" (click)="save()"></button>
+  </div>
+  <form>
+    <fieldset>
+      <legend>Artifacts Management</legend>
+
+      <div>
+        <button (click)="addArtifactCollection()" type="button">Add collection</button>
+        <hr />
+        <button (click)="addArtifacts()" type="button">Add artifacts</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Navigation</legend>
+
+      <div>
+        <select name="selectedBook" [(ngModel)]="formSelectedCollectionOrBook">
+          @let bookNames = listBookNames();
+          @if (bookNames.length) {
+            <optgroup label="Books"></optgroup>
+            @for (book of bookNames; track $index) {
+              <option [value]="'book-'+book.key">{{ book.name }}</option>
+            }
+          }
+
+          @if (collections.length) {
+            <optgroup label="Artifact Collections"></optgroup>
+            @for (collection of collections; track $index) {
+              <option [value]="'collection-'+collection.folder">{{ collection.name }}</option>
+            }
+          }
+        </select>
+  
+        <input name="selectedChapter" class="selectedChapter" [(ngModel)]="formSelectedArtifactOrChapter" type="number" />
+      </div>
+      
+      <div>
+        <button type="button" (click)="open()">Go</button>
+        <button type="button" [attr.disabled]="formSelectedArtifactOrChapter === 0 ? 'disabled': null"
+          (click)="back()">Back</button>
+        <button type="button" (click)="next()">Next</button>
+      </div>
+    </fieldset>
+
+    <ng-content></ng-content>
+
+    <div class="sidebuttons">
+      <button (click)="minimized = !minimized" class="minimize" type="button">▲</button>
+    </div>
+  </form>
+</header>

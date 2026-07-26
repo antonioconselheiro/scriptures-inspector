@@ -5,7 +5,7 @@ import { sourcesLoaderResolveFn } from '@shared/project/sources-loader-resolve-f
 import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-fn';
 import { TranslationEditorComponent } from './pages/translator/translation-editor/translation-editor-component';
 import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen-component';
-import { TranscriptionEditor } from './pages/transcriptor/transcription-editor/transcription-editor';
+import { TranscriptionEditorComponent } from './pages/transcriptor/transcription-editor/transcription-editor-component';
 
 export const routes: Routes = [
   {
@@ -18,7 +18,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'collection/:collection/artifact/:artifact',
-        component: TranscriptionEditor
+        component: TranscriptionEditorComponent
       }
     ]
   },

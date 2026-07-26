@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Data, Router } from '@angular/router';
+import { ActivatedRoute, Data } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
@@ -18,18 +18,14 @@ import { SourceBook } from '@domain/source-book-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
-import { AddArtifactCollectionDialog } from '@shared/add-artifact-collection-dialog/add-artifact-collection-dialog';
-import { EditArtifactsInCollectionDialog } from '@shared/edit-artifacts-in-collection-dialog/edit-artifacts-in-collection-dialog';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
-import { LoadingObservable } from '@shared/loading/loading-service';
-import { getProjectFn } from '@shared/project/get-project-fn';
+import { ProjectHeader } from '@shared/project-header/project-header';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-translations-details-fn';
 import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
 import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
-import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
@@ -42,8 +38,6 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
-import { FragmentCollection } from '@domain/fragment-collection-model';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -54,29 +48,24 @@ import { FragmentCollection } from '@domain/fragment-collection-model';
     AddPatternContextMenu,
     ScriptureMetadataComponent,
     TranslationViewerManager,
-    InterlinearComponent
+    InterlinearComponent,
+    ProjectHeader
   ],
   templateUrl: './translation-editor-component.html',
   styleUrl: './translation-editor-component.scss'
 })
 export class TranslationEditorComponent implements OnInit, OnDestroy {
 
-  project!: Project;
-
+  project: Project | null = null;
   current: CurrentChapter | null = null;
-
-  formSelectedCollectionOrBook = '';
-  formSelectedArtifactOrChapter: number | null = null;
-
-  minimized = true;
-  pipeUpdaterController = 1;
-
+  data: Data | null = null;
   projectData: ProjectData = {};
-  collections: FragmentCollection[] = [];
+
+  pipeUpdaterController = 1;
 
   codexMetadataRecord: {
     [source: string]: Codex<LanguageUnionType>
-  } = {};
+  } | null = null;
 
   sourceBookRecord: {
     readonly [source: string]: SourceBook | undefined
@@ -87,12 +76,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   } = {};
 
   readonly languageMetadataRecord = languageMetadataRecord;
-  readonly autoSaveDebounceTime = 5000;
 
   private subscriptions = new Subscription();
 
   constructor(
-    private router: Router,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
@@ -101,11 +88,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.readProjectFromSession();
-    this.loadProjectCollections(this.project);
     this.subscribeData();
-    this.subscribeParams();
-    this.subscribeSaveProject();
     this.subscribeSaveBookMetadata();
     this.subscribeSaveBookInterlinear();
     this.subscribeSaveBookCustomTranslation();
@@ -115,78 +98,44 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  private readProjectFromSession(): void {
-    const project = getProjectFn();
-    if (project) {
-      this.project = project;
-    } else {
-      const path = ['open'];
-      console.log(`[navigate]`, path.join('/'));
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
-    }
-  }
-
-  private loadProjectCollections(project: Project): void {
-    loadProjectCollectionsFn(project)
-      .then(collections => this.collections = collections)
-      .catch(e => console.error(e));
-  }
-
-  private subscribeParams(): void {
-    this.subscriptions.add(this.activatedRoute.params.subscribe({
-      next: params => {
-        const book = params['book'].toUpperCase();
-        const chapter = Number(params['chapter']);
-
-        if (book) {
-          this.formSelectedCollectionOrBook = `book-${book}`;
-          this.formSelectedArtifactOrChapter = chapter;
-  
-          if (!this.current) {
-            this.current = {
-              book, chapter
-            };
-          } else {
-            this.current.book = book;
-            this.current.chapter = chapter;
-          }
-        }
-      }
-    }));
-  }
-
   private subscribeData(): void {
     this.subscriptions.add(this.activatedRoute.data.subscribe({
       next: data => {
-        this.readBookSourceFromData(data);
-        this.readBookTranslationViewerFromData(data);
-        this.readBookTargetsFromData(data);
+        this.data = data;
+        this.onDataLoaded();
       }
     }));
   }
 
-  private subscribeSaveProject(): void {
-    this.subscriptions.add(SystemService
-      .saveCurrentProject
-      .asObservable()
-      .pipe(debounceTime(this.autoSaveDebounceTime))
-      .subscribe({
-        next: () => {
-          this.systemService.saveProjectConfig(this.project);
-        }
-      }));
+  onProjectChange(project: Project): void {
+    this.project = project;
+    this.onDataLoaded();
+  }
+
+  onDataLoaded(): void {
+    console.info('[onDataLoaded]', {
+      project: this.project,
+      data: this.data,
+    });
+
+    if (this.project && this.data) {
+      this.readBookSourceFromData(this.project, this.data);
+      this.readBookTranslationViewerFromData(this.project, this.data);
+      this.readBookTargetsFromData(this.project, this.data);
+    }
   }
 
   private subscribeSaveBookMetadata(): void {
     this.subscriptions.add(SystemService
       .saveCurrentBookMetadata
       .asObservable()
-      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .pipe(debounceTime(SystemService.autoSaveDebounceTime))
       .subscribe({
-        next: currentBook => this.systemService.saveCurrentBookMetadata(this.project, currentBook, this.projectData)
+        next: currentBook => {
+          if (this.project) {
+            this.systemService.saveCurrentBookMetadata(this.project, currentBook, this.projectData);
+          }
+        }
       }));
   }
 
@@ -194,9 +143,13 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.add(SystemService
       .saveCurrentBookInterlinear
       .asObservable()
-      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .pipe(debounceTime(SystemService.autoSaveDebounceTime))
       .subscribe({
-        next: currentBook => this.systemService.saveCurrentBookInterlinear(this.project, currentBook, this.projectData)
+        next: currentBook => {
+          if (this.project) {
+            this.systemService.saveCurrentBookInterlinear(this.project, currentBook, this.projectData);
+          }
+        }
       }));
   }
 
@@ -204,31 +157,39 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.subscriptions.add(SystemService
       .saveCurrentBookCustomTranslations
       .asObservable()
-      .pipe(debounceTime(this.autoSaveDebounceTime))
+      .pipe(debounceTime(SystemService.autoSaveDebounceTime))
       .subscribe({
-        next: currentBook => this.systemService.saveCurrentBookCustomTranslation(this.project, currentBook, this.projectData)
+        next: currentBook => {
+          if (this.project) {
+            this.systemService.saveCurrentBookCustomTranslation(this.project, currentBook, this.projectData);
+          }
+        }
       }));
   }
 
-  private readBookSourceFromData(data: Data): void {
-    const sources = this.getProjectSources();
+  private readBookSourceFromData(project: Project, data: Data): void {
+    const sources = this.getProjectSources(project);
     const sourceBookRecord: { [source: string]: SourceBook | undefined } = {};
 
     sources.forEach(source => {
       sourceBookRecord[source] = data['sources'][source];
+      if (!this.codexMetadataRecord) {
+        this.codexMetadataRecord = {};
+      }
+
       this.codexMetadataRecord[source] = data['codex'][source];
     });
 
     this.sourceBookRecord = sourceBookRecord;
   }
 
-  private readBookTranslationViewerFromData(data: Data): void {
+  private readBookTranslationViewerFromData(project: Project, data: Data): void {
     this.translationBookRecord = {};
-    if (!this.project.translationViewer) {
+    if (!project.translationViewer) {
       return;
     }
 
-    this.project.translationViewer
+    project.translationViewer
       .forEach(source => this.applyViewingTranslation(source, data['sources'][source], data['codex'][source]));
   }
 
@@ -236,113 +197,50 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.translationBookRecord[source] = { ...translationViewing };
     this.translationBookRecord[source].name = codex.name;
     this.translationBookRecord[source].source = source;
+    if (!this.codexMetadataRecord) {
+      this.codexMetadataRecord = {};
+    }
+
     this.codexMetadataRecord[source] = codex;
   }
 
-  private readBookTargetsFromData(data: Data): void {
-    const targets = this.getProjectTargets();
+  private readBookTargetsFromData(project: Project, data: Data): void {
+    const targets = this.getProjectTargets(project);
     const projectData: ProjectData = {};
 
     targets.forEach(target => {
       projectData[target] = data['targets'][target];
+      if (!this.codexMetadataRecord) {
+        this.codexMetadataRecord = {};
+      }
+
       this.codexMetadataRecord[target] = data['codex'][target];
     });
 
     this.projectData = projectData;
   }
 
-  getProjectSources(): Array<string> {
-    return getProjectSourcesFn(this.project);
+  getProjectSources(project: Project): Array<string> {
+    return getProjectSourcesFn(project);
   }
 
-  getProjectTargets(): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
-    return getProjectTargetsFn(this.project);
+  getProjectTargets(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
+    return getProjectTargetsFn(project);
   }
 
-  getProjectTargetsMetadataDetails(): Array<TargetMetadataDetail> {
-    return getProjectTargetsMetadataDetailsFn(this.project, this.codexMetadataRecord);
+  getProjectTargetsMetadataDetails(project: Project): Array<TargetMetadataDetail> {
+    return getProjectTargetsMetadataDetailsFn(project, this.codexMetadataRecord);
   }
 
-  getProjectTranslationsDetails(): Array<TargetTranslationMetadataDetail> {
-    return getProjectTranslationsDetailsFn(this.project, this.codexMetadataRecord);
+  getProjectTranslationsDetails(project: Project): Array<TargetTranslationMetadataDetail> {
+    return getProjectTranslationsDetailsFn(project, this.codexMetadataRecord);
   }
 
   getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
     return chapters.findIndex(chapter => chapter.chapter === current.chapter);
   }
 
-  listBookNames(): Array<{ key: string, name: string }> {
-    const books = this.project.target.books || {};
-    return Object.keys(books).map(book => {
-      return {
-        key: book,
-        name: books[book].name
-      };
-    });
-  }
-
-  private notNullLike<T>(value: T | null | undefined): value is T {
-    if (value === undefined || value === null) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  open(): void {
-    if (this.notNullLike(this.formSelectedCollectionOrBook) && this.notNullLike(this.formSelectedArtifactOrChapter)) {
-      const [type, key] = this.formSelectedCollectionOrBook.split('-');
-      const chapterOrArtifact = String(this.formSelectedArtifactOrChapter);
-      let path: string[] = [];
-
-      if (type === 'book') {
-        path = ['/translator/book', key, 'chapter', chapterOrArtifact];
-      } else if (type === 'collection') {
-        path = ['transcriptor/collection/', key, '/artifact/', chapterOrArtifact];
-      }
-
-      console.log(`[navigate]`, path.join('/'));
-
-      LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
-        .finally(() => LoadingObservable.stopLoading());
-    }
-  }
-
-  back(): void {
-    if (this.notNullLike(this.formSelectedArtifactOrChapter)) {
-      const previous = Number(this.formSelectedArtifactOrChapter) - 1;
-      if (previous < 0) {
-        this.formSelectedArtifactOrChapter = 0;
-      } else {
-        this.formSelectedArtifactOrChapter = previous;
-      }
-      this.open();
-    }
-  }
-
-  next(): void {
-    if (this.notNullLike(this.formSelectedArtifactOrChapter)) {
-      const next = Number(this.formSelectedArtifactOrChapter) + 1;
-      this.formSelectedArtifactOrChapter = next;
-      this.open();
-    }
-  }
-
-  save(): void {
-    const book = this.current?.book;
-
-    if (book) {
-      this.systemService.triggerSaveCurrentBookMetadata({ book });
-      this.systemService.triggerSaveCurrentBookInterlinear({ book });
-      this.systemService.triggerSaveCurrentBookTranslations({ book });
-    }
-
-    this.systemService.triggerSaveCurrentProject();
-  }
-
-  openImportFromBookDialog(targetMetadataDetails: TargetMetadataDetail[]): void {
+  openImportFromBookDialog(project: Project, targetMetadataDetails: TargetMetadataDetail[]): void {
     const book = this.current?.book;
 
     if (book) {
@@ -351,7 +249,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .setOutletName('main')
         .setData({
           targetMetadataDetails,
-          project: this.project,
+          project: project,
           projectData: this.projectData,
           book: book
         })
@@ -427,35 +325,6 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  addArtifactCollection(): void {
-    if (this.project) {
-      this.modalService
-        .createModal(AddArtifactCollectionDialog)
-        .setOutletName('main')
-        .setData({
-          project: this.project
-        })
-        .build();
-    }
-  }
-
-  addArtifacts(): void {
-    selectPngFilesFn().then(fromFiles => {
-      if (!fromFiles) {
-        return;
-      }
-
-      this.modalService
-        .createModal(EditArtifactsInCollectionDialog)
-        .setOutletName('main')
-        .setData({
-          fromFiles,
-          project: this.project
-        })
-        .build();
-    }).catch(e => console.error(e));
-  }
-
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
     const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, language);
@@ -466,14 +335,14 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     };
   }
 
-  onAddViewingTranslation(source: string): void {
+  onAddViewingTranslation(project: Project, source: string): void {
     const book = this.current?.book;
 
     if (book) {
-      loadCodexMetadataFn(this.httpClient, this.project, source)
+      loadCodexMetadataFn(this.httpClient, project, source)
         .then(codex => {
           if (codex) {
-            loadSourceBookFn(this.httpClient, this.project, source, book).then(sourceBook => {
+            loadSourceBookFn(this.httpClient, project, source, book).then(sourceBook => {
               if (sourceBook?.chapters) {
                 const translationViewing: TranslationViewing = {
                   ...sourceBook,
@@ -494,19 +363,19 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       console.warn('Can\'t load translation, current book is not set');
     }
 
-    if (!this.project.translationViewer) {
-      this.project.translationViewer = [];
+    if (!project.translationViewer) {
+      project.translationViewer = [];
     }
 
-    this.project.translationViewer.push(source);
+    project.translationViewer.push(source);
     this.systemService.triggerSaveCurrentProject();
   }
 
-  onRemoveTranslation(source: string): void {
+  onRemoveTranslation(project: Project, source: string): void {
     if (confirm('Confirm removing this translation viewing?')) {
       delete this.translationBookRecord[source];
-      if (this.project.translationViewer) {
-        this.project.translationViewer.splice(this.project.translationViewer.indexOf(source), 1);
+      if (project.translationViewer) {
+        project.translationViewer.splice(project.translationViewer.indexOf(source), 1);
       }
       this.systemService.triggerSaveCurrentProject();
     }
