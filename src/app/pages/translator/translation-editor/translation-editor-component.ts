@@ -228,12 +228,16 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     return getProjectTargetsFn(project);
   }
 
-  getProjectTargetsMetadataDetails(project: Project): Array<TargetMetadataDetail> {
-    return getProjectTargetsMetadataDetailsFn(project, this.codexMetadataRecord);
+  getProjectTargetsMetadataDetails(
+    project: Project, codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> }
+  ): Array<TargetMetadataDetail> {
+    return getProjectTargetsMetadataDetailsFn(project, codexMetadataRecord);
   }
 
-  getProjectTranslationsDetails(project: Project): Array<TargetTranslationMetadataDetail> {
-    return getProjectTranslationsDetailsFn(project, this.codexMetadataRecord);
+  getProjectTranslationsDetails(
+    project: Project, codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> }
+  ): Array<TargetTranslationMetadataDetail> {
+    return getProjectTranslationsDetailsFn(project, codexMetadataRecord);
   }
 
   getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {

@@ -1,8 +1,8 @@
 
-<app-project-header (onProject)="project = $event" (onCurrentChapter)="current = $event">
-  @if (project) {
-    @let targetMetadataDetails = getProjectTargetsMetadataDetails(project);
-    @let customTranslationsDetails = getProjectTranslationsDetails(project);
+<app-project-header (onProject)="onProjectChange($event)" (onCurrentChapter)="current = $event">
+  @if (project && codexMetadataRecord) {
+    @let targetMetadataDetails = getProjectTargetsMetadataDetails(project, codexMetadataRecord);
+    @let customTranslationsDetails = getProjectTranslationsDetails(project, codexMetadataRecord);
   
     <app-translation-viewer-manager
       (addViewingTranslation)="onAddViewingTranslation(project, $event)"></app-translation-viewer-manager>
@@ -50,7 +50,7 @@
 
 <app-add-pattern-context-menu #addPatternMenuRef></app-add-pattern-context-menu>
 
-@if (project) {
+@if (project && codexMetadataRecord) {
   @for (structure of project.structure; track $index) {
     @let sourceCodex = codexMetadataRecord[structure.metadataEditor.source];
     @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
