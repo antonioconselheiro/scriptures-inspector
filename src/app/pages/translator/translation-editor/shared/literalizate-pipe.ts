@@ -13,10 +13,10 @@ export class LiteralizatePipe implements PipeTransform {
     private projectDataService: ProjectDataService
   ) { }
 
-  transform(value: string, book: ParsedBookMetadata, sourceLanguage: Language, listenUpdate?: number): string {
+  transform(text: string, book: ParsedBookMetadata, sourceLanguage: Language, listenUpdate?: number): string {
     listenUpdate;
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
-    const word = this.projectDataService.splitByLanguageWordSeparator(sourceLanguage, value);
+    const word = this.projectDataService.splitByLanguageWordSeparator(sourceLanguage, text);
 
     return word.map(sentence => {
       let literalWord: string[] = [];

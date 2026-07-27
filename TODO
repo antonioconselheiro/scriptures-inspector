@@ -8,7 +8,9 @@ TODO
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Caractere especial configurado para ser splitado como espaço está quebrando e não está sendo reexibido ao reagrupar texto
-[ ] - Na tela de artefatos as coleções de artefatos devem vir listadas primeiro que os livros
+[ ] - (mvp fragmentator) Na tela de artefatos as coleções de artefatos devem vir listadas primeiro que os livros
+[ ] - (mvp fragmentator) carregar artefato selecionado da url
+[ ] - (mvp fragmentator) artefatos como os fragmentos de quram costumam ter nomes personalizados, incluir um método de selecionar o artefato pelo nome num select ao invés de pelo número 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
