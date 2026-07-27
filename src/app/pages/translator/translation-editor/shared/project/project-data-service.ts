@@ -25,14 +25,13 @@ export class ProjectDataService {
     text: string
   ): Array<Array<{ index: number, word: string }>> {
     let index = 0;
-    const splittingChars = language.wordSeparator || [' '];
-    const wordSplitterPattern = new RegExp(`[${splittingChars.join('')}]`, 'g'); 
-    return text.split(wordSplitterPattern).map(word => this.splitByPatterns(parsedBook.patterns, word).map(word => {
+    const words = this.splitByLanguageWordSeparator(language, text);
+    return words.map(word => this.splitByPatterns(language, parsedBook.patterns, word).map(word => {
       return { index: index++, word };
     }));
   }
 
-  splitByPatterns(patterns: ParsedPatterns, pharse: string): string[] {
+  splitByPatterns(language: Language, patterns: ParsedPatterns, pharse: string): string[] {
     const splitWord = (word: string): string[] => {
       if (!word) {
         return [];
@@ -95,7 +94,8 @@ export class ProjectDataService {
       return [word];
     };
 
-    return pharse.split(' ').map(word => splitWord(word)).flat();
+    const words = this.splitByLanguageWordSeparator(language, pharse);
+    return words.map(word => splitWord(word)).flat();
   }
 
   splitByLanguageWordSeparator(language: Language, text: string): string[] {
