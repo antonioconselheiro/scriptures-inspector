@@ -1,7 +1,7 @@
 @if (sourceVerse) {
   <h3>Metadata</h3>
 
-  @let wordList = sourceVerse.text.split(' ');
+  @let wordList = splitByLanguageWordSeparator(sourceVerse.text);
   @let eachWord = splitIntoMatrix(sourceVerse.text);
   @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
   @let translations = getTranslations(viewingTranslationBookRecord);

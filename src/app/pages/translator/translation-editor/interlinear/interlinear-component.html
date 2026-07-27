@@ -1,10 +1,13 @@
 @if (sourceVerse) {
   <h3>Interlinear</h3>
 
-  @let wordList = sourceVerse.text.split(' ');
+  @let wordList = splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   @let eachWord = splitIntoMatrix(sourceLanguageAttributes, parsedBook, sourceVerse);
   @let eachOriginWord = splitIntoMatrix(sourceLanguageAttributes, parsedOriginBook, originVerse);
+
+{{wordList|json}}
+
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
       <table border="1" frame="hsides" role="presentation">
@@ -107,6 +110,7 @@
     </div>
     <button (click)="minified = !minified" type="button"></button>
   </div>
+
   @if (customTranslation) {
     <app-custom-translation-component
       [bookTarget]="bookTarget"

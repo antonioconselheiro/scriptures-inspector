@@ -25,7 +25,7 @@ export class ProjectDataService {
     text: string
   ): Array<Array<{ index: number, word: string }>> {
     let index = 0;
-    const splittingChars = [ ' ', ...(language.wordSeparator || []) ];
+    const splittingChars = language.wordSeparator || [' '];
     const wordSplitterPattern = new RegExp(`[${splittingChars.join('')}]`, 'g'); 
     return text.split(wordSplitterPattern).map(word => this.splitByPatterns(parsedBook.patterns, word).map(word => {
       return { index: index++, word };
@@ -96,6 +96,12 @@ export class ProjectDataService {
     };
 
     return pharse.split(' ').map(word => splitWord(word)).flat();
+  }
+
+  splitByLanguageWordSeparator(language: Language, text: string): string[] {
+    const splittingChars = language.wordSeparator || [' '];
+    const regex = new RegExp(`[${splittingChars.join('')}]+`, 'g');
+    return text.split(regex);
   }
 
   getLexical(

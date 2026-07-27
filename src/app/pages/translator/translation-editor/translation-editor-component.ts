@@ -113,11 +113,6 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   onDataLoaded(): void {
-    console.info('[onDataLoaded]', {
-      project: this.project,
-      data: this.data,
-    });
-
     if (this.project && this.data) {
       this.readBookSourceFromData(this.project, this.data);
       this.readBookTranslationViewerFromData(this.project, this.data);

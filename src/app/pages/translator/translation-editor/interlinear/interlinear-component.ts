@@ -20,6 +20,7 @@ import { ProjectInterlinearService } from '../shared/project/project-interlinear
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { Language } from '@domain/language-model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -29,7 +30,8 @@ import { Language } from '@domain/language-model';
     LiteralizatePipe,
     FunctionProxyPipe,
     CustomTranslationComponent,
-    AddPatternContextMenuTrigger
+    AddPatternContextMenuTrigger,
+    CommonModule
   ],
   templateUrl: './interlinear-component.html',
   styleUrl: './interlinear-component.scss'
@@ -106,6 +108,11 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     word: string;
   }>> {
     return this.projectService.splitIntoMatrix(language, parsedBook, sourceVerse.text);
+  }
+
+  splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<string> {
+    const language = this.languageMetadataRecord[languageName];
+    return this.projectService.splitByLanguageWordSeparator(language, text);
   }
 
   onSelectInterlinearToBaseScripture(

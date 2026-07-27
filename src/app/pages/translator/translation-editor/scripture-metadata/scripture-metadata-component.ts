@@ -132,6 +132,11 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return this.projectService.splitIntoMatrix(language, this.parsedBook, text);
   }
 
+  splitByLanguageWordSeparator(text: string): Array<string> {
+    const language = this.languageMetadataRecord[this.sourceLanguage];
+    return this.projectService.splitByLanguageWordSeparator(language, text);
+  }
+
   //  word of God
   setAsWordOfGod(
     input: HTMLInputElement,
