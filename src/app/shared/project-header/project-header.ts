@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +19,7 @@ import { debounceTime, Subscription } from 'rxjs';
 @Component({
   selector: 'app-project-header',
   imports: [
+    CommonModule,
     FormsModule
   ],
   templateUrl: './project-header.html',
@@ -38,6 +40,8 @@ export class ProjectHeader implements OnInit, OnDestroy {
   project!: Project;
   collections: FragmentCollection[] = [];
   current: CurrentChapter | CurrentArtifact | null = null;
+
+  context: '' | 'transcriptor' | 'translator' = '';
 
   private subscriptions = new Subscription();
 
@@ -95,22 +99,27 @@ export class ProjectHeader implements OnInit, OnDestroy {
   private subscribeParams(): void {
     this.subscriptions.add(this.activatedRoute.params.subscribe({
       next: params => {
-        const book = params['book'].toUpperCase();
+        const book = params['book'];
         const chapter = Number(params['chapter']);
 
         const collection = params['collection'];
         const artifact = Number(params['artifact']);
 
         if (book && chapter) {
-          this.formSelectedCollectionOrBook = `book-${book}`;
+          const bookUpperCase = book.toUpperCase();
+          this.formSelectedCollectionOrBook = `book-${bookUpperCase}`;
           this.formSelectedArtifactOrChapter = chapter;
-          this.current = { book, chapter };
-          this.onCurrentChapter.next({ book, chapter });
+          this.current = { book: bookUpperCase, chapter };
+          this.onCurrentChapter.next({ book: bookUpperCase, chapter });
+          this.context = 'translator';
         } else if (collection && artifact) {
           this.formSelectedCollectionOrBook = `collection-${collection}`;
           this.formSelectedArtifactOrChapter = artifact;
           this.current = { collection, artifact };
           this.onCurrentArtifact.next({ collection, artifact });
+          this.context = 'transcriptor';
+        } else {
+          this.context = '';
         }
       }
     }));

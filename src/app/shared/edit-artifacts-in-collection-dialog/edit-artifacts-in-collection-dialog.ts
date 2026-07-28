@@ -5,6 +5,7 @@ import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { ImagesPreview } from '@shared/images-preview/images-preview';
 import { LoadingObservable } from '@shared/loading/loading-service';
+import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
@@ -92,32 +93,34 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   saveCollectionMetadata(collectionFiles: Array<string>, collectionFolder: string): Promise<void> {
     const collection = this.collections.find(c => c.folder === collectionFolder);
     if (collection && this.project) {
-      collection.order = [...collectionFiles];
+      collection.order = collectionFiles.map(file => file.split('/').pop() || file);
       const { folder, ...metadata } = { ...collection };
-      return writeJsonFileFn(`${this.project.path}/artifacts/${folder}/metadata.json`, metadata);
+      return writeJsonFileFn(`${getArtifactCollectionFolderFn(this.project, collectionFolder)}/metadata.json`, metadata);
     }
     
     return Promise.resolve();
   }
 
   importArtifacts(collectionFolder: string): void {
-    LoadingObservable.startLoading();
-
-    Promise.all([
-      this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder),
-      importImagesFn(this.selectedCollectionFiles, collectionFolder)
-    ])
-      .then(() => {
-        alert('Arquivos importados com sucesso!');
-      })
-      .catch(e => {
-        alert('Ocorreu um erro ao importar os arquivos.');
-        console.error(e);
-      })
-      .finally(() => {
-        LoadingObservable.stopLoading();
-        this.close();
-      });
+    if (this.project) {
+      LoadingObservable.startLoading();
+  
+      Promise.all([
+        this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder),
+        importImagesFn(this.selectedCollectionFiles, getArtifactCollectionFolderFn(this.project, collectionFolder))
+      ])
+        .then(() => {
+          alert('Arquivos importados com sucesso!');
+        })
+        .catch(e => {
+          alert('Ocorreu um erro ao importar os arquivos.');
+          console.error(e);
+        })
+        .finally(() => {
+          LoadingObservable.stopLoading();
+          this.close();
+        });
+    }
   }
 
   saveMetadata(collectionFolder: string): void {

@@ -19,19 +19,12 @@
 
       <div>
         <select name="selectedBook" [(ngModel)]="formSelectedCollectionOrBook">
-          @let bookNames = listBookNames();
-          @if (bookNames.length) {
-            <optgroup label="Books"></optgroup>
-            @for (book of bookNames; track $index) {
-              <option [value]="'book-'+book.key">{{ book.name }}</option>
-            }
-          }
-
-          @if (collections.length) {
-            <optgroup label="Artifact Collections"></optgroup>
-            @for (collection of collections; track $index) {
-              <option [value]="'collection-'+collection.folder">{{ collection.name }}</option>
-            }
+          @if (context === 'translator') {
+            <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
+          } @else if (context === 'transcriptor') {
+            <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
+            <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
           }
         </select>
   
@@ -53,3 +46,24 @@
     </div>
   </form>
 </header>
+
+<ng-template #booksTemplate>
+  @let bookNames = listBookNames();
+  @if (bookNames.length) {
+    <optgroup label="Books">
+      @for (book of bookNames; track $index) {
+        <option [value]="'book-'+book.key">{{ book.name }}</option>
+      }
+    </optgroup>
+  }
+</ng-template>
+
+<ng-template #collectionsTemplate>
+  @if (collections.length) {
+    <optgroup label="Artifact Collections">
+      @for (collection of collections; track $index) {
+        <option [value]="'collection-'+collection.folder">{{ collection.name }}</option>
+      }
+    </optgroup>
+  }
+</ng-template>
