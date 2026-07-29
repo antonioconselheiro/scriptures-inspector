@@ -22,4 +22,8 @@ export class TranscriptionEditorComponent {
   onProjectChange(project: Project): void {
     this.project = project;
   }
+
+  onCurrentArtifactChange(current: CurrentArtifact): void {
+    this.current = current;
+  }
 }

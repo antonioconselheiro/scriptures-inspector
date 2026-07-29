@@ -10,6 +10,7 @@ TODO
 [ ] - Caractere especial configurado para ser splitado como espaço está quebrando e não está sendo reexibido ao reagrupar texto
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
+[ ] - (mvp fragmentator) componente para associação da transcrição com livro/capítulo 
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
 [ ] - (não mvp fragmentator) incluir meio de renomear arquivos importados

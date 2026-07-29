@@ -112,6 +112,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.onDataLoaded();
   }
 
+  onCurrentChapterChange(current: CurrentChapter): void {
+    this.current = current;
+  }
+
   onDataLoaded(): void {
     if (this.project && this.data) {
       this.readBookSourceFromData(this.project, this.data);

@@ -1,5 +1,5 @@
 
-<app-project-header (onProject)="onProjectChange($event)" (onCurrentChapter)="current = $event">
+<app-project-header (onProject)="onProjectChange($event)" (onCurrentChapter)="onCurrentChapterChange($event)">
   @if (project && codexMetadataRecord) {
     @let targetMetadataDetails = getProjectTargetsMetadataDetails(project, codexMetadataRecord);
     @let customTranslationsDetails = getProjectTranslationsDetails(project, codexMetadataRecord);
