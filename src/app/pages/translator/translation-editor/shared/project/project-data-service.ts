@@ -3,6 +3,7 @@ import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
+import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
@@ -19,20 +20,8 @@ export class ProjectDataService {
     return `${segment.index}-${word}`;
   }
 
-  splitIntoMatrix(
-    language: Language,
-    parsedBook: ParsedBookMetadata,
-    text: string
-  ): Array<Array<{ index: number, word: string }>> {
-    let index = 0;
-    const words = this.splitByLanguageWordSeparator(language, text);
-    return words.map(word => this.splitByPatterns(language, parsedBook.patterns, word).map(word => {
-      return { index: index++, word };
-    }));
-  }
-
-  splitByPatterns(language: Language, patterns: ParsedPatterns, pharse: string): string[] {
-    const splitWord = (word: string): string[] => {
+  splitIntoMatrix(language: Language, patterns: ParsedPatterns, pharse: string): Array<Word> {
+    const segmentWord = (word: string): string[] => {
       if (!word) {
         return [];
       }
@@ -67,9 +56,9 @@ export class ProjectDataService {
         const beforeLexeme = word.slice(0, internalLexeme.index);
         const afterLexeme = word.slice(internalLexeme.index + internalLexeme.lexeme.length);
         return [
-          ...splitWord(beforeLexeme),
+          ...segmentWord(beforeLexeme),
           internalLexeme.lexeme,
-          ...splitWord(afterLexeme)
+          ...segmentWord(afterLexeme)
         ];
       }
 
@@ -78,7 +67,7 @@ export class ProjectDataService {
         if (match) {
           const [prefix] = Array.from(match);
           const nextWord = word.replace(pattern, '');
-          return [prefix, ...splitWord(nextWord)].filter(eachWord => eachWord);
+          return [prefix, ...segmentWord(nextWord)].filter(eachWord => eachWord);
         }
       }
 
@@ -87,21 +76,50 @@ export class ProjectDataService {
         if (match) {
           const [suffix] = Array.from(match);
           const nextWord = word.replace(pattern, '');
-          return [...splitWord(nextWord), suffix].filter(eachWord => eachWord);
+          return [...segmentWord(nextWord), suffix].filter(eachWord => eachWord);
         }
       }
 
       return [word];
     };
 
+    let index = 0;
     const words = this.splitByLanguageWordSeparator(language, pharse);
-    return words.map(word => splitWord(word)).flat();
+      return words.map(word => {
+        return {
+          separator: word.separator,
+          segments: segmentWord(word.word).map(word => {
+            return {
+              index: index++,
+              word
+            };
+          })
+        }
+      }).flat();
   }
 
-  splitByLanguageWordSeparator(language: Language, text: string): string[] {
+  splitByLanguageWordSeparator(language: Language, text: string): Array<{ word: string; separator?: string; }> {
     const splittingChars = language.wordSeparator || [' '];
-    const regex = new RegExp(`[${splittingChars.join('')}]+`, 'g');
-    return text.split(regex);
+    const regex = new RegExp(`([${splittingChars.join('')}]+)`, 'g');
+    const parts = text.split(regex);
+
+    const result: Array<{ word: string; separator?: string; }> = [];
+
+    for (let i = 0; i < parts.length; i += 2) {
+      const word = parts[i];
+      const separator = parts[i + 1];
+
+      if (word.length === 0) {
+        continue;
+      }
+
+      result.push({
+        word: word,
+        ...(separator ? { separator } : {}),
+      });
+    }
+
+    return result;
   }
 
   getLexical(

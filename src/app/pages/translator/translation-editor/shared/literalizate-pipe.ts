@@ -9,23 +9,15 @@ import { Language } from '@domain/language-model';
 export class LiteralizatePipe implements PipeTransform {
 
   constructor(
-    private projectService: ProjectDataService,
     private projectDataService: ProjectDataService
   ) { }
 
   transform(text: string, book: ParsedBookMetadata, sourceLanguage: Language, listenUpdate?: number): string {
     listenUpdate;
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
-    const word = this.projectDataService.splitByLanguageWordSeparator(sourceLanguage, text);
 
-    return word.map(sentence => {
-      let literalWord: string[] = [];
-      for (let word of this.projectService.splitByPatterns(sourceLanguage, book.patterns, sentence)) {
-        literalWord.push(book.lexical[normalizeFn(word)]);
-      }
-
-      return literalWord.join(' ');
-    }).join(' ');
+    const wordMatrix = this.projectDataService.splitIntoMatrix(sourceLanguage, book.patterns, text);
+    return wordMatrix.map(word => word.segments.map(segment => book.lexical[normalizeFn(segment.word)]).join(' ')).join(' ');
   }
 
 }

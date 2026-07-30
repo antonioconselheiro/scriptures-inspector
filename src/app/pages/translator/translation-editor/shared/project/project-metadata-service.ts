@@ -14,6 +14,7 @@ import { WordSegment } from '@domain/word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { Word } from '@domain/word-model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,7 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
-    segments: Array<WordSegment> = []
+    word: Word
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
@@ -54,7 +55,7 @@ export class ProjectMetadataService {
     const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata || {};
     bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata = metadata;
 
-    segments.forEach(segment => {
+    word.segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (!metadata[key]) {
         metadata[key] = {
@@ -71,12 +72,19 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
-    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordMatrix: Array<Word>,
     wordIndex: number
   ): void {
     const language = languageMetadataRecord[sourceLanguage];
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, eachWord[wordIndex]);
-    const keys = eachWord.flat().map(word => `${word.index}-${language.normalizeFn && language.normalizeFn(word.word) || word.word}`);
+    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, wordMatrix[wordIndex]);
+    const keys: Array<string> = [];
+
+    wordMatrix.forEach(word => {
+      word.segments.forEach(segment => {
+        keys.push(`${segment.index}-${language.normalizeFn && language.normalizeFn(segment.word) || segment.word}`);
+      });
+    });
+
     Object.keys(wordMetadata).forEach(key => {
       if (!keys.includes(key)) {
         delete wordMetadata[key];
@@ -93,10 +101,10 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
     verse: SourceVerse,
-    segments: Array<WordSegment>
+    word: Word
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, segments);
-    segments.forEach(segment => {
+    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, word);
+    word.segments.forEach(segment => {
       const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
@@ -112,7 +120,7 @@ export class ProjectMetadataService {
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentVerseIndex,
-    segments: Array<WordSegment>
+    word: Word
   ): boolean {
     const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
@@ -126,11 +134,11 @@ export class ProjectMetadataService {
     }
 
     const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
-    if (!metadata || !segments[0]) {
+    if (!metadata || !word.segments[0]) {
       return false;
     }
 
-    const segment = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segments[0]);
+    const segment = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, word.segments[0]);
     const segmentData = metadata[segment];
     if (!segmentData) {
       return false;
@@ -163,10 +171,10 @@ export class ProjectMetadataService {
   cleanLexicalInterlinear(
     current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
-    eachWord: Array<Array<{ index: number; word: string; }>>
+    wordMatrix: Array<Word>
   ): void {
-    eachWord.forEach(eachSegment => {
-      eachSegment.forEach(segment => {
+    wordMatrix.forEach(word => {
+      word.segments.forEach(segment => {
         delete bookMetadata.lexical[segment.word];
       });
     });

@@ -9,7 +9,6 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
-import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
@@ -19,6 +18,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { Word } from '@domain/word-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -124,32 +124,29 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     this.removeTranslation.emit(source);
   }
 
-  splitIntoMatrix(text: string): Array<Array<{
-    index: number;
-    word: string;
-  }>> {
+  splitIntoMatrix(text: string): Array<Word> {
     const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.projectService.splitIntoMatrix(language, this.parsedBook, text);
+    return this.projectService.splitIntoMatrix(language, this.parsedBook.patterns, text);
   }
 
   splitByLanguageWordSeparator(text: string): Array<string> {
     const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.projectService.splitByLanguageWordSeparator(language, text);
+    return this.projectService.splitByLanguageWordSeparator(language, text).map(word => word.word);
   }
 
   //  word of God
   setAsWordOfGod(
     input: HTMLInputElement,
-    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordMatrix: Array<Word>,
     wordIndex: number
   ): void {
-    const segments: Array<WordSegment> = eachWord[wordIndex];
+    const word: Word = wordMatrix[wordIndex];
     this.projectMetadataService.removeUnusedMetadata(
       this.bookTarget,
       this.sourceLanguage,
       this.getCurrent(this.verseIndex),
       this.sourceVerse,
-      eachWord,
+      wordMatrix,
       wordIndex
     );
 
@@ -159,20 +156,20 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       this.sourceLanguage,
       this.getCurrent(this.verseIndex),
       this.sourceVerse,
-      segments
+      word
     );
   }
 
   getScriptureMetadataWordOfGod(
-    eachWord: Array<Array<{ index: number; word: string; }>>,
+    wordMatrix: Array<Word>,
     wordIndex: number
   ): boolean {
-    const segments: Array<WordSegment> = eachWord[wordIndex];
+    const word: Word = wordMatrix[wordIndex];
     return this.projectMetadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,
       this.getCurrent(this.verseIndex),
-      segments
+      word
     );
   }
 

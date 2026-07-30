@@ -5,17 +5,17 @@ import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
+import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
+import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
+import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { WordFragment } from '@domain/word-fragment-model';
+import { TranslationWordSegment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { BookVerseTranslationTarget } from '@domain/book-verse-translation-target-model';
-import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
-import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
 
 @Injectable({
   providedIn: 'root'
@@ -71,10 +71,15 @@ export class ProjectCustomTranslationService {
 
     if (chapterIndex !== this.indexNotFound) {
       const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
-      const lexicalList = this.projectService
-        .splitIntoMatrix(sourceLanguage, parsedBookMetadata, sourceVerse.text)
-        .flat()
-        .map(word => this.projectService.getLexical(parsedBookMetadata, sourceLanguage, word.word))
+      const lexicalList: Array<string> = [];
+      const wordMatrix = this.projectService
+        .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
+
+      wordMatrix.forEach(word => {
+        word.segments.forEach(segment => {
+          lexicalList.push(this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word));
+        });
+      });
   
       customVerse.text = lexicalList.join(' ').replace(/ {2,}/g, ' ');
       customVerse.metadata = lexicalList.map(lexical => { return { size: lexical.length, value: '' } });
@@ -99,14 +104,16 @@ export class ProjectCustomTranslationService {
       const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
       const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
   
-      this.projectService
-        .splitIntoMatrix(sourceLanguage, parsedBookMetadata, sourceVerse.text)
-        .flat()
-        .forEach(segment => {
-          if (customTranslationSplitted[segment.index].fragment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
+      const wordMatrix = this.projectService
+        .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
+
+      wordMatrix.forEach(word => {
+        word.segments.forEach(segment => {
+          if (customTranslationSplitted[segment.index].segment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
             metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment);
           }
         });
+      });
   
       this.systemService.triggerSaveCurrentBookTranslations(current);
     }
@@ -115,13 +122,13 @@ export class ProjectCustomTranslationService {
   splitCustomTranslation(customTranslationObj: BookVerse<{
     text: string;
     metadata: Array<BookTranslationTargetMetadata>;
-  }>): Array<WordFragment> {
-    const sentenceList: Array<WordFragment> = [];
+  }>): Array<TranslationWordSegment> {
+    const sentenceList: Array<TranslationWordSegment> = [];
     let start = 0;
     customTranslationObj.metadata.forEach(metadata => {
       const fragment = customTranslationObj.text.slice(start, start + metadata.size);
-      const sentence: WordFragment = {
-        fragment
+      const sentence: TranslationWordSegment = {
+        segment: fragment
       };
 
       sentenceList.push(sentence);
@@ -136,7 +143,7 @@ export class ProjectCustomTranslationService {
 
     const finalSentence = customTranslationObj.text.slice(start).trim();
     if (finalSentence.length) {
-      sentenceList.push({ fragment: finalSentence });
+      sentenceList.push({ segment: finalSentence });
     }
 
     return sentenceList;
@@ -147,8 +154,8 @@ export class ProjectCustomTranslationService {
     chapter: number,
     verseIndex: number
   ): {
-    original: Array<WordFragment>,
-    variations: Record<string, Array<WordFragment>>
+    original: Array<TranslationWordSegment>,
+    variations: Record<string, Array<TranslationWordSegment>>
   } {
     const customTranslationObj = customTranslation.chapters[chapter]?.verses[verseIndex];
     if (!customTranslationObj) {
@@ -156,7 +163,7 @@ export class ProjectCustomTranslationService {
     }
 
     const original = this.splitCustomTranslation(customTranslationObj);
-    const variations: Record<string, Array<WordFragment>> = {};
+    const variations: Record<string, Array<TranslationWordSegment>> = {};
     Object.keys(customTranslation.variations).forEach(variationKey => {
       const variationConfig = customTranslationObj.variations[variationKey];
       if (variationConfig) {

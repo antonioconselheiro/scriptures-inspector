@@ -1,12 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ParsedPatterns } from '@domain/parsed-patterns';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
+import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
+import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
@@ -18,9 +23,6 @@ import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
-import { Language } from '@domain/language-model';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -103,14 +105,14 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix(language: Language, parsedBook: ParsedBookMetadata, sourceVerse: SourceVerse): Array<Array<{
-    index: number;
-    word: string;
-  }>> {
-    return this.projectService.splitIntoMatrix(language, parsedBook, sourceVerse.text);
+  splitIntoMatrix(language: Language, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
+    return this.projectService.splitIntoMatrix(language, patterns, sourceVerse.text);
   }
 
-  splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<string> {
+  splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<{
+    word: string;
+    separator?: string;
+  }> {
     const language = this.languageMetadataRecord[languageName];
     return this.projectService.splitByLanguageWordSeparator(language, text);
   }

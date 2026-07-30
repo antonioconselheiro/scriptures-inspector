@@ -6,6 +6,7 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
 import { WordSegment } from '@domain/word-segment-model';
+import { Word } from '@domain/word-model';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {
@@ -41,16 +42,12 @@ export abstract class AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
-  joinSentenceWords(sentence: Array<{ index: number; word: string }>): string {
-    return sentence.map((word) => word.word).join('');
-  }
-
-  cleanLexicalInterlinear(eachWord: Array<Array<{ index: number; word: string; }>>): void {
+  cleanLexicalInterlinear(wordMatrix: Array<Word>): void {
     if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
       return;
     }
 
-    this.projectMetadataService.cleanLexicalInterlinear(this.current, this.bookTarget, eachWord);
+    this.projectMetadataService.cleanLexicalInterlinear(this.current, this.bookTarget, wordMatrix);
     this.pipeUpdaterController++;
   }
 }

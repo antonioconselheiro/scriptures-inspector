@@ -14,12 +14,13 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { WordFragment } from '@domain/word-fragment-model';
+import { TranslationWordSegment } from '@domain/word-fragment-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { Word } from '@domain/word-model';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -56,7 +57,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   sourceVerse!: SourceVerse;
 
   @Input()
-  eachWord!: Array<Array<{ index: number; word: string; }>>;
+  wordMatrix!: Array<Word>;
 
   @Input()
   customTranslation!: BookTranslationTarget;
@@ -83,8 +84,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     verseIndex: number,
     pipeUpdaterController: number
   ): {
-    original: Array<WordFragment>,
-    variations: Record<string, Array<WordFragment>>
+    original: Array<TranslationWordSegment>,
+    variations: Record<string, Array<TranslationWordSegment>>
   } {
     pipeUpdaterController;
     return this.projectCustomTranslationService.splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex);
@@ -138,7 +139,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   cleanCustomTranslationVariation(
     variation: { id: string; name: string; },
     chapterVariations: BookVerseTranslationTargetVariations,
-    splittedCustomTranslation: WordFragment[]
+    splittedCustomTranslation: TranslationWordSegment[]
   ): void {
     if (!confirm(`clean variation "${variation.name}" on this verse?`)) {
       return;

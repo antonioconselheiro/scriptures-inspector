@@ -88,13 +88,13 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
             patterns: parsedPatterns
           };
 
-          const eachWord = this.projectService.splitIntoMatrix(language, parsedBook, verse.text);
-          eachWord.forEach(wordFragments => {
-            wordFragments.forEach(fragment => {
-              const word = normalizeFn(fragment.word);
+          const wordMatrix = this.projectService.splitIntoMatrix(language, parsedBook.patterns, verse.text);
+          wordMatrix.forEach(word => {
+            word.segments.forEach(segment => {
+              const wordSegment = normalizeFn(segment.word);
 
-              if (word in lexicalFoundInText) {
-                lexicalFoundInText[word]++;
+              if (wordSegment in lexicalFoundInText) {
+                lexicalFoundInText[wordSegment]++;
               }
             })
           });

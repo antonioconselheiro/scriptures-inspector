@@ -2,7 +2,7 @@
   <h3>Metadata</h3>
 
   @let wordList = splitByLanguageWordSeparator(sourceVerse.text);
-  @let eachWord = splitIntoMatrix(sourceVerse.text);
+  @let wordMatrix = splitIntoMatrix(sourceVerse.text);
   @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
   @let translations = getTranslations(viewingTranslationBookRecord);
 
@@ -23,13 +23,13 @@
           <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
             [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-            @for (sentence of eachWord; track $index) {
-              @for (word of sentence; track $index) {
-                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+            @for (word of wordMatrix; track $index) {
+              @for (segment of word.segments; track segment.index) {
+                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
               }
   
-              @if (joinSentenceWords(sentence).length) {
-                <span>&nbsp;</span>
+              @if (word.separator) {
+                <span>{{word.separator}}</span>
               }
             }
           </td>
@@ -37,10 +37,10 @@
         </tr>
         <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-          @for (sentence of eachWord; track $index) {
+          @for (word of wordMatrix; track $index) {
           <td>
-            @for (word of sentence; track $index) {
-            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+            @for (segment of word.segments; track segment.index) {
+            <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
             }
           </td>
           }
@@ -50,10 +50,10 @@
         @if (transliteration) {
         <tr>
           <th>transliteration</th>
-          @for (sentence of eachWord; track $index) {
+          @for (word of wordMatrix; track $index) {
           <td>
-            @for (word of sentence; track $index) {
-            <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : transliteration}}</span>
+            @for (segment of word.segments; track segment.index) {
+              <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : transliteration}}</span>
             }
           </td>
           }
@@ -66,8 +66,8 @@
           <td>
             <input
               type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-              (change)="setAsWordOfGod(wordOfGodEl, eachWord, wordIndex)"
-              [checked]="getScriptureMetadataWordOfGod(eachWord, wordIndex)"
+              (change)="setAsWordOfGod(wordOfGodEl, wordMatrix, wordIndex)"
+              [checked]="getScriptureMetadataWordOfGod(wordMatrix, wordIndex)"
             />
           </td>
           }
@@ -76,9 +76,9 @@
     
         <tr>
           <th rowspan="2">interlinear</th>
-          @for (word of eachWord; track $index) {
+          @for (word of wordMatrix; track $index) {
           <td>
-            @for (segment of word; track $index) {
+            @for (segment of word.segments; track segment.index) {
             @let lexical = segment.word | lexical : bookTarget : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
             <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
               #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
@@ -86,18 +86,18 @@
             }
           </td>
           }
-          <td rowspan="2"><button (click)="cleanLexicalInterlinear(eachWord)" type="button">×</button></td>
+          <td rowspan="2"><button (click)="cleanLexicalInterlinear(wordMatrix)" type="button">×</button></td>
         </tr>
         <tr>
           <td [colSpan]="wordList.length">
-            @for (sentence of eachWord; track $index) {
-              @for (word of sentence; track $index) {
-                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | literalizate : parsedBook :
+            @for (word of wordMatrix; track $index) {
+              @for (segment of word.segments; track segment.index) {
+                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | literalizate : parsedBook :
                   languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
-                
-                @if (word.word.length) {
-                  <span>&nbsp;</span>
-                }
+              }
+
+              @if (word.separator) {
+                <span>{{word.separator}}</span>
               }
             }
           </td>
@@ -120,13 +120,13 @@
           <tr>
             <th rowspan="2">{{spelling.name}}</th>
     
-            @for (sentence of eachWord; track $index) {
+            @for (word of wordMatrix; track $index) {
             <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-              @for (word of sentence; track $index) {
+              @for (segment of word.segments; track segment.index) {
                 @if (spelling.parse) {
-                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : spelling.parse}}</span>
                 } @else {
-                <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
                 }
               }
             </td>
@@ -136,17 +136,17 @@
     
           <tr>
             <td [colSpan]="wordList.length">
-              @for (sentence of eachWord; track $index) {
-                @for (word of sentence; track $index) {
+              @for (word of wordMatrix; track $index) {
+                @for (segment of word.segments; track segment.index) {
                   @if (spelling.parse) {
-                    <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word | functionProxy : spelling.parse}}</span>
+                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : spelling.parse}}</span>
                   } @else {
-                    <span [class]="'prisma'+(word.index % 7 + 1)">{{word.word}}</span>
+                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
                   }
                 }
   
-                @if (joinSentenceWords(sentence).length) {
-                  <span>&nbsp;</span>
+                @if (word.separator) {
+                  <span>{{word.separator}}</span>
                 }
               }
             </td>
@@ -161,6 +161,6 @@
   @if (customTranslation) {
   <app-custom-translation-component [bookTarget]="bookTarget" [translationSourceLanguage]="sourceLanguage"
     [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
-    [eachWord]="eachWord" [customTranslation]="customTranslation"></app-custom-translation-component>
+    [wordMatrix]="wordMatrix" [customTranslation]="customTranslation"></app-custom-translation-component>
   }
 }

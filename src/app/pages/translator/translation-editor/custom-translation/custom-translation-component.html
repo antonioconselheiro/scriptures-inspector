@@ -25,10 +25,10 @@
   
       <tr>
         <td [colSpan]="splittedCustomTranslation.original.length">
-          @for (sentence of splittedCustomTranslation.original; track $index) {
+          @for (word of splittedCustomTranslation.original; track $index) {
           @let color = getCustomTranslationColor($index);
-          <span [attr.data-punctuation]="isPunctuation(color, sentence.fragment)" [class]="'prisma'+color">{{sentence.fragment}}</span>
-            @if (sentence.hasTrailingSpace && sentence.fragment) {
+          <span [attr.data-punctuation]="isPunctuation(color, word.segment)" [class]="'prisma'+color">{{word.segment}}</span>
+            @if (word.hasTrailingSpace && word.segment) {
               <span class="prisma-gap">&nbsp;</span>
             }
           }
@@ -37,9 +37,9 @@
   
       <tr>
         <td [colSpan]="splittedCustomTranslation.original.length">
-          @for (sentence of splittedCustomTranslation.original; track $index) {
-          <span [class]="isCustomTranslationWordOfGod($index) ? 'godsaid' : ''">{{sentence.fragment}}</span>
-            @if (sentence.hasTrailingSpace && sentence.fragment) {
+          @for (word of splittedCustomTranslation.original; track $index) {
+          <span [class]="isCustomTranslationWordOfGod($index) ? 'godsaid' : ''">{{word.segment}}</span>
+            @if (word.hasTrailingSpace && word.segment) {
               <span class="prisma-gap">&nbsp;</span>
             }
           }
@@ -61,9 +61,9 @@
   
       <tr>
         <th>interlinear</th>
-        @for (sentence of splittedCustomTranslation.original; track $index) {
+        @for (word of splittedCustomTranslation.original; track $index) {
         <td>
-          {{sentence.fragment}}
+          {{word.segment}}
         </td>
         }
         <td>
@@ -97,8 +97,8 @@
             [ngModel]="getCustomTranslationInterlinearValue($index)"
             (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
             <option value=""></option>
-            @for (wordSegments of eachWord; track $index) {
-              @for (segment of wordSegments; track $index) {
+            @for (word of wordMatrix; track $index) {
+              @for (segment of word.segments; track $index) {
                 <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
               }
             }
@@ -131,7 +131,7 @@
           </tr>
   
           <tr>
-            @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
+            @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
             <td>
               @let dataListId = getDataListId(variation, $index);
               @let variarion = getVariation(chapterVariations, variation.id, $index)?.value || '';
@@ -144,7 +144,7 @@
                 name="variationValue{{dataListId}}"
                 [ngModel]="variarion"
                 (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
-                [style.width.px]="calcFieldSize({ word: sentence.fragment, index: 0 }, variationValueEl.value) + 20">
+                [style.width.px]="calcFieldSize({ word: word.segment, index: 0 }, variationValueEl.value) + 20">
   
                 <datalist [id]="dataListId">
                   @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
@@ -160,7 +160,7 @@
 
           <tr>
             <td [colSpan]="splittedCustomTranslation.variations[variation.id].length">
-              @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
+              @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
                 @let hasVariation = getVariation(chapterVariations, variation.id, $index);
                 @if (hasVariation && (hasVariation.value.length || hasVariation.value === '' && hasVariation.size === 0)) {
                   @if (hasVariation.value.trim().length) {
@@ -168,14 +168,14 @@
                     <span [attr.data-punctuation]="isPunctuation(color, hasVariation.value)" [class]="'prisma'+color">{{hasVariation.value}}</span>
                   }
 
-                  @if (sentence.hasTrailingSpace) {
+                  @if (word.hasTrailingSpace) {
                     <span class="prisma-gap">&nbsp;</span>
                   }
                 } @else {
                   @let color = getCustomTranslationColor($index);
-                  <span [attr.data-punctuation]="isPunctuation(color, sentence.fragment)" [class]="'prisma'+color">{{sentence.fragment}}</span>
+                  <span [attr.data-punctuation]="isPunctuation(color, word.segment)" [class]="'prisma'+color">{{word.segment}}</span>
   
-                  @if (sentence.hasTrailingSpace && sentence.fragment) {
+                  @if (word.hasTrailingSpace && word.segment) {
                     <span class="prisma-gap">&nbsp;</span>
                   }
                 }

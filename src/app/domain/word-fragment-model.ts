@@ -1,4 +1,4 @@
-export interface WordFragment {
-  fragment: string;
+export interface TranslationWordSegment {
+  segment: string;
   hasTrailingSpace?: true;
 }
