@@ -92,12 +92,12 @@
           <td [colSpan]="wordList.length">
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
-                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | literalizate : parsedBook :
-                  languageMetadataRecord[sourceLanguage] : pipeUpdaterController}}</span>
-              }
+                @let literalized = segment.word | literalizate : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
+                <span [class]="'prisma'+(segment.index % 7 + 1)">{{literalized}}</span>
 
-              @if (word.separator) {
-                <span>{{word.separator}}</span>
+                @if (literalized.length && wordList.length !== segment.index) {
+                  <span>&nbsp;</span>
+                }
               }
             }
           </td>
