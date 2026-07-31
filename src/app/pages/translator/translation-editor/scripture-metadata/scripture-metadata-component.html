@@ -25,12 +25,12 @@
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
-                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+                @if (segment.word.length) {
+                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+                }
               }
   
-              @if (word.separator) {
-                <span>{{word.separator}}</span>
-              }
+              @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
             }
           </td>
           <td></td>
@@ -40,7 +40,9 @@
           @for (word of wordMatrix; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
-            <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+              @if (segment.word.length) {
+                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+              }
             }
           </td>
           }
@@ -53,7 +55,10 @@
           @for (word of wordMatrix; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
-              <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : transliteration}}</span>
+              @let transliterated = segment.word | functionProxy : transliteration;
+              @if (transliterated.length) {
+                <span [class]="'prisma'+(segment.index % 7 + 1)">{{transliterated}}</span>
+              }
             }
           </td>
           }
@@ -93,10 +98,9 @@
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @let literalized = segment.word | literalizate : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
-                <span [class]="'prisma'+(segment.index % 7 + 1)">{{literalized}}</span>
-
-                @if (literalized.length && wordList.length !== segment.index) {
-                  <span>&nbsp;</span>
+                @if (literalized.length) {
+                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{literalized}}</span>
+                  @if (wordList.length !== segment.index) {&nbsp;}
                 }
               }
             }
@@ -124,8 +128,11 @@
             <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
               @for (segment of word.segments; track segment.index) {
                 @if (spelling.parse) {
-                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : spelling.parse}}</span>
-                } @else {
+                  @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
+                  @if (alternativeSpelling.length) {
+                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
+                  }
+                } @else if (segment.word.length) {
                   <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
                 }
               }
@@ -139,15 +146,16 @@
               @for (word of wordMatrix; track $index) {
                 @for (segment of word.segments; track segment.index) {
                   @if (spelling.parse) {
-                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word | functionProxy : spelling.parse}}</span>
-                  } @else {
+                    @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
+                    @if (alternativeSpelling.length) {
+                      <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
+                    }
+                  } @else if (segment.word.length) {
                     <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
                   }
                 }
   
-                @if (word.separator) {
-                  <span>{{word.separator}}</span>
-                }
+                @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
               }
             </td>
           </tr>

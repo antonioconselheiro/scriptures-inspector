@@ -20,10 +20,9 @@
           >
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
-                <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
-
-                @if (word.separator) {
-                  <span>{{word.separator}}</span>
+                @if (segment.word.length) {
+                  <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
+                  @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
                 }
               }
               
@@ -35,7 +34,9 @@
           @for (word of wordMatrix; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
-              <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
+              @if (segment.word.length) {
+                <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
+              }
             }
           </td>
           }
@@ -47,7 +48,9 @@
             @for (word of wordMatrix; track $index) {
               <td>
                 @for (segment of word.segments; track segment.index) {
-                  <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word | functionProxy : sourceLanguageAttributes.transliteration}}</span>
+                  @if (segment.word.length) {
+                    <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word | functionProxy : sourceLanguageAttributes.transliteration}}</span>
+                  }
                 }
               </td>
             }
@@ -81,10 +84,7 @@
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @let value = segment.word | literalizate : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-                <span [class]="'prisma'+getTranslationColor(segment.index)">{{value}}</span>
-                @if (value.length) {
-                  <span>&nbsp;</span>
-                }
+                @if (value.length) {<span [class]="'prisma'+getTranslationColor(segment.index)">{{value}}</span>&nbsp;}
               }
             }
           </td>

@@ -27,9 +27,9 @@
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (word of splittedCustomTranslation.original; track $index) {
           @let color = getCustomTranslationColor($index);
-          <span [attr.data-punctuation]="isPunctuation(color, word.segment)" [class]="'prisma'+color">{{word.segment}}</span>
-            @if (word.hasTrailingSpace && word.segment) {
-              <span class="prisma-gap">&nbsp;</span>
+          @if (word.segment.length) {
+            <span [attr.data-punctuation]="isPunctuation(color, word.segment)" [class]="'prisma'+color">{{word.segment}}</span>
+              @if (word.hasTrailingSpace && word.segment) {&nbsp;}
             }
           }
         </td>
@@ -39,9 +39,7 @@
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (word of splittedCustomTranslation.original; track $index) {
           <span [class]="isCustomTranslationWordOfGod($index) ? 'godsaid' : ''">{{word.segment}}</span>
-            @if (word.hasTrailingSpace && word.segment) {
-              <span class="prisma-gap">&nbsp;</span>
-            }
+            @if (word.hasTrailingSpace && word.segment) {&nbsp;}
           }
         </td>
       </tr>
@@ -62,9 +60,9 @@
       <tr>
         <th>interlinear</th>
         @for (word of splittedCustomTranslation.original; track $index) {
-        <td>
-          {{word.segment}}
-        </td>
+          <td>
+            {{word.segment}}
+          </td>
         }
         <td>
         </td>
@@ -168,16 +166,12 @@
                     <span [attr.data-punctuation]="isPunctuation(color, hasVariation.value)" [class]="'prisma'+color">{{hasVariation.value}}</span>
                   }
 
-                  @if (word.hasTrailingSpace) {
-                    <span class="prisma-gap">&nbsp;</span>
-                  }
-                } @else {
+                  @if (word.hasTrailingSpace) {&nbsp;}
+                } @else if (word.segment.length) {
                   @let color = getCustomTranslationColor($index);
                   <span [attr.data-punctuation]="isPunctuation(color, word.segment)" [class]="'prisma'+color">{{word.segment}}</span>
   
-                  @if (word.hasTrailingSpace && word.segment) {
-                    <span class="prisma-gap">&nbsp;</span>
-                  }
+                  @if (word.hasTrailingSpace && word.segment) {&nbsp;}
                 }
               }
             </td>
