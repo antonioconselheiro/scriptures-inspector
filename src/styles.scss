@@ -157,6 +157,17 @@ table {
   }
 }
 
+@for $i from 1 through 7 {
+  .prisma#{$i} + .prisma[data-punctuation] {
+    &:not(:has(+ .prisma))::after {
+      content: "";
+    }
+
+    + .prisma::before {
+      content: "[";
+    }
+  }
+}
 
 .prisma1 {
   color: rgb(211, 1, 1);
