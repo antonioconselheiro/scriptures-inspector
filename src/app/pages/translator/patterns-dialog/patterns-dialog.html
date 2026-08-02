@@ -6,7 +6,7 @@
       <label for="word">Word</label>
       <input id="word" type="text" formControlName="word" placeholder="word" />
       @if (form.get('word')?.invalid && form.get('word')?.touched) {
-      <small class="error">Word value is required</small>
+        <small class="error">Word value is required</small>
       }
     </div>
 
@@ -18,7 +18,7 @@
         <option value="lexeme">Lexeme</option>
       </select>
       @if (form.get('type')?.invalid && form.get('type')?.touched) {
-      <small class="error">Type selection is required</small>
+        <small class="error">Type selection is required</small>
       }
     </div>
 
@@ -26,40 +26,42 @@
   </fieldset>
 </form>
 
-<table class="textCenter" border="1" role="presentation">
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Pattern</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th colspan="3">{{languageMetadataRecord[language].name}}</th>
-    </tr>
-    @for (pattern of patterns.prefix; track $index) {
-    <tr>
-      <td>prefix</td>
-      <td>{{pattern}}</td>
-      <td><button type="button" (click)="deletePattern('prefix', $index)">×</button></td>
-    </tr>
-    }
-
-    @for (pattern of patterns.suffix; track $index) {
-    <tr>
-      <td>suffix</td>
-      <td>{{pattern}}</td>
-      <td><button type="button" (click)="deletePattern('suffix', $index)">×</button></td>
-    </tr>
-    }
-
-    @for (pattern of patterns.lexeme; track $index) {
-    <tr>
-      <td>lexeme</td>
-      <td>{{pattern}}</td>
-      <td><button type="button" (click)="deletePattern('lexeme', $index)">×</button></td>
-    </tr>
-    }
-  </tbody>
-</table>
+<div class="wrapper">
+  <table class="textCenter" border="1" role="presentation">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Pattern</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th colspan="3">{{languageMetadataRecord[language].name}}</th>
+      </tr>
+      @for (pattern of patterns.prefix; track $index) {
+      <tr>
+        <td>prefix</td>
+        <td>{{pattern}}</td>
+        <td><button type="button" (click)="deletePattern('prefix', $index)">×</button></td>
+      </tr>
+      }
+  
+      @for (pattern of patterns.suffix; track $index) {
+      <tr>
+        <td>suffix</td>
+        <td>{{pattern}}</td>
+        <td><button type="button" (click)="deletePattern('suffix', $index)">×</button></td>
+      </tr>
+      }
+  
+      @for (pattern of patterns.lexeme; track $index) {
+      <tr>
+        <td>lexeme</td>
+        <td>{{pattern}}</td>
+        <td><button type="button" (click)="deletePattern('lexeme', $index)">×</button></td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -10,11 +10,10 @@ import { ParsedPatterns } from '@domain/parsed-patterns';
 import { PatternsSerialized } from '@domain/patterns-serialized';
 import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-word-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { WordSegment } from '@domain/word-segment-model';
+import { Word } from '@domain/word-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
-import { Word } from '@domain/word-model';
 
 @Injectable({
   providedIn: 'root'

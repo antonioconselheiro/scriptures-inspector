@@ -113,7 +113,6 @@ export class ProjectCustomTranslationService {
       wordMatrix.forEach(word => {
         word.segments.forEach(segment => {
           if (
-            customTranslationSplitted[segment.index] &&
             customTranslationSplitted[segment.index].segment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)
           ) {
             metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationLanguage, segment);
@@ -174,13 +173,6 @@ export class ProjectCustomTranslationService {
       const variationConfig = customTranslationObj.variations[variationKey];
       if (variationConfig) {
         const metadataVariation = structuredClone(customTranslationObj.metadata);
-        Object.keys(variationConfig).forEach(key => {
-          const sizeOverride = variationConfig[key].size;
-          if (sizeOverride) {
-            metadataVariation[Number(key)].size = sizeOverride;
-          }
-        });
-
         variations[variationKey] = this.splitCustomTranslation({ ...customTranslationObj, metadata: metadataVariation });
       } else {
         variations[variationKey] = original;
@@ -534,22 +526,6 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
-  getVariationSize(
-    customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceVerse: SourceVerse,
-    scriptureWordSpanIndex: number,
-    chapterVariations: BookVerseTranslationTargetVariations,
-    variationId: string
-  ): `${number}` | '' {
-    const scripture = this.getCustomTranslationInterlinearValue(
-      customTranslation, current, sourceVerse, scriptureWordSpanIndex
-    );
-
-    const size = chapterVariations[variationId] && chapterVariations[variationId][scripture]?.size || '';
-    return String(size) as `${number}` | '';
-  }
-
   getVariation(
     translationWordSpanIndex: number,
     chapterVariations: BookVerseTranslationTargetVariations,
@@ -587,30 +563,7 @@ export class ProjectCustomTranslationService {
     return Array.from(suggestions);
   }
 
-  updateVariationSize(
-    current: CurrentChapter,
-    translationWordSpanIndex: number,
-    chapterVariations: BookVerseTranslationTargetVariations,
-    variationId: string,
-    sizeValue: `${number}` | ''
-  ): void {
-    const translationWordSpanIndexString = String(translationWordSpanIndex);
-    if (!chapterVariations[variationId]) {
-      chapterVariations[variationId] = {};
-    }
 
-    if (sizeValue.length) {
-      if (chapterVariations[variationId][translationWordSpanIndexString]) {
-        chapterVariations[variationId][translationWordSpanIndexString].size = Number(sizeValue);
-      } else {
-        chapterVariations[variationId][translationWordSpanIndexString] = { size: Number(sizeValue), value: '' };
-      }
-    } else {
-      delete chapterVariations[variationId][translationWordSpanIndexString].size;
-    }
-
-    this.systemService.triggerSaveCurrentBookTranslations(current);
-  }
 
   updateVariationValue(
     current: CurrentChapter,

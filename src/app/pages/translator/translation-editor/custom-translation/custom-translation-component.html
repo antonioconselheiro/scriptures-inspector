@@ -112,55 +112,44 @@
   
       @if (chapterVariations) {
         @for (variation of getVariations(); track $index) {
+ 
           <tr>
-            <th rowspan="3" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
-  
-            @for (sentence of splittedCustomTranslation.variations[variation.id]; track $index) {
+            <th rowspan="2" class="variationName" [title]="variation.name">Variation: {{variation.name}}</th>
+            @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
               <td>
-                <input type="number" #variationSizeEl class="wordSpan configField" name="wordSpanOverride{{variation.id}}{{$index}}" placeholder="size override" title="size override"
-                  [ngModel]="getVariationSize(chapterVariations, variation.id, $index)"
-                  (input)="updateVariationSize(chapterVariations, variation.id, $index, variationSizeEl.value)">
+                @let dataListId = getDataListId(variation, $index);
+                @let variarion = getVariation(chapterVariations, variation.id, $index)?.value || '';
+                <input
+                  type="text"
+                  #variationValueEl
+                  placeholder="empty"
+                  class="configField"
+                  [attr.list]="dataListId"
+                  name="variationValue{{dataListId}}"
+                  [ngModel]="variarion"
+                  (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
+                  [style.width.px]="calcFieldSize({ word: word.segment, index: 0 }, variationValueEl.value) + 20">
+    
+                  <datalist [id]="dataListId">
+                    @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
+                      @if (suggestion !== variationValueEl.value) {
+                        <option [value]="suggestion"></option>
+                      }
+                    }
+                  </datalist>
               </td>
             }
 
-            <td rowspan="3">
+            <td rowspan="2">
               <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])" type="button">×</button>
             </td>
-          </tr>
-  
-          <tr>
-            @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
-            <td>
-              @let dataListId = getDataListId(variation, $index);
-              @let variarion = getVariation(chapterVariations, variation.id, $index)?.value || '';
-              <input
-                type="text"
-                #variationValueEl
-                placeholder="empty"
-                class="configField"
-                [attr.list]="dataListId"
-                name="variationValue{{dataListId}}"
-                [ngModel]="variarion"
-                (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
-                [style.width.px]="calcFieldSize({ word: word.segment, index: 0 }, variationValueEl.value) + 20">
-  
-                <datalist [id]="dataListId">
-                  @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                    @if (suggestion !== variationValueEl.value) {
-                      <option [value]="suggestion"></option>
-                    }
-                  }
-                </datalist>
-            </td>
-            }
-  
           </tr>
 
           <tr>
             <td [colSpan]="splittedCustomTranslation.variations[variation.id].length">
               @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
                 @let hasVariation = getVariation(chapterVariations, variation.id, $index);
-                @if (hasVariation && (hasVariation.value.length || hasVariation.value === '' && hasVariation.size === 0)) {
+                @if (hasVariation && hasVariation.value.length) {
                   @if (hasVariation.value.trim().length) {
                     @let color = getCustomTranslationColor($index);
                     <span [attr.data-punctuation]="isPunctuation(color, hasVariation.value)" [class]="'prisma'+color">{{hasVariation.value}}</span>

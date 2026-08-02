@@ -1,18 +1,20 @@
 <button class="center" type="button" (click)="cleanUnusedLexical()">clean unused lexical</button>
 
-<table border="1" role="presentation">
-
-  <tr>
-    <th>Word</th>
-    <th>Lexical</th>
-    <th></th>
-  </tr>
-
-  @for (lexical of lexicals; track $index) {
+<div class="wrapper">
+  <table border="1" role="presentation">
+  
     <tr>
-      <td>{{lexical.key}}</td>
-      <td>{{lexical.value}}</td>
-      <td><button type="button" (click)="deleteLexical(lexical.key)">×</button></td>
+      <th>Word</th>
+      <th>Lexical</th>
+      <th></th>
     </tr>
-  }
-</table>
+  
+    @for (lexical of lexicals; track $index) {
+      <tr>
+        <td>{{lexical.key}}</td>
+        <td>{{lexical.value}}</td>
+        <td><button type="button" (click)="deleteLexical(lexical.key)">×</button></td>
+      </tr>
+    }
+  </table>
+</div>

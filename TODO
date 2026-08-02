@@ -8,6 +8,7 @@ TODO
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Caractere agrupador massorético (־, ׀) está sendo incluso na representação dos caracteres paleo hebraicos, deve ser substituído por espaço
+[ ] - Quando um campo já preenchido é alterado, os outros campos conectados ao mesmo léxico não são atualizados
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) componente para associação da transcrição com livro/capítulo 

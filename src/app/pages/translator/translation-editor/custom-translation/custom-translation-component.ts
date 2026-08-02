@@ -243,17 +243,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     });
   }
 
-  getVariationSize(chapterVariations: BookVerseTranslationTargetVariations, variationId: string, scriptureWordSpanIndex: number): `${number}` | '' {
-    return this.projectCustomTranslationService.getVariationSize(
-      this.customTranslation,
-      this.current,
-      this.sourceVerse,
-      scriptureWordSpanIndex,
-      chapterVariations,
-      variationId
-    );
-  }
-
   getVariation(
     chapterVariations: BookVerseTranslationTargetVariations,
     variationId: string,
@@ -275,21 +264,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
     return this.projectCustomTranslationService.getVariationDataListOptions(this.customTranslation, interlinearValue, variationId);
-  }
-
-  updateVariationSize(
-    chapterVariations: BookVerseTranslationTargetVariations,
-    variationId: string,
-    scriptureWordSpanIndex: number,
-    sizeValue: string,
-  ): void {
-    this.projectCustomTranslationService.updateVariationSize(
-      this.current,
-      scriptureWordSpanIndex,
-      chapterVariations,
-      variationId,
-      sizeValue as `${number}` | ''
-    );
   }
 
   updateVariationValue(
