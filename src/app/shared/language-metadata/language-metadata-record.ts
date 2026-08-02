@@ -21,7 +21,7 @@ export const languageMetadataRecord: {
     label: 'hebraic',
     direction: 'rtl',
     transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
-    wordSeparator: ['־', ' '],
+    wordSeparator: ['־', '׀', ' '],
     numerology: [
       {
         name: 'gematria',
