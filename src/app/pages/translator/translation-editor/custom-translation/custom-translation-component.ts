@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
@@ -67,6 +67,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   pipeUpdaterController = 0;
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private projectService: ProjectDataService,
     protected projectMetadataService: ProjectMetadataService,
     private projectCustomTranslationService: ProjectCustomTranslationService
@@ -110,9 +111,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
         this.parsedBook,
         this.customTranslation,
         this.current,
-      ).then(() => {
-
-      });
+      ).then(() => this.cdr.detectChanges());
     }
   }
 
