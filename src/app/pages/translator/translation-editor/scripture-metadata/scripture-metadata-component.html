@@ -98,10 +98,7 @@
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @let literalized = segment.word | literalizate : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
-                @if (literalized.length) {
-                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{literalized}}</span>
-                  @if (wordList.length !== segment.index) {&nbsp;}
-                }
+                @if (literalized.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{literalized}}</span>&nbsp;}
               }
             }
           </td>
@@ -167,7 +164,7 @@
     <button (click)="minified = !minified" type="button"></button>
   </div>
   @if (customTranslation) {
-  <app-custom-translation-component [bookTarget]="bookTarget" [translationSourceLanguage]="sourceLanguage"
+  <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
     [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
     [wordMatrix]="wordMatrix" [customTranslation]="customTranslation"></app-custom-translation-component>
   }

@@ -42,7 +42,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   interlinear?: BookInterlinearTarget;
 
   @Input()
-  translationSourceLanguage!: LanguageUnionType;
+  translationLanguage!: LanguageUnionType;
 
   @Input()
   current!: CurrentChapter;
@@ -103,19 +103,22 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {
       this.projectCustomTranslationService.derivateAllToCustom(
-        this.translationSourceLanguage,
+        this.sourceBook,
+        this.sourceVerse,
+        this.languageMetadataRecord[this.translationLanguage],
+        this.translationLanguage,
         this.parsedBook,
         this.customTranslation,
         this.current,
-        this.languageMetadataRecord[this.translationSourceLanguage],
-        this.sourceVerse
-      );
+      ).then(() => {
+
+      });
     }
   }
 
   updateCustomTranslation(input: HTMLInputElement): void {
     this.projectCustomTranslationService.updateCustomTranslation(
-      input, this.customTranslation, this.current, this.sourceVerse
+      this.sourceBook, this.sourceVerse, input, this.customTranslation, this.current
     );
   }
 
@@ -169,7 +172,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
     const isWordOfGod = this.projectCustomTranslationService.isWordOfGod(
-      this.translationSourceLanguage,
+      this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -183,7 +186,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     }
 
     const isWordOfGodOverriding = this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
-      this.translationSourceLanguage,
+      this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -199,7 +202,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
     return this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
-      this.translationSourceLanguage,
+      this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -214,9 +217,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): void {
     return this.projectCustomTranslationService.setAsWordOfGodOverriding(
+      this.sourceBook,
+      this.sourceVerse,
       this.customTranslation,
       this.current,
-      this.sourceVerse,
       value,
       wordIndex
     );
@@ -309,12 +313,12 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): void {
     this.projectCustomTranslationService.saveCustomTranslationInterlinearMetadata(
-      this.customTranslation, this.current, this.sourceVerse, value, wordIndex
+      this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
     );
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
-    return this.projectService.castSegmentIntoMetadataIndex(this.translationSourceLanguage, segment);
+    return this.projectService.castSegmentIntoMetadataIndex(this.translationLanguage, segment);
   }
 
   cleanInterlinear(): void {

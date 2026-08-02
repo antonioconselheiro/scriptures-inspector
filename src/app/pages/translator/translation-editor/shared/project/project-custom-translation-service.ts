@@ -16,6 +16,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { SourceBook } from '@domain/source-book-model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,14 +31,15 @@ export class ProjectCustomTranslationService {
   ) { }
 
   private createCustomTranslationStructureIfNotExists(
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
     customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceVerse: SourceVerse
+    current: CurrentChapter
   ): Array<BookTranslationTargetMetadata> {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    const chapterIndex = sourceBook.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
-    if (chapterIndex === this.indexNotFound) {
+    if (chapterIndex !== this.indexNotFound) {
       if (!customTranslation.chapters[chapterIndex]) {
         customTranslation.chapters[chapterIndex] = {
           chapter: current.chapter,
@@ -59,16 +61,17 @@ export class ProjectCustomTranslationService {
   }
 
   private derivateTranslationToCustom(
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
+    sourceLanguage: Language,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceLanguage: Language,
-    sourceVerse: SourceVerse
+    current: CurrentChapter
   ): void {
-    this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-
+    const chapterIndex = sourceBook.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    this.createCustomTranslationStructureIfNotExists(sourceBook, sourceVerse, customTranslation, current);
+    
     if (chapterIndex !== this.indexNotFound) {
       const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
       const lexicalList: Array<string> = [];
@@ -89,28 +92,31 @@ export class ProjectCustomTranslationService {
   }
 
   private derivateInterlinearToCustom(
-    translationSourceLanguage: LanguageUnionType,
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
+    sourceLanguage: Language,
+    translationLanguage: LanguageUnionType,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceLanguage: Language,
-    sourceVerse: SourceVerse
+    current: CurrentChapter
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
-    const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
-    const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    const metadata = this.createCustomTranslationStructureIfNotExists(sourceBook, sourceVerse, customTranslation, current);
+    const chapterIndex = sourceBook.chapters.findIndex(chapter => chapter.chapter === current.chapter);
     
     if (chapterIndex !== this.indexNotFound) {
       const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
       const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
-  
       const wordMatrix = this.projectService
         .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
 
       wordMatrix.forEach(word => {
         word.segments.forEach(segment => {
-          if (customTranslationSplitted[segment.index].segment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)) {
-            metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, segment);
+          if (
+            customTranslationSplitted[segment.index] &&
+            customTranslationSplitted[segment.index].segment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)
+          ) {
+            metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationLanguage, segment);
           }
         });
       });
@@ -215,22 +221,29 @@ export class ProjectCustomTranslationService {
   }
 
   derivateAllToCustom(
-    translationSourceLanguage: LanguageUnionType,
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
+    sourceLanguage: Language,
+    translationLanguage: LanguageUnionType,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
-    sourceLanguage: Language,
-    sourceVerse: SourceVerse
-  ): void {
-    this.derivateTranslationToCustom(parsedBookMetadata, customTranslation, current, sourceLanguage, sourceVerse);
-    setTimeout(() => this.derivateInterlinearToCustom(
-      translationSourceLanguage,
-      parsedBookMetadata,
-      customTranslation,
-      current,
-      sourceLanguage,
-      sourceVerse
-    ));
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      this.derivateTranslationToCustom(sourceBook, sourceVerse, sourceLanguage, parsedBookMetadata, customTranslation, current);
+      setTimeout(() => {
+        this.derivateInterlinearToCustom(
+          sourceBook,
+          sourceVerse,
+          sourceLanguage,
+          translationLanguage,
+          parsedBookMetadata,
+          customTranslation,
+          current
+        );
+        resolve();
+      });
+    });
   }
 
   getCustomTranslationVerse(
@@ -244,10 +257,11 @@ export class ProjectCustomTranslationService {
   }
 
   updateCustomTranslation(
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
     input: HTMLInputElement,
     customTranslation: BookTranslationTarget,
-    current: CurrentChapter,
-    sourceVerse: SourceVerse
+    current: CurrentChapter
   ): void {
     const verseIndex = this.getVerseIndex(sourceVerse);
     const chapterIndex = customTranslation.chapters.findIndex(chapter => chapter.chapter === current.chapter);
@@ -255,7 +269,7 @@ export class ProjectCustomTranslationService {
       return;
     }
 
-    this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
+    this.createCustomTranslationStructureIfNotExists(sourceBook, sourceVerse, customTranslation, current);
     const chapter = customTranslation.chapters[chapterIndex];
 
     if (chapter.verses[verseIndex]) {
@@ -351,7 +365,7 @@ export class ProjectCustomTranslationService {
   }
 
   isWordOfGod(
-    translationSourceLanguage: LanguageUnionType,
+    translationLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
     interlinear: BookInterlinearTarget | undefined,
@@ -384,7 +398,7 @@ export class ProjectCustomTranslationService {
       }
 
       scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
-      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationSourceLanguage, interlinearSegmentOrigin);
+      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationLanguage, interlinearSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
     } else {
       scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
@@ -427,13 +441,14 @@ export class ProjectCustomTranslationService {
   }
 
   saveCustomTranslationInterlinearMetadata(
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
     value: string,
     wordIndex: number
   ): void {
-    const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
+    const metadata = this.createCustomTranslationStructureIfNotExists(sourceBook, sourceVerse, customTranslation, current);
     if (metadata[wordIndex]) {
       metadata[wordIndex].value = value;
     } else {
@@ -444,7 +459,7 @@ export class ProjectCustomTranslationService {
   }
 
   getScriptureMetadataWordOfGodOverriding(
-    translationSourceLanguage: LanguageUnionType,
+    translationLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
     interlinear: BookInterlinearTarget | undefined,
@@ -453,7 +468,7 @@ export class ProjectCustomTranslationService {
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
     const isWordOfGod = this.isWordOfGod(
-      translationSourceLanguage,
+      translationLanguage,
       bookMetadata,
       customTranslation,
       interlinear,
@@ -494,13 +509,14 @@ export class ProjectCustomTranslationService {
   }
 
   setAsWordOfGodOverriding(
+    sourceBook: SourceBook,
+    sourceVerse: SourceVerse,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
     value: boolean,
     wordIndex: number
   ): void {
-    const metadata = this.createCustomTranslationStructureIfNotExists(customTranslation, current, sourceVerse);
+    const metadata = this.createCustomTranslationStructureIfNotExists(sourceBook, sourceVerse, customTranslation, current);
     if (metadata[wordIndex]) {
       if (value) {
         metadata[wordIndex].isWordOfGod = true;
