@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -86,15 +85,20 @@ export class ProjectDataService {
     let index = 0;
     const words = this.splitByLanguageWordSeparator(language, pharse);
       return words.map(word => {
-        return {
-          separator: word.separator,
+        const wordObject: Word = {
           segments: segmentWord(word.word).map(word => {
             return {
               index: index++,
               word
             };
           })
+        };
+
+        if (word.separator !== undefined) {
+          wordObject.separator = word.separator;
         }
+
+        return wordObject;
       }).flat();
   }
 

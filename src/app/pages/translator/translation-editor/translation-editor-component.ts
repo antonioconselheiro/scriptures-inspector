@@ -84,7 +84,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
     private systemService: SystemService,
-    protected projectMetadataService: ProjectMetadataService
+    protected metadataService: ProjectMetadataService
   ) { }
 
   ngOnInit(): void {
@@ -330,7 +330,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
     pipeUpdaterController;
-    const parsedPatterns = this.projectMetadataService.parsePattern(book.patterns, language);
+    const parsedPatterns = this.metadataService.parsePattern(book.patterns, language);
 
     return {
       lexical: book.lexical,
