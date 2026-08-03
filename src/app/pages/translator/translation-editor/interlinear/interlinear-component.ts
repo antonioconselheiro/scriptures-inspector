@@ -81,9 +81,9 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   private readonly indexNotFound = -1;
 
   constructor(
-    private projectService: ProjectDataService,
-    protected projectMetadataService: ProjectMetadataService,
-    private projectInterlinearService: ProjectInterlinearService
+    private dataService: ProjectDataService,
+    protected metadataService: ProjectMetadataService,
+    private interlinearService: ProjectInterlinearService
   ) {
     super();
   }
@@ -106,7 +106,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   splitIntoMatrix(language: Language, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
-    return this.projectService.splitIntoMatrix(language, patterns, sourceVerse.text);
+    return this.dataService.splitIntoMatrix(language, patterns, sourceVerse.text);
   }
 
   splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<{
@@ -114,7 +114,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     separator?: string;
   }> {
     const language = this.languageMetadataRecord[languageName];
-    return this.projectService.splitByLanguageWordSeparator(language, text);
+    return this.dataService.splitByLanguageWordSeparator(language, text);
   }
 
   onSelectInterlinearToBaseScripture(
@@ -122,7 +122,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     translationWord: string,
     interlinearValue: string
   ): void {
-    this.projectInterlinearService.onSelectInterlinearToBaseScripture(
+    this.interlinearService.onSelectInterlinearToBaseScripture(
       this.bookTarget,
       this.current,
       this.sourceVerse,
@@ -134,7 +134,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   getInterlinear(wordIndex: number): string {
-    return this.projectInterlinearService.getInterlinear(
+    return this.interlinearService.getInterlinear(
       this.sourceLanguage,
       this.bookTarget,
       this.current,
@@ -144,7 +144,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
-    return this.projectService.castSegmentIntoMetadataIndex(this.sourceLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndex(this.sourceLanguage, segment);
   }
 
   cleanTranslationInterlinear() {
@@ -152,7 +152,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectInterlinearService.cleanTranslationInterlinear(
+    this.interlinearService.cleanTranslationInterlinear(
       this.bookTarget, this.current, this.sourceVerse
     );
   }

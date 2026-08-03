@@ -26,7 +26,7 @@ export class ProjectCustomTranslationService {
   private readonly indexNotFound = -1;
 
   constructor(
-    private projectService: ProjectDataService,
+    private dataService: ProjectDataService,
     private systemService: SystemService
   ) { }
 
@@ -75,12 +75,12 @@ export class ProjectCustomTranslationService {
     if (chapterIndex !== this.indexNotFound) {
       const customVerse = customTranslation.chapters[chapterIndex].verses[verseIndex];
       const lexicalList: Array<string> = [];
-      const wordMatrix = this.projectService
+      const wordMatrix = this.dataService
         .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
 
       wordMatrix.forEach(word => {
         word.segments.forEach(segment => {
-          lexicalList.push(this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word));
+          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word));
         });
       });
   
@@ -107,15 +107,15 @@ export class ProjectCustomTranslationService {
     if (chapterIndex !== this.indexNotFound) {
       const customTranslationObj = customTranslation.chapters[chapterIndex].verses[verseIndex];
       const customTranslationSplitted = this.splitCustomTranslation(customTranslationObj);
-      const wordMatrix = this.projectService
+      const wordMatrix = this.dataService
         .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
 
       wordMatrix.forEach(word => {
         word.segments.forEach(segment => {
           if (
-            customTranslationSplitted[segment.index].segment === this.projectService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)
+            customTranslationSplitted[segment.index].segment === this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)
           ) {
-            metadata[segment.index].value = this.projectService.castSegmentIntoMetadataIndex(translationLanguage, segment);
+            metadata[segment.index].value = this.dataService.castSegmentIntoMetadataIndex(translationLanguage, segment);
           }
         });
       });
@@ -390,7 +390,7 @@ export class ProjectCustomTranslationService {
       }
 
       scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
-      customTranslationMetadataKey = this.projectService.castSegmentIntoMetadataIndex(translationLanguage, interlinearSegmentOrigin);
+      customTranslationMetadataKey = this.dataService.castSegmentIntoMetadataIndex(translationLanguage, interlinearSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
     } else {
       scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];

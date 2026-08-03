@@ -68,9 +68,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private projectService: ProjectDataService,
-    protected projectMetadataService: ProjectMetadataService,
-    private projectCustomTranslationService: ProjectCustomTranslationService
+    private dataService: ProjectDataService,
+    protected metadataService: ProjectMetadataService,
+    private customTranslationService: ProjectCustomTranslationService
   ) {
     super();
   }
@@ -89,7 +89,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     variations: Record<string, Array<TranslationWordSegment>>
   } {
     pipeUpdaterController;
-    return this.projectCustomTranslationService.splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex);
+    return this.customTranslationService.splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex);
   }
 
   onChangeWordSpan(
@@ -97,13 +97,13 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     index: number,
     wordSpanEl: { value: string }
   ): void {
-    this.projectCustomTranslationService.onChangeWordSpan(this.current, verse, index, wordSpanEl);
+    this.customTranslationService.onChangeWordSpan(this.current, verse, index, wordSpanEl);
   }
 
   derivateAllToCustom(): void {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {
-      this.projectCustomTranslationService.derivateAllToCustom(
+      this.customTranslationService.derivateAllToCustom(
         this.sourceBook,
         this.sourceVerse,
         this.languageMetadataRecord[this.translationLanguage],
@@ -116,13 +116,13 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   updateCustomTranslation(input: HTMLInputElement): void {
-    this.projectCustomTranslationService.updateCustomTranslation(
+    this.customTranslationService.updateCustomTranslation(
       this.sourceBook, this.sourceVerse, input, this.customTranslation, this.current
     );
   }
 
   getCustomTranslationVerse(): { text: string } | null {
-    return this.projectCustomTranslationService.getCustomTranslationVerse(
+    return this.customTranslationService.getCustomTranslationVerse(
       this.customTranslation, this.current, this.sourceVerse
     );
   }
@@ -132,7 +132,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectCustomTranslationService.cleanCustomTranslation(
+    this.customTranslationService.cleanCustomTranslation(
       input, this.customTranslation, this.current, this.sourceVerse
     );
     this.pipeUpdaterController++;
@@ -160,7 +160,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   getCustomTranslationColor(
     wordIndex: number
   ): string {
-    return this.projectCustomTranslationService.getCustomTranslationColor(
+    return this.customTranslationService.getCustomTranslationColor(
       this.customTranslation, this.interlinear, this.current, this.sourceVerse, wordIndex
     );
   }
@@ -170,7 +170,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
-    const isWordOfGod = this.projectCustomTranslationService.isWordOfGod(
+    const isWordOfGod = this.customTranslationService.isWordOfGod(
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -184,7 +184,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       return true;
     }
 
-    const isWordOfGodOverriding = this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
+    const isWordOfGodOverriding = this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -200,7 +200,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   getScriptureMetadataWordOfGodOverriding(
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
-    return this.projectCustomTranslationService.getScriptureMetadataWordOfGodOverriding(
+    return this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -215,7 +215,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     value: boolean,
     wordIndex: number
   ): void {
-    return this.projectCustomTranslationService.setAsWordOfGodOverriding(
+    return this.customTranslationService.setAsWordOfGodOverriding(
       this.sourceBook,
       this.sourceVerse,
       this.customTranslation,
@@ -228,7 +228,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   getCustomTranslationInterlinearValue(
     wordSpanIndex: number
   ): string {
-    return this.projectCustomTranslationService.getCustomTranslationInterlinearValue(
+    return this.customTranslationService.getCustomTranslationInterlinearValue(
       this.customTranslation, this.current, this.sourceVerse, wordSpanIndex
     );
   }
@@ -248,7 +248,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     variationId: string,
     scriptureWordSpanIndex: number
   ): BookVerseTranslationTargetVariation | undefined {
-    return this.projectCustomTranslationService.getVariation(
+    return this.customTranslationService.getVariation(
       scriptureWordSpanIndex,
       chapterVariations,
       variationId
@@ -263,7 +263,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
-    return this.projectCustomTranslationService.getVariationDataListOptions(this.customTranslation, interlinearValue, variationId);
+    return this.customTranslationService.getVariationDataListOptions(this.customTranslation, interlinearValue, variationId);
   }
 
   updateVariationValue(
@@ -272,7 +272,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     translationWordSpanIndex: number,
     value: string,
   ): void {
-    this.projectCustomTranslationService.updateVariationValue(
+    this.customTranslationService.updateVariationValue(
       this.current,
       translationWordSpanIndex,
       chapterVariations,
@@ -285,17 +285,17 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     value: string,
     wordIndex: number
   ): void {
-    this.projectCustomTranslationService.saveCustomTranslationInterlinearMetadata(
+    this.customTranslationService.saveCustomTranslationInterlinearMetadata(
       this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
     );
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
-    return this.projectService.castSegmentIntoMetadataIndex(this.translationLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndex(this.translationLanguage, segment);
   }
 
   cleanInterlinear(): void {
-    this.projectCustomTranslationService.cleanInterlinear(this.customTranslation, this.current, this.sourceVerse);
+    this.customTranslationService.cleanInterlinear(this.customTranslation, this.current, this.sourceVerse);
     this.pipeUpdaterController++;
   }
 }

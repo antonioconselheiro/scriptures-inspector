@@ -76,8 +76,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   minified = false;
 
   constructor(
-    private projectService: ProjectDataService,
-    protected projectMetadataService: ProjectMetadataService
+    private dataService: ProjectDataService,
+    protected metadataService: ProjectMetadataService
   ) {
     super();
   }
@@ -126,12 +126,12 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
 
   splitIntoMatrix(text: string): Array<Word> {
     const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.projectService.splitIntoMatrix(language, this.parsedBook.patterns, text);
+    return this.dataService.splitIntoMatrix(language, this.parsedBook.patterns, text);
   }
 
   splitByLanguageWordSeparator(text: string): Array<string> {
     const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.projectService.splitByLanguageWordSeparator(language, text).map(word => word.word);
+    return this.dataService.splitByLanguageWordSeparator(language, text).map(word => word.word);
   }
 
   //  word of God
@@ -141,7 +141,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): void {
     const word: Word = wordMatrix[wordIndex];
-    this.projectMetadataService.removeUnusedMetadata(
+    this.metadataService.removeUnusedMetadata(
       this.bookTarget,
       this.sourceLanguage,
       this.getCurrent(this.verseIndex),
@@ -150,7 +150,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       wordIndex
     );
 
-    this.projectMetadataService.setAsWordOfGod(
+    this.metadataService.setAsWordOfGod(
       input.checked,
       this.bookTarget,
       this.sourceLanguage,
@@ -165,7 +165,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): boolean {
     const word: Word = wordMatrix[wordIndex];
-    return this.projectMetadataService.getScriptureMetadataWordOfGod(
+    return this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,
       this.getCurrent(this.verseIndex),
@@ -178,6 +178,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
+    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
   }
 }

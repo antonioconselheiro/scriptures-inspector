@@ -16,7 +16,7 @@ export class ProjectInterlinearService {
   private readonly indexNotFound = -1;
 
   constructor(
-    private projectService: ProjectDataService,
+    private dataService: ProjectDataService,
     private systemService: SystemService
   ) { }
 
@@ -86,7 +86,7 @@ export class ProjectInterlinearService {
         interlinearTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex];
 
       if (interlinear) {
-        return this.projectService.castSegmentIntoMetadataIndex(language, interlinear.origin);
+        return this.dataService.castSegmentIntoMetadataIndex(language, interlinear.origin);
       }
     } catch (e) {
       console.error(e);

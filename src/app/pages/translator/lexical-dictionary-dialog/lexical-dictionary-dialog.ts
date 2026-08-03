@@ -30,8 +30,8 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   override response = new Subject<boolean | void>();
 
   constructor(
-    private projectService: ProjectDataService,
-    private projectMetadataService: ProjectMetadataService
+    private dataService: ProjectDataService,
+    private metadataService: ProjectMetadataService
   ) {
     super();
   }
@@ -82,13 +82,13 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
 
       bookSource.chapters.forEach(chapter => {
         chapter.verses.forEach(verse => {
-          const parsedPatterns = this.projectMetadataService.parsePattern(bookMetadata.patterns, language);
+          const parsedPatterns = this.metadataService.parsePattern(bookMetadata.patterns, language);
           const parsedBook: ParsedBookMetadata = {
             lexical: bookMetadata.lexical,
             patterns: parsedPatterns
           };
 
-          const wordMatrix = this.projectService.splitIntoMatrix(language, parsedBook.patterns, verse.text);
+          const wordMatrix = this.dataService.splitIntoMatrix(language, parsedBook.patterns, verse.text);
           wordMatrix.forEach(word => {
             word.segments.forEach(segment => {
               const wordSegment = normalizeFn(segment.word);

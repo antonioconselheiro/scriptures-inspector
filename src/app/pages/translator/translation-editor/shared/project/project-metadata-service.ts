@@ -23,7 +23,7 @@ export class ProjectMetadataService {
   private readonly indexNotFound = -1;
 
   constructor(
-    private projectService: ProjectDataService,
+    private dataService: ProjectDataService,
     private systemService: SystemService
   ) { }
 
@@ -55,7 +55,7 @@ export class ProjectMetadataService {
     bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata = metadata;
 
     word.segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
+      const key = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (!metadata[key]) {
         metadata[key] = {
           segment: segment.word
@@ -104,7 +104,7 @@ export class ProjectMetadataService {
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, word);
     word.segments.forEach(segment => {
-      const key = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
+      const key = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
@@ -137,7 +137,7 @@ export class ProjectMetadataService {
       return false;
     }
 
-    const segment = this.projectService.castSegmentIntoMetadataIndex(sourceLanguage, word.segments[0]);
+    const segment = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, word.segments[0]);
     const segmentData = metadata[segment];
     if (!segmentData) {
       return false;
@@ -164,7 +164,7 @@ export class ProjectMetadataService {
     sourceLanguage: Language,
     word: string
   ): string {
-    return this.projectService.getLexical(data, sourceLanguage, word);
+    return this.dataService.getLexical(data, sourceLanguage, word);
   }
 
   cleanLexicalInterlinear(

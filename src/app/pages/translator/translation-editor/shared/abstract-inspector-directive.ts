@@ -22,10 +22,12 @@ export abstract class AbstractInspectorDiretive {
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
-  protected abstract projectMetadataService: ProjectMetadataService;
+  protected abstract metadataService: ProjectMetadataService;
 
   calcFieldSize(segment: WordSegment, value: string): number {
-    if (value.length) {
+    if (value.length === 2) {
+      return 21;
+    } else if (value.length) {
       return Math.floor(value.length * 8.5);
     } else if (segment.word.length) {
       return Math.floor(segment.word.length * 5);
@@ -37,7 +39,7 @@ export abstract class AbstractInspectorDiretive {
     //  lexical
   updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment): void {
     const language = this.languageMetadataRecord[sourceLanguage];
-    this.projectMetadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value);
+    this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value);
     input.style.width = `${this.calcFieldSize(segment, input.value)}px`;
     this.pipeUpdaterController++;
   }
@@ -47,7 +49,7 @@ export abstract class AbstractInspectorDiretive {
       return;
     }
 
-    this.projectMetadataService.cleanLexicalInterlinear(this.current, this.bookTarget, wordMatrix);
+    this.metadataService.cleanLexicalInterlinear(this.current, this.bookTarget, wordMatrix);
     this.pipeUpdaterController++;
   }
 }
