@@ -154,17 +154,25 @@ table {
     &:not(:has(+ .prisma))::after {
       content: "]";
     }
+
+    ~ .prisma:not([data-punctuation])::before {
+      content: "[";
+    }
   }
 }
 
 @for $i from 1 through 7 {
   .prisma#{$i} + .prisma[data-punctuation] {
-    &:not(:has(+ .prisma))::after {
+    &:not(:has(+ .prisma:not([data-punctuation])))::after {
       content: "";
     }
 
-    + .prisma::before {
+    + .prisma:not([data-punctuation])::before {
       content: "[";
+    }
+
+    ~ .prisma[data-punctuation]::after {
+      content: "";
     }
   }
 }

@@ -9,23 +9,21 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
+import { Word } from '@domain/word-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
-import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { Word } from '@domain/word-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
   imports: [
     LexicalPipe,
     FormsModule,
-    LiteralizatePipe,
     FunctionProxyPipe,
     CustomTranslationComponent,
     AddPatternContextMenuTrigger

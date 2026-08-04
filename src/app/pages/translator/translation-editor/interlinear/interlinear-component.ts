@@ -19,7 +19,6 @@ import { CustomTranslationComponent } from '../custom-translation/custom-transla
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
-import { LiteralizatePipe } from '../shared/literalizate-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
@@ -29,7 +28,6 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   imports: [
     FormsModule,
     LexicalPipe,
-    LiteralizatePipe,
     FunctionProxyPipe,
     CustomTranslationComponent,
     AddPatternContextMenuTrigger,
