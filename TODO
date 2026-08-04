@@ -11,8 +11,8 @@ TODO
 [ ] - Quando um campo já preenchido é alterado, os outros campos conectados ao mesmo léxico não são atualizados
 [ ] - Fazer com que o length do campo com o lexico preenchido, se houverem somente dois caracteres, ser um pouco maior
 [ ] - Há a possibilidade de cadastrar um prefixo, sulfixo e lexema mais de uma vez igual, impedir isso
-[ ] - Pode ser que lexemas que estão no meio de prefixo e sulfixo não sejam adequadamente preservados, mas fatiados se houver aspecto de prefixo ou sulfixo dentro de si
-[ ] - Há algo de errado com o interlinear de Gênesis, 1:8, algumas palavras não foram exibidas
+[ ] - Pode ser que lexemas que estão no meio de prefixo e sulfixo não sejam adequadamente preservados, mas fatiados se houver aspecto de prefixo ou sulfixo dentro de si, ampliar testes para verificar este comportamento
+[ ] - Incluir confirm para quando usuário associar uma palavra a nenhum elemento da tradução, o confirm deve perguntar se deseja deslocar em uma palavra a associação com a tradução todas as palavras a direita
 [ ] - Fazer animação no botão de salvar quando clicar nele, como um pulsar
 [ ] - Translation Viewer precisa indicar com qual dos textos do projeto a tradução ficará associada
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
