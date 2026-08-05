@@ -6,6 +6,7 @@ import { Language } from '@domain/language-model';
 import { PatternsSerialized } from '@domain/patterns-serialized';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { Subject } from 'rxjs';
+import { PatternsService } from '../patterns-service';
 
 @Component({
   selector: 'app-patterns-dialog',
@@ -17,6 +18,7 @@ import { Subject } from 'rxjs';
 })
 export class PatternsDialog extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> {
 
+  readonly indexNotFound = -1;
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
   patterns!: PatternsSerialized;
   language!: string;
@@ -25,7 +27,8 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   override response = new Subject<PatternsSerialized | void>();
 
   constructor(
-    fb: FormBuilder
+    fb: FormBuilder,
+    private patternsService: PatternsService
   ) {
     super();
     this.form = fb.group({
@@ -40,21 +43,14 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   }
 
   deletePattern(type: 'prefix' | 'suffix' | 'lexeme', index: number): void {
-    this.patterns[type].splice(index, 1);
+    this.patternsService.deletePattern(this.patterns, type, index);
   }
 
   onAddPatternSubmit(): void {
     if (this.form.valid) {
       const { type, word } = this.form.value;
 
-      if (type === 'prefix') {
-        this.patterns.prefix.push(word);
-      } else if (type === 'sufix') {
-        this.patterns.suffix.push(word);
-      } else if (type === 'lexeme') {
-        this.patterns.lexeme.push(word);
-      }
-
+      this.patternsService.addPattern(this.patterns, type, this.languageMetadataRecord[this.language], word);
       this.form.reset();
     } else {
       this.form.markAllAsTouched();

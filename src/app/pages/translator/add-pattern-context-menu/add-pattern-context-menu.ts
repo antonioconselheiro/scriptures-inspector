@@ -4,6 +4,7 @@ import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { PatternsService } from '../patterns-service';
 
 @Component({
   selector: 'app-add-pattern-context-menu',
@@ -28,11 +29,12 @@ export class AddPatternContextMenu {
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
-  onAddPattern(type: 'prefix' | 'suffix' | 'lexeme', word: string): void {
-    const langMetadata = this.languageMetadataRecord[this.sourceLanguage];
-    const normalized = langMetadata.normalizeFn ? langMetadata.normalizeFn(word) : word;
+  constructor(
+    private patternsService: PatternsService
+  ) { }
 
-    this.bookTarget.patterns[type].push(normalized);
+  onAddPattern(type: 'prefix' | 'suffix' | 'lexeme', word: string): void {
+    this.patternsService.addPattern(this.bookTarget.patterns, type, this.languageMetadataRecord[this.sourceLanguage], word);
     this.visible = false;
   }
 }
