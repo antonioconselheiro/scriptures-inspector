@@ -92,22 +92,21 @@
         <tr>
           <th>scriptures</th>
           @for (word of wordMatrix; track $index; let y = $index) {
-          <td>
-            @for (translationSegment of word.segments; track $index) {
-            <select #interlinear
-              (change)="onSelectInterlinearToBaseScripture(translationSegment.index, translationSegment.word, interlinear.value)"
-              [ngModel]="getInterlinear(translationSegment.index)"
-              [name]="'translationToSourceInterlinear' + $index">
-              <option value=""></option>
-              @for (originWords of originWordMatrix; track $index) {
-                @for (segment of originWords.segments; track $index) {
-                <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )
-                </option>
-                }
+            <td>
+              @for (translationSegment of word.segments; track $index) {
+                <select #interlinear
+                  (change)="onChangeInterlinearToBaseScripture(translationSegment.index, translationSegment.word, interlinear.value)"
+                  [ngModel]="getInterlinear(translationSegment.index)"
+                  [name]="'translationToSourceInterlinear' + $index">
+                  <option value=""></option>
+                  @for (originWords of originWordMatrix; track $index) {
+                    @for (segment of originWords.segments; track $index) {
+                      <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
+                    }
+                  }
+                </select>
               }
-            </select>
-            }
-          </td>
+            </td>
           }
           <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
         </tr>

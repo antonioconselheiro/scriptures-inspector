@@ -20,7 +20,7 @@ export class ProjectInterlinearService {
     private systemService: SystemService
   ) { }
 
-  onSelectInterlinearToBaseScripture(
+  saveInterlinearToBaseScripture(
     interlinearTarget: BookInterlinearTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse,

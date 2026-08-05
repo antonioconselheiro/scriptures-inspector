@@ -70,7 +70,7 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
 
   @Input()
   variations: Array<TargetTranslationMetadataDetail> = [];
-  
+
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
@@ -115,20 +115,60 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
     return this.dataService.splitByLanguageWordSeparator(language, text);
   }
 
-  onSelectInterlinearToBaseScripture(
+  onChangeInterlinearToBaseScripture(
     translationWordIndex: number,
     translationWord: string,
     interlinearValue: string
   ): void {
-    this.interlinearService.onSelectInterlinearToBaseScripture(
-      this.bookTarget,
-      this.current,
-      this.sourceVerse,
-      this.sourceVerse,
-      translationWordIndex,
-      translationWord,
-      interlinearValue
-    );
+    if (!interlinearValue && confirm('Advance one word to all associations to the right?')) {
+      const wordMatrix = this.splitIntoMatrix(this.languageMetadataRecord[this.sourceLanguage], this.parsedBook.patterns, this.sourceVerse);
+      let previousValue = '';
+      for (let word of wordMatrix) {
+        for (let segment of word.segments) {
+          if (segment.index >= translationWordIndex) {
+  
+            if (segment.index == translationWordIndex) {
+              previousValue = this.getInterlinear(segment.index);
+  
+              this.interlinearService.saveInterlinearToBaseScripture(
+                this.bookTarget,
+                this.current,
+                this.sourceVerse,
+                this.sourceVerse,
+                translationWordIndex,
+                translationWord,
+                interlinearValue
+              );
+            } else {
+              const currentValue = this.getInterlinear(segment.index);
+  
+              this.interlinearService.saveInterlinearToBaseScripture(
+                this.bookTarget,
+                this.current,
+                this.sourceVerse,
+                this.sourceVerse,
+                segment.index,
+                segment.word,
+                previousValue
+              );
+              previousValue = currentValue;
+            }
+          }
+        }
+      }
+
+      setTimeout(() => this.pipeUpdaterController++);
+    } else {
+      this.interlinearService.saveInterlinearToBaseScripture(
+        this.bookTarget,
+        this.current,
+        this.sourceVerse,
+        this.sourceVerse,
+        translationWordIndex,
+        translationWord,
+        interlinearValue
+      );
+    }
   }
 
   getInterlinear(wordIndex: number): string {

@@ -210,7 +210,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       wordSpanIndex
     );
   }
-  
+
   setAsWordOfGodOverriding(
     value: boolean,
     wordIndex: number
@@ -281,13 +281,39 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
   }
 
-  saveCustomTranslationInterlinearMetadata(
+  onChangeCustomTranslationInterlinearMetadata(
     value: string,
-    wordIndex: number
+    wordIndex: number,
+    chapterIndex: number,
+    verseIndex: number
   ): void {
-    this.customTranslationService.saveCustomTranslationInterlinearMetadata(
-      this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
-    );
+    if (!value && confirm('Advance one word to all associations to the right?')) {
+      const splittedCustomTranslation = this.customTranslationService.splitCustomTranslationWithVariations(this.customTranslation, chapterIndex, verseIndex);
+      let previousValue = '';
+      for (let originalWordIndex = 0; originalWordIndex < splittedCustomTranslation.original.length; originalWordIndex++) {
+        if (originalWordIndex >= wordIndex) {
+          
+          if (originalWordIndex == wordIndex) {
+            previousValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
+            this.customTranslationService.saveCustomTranslationInterlinearMetadata(
+              this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
+            );
+          } else {
+            const currentValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
+            this.customTranslationService.saveCustomTranslationInterlinearMetadata(
+              this.sourceBook, this.sourceVerse, this.customTranslation, this.current, previousValue, originalWordIndex
+            );
+            previousValue = currentValue;
+          }
+        }
+      }
+
+      setTimeout(() => this.pipeUpdaterController++);
+    } else {
+      this.customTranslationService.saveCustomTranslationInterlinearMetadata(
+        this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
+      );
+    }
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {

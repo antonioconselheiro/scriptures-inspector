@@ -87,21 +87,21 @@
   
       <tr>
         <th>scriptures</th>
-        @for (sentence of splittedCustomTranslation.original; track $index) {
-        <td>
-          <select
-            #interlinearCustomTranslationEl
-            [name]="'selectInterlinearCustomTranslationEl' + $index"
-            [ngModel]="getCustomTranslationInterlinearValue($index)"
-            (change)="saveCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, $index)">
-            <option value=""></option>
-            @for (word of wordMatrix; track $index) {
-              @for (segment of word.segments; track $index) {
-                <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
+        @for (sentence of splittedCustomTranslation.original; track $index; let wordIndex = $index) {
+          <td>
+            <select
+              #interlinearCustomTranslationEl
+              [name]="'selectInterlinearCustomTranslationEl' + wordIndex"
+              [ngModel]="getCustomTranslationInterlinearValue(wordIndex)"
+              (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex, chapterIndex, verseIndex)">
+              <option value=""></option>
+              @for (word of wordMatrix; track $index) {
+                @for (segment of word.segments; track segment.index) {
+                  <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
+                }
               }
-            }
-          </select>
-        </td>
+            </select>
+          </td>
         }
   
         @if (!splittedCustomTranslation.original.length) {
