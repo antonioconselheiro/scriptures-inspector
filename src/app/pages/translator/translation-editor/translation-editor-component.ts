@@ -118,6 +118,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   onCurrentChapterChange(current: CurrentChapter): void {
     this.current = current;
+    this.minifiedFieldset = {};
   }
 
   onDataLoaded(): void {
