@@ -116,4 +116,18 @@ describe('ProjectDataService', () => {
 
     expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
   });
+
+  it('should keep the internal lexeme when prefix and suffix have part of it', () => {
+    const result = dataService.splitIntoMatrix(
+      language,
+      metadataService.parsePattern({
+        prefix: ['pre', 'presu'],
+        suffix: ['re', 'ly'],
+        lexeme: ['core', 'supercore']
+      }, language),
+      'presupercorely'
+    );
+
+    expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
+  });
 });

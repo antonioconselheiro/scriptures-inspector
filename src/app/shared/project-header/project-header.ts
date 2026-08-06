@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
@@ -30,6 +30,8 @@ export class ProjectHeader implements OnInit, OnDestroy {
   @HostBinding('class.minimized')
   minimized = true;
 
+  saveIsAnimating = false;
+
   @Output() onProject = new EventEmitter<Project>();
   @Output() onCurrentChapter = new EventEmitter<CurrentChapter>();
   @Output() onCurrentArtifact = new EventEmitter<CurrentArtifact>(); 
@@ -49,6 +51,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private systemService: SystemService,
     private modalService: ModalService,
+    private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
@@ -175,6 +178,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
   }
 
   save(): void {
+    this.saveIsAnimating = true;
     
     if (this.current) {
       if ('book' in this.current) {
@@ -188,6 +192,10 @@ export class ProjectHeader implements OnInit, OnDestroy {
         // TODO: this.systemService.triggerSaveCurrentArtifactMetadata({ collection, artifact });
       }
   
+      setTimeout(() => {
+        this.saveIsAnimating = false;
+        this.cdr.detectChanges();
+      }, 500);
       this.systemService.triggerSaveCurrentProject();
     }
   }

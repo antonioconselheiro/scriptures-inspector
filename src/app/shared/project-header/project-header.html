@@ -1,7 +1,7 @@
 <header class="tools">
   <div class="buttonGroup">
     <img class="logo" src="script.png" />
-    <button class="save" type="button" (click)="save()"></button>
+    <button class="save" [class.pulse]="saveIsAnimating" type="button" (click)="save()"></button>
   </div>
   <form>
     <fieldset>

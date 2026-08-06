@@ -5,6 +5,8 @@ import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { PatternsService } from '../patterns-service';
+import { CurrentChapter } from '@domain/current-chapter-model';
+import { SystemService } from '@shared/system/system-service';
 
 @Component({
   selector: 'app-add-pattern-context-menu',
@@ -22,6 +24,9 @@ export class AddPatternContextMenu {
   @Input()
   bookTarget!: BookMetadataTarget | BookInterlinearTarget;
 
+  @Input()
+  current: CurrentChapter | null = null;
+
   selectedWord = '';
   visible = false;
   x = 0;
@@ -30,11 +35,18 @@ export class AddPatternContextMenu {
   readonly languageMetadataRecord = languageMetadataRecord;
 
   constructor(
-    private patternsService: PatternsService
+    private patternsService: PatternsService,
+    private systemService: SystemService
   ) { }
 
   onAddPattern(type: 'prefix' | 'suffix' | 'lexeme', word: string): void {
     this.patternsService.addPattern(this.bookTarget.patterns, type, this.languageMetadataRecord[this.sourceLanguage], word);
+
+    if (this.current) {
+      this.systemService.triggerSaveCurrentBookMetadata(this.current);
+      this.systemService.triggerSaveCurrentBookInterlinear(this.current);
+    }
+
     this.visible = false;
   }
 }

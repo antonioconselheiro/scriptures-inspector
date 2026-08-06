@@ -48,7 +48,7 @@
   }
 </app-project-header>
 
-<app-add-pattern-context-menu #addPatternMenuRef></app-add-pattern-context-menu>
+<app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
 
 @if (project && codexMetadataRecord) {
   @for (structure of project.structure; track $index) {

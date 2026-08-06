@@ -215,6 +215,14 @@ table {
 
 .save {
   background-image: url('../public/save.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: none;
+
+  &.pulse {
+    animation: pulse 0.3s ease-in-out 3;
+  }
 }
 
 .loading {
@@ -224,4 +232,16 @@ table {
 .error {
   color: red;
   display: block;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }

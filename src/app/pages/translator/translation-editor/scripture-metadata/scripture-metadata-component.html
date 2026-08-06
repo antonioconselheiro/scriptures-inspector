@@ -119,44 +119,50 @@
     
         @if (languageMetadataRecord[sourceLanguage].alternativeSpelling) {
           @for (spelling of languageMetadataRecord[sourceLanguage].alternativeSpelling; track $index) {
-          <tr>
-            <th rowspan="2">{{spelling.name}}</th>
-    
-            @for (word of wordMatrix; track $index) {
-            <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-              @for (segment of word.segments; track segment.index) {
-                @if (spelling.parse) {
-                  @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
-                  @if (alternativeSpelling.length) {
-                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
-                  }
-                } @else if (segment.word.length) {
-                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
-                }
-              }
-            </td>
-            }
-            <td rowspan="2"></td>
-          </tr>
-    
-          <tr>
-            <td [colSpan]="wordList.length">
+            <tr>
+              <th rowspan="2">{{spelling.name}}</th>
+      
               @for (word of wordMatrix; track $index) {
-                @for (segment of word.segments; track segment.index) {
-                  @if (spelling.parse) {
-                    @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
-                    @if (alternativeSpelling.length) {
-                      <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
+                <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+                  @for (segment of word.segments; track segment.index) {
+                    @if (spelling.parse) {
+                      @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
+                      @if (alternativeSpelling.length) {
+                        <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
+                      }
+                    } @else if (segment.word.length) {
+                      <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
                     }
-                  } @else if (segment.word.length) {
-                    <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+                  }
+                </td>
+              }
+              <td rowspan="2"></td>
+            </tr>
+      
+            <tr>
+              <td [colSpan]="wordList.length">
+                @for (word of wordMatrix; track $index) {
+                  @for (segment of word.segments; track segment.index) {
+                    @if (spelling.parse) {
+                      @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
+                      @if (alternativeSpelling.length) {
+                        <span [class]="'prisma'+(segment.index % 7 + 1)">{{alternativeSpelling}}</span>
+                      }
+                    } @else if (segment.word.length) {
+                      <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+                    }
+                  }
+    
+                  @if (word.separator) {
+                    @if (spelling.parse) {
+                      {{word.separator | functionProxy : spelling.parse}}
+                    } @else {
+                      {{word.separator}}
+                    }
                   }
                 }
-  
-                @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
-              }
-            </td>
-          </tr>
+              </td>
+            </tr>
           }
         }
       </table>

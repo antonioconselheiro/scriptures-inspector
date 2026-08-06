@@ -111,13 +111,18 @@ const iconography = [
   },
   {
     name: "separator",
-    matcher: /[\u05BE\u05C0\u05C3\u05C6]$/g,
+    matcher: /[ \u05BE\u05C0]/g,
+    paleo: " "
+  },
+  {
+    name: "punctuation",
+    matcher: /[\u05C3]/g,
     paleo: "\u202E𐤟"
   }
 ];
 
 export function paleoHebrewSpellingFn(value: string): string {
-  const paleo = value.split(/[ ־]/).map(word => {
+  const paleo = value.split(/[ ־׀]/).map(word => {
     for (let index = 0; index < iconography.length; index++) {
       word = word.replace(iconography[index].matcher, iconography[index].paleo);
     }
