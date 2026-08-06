@@ -75,6 +75,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     [source: string]: TranslationViewing;
   } = {};
 
+  minifiedFieldset: {
+    [index: number]: boolean;
+  } = {};
+
   readonly languageMetadataRecord = languageMetadataRecord;
 
   private subscriptions = new Subscription();

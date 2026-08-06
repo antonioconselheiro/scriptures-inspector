@@ -83,6 +83,36 @@ table {
   }
 }
 
+fieldset.fieldsetMinifiable {
+  position: relative;
+
+  &.minified {
+    max-height: 40px;
+    overflow: hidden;
+
+    > :not(legend):not(button) {
+      overflow: hidden;
+      max-height: 0px;
+      visibility: hidden;
+    }
+
+    > button::before {
+      content: '+';
+    }
+  }
+
+  > button {
+    height: 21px;
+    position: absolute;
+    top: 0px;
+    right: 10px;
+
+    &::before {
+      content: '-';
+    }
+  }
+}
+
 .tableMinifiable {
   margin: 1rem auto;
   display: flex;
