@@ -7,7 +7,7 @@ TODO
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
-[ ] - Translation Viewer precisa indicar com qual dos textos do projeto a tradução ficará associada
+[X] - Translation Viewer precisa indicar com qual dos textos do projeto a tradução ficará associada
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original

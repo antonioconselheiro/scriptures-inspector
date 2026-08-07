@@ -11,6 +11,7 @@ import { ParsedPatterns } from '@domain/parsed-patterns';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
+import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
@@ -22,6 +23,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -36,7 +38,10 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   templateUrl: './interlinear-component.html',
   styleUrl: './interlinear-component.scss'
 })
-export class InterlinearComponent extends AbstractInspectorDiretive {
+export class InterlinearComponent extends AbstractTranslatableDirective {
+
+  @Input()
+  source!: string;
 
   @Input()
   current!: CurrentChapter;
@@ -69,14 +74,17 @@ export class InterlinearComponent extends AbstractInspectorDiretive {
   customTranslation: BookTranslationTarget | undefined;
 
   @Input()
+  viewingTranslationBookRecord: {
+    readonly [source: string]: TranslationViewing;
+  } = {};
+
+  @Input()
   variations: Array<TargetTranslationMetadataDetail> = [];
 
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
   minified = false;
-
-  private readonly indexNotFound = -1;
 
   constructor(
     private dataService: ProjectDataService,

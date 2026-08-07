@@ -13,7 +13,7 @@ import { Word } from '@domain/word-model';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
-import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
+import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
@@ -31,19 +31,19 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
   templateUrl: './scripture-metadata-component.html',
   styleUrl: './scripture-metadata-component.scss'
 })
-export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
+export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
+
+  @Input()
+  source!: string;
 
   @Input()
   current!: CurrentChapter;
 
   @Input()
   pipeUpdaterController = 0;
-
+  
   @Input()
   sourceBook!: SourceBook;
-
-  @Input()
-  verseIndex!: number;
 
   @Input()
   parsedBook!: ParsedBookMetadata;
@@ -68,9 +68,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
 
-  @Output()
-  removeTranslation = new EventEmitter<string>();
-
   minified = false;
 
   constructor(
@@ -80,46 +77,8 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     super();
   }
 
-  private getCurrent(currentIndex: number): CurrentVerseIndex {
-    return { ...this.current, verseIndex: currentIndex };
-  }
-
-  getTranslations(
-    viewingTranslationBookRecord: {
-      readonly [source: string]: TranslationViewing;
-    }
-  ): Array<{
-    source: string;
-    name: string;
-    verses: Readonly<BookVerse<{
-      text: string;
-    }>>[];
-  }> {
-    const indexNotFound = -1;
-    return Object.keys(viewingTranslationBookRecord).map(source => {
-      const chapterIndex = viewingTranslationBookRecord[source].chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
-      const name = viewingTranslationBookRecord[source].name;
-
-      if (chapterIndex !== indexNotFound) {
-        const verses = viewingTranslationBookRecord[source].chapters[chapterIndex].verses;
-        
-        return {
-          source,
-          name,
-          verses
-        }
-      } else {
-        return {
-          source,
-          name,
-          verses: []
-        }
-      }
-    });
-  }
-
-  removeTranslationViewing(source: string): void {
-    this.removeTranslation.emit(source);
+  private getCurrent(): CurrentVerseIndex {
+    return { ...this.current, verseIndex: this.sourceVerse.verse.index };
   }
 
   splitIntoMatrix(text: string): Array<Word> {
@@ -142,7 +101,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     this.metadataService.removeUnusedMetadata(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
+      this.getCurrent(),
       this.sourceVerse,
       wordMatrix,
       wordIndex
@@ -152,7 +111,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       input.checked,
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
+      this.getCurrent(),
       this.sourceVerse,
       word
     );
@@ -166,7 +125,7 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
     return this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(this.verseIndex),
+      this.getCurrent(),
       word
     );
   }
@@ -176,6 +135,6 @@ export class ScriptureMetadataComponent extends AbstractInspectorDiretive {
       return;
     }
 
-    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent(this.verseIndex));
+    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent());
   }
 }

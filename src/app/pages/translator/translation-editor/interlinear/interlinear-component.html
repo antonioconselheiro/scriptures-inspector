@@ -5,10 +5,22 @@
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   @let wordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedBook.patterns, sourceVerse);
   @let originWordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedOriginBook.patterns, originVerse);
+  @let translations = getTranslations();
 
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
       <table border="1" frame="hsides" role="presentation">
+        @for (translationInformation of translations; track $index) {
+          @let verseIndex = this.getCurrentVerseIndex(translationInformation.verses);
+          <tr>
+            <th class="translationName">{{translationInformation.name}}</th>
+            <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
+            <td>
+              <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
+            </td>
+          </tr>
+        }
+
         <tr>
           <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
           <td

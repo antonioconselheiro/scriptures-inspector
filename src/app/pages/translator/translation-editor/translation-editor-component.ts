@@ -3,6 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
+import { AssociatedTranslation } from '@domain/associated-translation-model';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
@@ -50,7 +51,7 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
     TranslationViewerManager,
     InterlinearComponent,
     ProjectHeader
-  ],
+],
   templateUrl: './translation-editor-component.html',
   styleUrl: './translation-editor-component.scss'
 })
@@ -193,19 +194,35 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       return;
     }
 
-    project.translationViewer
-      .forEach(source => this.applyViewingTranslation(source, data['sources'][source], data['codex'][source]));
+    project.translationViewer.forEach(association => {
+      this.applyViewingTranslation(
+        association,
+        data['sources'][association.translation],
+        data['codex'][association.translation]
+      )
+    });
   }
 
-  private applyViewingTranslation(source: string, translationViewing: TranslationViewing, codex: Codex<LanguageUnionType>): void {
-    this.translationBookRecord[source] = { ...translationViewing };
-    this.translationBookRecord[source].name = codex.name;
-    this.translationBookRecord[source].source = source;
-    if (!this.codexMetadataRecord) {
-      this.codexMetadataRecord = {};
+  private applyViewingTranslation(
+    associatingTranslation: AssociatedTranslation,
+    translationViewing: TranslationViewing,
+    translationCodexObject: Codex<LanguageUnionType>
+  ): void {
+    if (this.translationBookRecord[associatingTranslation.translation]) {
+      const associatedTo = this.translationBookRecord[associatingTranslation.translation].associatedTo;
+      this.translationBookRecord[associatingTranslation.translation].associatedTo = [
+        ...new Set([...associatedTo, ...associatingTranslation.associatedTo])
+      ];
+    } else {
+      this.translationBookRecord[associatingTranslation.translation] = { ...translationViewing };
+      this.translationBookRecord[associatingTranslation.translation].name = translationCodexObject.name;
+      this.translationBookRecord[associatingTranslation.translation].source = associatingTranslation.translation;
+      if (!this.codexMetadataRecord) {
+        this.codexMetadataRecord = {};
+      }
+  
+      this.codexMetadataRecord[associatingTranslation.translation] = translationCodexObject;
     }
-
-    this.codexMetadataRecord[source] = codex;
   }
 
   private readBookTargetsFromData(project: Project, data: Data): void {
@@ -343,22 +360,23 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     };
   }
 
-  onAddViewingTranslation(project: Project, source: string): void {
+  onAddViewingTranslation(project: Project, associating: AssociatedTranslation): void {
     const book = this.current?.book;
 
     if (book) {
-      loadCodexMetadataFn(this.httpClient, project, source)
+      loadCodexMetadataFn(this.httpClient, project, associating.translation)
         .then(codex => {
           if (codex) {
-            loadSourceBookFn(this.httpClient, project, source, book).then(sourceBook => {
+            loadSourceBookFn(this.httpClient, project, associating.translation, book).then(sourceBook => {
               if (sourceBook?.chapters) {
                 const translationViewing: TranslationViewing = {
                   ...sourceBook,
-                  source,
+                  source: associating.translation,
+                  associatedTo: associating.associatedTo,
                   name: codex.name
                 };
 
-                this.applyViewingTranslation(source, translationViewing, codex);
+                this.applyViewingTranslation(associating, translationViewing, codex);
               } else {
                 console.warn('Can\'t show added translation, codex is null');
               }
@@ -375,16 +393,36 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       project.translationViewer = [];
     }
 
-    project.translationViewer.push(source);
+    project.translationViewer.push(associating);
     this.systemService.triggerSaveCurrentProject();
   }
 
-  onRemoveTranslation(project: Project, source: string): void {
+  onRemoveTranslation(project: Project, associationWith: string, source: string): void {
     if (confirm('Confirm removing this translation viewing?')) {
+      const indexNotFound = -1;
       delete this.translationBookRecord[source];
-      if (project.translationViewer) {
-        project.translationViewer.splice(project.translationViewer.indexOf(source), 1);
+
+      if (this.translationBookRecord[source]) {
+        const indexOf = this.translationBookRecord[source].associatedTo.indexOf(associationWith);
+        if (indexOf !== indexNotFound) {
+          this.translationBookRecord[source].associatedTo.splice(indexOf, 1);
+        }
+
+        if (this.translationBookRecord[source].associatedTo.length === 0) {
+          delete this.translationBookRecord[source];
+        }
       }
+
+      if (project.translationViewer) {
+        const translationIndex = project.translationViewer.findIndex(item => item.translation === source);
+        if (project.translationViewer[translationIndex]) {
+          project.translationViewer[translationIndex].associatedTo = project.translationViewer[translationIndex].associatedTo.filter(item => item !== associationWith);
+          if (project.translationViewer[translationIndex].associatedTo.length === 0) {
+            project.translationViewer.splice(translationIndex, 1);
+          }
+        }
+      }
+
       this.systemService.triggerSaveCurrentProject();
     }
   }

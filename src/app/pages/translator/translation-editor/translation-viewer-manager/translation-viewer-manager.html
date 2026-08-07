@@ -1,19 +1,35 @@
 <fieldset>
   <legend>Translation</legend>
-  <select #bibleTranslation name="bibleTranslation" placeholder="Translation">
-    <option></option>
 
-    @if (repositories) {
-      @for (repository of repositories | keyvalue; track $index) {
-        <optgroup [attr.label]="repository.value.name">
-          @for (translation of repository.value.translations | keyvalue; track $index) {
-            <option [attr.value]="translation.key">{{translation.value.name}}</option>
-          }
-        </optgroup>    
+  @let associable = getAssociableCodex();
+
+  <div>
+    <label>Associated To</label>
+    <select #associatedToEl name="associatedTo">
+      <option></option>
+      @for (item of associable; track $index) {
+        <option [attr.value]="item.value">{{item.label}}</option>
       }
-    }
+    </select>
+  </div>
 
-  </select>
+  <div>
+    <label>Translation</label>
+    <select #translationEl name="translation">
+      <option></option>
+  
+      @if (repositories) {
+        @for (repository of repositories | keyvalue; track $index) {
+          <optgroup [attr.label]="repository.value.name">
+            @for (translation of repository.value.translations | keyvalue; track $index) {
+              <option [attr.value]="translation.key">{{translation.value.name}}</option>
+            }
+          </optgroup>    
+        }
+      }
+  
+    </select>
+  </div>
 
-  <button (click)="loadTranslation(bibleTranslation.value); bibleTranslation.value = ''" type="button">+</button>
+  <button (click)="loadTranslation(associatedToEl, translationEl)" type="button">Associate</button>
 </fieldset>

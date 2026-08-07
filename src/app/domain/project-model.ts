@@ -1,3 +1,4 @@
+import { AssociatedTranslation } from './associated-translation-model';
 import { ProjectStructure } from './project-structure-model';
 import { ProjectTarget } from './project-target-model';
 
@@ -6,6 +7,6 @@ export interface Project {
   readonly path: string;
   repositories?: { [alias: string]: string };
   target: ProjectTarget;
-  translationViewer?: Array<string>;
+  translationViewer?: Array<AssociatedTranslation>;
   structure: Array<ProjectStructure>;
 }

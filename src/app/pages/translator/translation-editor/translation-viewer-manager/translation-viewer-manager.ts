@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AssociatedTranslation } from '@domain/associated-translation-model';
+import { Codex } from '@domain/codex-model';
+import { LanguageUnionType } from '@domain/language-union-type';
 import { RepositoryRecord } from '@domain/repository-record';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
@@ -14,8 +17,13 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 })
 export class TranslationViewerManager implements OnInit {
 
+  @Input()
+  codexMetadataRecord: {
+    [source: string]: Codex<LanguageUnionType>
+  } | null = null;
+
   @Output()
-  addViewingTranslation = new EventEmitter<string>();
+  addViewingTranslation = new EventEmitter<AssociatedTranslation>();
 
   repositories: RepositoryRecord = {};
   readonly languageMetadataRecord = languageMetadataRecord;
@@ -46,7 +54,27 @@ export class TranslationViewerManager implements OnInit {
     });
   }
 
-  loadTranslation(viewingTranslation: string): void {
-    this.addViewingTranslation.next(viewingTranslation);
+  getAssociableCodex(): Array<{ value: string, label: string }> {
+    if (!this.codexMetadataRecord) {
+      return [];
+    }
+
+    return Object.keys(this.codexMetadataRecord).map(source => {
+      const codex = this.codexMetadataRecord![source];
+      return {
+        value: source,
+        label: `${codex.name} (${codex.language})`
+      };
+    });
+  }
+
+  loadTranslation(associatedToEl: HTMLSelectElement, translationEl: HTMLSelectElement): void {
+    this.addViewingTranslation.next({
+      associatedTo: [associatedToEl.value],
+      translation: translationEl.value
+    });
+
+    associatedToEl.value = '';
+    translationEl.value = '';
   }
 }

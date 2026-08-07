@@ -5,7 +5,9 @@
     @let customTranslationsDetails = getProjectTranslationsDetails(project, codexMetadataRecord);
   
     <app-translation-viewer-manager
-      (addViewingTranslation)="onAddViewingTranslation(project, $event)"></app-translation-viewer-manager>
+      [codexMetadataRecord]="codexMetadataRecord"
+      (addViewingTranslation)="onAddViewingTranslation(project, $event)"
+    ></app-translation-viewer-manager>
   
     <fieldset>
       <legend>Import configs</legend>
@@ -68,12 +70,12 @@
   
         <fieldset [class.minified]="minifiedFieldset[fieldsetIndex]" class="fieldsetMinifiable">
           <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}</legend>
-          <app-scripture-metadata-component [current]="current" [sourceLanguage]="sourceCodex.language"
-            [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook"
-            [sourceVerse]="verse" [verseIndex]="( typeof verse.verse === 'number' ? $index : verse.verse.index )"
+          <app-scripture-metadata-component [current]="current" [source]="structure.metadataEditor.source" [sourceLanguage]="sourceCodex.language"
+            [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook" [sourceVerse]="verse"
             [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
-            [viewingTranslationBookRecord]="translationBookRecord" (removeTranslation)="onRemoveTranslation(project, $event)"
-            [pipeUpdaterController]="pipeUpdaterController"></app-scripture-metadata-component>
+            [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
+            (removeTranslation)="onRemoveTranslation(project, structure.metadataEditor.source, $event)"
+          ></app-scripture-metadata-component>
   
           @for (item of structure.interlinearEditor; track $index) {
             @let bookInterlinearSource = sourceBookRecord[item.source];
@@ -85,11 +87,12 @@
               @let langInterlinearSource = codexMetadataRecord[item.source].language;
               @let parsedInterlinearBook = parseBook(bookInterlinearTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
   
-              <app-interlinear-component [current]="current" [sourceLanguage]="langInterlinearSource"
+              <app-interlinear-component [current]="current" [source]="item.source" [sourceLanguage]="langInterlinearSource"
                 [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook" [originVerse]="verse"
                 [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
-                [bookTarget]="bookInterlinearTarget" [customTranslation]="bookCustomTranslationTarget"
-                [addPatternMenuRef]="addPatternMenuRef"></app-interlinear-component>
+                [bookTarget]="bookInterlinearTarget" [viewingTranslationBookRecord]="translationBookRecord"
+                [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
+                (removeTranslation)="onRemoveTranslation(project, item.source, $event)"></app-interlinear-component>
             }
           }
 

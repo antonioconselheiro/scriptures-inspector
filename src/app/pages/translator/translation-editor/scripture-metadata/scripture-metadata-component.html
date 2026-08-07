@@ -4,12 +4,13 @@
   @let wordList = splitByLanguageWordSeparator(sourceVerse.text);
   @let wordMatrix = splitIntoMatrix(sourceVerse.text);
   @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
-  @let translations = getTranslations(viewingTranslationBookRecord);
+  @let translations = getTranslations();
 
   <div [class.minified]="minified" class="tableMinifiable">
     <div>
       <table border="1" frame="hsides" role="presentation">
         @for (translationInformation of translations; track $index) {
+          @let verseIndex = this.getCurrentVerseIndex(translationInformation.verses);
           <tr>
             <th class="translationName">{{translationInformation.name}}</th>
             <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
