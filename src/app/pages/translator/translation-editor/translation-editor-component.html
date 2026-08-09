@@ -5,6 +5,7 @@
     @let customTranslationsDetails = getProjectTranslationsDetails(project, codexMetadataRecord);
   
     <app-translation-viewer-manager
+      [project]="project"
       [codexMetadataRecord]="codexMetadataRecord"
       (addViewingTranslation)="onAddViewingTranslation(project, $event)"
     ></app-translation-viewer-manager>

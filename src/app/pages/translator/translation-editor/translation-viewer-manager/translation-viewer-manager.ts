@@ -4,8 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { AssociatedTranslation } from '@domain/associated-translation-model';
 import { Codex } from '@domain/codex-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { Project } from '@domain/project-model';
 import { RepositoryRecord } from '@domain/repository-record';
+import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
 
 @Component({
   selector: 'app-translation-viewer-manager',
@@ -22,6 +25,9 @@ export class TranslationViewerManager implements OnInit {
     [source: string]: Codex<LanguageUnionType>
   } | null = null;
 
+  @Input()
+  project: Project | null = null;
+  
   @Output()
   addViewingTranslation = new EventEmitter<AssociatedTranslation>();
 
@@ -54,18 +60,13 @@ export class TranslationViewerManager implements OnInit {
     });
   }
 
-  getAssociableCodex(): Array<{ value: string, label: string }> {
-    if (!this.codexMetadataRecord) {
+  getAssociableCodex(): Array<TargetMetadataDetail> {
+    const codexMetadataRecord = this.codexMetadataRecord;
+    if (!codexMetadataRecord || !this.project) {
       return [];
     }
 
-    return Object.keys(this.codexMetadataRecord).map(source => {
-      const codex = this.codexMetadataRecord![source];
-      return {
-        value: source,
-        label: `${codex.name} (${codex.language})`
-      };
-    });
+    return getProjectTargetsMetadataDetailsFn(this.project, codexMetadataRecord);
   }
 
   loadTranslation(associatedToEl: HTMLSelectElement, translationEl: HTMLSelectElement): void {

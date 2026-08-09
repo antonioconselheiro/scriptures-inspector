@@ -3,7 +3,14 @@
   "repositories": {
     "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
-  "translationViewer": [],
+  "translationViewer": [
+    {
+      "associatedTo": [
+        "geez-mashafa-qeddus"
+      ],
+      "translation": "@remote/bible-af-afr3353"
+    }
+  ],
   "target": {
     "language": "portuguese",
     "books": {

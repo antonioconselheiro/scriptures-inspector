@@ -24,16 +24,34 @@ export abstract class AbstractTranslatableDirective extends AbstractInspectorDir
   @Output()
   removeTranslation = new EventEmitter<string>();
 
-  protected getCurrentVerseIndex(verses: Readonly<Array<BookVerse<{ text: string; }>>>): number {
-    return verses.findIndex(verse => verse.verse.start === this.sourceVerse.verse.start && verse.verse.end === this.sourceVerse.verse.end);
+  protected getCurrentVerseIndex(verses: Readonly<Array<BookVerse<{ text: string; }>>> | Array<{ verse: `${number}`; text: string; }>): number {
+    return verses.findIndex(verse => {
+      if (typeof verse.verse === 'string') {
+        const verseNumber = parseFloat(verse.verse);
+        const sourceVerseStartNumber = parseFloat(this.sourceVerse.verse.start);
+        const sourceVerseEndNumber = parseFloat(this.sourceVerse.verse.end);
+        return sourceVerseStartNumber <= verseNumber && verseNumber <= sourceVerseEndNumber;
+      } else {
+
+        const verseStartNumber = parseFloat(verse.verse.start);
+        const verseEndNumber = parseFloat(verse.verse.end);
+
+        const sourceVerseStartNumber = parseFloat(this.sourceVerse.verse.start);
+        const sourceVerseEndNumber = parseFloat(this.sourceVerse.verse.end);
+
+        return sourceVerseStartNumber <= verseStartNumber && verseStartNumber <= sourceVerseEndNumber
+            || sourceVerseStartNumber <= verseEndNumber && verseEndNumber <= sourceVerseEndNumber;
+      }
+    });
   }
 
-  getTranslations(): Array<{
+  getViewingTranslations(): Array<{
     source: string;
     name: string;
-    verses: Readonly<BookVerse<{
+    verses: Readonly<{
       text: string;
-    }>>[];
+      verse: `${number}`;
+    }>[];
   }> {
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
       const translationViewing = this.viewingTranslationBookRecord[source];

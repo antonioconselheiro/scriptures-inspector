@@ -1,20 +1,23 @@
 <fieldset>
   <legend>Translation</legend>
 
-  @let associable = getAssociableCodex();
+  @let associables = getAssociableCodex();
 
   <div>
-    <label>Associated To</label>
+    <label>Associated To: </label>
     <select #associatedToEl name="associatedTo">
       <option></option>
-      @for (item of associable; track $index) {
-        <option [attr.value]="item.value">{{item.label}}</option>
+      
+      @if (codexMetadataRecord) {
+        @for (associable of associables; track $index) {
+          <option [attr.value]="associable.source">{{codexMetadataRecord[associable.source].name}}</option>
+        }
       }
     </select>
   </div>
 
   <div>
-    <label>Translation</label>
+    <label>Translation: </label>
     <select #translationEl name="translation">
       <option></option>
   

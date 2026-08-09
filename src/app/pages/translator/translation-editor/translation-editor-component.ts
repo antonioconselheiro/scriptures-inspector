@@ -39,6 +39,8 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { Book } from '@domain/book-model';
+import { BookVerse } from '@domain/book-verse-model';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -208,12 +210,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     translationViewing: TranslationViewing,
     translationCodexObject: Codex<LanguageUnionType>
   ): void {
-    if (this.translationBookRecord[associatingTranslation.translation]) {
-      const associatedTo = this.translationBookRecord[associatingTranslation.translation].associatedTo;
-      this.translationBookRecord[associatingTranslation.translation].associatedTo = [
-        ...new Set([...associatedTo, ...associatingTranslation.associatedTo])
-      ];
-    } else {
+    if (!this.translationBookRecord[associatingTranslation.translation]) {
       this.translationBookRecord[associatingTranslation.translation] = { ...translationViewing };
       this.translationBookRecord[associatingTranslation.translation].name = translationCodexObject.name;
       this.translationBookRecord[associatingTranslation.translation].source = associatingTranslation.translation;
@@ -223,6 +220,11 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   
       this.codexMetadataRecord[associatingTranslation.translation] = translationCodexObject;
     }
+
+    const associatedTo = this.translationBookRecord[associatingTranslation.translation].associatedTo || [];
+    this.translationBookRecord[associatingTranslation.translation].associatedTo = [
+      ...new Set([...associatedTo, ...associatingTranslation.associatedTo])
+    ];
   }
 
   private readBookTargetsFromData(project: Project, data: Data): void {
@@ -367,7 +369,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       loadCodexMetadataFn(this.httpClient, project, associating.translation)
         .then(codex => {
           if (codex) {
-            loadSourceBookFn(this.httpClient, project, associating.translation, book).then(sourceBook => {
+            loadSourceBookFn<Book<object, { text: string; verse: `${number}` }>>(this.httpClient, project, associating.translation, book).then(sourceBook => {
               if (sourceBook?.chapters) {
                 const translationViewing: TranslationViewing = {
                   ...sourceBook,
