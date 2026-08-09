@@ -21,29 +21,29 @@ export function getProjectTranslationsDetailsFn(
   const indexNotFound = -1;
 
   project.structure.forEach(structure => {
-    const { source, customTranslationEditor } = structure.metadataEditor;
+    const { source, customTranslation } = structure.metadata;
     const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
-    if (indexMetadata === indexNotFound && customTranslationEditor) {
+    if (indexMetadata === indexNotFound && customTranslation) {
       targetResultset.push({
         type: 'translation',
         source,
-        target: customTranslationEditor,
+        target: customTranslation,
         languageSource: codexMetadataRecord[source].language,
         languageTarget: project.target.language
       });
     }
 
-    if (structure.interlinearEditor) {
-      structure.interlinearEditor.forEach(interlinear => {
-        const { source, customTranslationEditor } = interlinear;
+    if (structure.interlinear) {
+      structure.interlinear.forEach(interlinear => {
+        const { source, customTranslation } = interlinear;
         const indexInterlinear = targetResultset.findIndex(target => target.source === source);
 
-        if (indexInterlinear === indexNotFound && customTranslationEditor) {
+        if (indexInterlinear === indexNotFound && customTranslation) {
           targetResultset.push({
             type: 'translation',
             source,
-            target: customTranslationEditor,
+            target: customTranslation,
             languageSource: codexMetadataRecord[source].language,
             languageTarget: project.target.language
           });

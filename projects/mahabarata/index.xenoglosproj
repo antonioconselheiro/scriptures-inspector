@@ -25,10 +25,10 @@
   },
   "structure": [
     {
-      "metadataEditor": {
+      "metadata": {
         "source": "mahabharata-sanskrit",
         "target": "mahabharata-sanskrit-portuguese-metadata",
-        "customTranslationEditor": "mahabharata-sanskrit-custom-portuguese-translation"
+        "customTranslation": "mahabharata-sanskrit-custom-portuguese-translation"
       }
     }
   ]

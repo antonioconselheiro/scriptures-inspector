@@ -2,13 +2,13 @@ import { Project } from '@domain/project-model';
 
 export function getProjectSourcesFn(project: Project): Array<string> {
   return project.structure.map(structure => {
-    if (structure.interlinearEditor) {
+    if (structure.interlinear) {
       return [
-        structure.metadataEditor.source,
-        ...structure.interlinearEditor.map(interlinear => interlinear.source)
+        structure.metadata.source,
+        ...structure.interlinear.map(interlinear => interlinear.source)
       ];
     }
 
-    return [structure.metadataEditor.source];
+    return [structure.metadata.source];
   }).flat();
 }

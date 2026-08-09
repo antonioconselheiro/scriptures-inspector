@@ -1,8 +1,8 @@
 import { KeyInterlinear } from './key-interlinear-type';
 import { KeyTranslation } from './key-translation-type';
 
-export interface ProjectStructureInterlinearEditor {
+export interface ProjectStructureInterlinear {
   source: string;
   target: KeyInterlinear;
-  customTranslationEditor: KeyTranslation | null;
+  customTranslation: KeyTranslation | null;
 }

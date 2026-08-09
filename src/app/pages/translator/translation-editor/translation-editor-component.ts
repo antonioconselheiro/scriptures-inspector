@@ -369,7 +369,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       loadCodexMetadataFn(this.httpClient, project, associating.translation)
         .then(codex => {
           if (codex) {
-            loadSourceBookFn<Book<object, { text: string; verse: `${number}` }>>(this.httpClient, project, associating.translation, book).then(sourceBook => {
+            loadSourceBookFn(this.httpClient, project, associating.translation, book).then(sourceBook => {
               if (sourceBook?.chapters) {
                 const translationViewing: TranslationViewing = {
                   ...sourceBook,

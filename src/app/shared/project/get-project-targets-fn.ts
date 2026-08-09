@@ -5,17 +5,17 @@ import { Project } from '@domain/project-model';
 
 export function getProjectTargetsFn(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
   return project.structure.map(structure => {
-    if (structure.interlinearEditor) {
+    if (structure.interlinear) {
       return [
-        structure.metadataEditor.target,
-        structure.metadataEditor.customTranslationEditor,
-        ...structure.interlinearEditor.map(interlinear => [interlinear.target, interlinear.customTranslationEditor]).flat()
+        structure.metadata.target,
+        structure.metadata.customTranslation,
+        ...structure.interlinear.map(interlinear => [interlinear.target, interlinear.customTranslation]).flat()
       ];
     }
 
     return [
-      structure.metadataEditor.target,
-      structure.metadataEditor.customTranslationEditor
+      structure.metadata.target,
+      structure.metadata.customTranslation
     ];
   }).flat().filter(v => !!v);
 }

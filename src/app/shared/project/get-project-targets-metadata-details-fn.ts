@@ -10,7 +10,7 @@ export function getProjectTargetsMetadataDetailsFn(
   const indexNotFound = -1;
 
   project.structure.forEach(structure => {
-    const { source, target } = structure.metadataEditor;
+    const { source, target } = structure.metadata;
     const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
     if (indexMetadata === indexNotFound) {
@@ -23,8 +23,8 @@ export function getProjectTargetsMetadataDetailsFn(
       });
     }
 
-    if (structure.interlinearEditor) {
-      structure.interlinearEditor.forEach(interlinear => {
+    if (structure.interlinear) {
+      structure.interlinear.forEach(interlinear => {
         const { source, target } = interlinear;
         const indexInterlinear = targetResultset.findIndex(target => target.source === source);
 

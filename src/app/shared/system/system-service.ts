@@ -36,27 +36,27 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => await this.saveFile(project, structure.metadataEditor.target, current, data));
+    project.structure.forEach(async structure => await this.saveFile(project, structure.metadata.target, current, data));
   }
 
   async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
-      if (structure.interlinearEditor) {
-        structure.interlinearEditor.forEach(async interlinear => await this.saveFile(project, interlinear.target, current, data));
+      if (structure.interlinear) {
+        structure.interlinear.forEach(async interlinear => await this.saveFile(project, interlinear.target, current, data));
       }
     });
   }
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
-      if (structure.metadataEditor.customTranslationEditor) {
-        await this.saveFile(project, structure.metadataEditor.customTranslationEditor, current, data);
+      if (structure.metadata.customTranslation) {
+        await this.saveFile(project, structure.metadata.customTranslation, current, data);
       }
 
-      if (structure.interlinearEditor) {
-        structure.interlinearEditor.forEach(async interlinear => {
-          if (interlinear.customTranslationEditor) {
-            await this.saveFile(project, interlinear.customTranslationEditor, current, data);
+      if (structure.interlinear) {
+        structure.interlinear.forEach(async interlinear => {
+          if (interlinear.customTranslation) {
+            await this.saveFile(project, interlinear.customTranslation, current, data);
           }
         });
       }

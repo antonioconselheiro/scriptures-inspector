@@ -6,9 +6,8 @@ export interface TranslationViewing {
   associatedTo: Array<string>;
   chapters: Array<Readonly<{
     chapter: number;
-    verses: Array<Readonly<{
-      verse: `${number}`;
+    verses: Array<Readonly<BookVerse<{
       text: string;
-    }>>
+    }>>>
   }>>;
 }

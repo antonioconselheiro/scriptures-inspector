@@ -3,7 +3,7 @@ import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { Book } from '@domain/book-model';
 import { CurrentBook } from '@domain/current-book-model';
-import { CurrentVerseIndex } from '@domain/current-verse-index-model';
+import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedPatterns } from '@domain/parsed-patterns';
@@ -30,7 +30,7 @@ export class ProjectMetadataService {
   createIfNotExistsWordMetadata(
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
+    current: CurrentChapter,
     verse: SourceVerse,
     word: Word
   ): {
@@ -69,7 +69,7 @@ export class ProjectMetadataService {
   removeUnusedMetadata(
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
+    current: CurrentChapter,
     verse: SourceVerse,
     wordMatrix: Array<Word>,
     wordIndex: number
@@ -98,7 +98,7 @@ export class ProjectMetadataService {
     checked: boolean,
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
+    current: CurrentChapter,
     verse: SourceVerse,
     word: Word
   ): void {
@@ -118,7 +118,7 @@ export class ProjectMetadataService {
   getScriptureMetadataWordOfGod(
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
-    current: CurrentVerseIndex,
+    current: CurrentChapter,
     word: Word
   ): boolean {
     const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
@@ -183,7 +183,7 @@ export class ProjectMetadataService {
 
   cleanWordOfGodFromVerse(
     bookMetadata: BookMetadataTarget,
-    current: CurrentVerseIndex
+    current: CurrentChapter
   ): void {
     const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 

@@ -1,7 +1,7 @@
-import { ProjectStructureInterlinearEditor } from './project-structure-interlinear-editor-model';
-import { ProjectStructureMetadataEditor } from './project-structure-metadata-editor-model';
+import { ProjectStructureInterlinear } from './project-structure-interlinear-model';
+import { ProjectStructureMetadata } from './project-structure-metadata-model';
 
 export interface ProjectStructure {
-  metadataEditor: ProjectStructureMetadataEditor;
-  interlinearEditor?: Array<ProjectStructureInterlinearEditor>;
+  metadata: ProjectStructureMetadata;
+  interlinear?: Array<ProjectStructureInterlinear>;
 }

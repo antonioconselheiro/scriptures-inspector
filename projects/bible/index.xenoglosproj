@@ -1,14 +1,14 @@
 {
   "name": "Bible Translation",
   "repositories": {
-    "remote": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
+    "bible": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
   "translationViewer": [
     {
       "associatedTo": [
         "geez-mashafa-qeddus"
       ],
-      "translation": "@remote/bible-af-afr3353"
+      "translation": "@bible/bible-af-afr3353"
     }
   ],
   "target": {
@@ -219,30 +219,30 @@
   },
   "structure": [
     {
-      "metadataEditor": {
+      "metadata": {
         "source": "hebrew-stuttgartensia",
         "target": "hebrew-stuttgartensia-portuguese-metadata",
-        "customTranslationEditor": "hebrew-stuttgartensia-custom-portuguese-translation"
+        "customTranslation": "hebrew-stuttgartensia-custom-portuguese-translation"
       },
-      "interlinearEditor": [
+      "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
           "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
+          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation"
         }
       ]
     },
     {
-      "metadataEditor": {
+      "metadata": {
         "source": "greek-elzeviriana",
         "target": "greek-elzeviriana-portuguese-metadata",
-        "customTranslationEditor": "greek-elzeviriana-custom-portuguese-translation"
+        "customTranslation": "greek-elzeviriana-custom-portuguese-translation"
       },
-      "interlinearEditor": [
+      "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
           "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslationEditor": "geez-mashafa-qeddus-custom-portuguese-translation"
+          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation"
         }
       ]
     }

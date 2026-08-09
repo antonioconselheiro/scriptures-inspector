@@ -55,10 +55,10 @@
 
 @if (project && codexMetadataRecord) {
   @for (structure of project.structure; track $index) {
-    @let sourceCodex = codexMetadataRecord[structure.metadataEditor.source];
-    @let selectedSourceBook = sourceBookRecord[structure.metadataEditor.source];
-    @let bookMetadata = projectData[structure.metadataEditor.target];
-    @let bookCustomTranslation = structure.metadataEditor.customTranslationEditor ? projectData[structure.metadataEditor.customTranslationEditor] : undefined;
+    @let sourceCodex = codexMetadataRecord[structure.metadata.source];
+    @let selectedSourceBook = sourceBookRecord[structure.metadata.source];
+    @let bookMetadata = projectData[structure.metadata.target];
+    @let bookCustomTranslation = structure.metadata.customTranslation ? projectData[structure.metadata.customTranslation] : undefined;
   
     @if (current && selectedSourceBook) {
       @let chapterIndex = getChapterIndex(current, selectedSourceBook.chapters);
@@ -71,17 +71,17 @@
   
         <fieldset [class.minified]="minifiedFieldset[fieldsetIndex]" class="fieldsetMinifiable">
           <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}</legend>
-          <app-scripture-metadata-component [current]="current" [source]="structure.metadataEditor.source" [sourceLanguage]="sourceCodex.language"
+          <app-scripture-metadata-component [current]="current" [source]="structure.metadata.source" [sourceLanguage]="sourceCodex.language"
             [bookTarget]="bookMetadata" [parsedBook]="parsedBook" [sourceBook]="selectedSourceBook" [sourceVerse]="verse"
             [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
             [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
-            (removeTranslation)="onRemoveTranslation(project, structure.metadataEditor.source, $event)"
+            (removeTranslation)="onRemoveTranslation(project, structure.metadata.source, $event)"
           ></app-scripture-metadata-component>
   
-          @for (item of structure.interlinearEditor; track $index) {
+          @for (item of structure.interlinear; track $index) {
             @let bookInterlinearSource = sourceBookRecord[item.source];
             @let bookInterlinearTarget = projectData[item.target];
-            @let bookCustomTranslationTarget = item.customTranslationEditor ? projectData[item.customTranslationEditor] : undefined;
+            @let bookCustomTranslationTarget = item.customTranslation ? projectData[item.customTranslation] : undefined;
   
             @if (bookInterlinearSource) {
               @let verseInterlinearSource = bookInterlinearSource.chapters[chapterIndex].verses[verse.verse.index];

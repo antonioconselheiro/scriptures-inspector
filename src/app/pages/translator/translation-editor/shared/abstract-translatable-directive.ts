@@ -1,8 +1,8 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { BookVerse } from '@domain/book-verse-model';
+import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { AbstractInspectorDiretive } from './abstract-inspector-directive';
-import { SourceBook } from '@domain/source-book-model';
 
 @Directive()
 export abstract class AbstractTranslatableDirective extends AbstractInspectorDiretive {
@@ -24,34 +24,23 @@ export abstract class AbstractTranslatableDirective extends AbstractInspectorDir
   @Output()
   removeTranslation = new EventEmitter<string>();
 
-  protected getCurrentVerseIndex(verses: Readonly<Array<BookVerse<{ text: string; }>>> | Array<{ verse: `${number}`; text: string; }>): number {
+  protected getCurrentVerseIndex(verses: Readonly<Array<BookVerse<{ text: string; }>>>): number {
     return verses.findIndex(verse => {
-      if (typeof verse.verse === 'string') {
-        const verseNumber = parseFloat(verse.verse);
-        const sourceVerseStartNumber = parseFloat(this.sourceVerse.verse.start);
-        const sourceVerseEndNumber = parseFloat(this.sourceVerse.verse.end);
-        return sourceVerseStartNumber <= verseNumber && verseNumber <= sourceVerseEndNumber;
-      } else {
+      const verseStartNumber = verse.verse.start;
+      const verseEndNumber = verse.verse.end;
 
-        const verseStartNumber = parseFloat(verse.verse.start);
-        const verseEndNumber = parseFloat(verse.verse.end);
+      const sourceVerseStartNumber = this.sourceVerse.verse.start;
+      const sourceVerseEndNumber = this.sourceVerse.verse.end;
 
-        const sourceVerseStartNumber = parseFloat(this.sourceVerse.verse.start);
-        const sourceVerseEndNumber = parseFloat(this.sourceVerse.verse.end);
-
-        return sourceVerseStartNumber <= verseStartNumber && verseStartNumber <= sourceVerseEndNumber
-            || sourceVerseStartNumber <= verseEndNumber && verseEndNumber <= sourceVerseEndNumber;
-      }
+      return sourceVerseStartNumber <= verseStartNumber && verseStartNumber <= sourceVerseEndNumber
+          || sourceVerseStartNumber <= verseEndNumber && verseEndNumber <= sourceVerseEndNumber;
     });
   }
 
   getViewingTranslations(): Array<{
     source: string;
     name: string;
-    verses: Readonly<{
-      text: string;
-      verse: `${number}`;
-    }>[];
+    verses: Array<BookVerse<{ text: string; }>>;
   }> {
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
       const translationViewing = this.viewingTranslationBookRecord[source];

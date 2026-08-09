@@ -1,10 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { CurrentVerseIndex } from '@domain/current-verse-index-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -75,10 +74,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     protected metadataService: ProjectMetadataService
   ) {
     super();
-  }
-
-  private getCurrent(): CurrentVerseIndex {
-    return { ...this.current, verseIndex: this.sourceVerse.verse.index };
   }
 
   splitIntoMatrix(text: string): Array<Word> {
