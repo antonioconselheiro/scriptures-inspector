@@ -6,6 +6,8 @@ import { AbstractInspectorDiretive } from './abstract-inspector-directive';
 import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { Project } from '@domain/project-model';
 import { SystemService } from '@shared/system/system-service';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { ProjectDataService } from './project/project-data-service';
 
 @Directive()
 export abstract class AbstractTranslatableDirective extends AbstractInspectorDiretive {
@@ -28,6 +30,15 @@ export abstract class AbstractTranslatableDirective extends AbstractInspectorDir
   abstract viewingTranslationBookRecord: { [source: string]: TranslationViewing; };
 
   protected abstract systemService: SystemService;
+  protected abstract dataService: ProjectDataService;
+
+  splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<{
+    word: string;
+    separator?: string;
+  }> {
+    const language = this.languageMetadataRecord[languageName];
+    return this.dataService.splitByLanguageWordSeparator(language, text);
+  }
 
   getViewingTranslations(): Array<{
     source: string;

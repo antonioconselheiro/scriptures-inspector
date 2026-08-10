@@ -1,12 +1,17 @@
 @if (sourceVerse) {
   @let wordList = splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
-  @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
-  @let wordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedBook.patterns, sourceVerse);
-  @let originWordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedOriginBook.patterns, originVerse);
 
-  <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage"
-    [project]="project" [projectData]="projectData" [bookTarget]="bookMetadata" [parsedBook]="parsedBook"
-    [sourceBook]="selectedSourceBook" [sourceVerse]="verse" [customTranslation]="bookCustomTranslation"
+  @let parsedBook = parseBook(projectData[structure.metadataTarget], sourceLanguage);
+  @let wordMatrix = splitIntoMatrix(sourceLanguage, parsedBook.patterns, sourceVerse);
+
+  @let originParsedBook = parseBook(projectData[originStructure.metadataTarget], originLanguage);
+  @let originWordMatrix = splitIntoMatrix(originLanguage, originParsedBook.patterns, originVerse);
+
+  <app-scripture-metadata-component
+    [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
+    [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage"
+    [project]="project" [projectData]="projectData" [bookTarget]="bookMetadata"
+    [sourceBook]="sourceBook" [sourceVerse]="verse" [customTranslation]="bookCustomTranslation"
     [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
     [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor"
   >
@@ -16,7 +21,7 @@
       <td>
         <div class="configFieldWrapper">
           @for (segment of word.segments; track segment.index) {
-            @let literal = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+            @let literal = segment.word | lexical : parsedBook : originLanguage : pipeUpdaterController;
             <input
               #field
               type="text"
@@ -36,7 +41,7 @@
       <td [colSpan]="wordList.length">
         @for (word of wordMatrix; track $index) {
           @for (segment of word.segments; track segment.index) {
-            @let value = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+            @let value = segment.word | lexical : parsedBook : originLanguage : pipeUpdaterController;
             @if (value.length) {<span [class]="'prisma'+getTranslationColor(segment.index)">{{value}}</span>&nbsp;}
           }
         }

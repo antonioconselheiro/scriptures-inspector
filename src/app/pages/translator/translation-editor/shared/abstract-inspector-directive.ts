@@ -7,6 +7,8 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 import { ProjectMetadataService } from './project/project-metadata-service';
 import { WordSegment } from '@domain/word-segment-model';
 import { Word } from '@domain/word-model';
+import { Language } from '@domain/language-model';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {
@@ -51,5 +53,15 @@ export abstract class AbstractInspectorDiretive {
 
     this.metadataService.cleanLexicalInterlinear(this.current, this.bookTarget, wordMatrix);
     this.pipeUpdaterController++;
+  }
+
+  parseBook(book: BookMetadataAttributes, languageName: LanguageUnionType): ParsedBookMetadata {
+    const languageAttributes = this.languageMetadataRecord[languageName];
+    const parsedPatterns = this.metadataService.parsePattern(book.patterns, languageAttributes);
+
+    return {
+      lexical: book.lexical,
+      patterns: parsedPatterns
+    };
   }
 }

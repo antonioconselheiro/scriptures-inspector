@@ -3,42 +3,38 @@ import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
-import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
+import { ProjectData } from '@domain/project-data-model';
+import { Project } from '@domain/project-model';
+import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
-import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
-import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
-import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
+import { ScriptureMetadataComponent } from '../scripture-metadata/scripture-metadata-component';
+import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
-import { ScriptureMetadataComponent } from '../scripture-metadata/scripture-metadata-component';
-import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
-import { SystemService } from '@shared/system/system-service';
-import { Project } from '@domain/project-model';
-import { ProjectData } from '@domain/project-data-model';
 
 @Component({
   selector: 'app-interlinear-component',
   imports: [
     FormsModule,
     LexicalPipe,
-    FunctionProxyPipe,
     ScriptureMetadataComponent,
     CustomTranslationComponent,
-    AddPatternContextMenuTrigger,
     CommonModule
   ],
   templateUrl: './interlinear-component.html',
@@ -56,7 +52,16 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   structure!: ProjectStructureInterlinear;
 
   @Input()
+  originStructure!: ProjectStructureMetadata | ProjectStructureInterlinear;
+
+  @Input()
+  codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
+
+  @Input()
   current!: CurrentChapter;
+
+  @Input()
+  originLanguage!: LanguageUnionType;
 
   @Input()
   sourceLanguage!: LanguageUnionType;
@@ -72,9 +77,6 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
   @Input()
   sourceBook!: SourceBook;
-
-  @Input()
-  parsedBook!: ParsedBookMetadata;
 
   @Input()
   sourceVerse!: SourceVerse;
@@ -97,7 +99,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   minified = false;
 
   constructor(
-    private dataService: ProjectDataService,
+    protected dataService: ProjectDataService,
     protected metadataService: ProjectMetadataService,
     protected systemService: SystemService,
     private interlinearService: ProjectInterlinearService
@@ -122,16 +124,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     return String(map.origin.index % 7 + 1);
   }
 
-  splitIntoMatrix(language: Language, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
-    return this.dataService.splitIntoMatrix(language, patterns, sourceVerse.text);
-  }
-
-  splitByLanguageWordSeparator(languageName: LanguageUnionType, text: string): Array<{
-    word: string;
-    separator?: string;
-  }> {
-    const language = this.languageMetadataRecord[languageName];
-    return this.dataService.splitByLanguageWordSeparator(language, text);
+  splitIntoMatrix(language: LanguageUnionType, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
+    return this.dataService.splitIntoMatrix(this.languageMetadataRecord[language], patterns, sourceVerse.text);
   }
 
   onChangeInterlinearToBaseScripture(
@@ -140,7 +134,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     interlinearValue: string
   ): void {
     if (!interlinearValue && confirm('Advance one word to all associations to the right?')) {
-      const wordMatrix = this.splitIntoMatrix(this.languageMetadataRecord[this.sourceLanguage], this.parsedBook.patterns, this.sourceVerse);
+      const parsedBook = this.parseBook(this.bookTarget, this.sourceLanguage);
+      const wordMatrix = this.splitIntoMatrix(this.sourceLanguage, parsedBook.patterns, this.sourceVerse);
       let previousValue = '';
       for (let word of wordMatrix) {
         for (let segment of word.segments) {

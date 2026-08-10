@@ -3,6 +3,8 @@ import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Language } from '@domain/language-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectDataService } from './project/project-data-service';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Pipe({
   name: 'lexical'
@@ -13,9 +15,10 @@ export class LexicalPipe implements PipeTransform {
     private dataService: ProjectDataService
   ) { }
 
-  transform(value: string, book: BookMetadataAttributes | ParsedBookMetadata, language: Language, listenUpdate?: number): string {
+  transform(value: string, book: BookMetadataAttributes | ParsedBookMetadata, languageName: LanguageUnionType, listenUpdate?: number): string {
     listenUpdate;
-    return this.dataService.getLexical(book, language, value);
+
+    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value);
   }
 
 }

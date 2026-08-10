@@ -23,6 +23,8 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { ParsedPatterns } from '@domain/parsed-patterns';
+import { Codex } from '@domain/codex-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -43,13 +45,22 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   title = 'Metadata';
 
   @Input()
+  project!: Project;
+  
+  @Input()
+  projectData: ProjectData = {};
+  
+  @Input()
   structure!: ProjectStructureMetadata | ProjectStructureInterlinear;
 
   @Input()
-  project!: Project;
+  codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
-  projectData: ProjectData = {};
+  wordList: Array<{ word: string; separator?: string; }> | null = null;
+  
+  @Input()
+  wordMatrix: Array<Word> | null = null;
 
   @Input()
   current!: CurrentChapter;
@@ -59,9 +70,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   
   @Input()
   sourceBook!: SourceBook;
-
-  @Input()
-  parsedBook!: ParsedBookMetadata;
 
   @Input()
   sourceLanguage!: LanguageUnionType;
@@ -87,21 +95,16 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   minified = false;
 
   constructor(
-    private dataService: ProjectDataService,
+    protected dataService: ProjectDataService,
     protected systemService: SystemService,
     protected metadataService: ProjectMetadataService
   ) {
     super();
   }
 
-  splitIntoMatrix(text: string): Array<Word> {
+  splitIntoMatrix(patterns: ParsedPatterns, text: string): Array<Word> {
     const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.dataService.splitIntoMatrix(language, this.parsedBook.patterns, text);
-  }
-
-  splitByLanguageWordSeparator(text: string): Array<string> {
-    const language = this.languageMetadataRecord[this.sourceLanguage];
-    return this.dataService.splitByLanguageWordSeparator(language, text).map(word => word.word);
+    return this.dataService.splitIntoMatrix(language, patterns, text);
   }
 
   //  word of God

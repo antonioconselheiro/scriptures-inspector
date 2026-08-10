@@ -4,15 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AssociatedTranslation } from '@domain/associated-translation-model';
-import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { KeyInterlinear } from '@domain/key-interlinear-type';
 import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
-import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -62,9 +59,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   pipeUpdaterController = 1;
 
-  codexMetadataRecord: {
-    [source: string]: Codex<LanguageUnionType>
-  } | null = null;
+  codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> } | null = null;
 
   sourceBookRecord: {
     readonly [source: string]: SourceBook | undefined
@@ -348,16 +343,6 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  parseBook(book: BookMetadataAttributes, language: Language, pipeUpdaterController: number): ParsedBookMetadata {
-    pipeUpdaterController;
-    const parsedPatterns = this.metadataService.parsePattern(book.patterns, language);
-
-    return {
-      lexical: book.lexical,
-      patterns: parsedPatterns
-    };
-  }
-
   onAddViewingTranslation(project: Project, associating: AssociatedTranslation): void {
     const book = this.current?.book;
 
@@ -394,5 +379,4 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     project.translationViewer.push(associating);
     this.systemService.triggerSaveCurrentProject();
   }
-
 }

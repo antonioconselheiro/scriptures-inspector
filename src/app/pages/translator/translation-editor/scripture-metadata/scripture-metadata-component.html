@@ -1,8 +1,9 @@
 @if (sourceVerse) {
   <h3>{{title}}</h3>
 
-  @let wordList = splitByLanguageWordSeparator(sourceVerse.text);
-  @let wordMatrix = splitIntoMatrix(sourceVerse.text);
+  @let wordListValue = wordList || splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
+  @let parsedBook = parseBook(bookTarget, sourceLanguage);
+  @let wordMatrixValue = wordMatrix || splitIntoMatrix(parsedBook.patterns, sourceVerse.text);
   @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
   @let translations = getViewingTranslations();
 
@@ -13,7 +14,7 @@
           @let verseIndex = getCurrentVerseIndex(translationInformation.verses);
           <tr>
             <th class="translationName">{{translationInformation.name}}</th>
-            <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
+            <td [colSpan]="wordListValue.length">{{translationInformation.verses[verseIndex].text}}</td>
             <td>
               <button type="button" (click)="onRemoveTranslation(translationInformation.source)">×</button>
             </td>
@@ -22,10 +23,10 @@
 
         <tr>
           <th rowspan="2">scriptures</th>
-          <td [colSpan]="wordList.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
+          <td [colSpan]="wordListValue.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
             [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-            @for (word of wordMatrix; track $index) {
+            @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
                   <span [class]="'prisma'+getColor(segment.index)">{{segment.word}}</span>
@@ -42,7 +43,7 @@
           [sourceLanguage]="sourceLanguage"
           [bookTarget]="bookTarget"
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-          @for (word of wordMatrix; track $index) {
+          @for (word of wordMatrixValue; track $index) {
             <td>
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
@@ -57,7 +58,7 @@
         @if (transliteration) {
           <tr>
             <th>transliteration</th>
-            @for (word of wordMatrix; track $index) {
+            @for (word of wordMatrixValue; track $index) {
               <td>
                 @for (segment of word.segments; track segment.index) {
                   @let transliterated = segment.word | functionProxy : transliteration;
@@ -72,12 +73,12 @@
         }
         <tr>
           <th>God said</th>
-          @for (word of wordList; track $index; let wordIndex = $index) {
+          @for (word of wordListValue; track $index; let wordIndex = $index) {
             <td>
               <input
                 type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-                (change)="setAsWordOfGod(wordOfGodEl, wordMatrix, wordIndex)"
-                [checked]="getScriptureMetadataWordOfGod(wordMatrix, wordIndex)"
+                (change)="setAsWordOfGod(wordOfGodEl, wordMatrixValue, wordIndex)"
+                [checked]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex)"
               />
             </td>
           }
@@ -86,23 +87,23 @@
     
         <tr>
           <th rowspan="2">interlinear</th>
-          @for (word of wordMatrix; track $index) {
+          @for (word of wordMatrixValue; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
-              @let lexical = segment.word | lexical : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : pipeUpdaterController;
               <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
                 #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
                 (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
             }
           </td>
           }
-          <td rowspan="2"><button (click)="cleanLexicalInterlinear(wordMatrix)" type="button">×</button></td>
+          <td rowspan="2"><button (click)="cleanLexicalInterlinear(wordMatrixValue)" type="button">×</button></td>
         </tr>
         <tr>
-          <td [colSpan]="wordList.length">
-            @for (word of wordMatrix; track $index) {
+          <td [colSpan]="wordListValue.length">
+            @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index) {
-                @let lexical = segment.word | lexical : parsedBook : languageMetadataRecord[sourceLanguage] : pipeUpdaterController;
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : pipeUpdaterController;
                 @if (lexical.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical}}</span>&nbsp;}
               }
             }
@@ -113,8 +114,8 @@
           @for (algorythm of languageMetadataRecord[sourceLanguage].numerology; track $index) {
           <tr>
             <th>{{algorythm.name}}</th>
-            @for (word of wordList; track $index) {
-              <td>{{word | functionProxy : algorythm.calc}}</td>
+            @for (word of wordListValue; track $index) {
+              <td>{{word.word | functionProxy : algorythm.calc}}</td>
             }
             <td></td>
           </tr>
@@ -126,7 +127,7 @@
             <tr>
               <th rowspan="2">{{spelling.name}}</th>
       
-              @for (word of wordMatrix; track $index) {
+              @for (word of wordMatrixValue; track $index) {
                 <td [attr.lang]="languageMetadataRecord[sourceLanguage].label">
                   @for (segment of word.segments; track segment.index) {
                     @if (spelling.parse) {
@@ -144,8 +145,8 @@
             </tr>
       
             <tr>
-              <td [colSpan]="wordList.length">
-                @for (word of wordMatrix; track $index) {
+              <td [colSpan]="wordListValue.length">
+                @for (word of wordMatrixValue; track $index) {
                   @for (segment of word.segments; track segment.index) {
                     @if (spelling.parse) {
                       @let alternativeSpelling = segment.word | functionProxy : spelling.parse;
@@ -180,7 +181,7 @@
   @if (customTranslation) {
     <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
       [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
-      [wordMatrix]="wordMatrix" [customTranslation]="customTranslation"></app-custom-translation-component>
+      [wordMatrix]="wordMatrixValue" [customTranslation]="customTranslation"></app-custom-translation-component>
   }
 }
 
@@ -192,13 +193,14 @@
 
   @if (bookInterlinearSource) {
     @let verseInterlinearSource = bookInterlinearSource.chapters[chapterIndex].verses[getVerseIndex(bookInterlinearTarget)];
-    @let langInterlinearSource = codexMetadataRecord[item.source].language;
-    @let parsedInterlinearBook = parseBook(bookInterlinearMetadataTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+    @let interlinearSourceLanguage = codexMetadataRecord[item.source].language;
 
-    <app-interlinear-component title="Interlinear" [current]="current" [structure]="item" [sourceLanguage]="langInterlinearSource"
-      [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook"
-      [originVerse]="verse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
-      [bookTarget]="bookInterlinearTarget" [viewingTranslationBookRecord]="translationBookRecord"
+    <app-interlinear-component
+      title="Interlinear" [current]="current" [originStructure]="structure" [structure]="item"
+      [sourceLanguage]="interlinearSourceLanguage" [originLanguage]="sourceLanguage"
+      [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController"
+      [originVerse]="verse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
+      [bookTarget]="bookInterlinearTarget" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
       [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
     ></app-interlinear-component>
   }
