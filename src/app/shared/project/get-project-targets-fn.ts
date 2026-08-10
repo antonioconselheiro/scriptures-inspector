@@ -7,15 +7,15 @@ export function getProjectTargetsFn(project: Project): Array<KeyMetadata | KeyIn
   return project.structure.map(structure => {
     if (structure.interlinear) {
       return [
-        structure.metadata.target,
-        structure.metadata.customTranslation,
-        ...structure.interlinear.map(interlinear => [interlinear.target, interlinear.customTranslation]).flat()
+        structure.metadata.metadataTarget,
+        structure.metadata.customTranslationTarget,
+        ...structure.interlinear.map(interlinear => [interlinear.interlinearTarget, interlinear.customTranslation]).flat()
       ];
     }
 
     return [
-      structure.metadata.target,
-      structure.metadata.customTranslation
+      structure.metadata.metadataTarget,
+      structure.metadata.customTranslationTarget
     ];
   }).flat().filter(v => !!v);
 }

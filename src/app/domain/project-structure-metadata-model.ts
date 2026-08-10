@@ -1,5 +1,10 @@
+import { KeyTranslation } from './key-translation-type';
+import { KeyMetadata } from './key-metadata-type';
+import { ProjectStructureInterlinear } from './project-structure-interlinear-model';
+
 export interface ProjectStructureMetadata {
   source: string;
-  target: `${string}-metadata`;
-  customTranslation: `${string}-translation` | null;
+  metadataTarget: KeyMetadata;
+  customTranslationTarget?: KeyTranslation;
+  interlinear?: Array<ProjectStructureInterlinear>;
 }

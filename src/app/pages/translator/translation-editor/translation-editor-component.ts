@@ -34,13 +34,10 @@ import { ImportFromBookDialog } from '../import-from-book-dialog/import-from-boo
 import { LexicalDictionaryDialog } from '../lexical-dictionary-dialog/lexical-dictionary-dialog';
 import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
 import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
-import { InterlinearComponent } from './interlinear/interlinear-component';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
-import { Book } from '@domain/book-model';
-import { BookVerse } from '@domain/book-verse-model';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -51,7 +48,6 @@ import { BookVerse } from '@domain/book-verse-model';
     AddPatternContextMenu,
     ScriptureMetadataComponent,
     TranslationViewerManager,
-    InterlinearComponent,
     ProjectHeader
 ],
   templateUrl: './translation-editor-component.html',
@@ -399,33 +395,4 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.systemService.triggerSaveCurrentProject();
   }
 
-  onRemoveTranslation(project: Project, associationWith: string, source: string): void {
-    if (confirm('Confirm removing this translation viewing?')) {
-      const indexNotFound = -1;
-      delete this.translationBookRecord[source];
-
-      if (this.translationBookRecord[source]) {
-        const indexOf = this.translationBookRecord[source].associatedTo.indexOf(associationWith);
-        if (indexOf !== indexNotFound) {
-          this.translationBookRecord[source].associatedTo.splice(indexOf, 1);
-        }
-
-        if (this.translationBookRecord[source].associatedTo.length === 0) {
-          delete this.translationBookRecord[source];
-        }
-      }
-
-      if (project.translationViewer) {
-        const translationIndex = project.translationViewer.findIndex(item => item.translation === source);
-        if (project.translationViewer[translationIndex]) {
-          project.translationViewer[translationIndex].associatedTo = project.translationViewer[translationIndex].associatedTo.filter(item => item !== associationWith);
-          if (project.translationViewer[translationIndex].associatedTo.length === 0) {
-            project.translationViewer.splice(translationIndex, 1);
-          }
-        }
-      }
-
-      this.systemService.triggerSaveCurrentProject();
-    }
-  }
 }

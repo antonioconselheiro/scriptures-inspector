@@ -1,132 +1,69 @@
 @if (sourceVerse) {
-  <h3>Interlinear</h3>
-
   @let wordList = splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
   @let sourceLanguageAttributes = languageMetadataRecord[sourceLanguage];
   @let wordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedBook.patterns, sourceVerse);
   @let originWordMatrix = splitIntoMatrix(sourceLanguageAttributes, parsedOriginBook.patterns, originVerse);
-  @let translations = getViewingTranslations();
 
-  <div [class.minified]="minified" class="tableMinifiable">
-    <div>
-      <table border="1" frame="hsides" role="presentation">
-        @for (translationInformation of translations; track $index) {
-          @let verseIndex = getCurrentVerseIndex(translationInformation.verses);
-
-          <tr>
-            <th class="translationName">{{translationInformation.name}}</th>
-            <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
-            <td>
-              <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
-            </td>
-          </tr>
+  <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage"
+    [project]="project" [projectData]="projectData" [bookTarget]="bookMetadata" [parsedBook]="parsedBook"
+    [sourceBook]="selectedSourceBook" [sourceVerse]="verse" [customTranslation]="bookCustomTranslation"
+    [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
+    [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor"
+  >
+    <tr>
+      <th rowspan="2">interlinear</th>
+      @for (word of wordMatrix; track $index) {
+      <td>
+        <div class="configFieldWrapper">
+          @for (segment of word.segments; track segment.index) {
+            @let literal = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+            <input
+              #field
+              type="text"
+              class="configField"
+              [name]="'fieldTranslation' + segment.index"
+              [placeholder]="segment.word"
+              [style.width.px]="calcFieldSize(segment, literal)" (input)="updateLexical(sourceLanguage, field, segment)"
+              [value]="literal"
+            />
+          }
+        </div>
+      </td>
+      }
+      <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(wordMatrix)">×</button></td>
+    </tr>
+    <tr>
+      <td [colSpan]="wordList.length">
+        @for (word of wordMatrix; track $index) {
+          @for (segment of word.segments; track segment.index) {
+            @let value = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
+            @if (value.length) {<span [class]="'prisma'+getTranslationColor(segment.index)">{{value}}</span>&nbsp;}
+          }
         }
-
-        <tr>
-          <th rowspan="2">{{sourceLanguageAttributes.name}}</th>
-          <td
-            [colSpan]="wordList.length"
-            [appAddPatternContextMenuTrigger]="addPatternMenuRef"
-            [sourceLanguage]="sourceLanguage"
-            [bookTarget]="bookTarget"
-            [attr.lang]="sourceLanguageAttributes.label"
-          >
-            @for (word of wordMatrix; track $index) {
-              @for (segment of word.segments; track segment.index) {
-                @if (segment.word.length) {
-                  <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
-                  @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
+      </td>
+    </tr>
+    <tr>
+      <th>interlinear</th>
+      @for (word of wordMatrix; track $index; let y = $index) {
+        <td>
+          @for (translationSegment of word.segments; track $index) {
+            <select #interlinear
+              (change)="onChangeInterlinearToBaseScripture(translationSegment.index, translationSegment.word, interlinear.value)"
+              [ngModel]="getInterlinear(translationSegment.index)"
+              [name]="'translationToSourceInterlinear' + $index">
+              <option value=""></option>
+              @for (originWords of originWordMatrix; track $index) {
+                @for (segment of originWords.segments; track $index) {
+                  <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
                 }
               }
-              
-            }
-          </td>
-          <td rowspan="2"></td>
-        </tr>
-        <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [attr.lang]="sourceLanguageAttributes.label">
-          @for (word of wordMatrix; track $index) {
-          <td>
-            @for (segment of word.segments; track segment.index) {
-              @if (segment.word.length) {
-                <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word}}</span>
-              }
-            }
-          </td>
+            </select>
           }
-        </tr>
-      
-        @if (sourceLanguageAttributes.transliteration) {
-          <tr>
-            <th>transliteration</th>
-            @for (word of wordMatrix; track $index) {
-              <td>
-                @for (segment of word.segments; track segment.index) {
-                  @if (segment.word.length) {
-                    <span [class]="'prisma'+getTranslationColor(segment.index)">{{segment.word | functionProxy : sourceLanguageAttributes.transliteration}}</span>
-                  }
-                }
-              </td>
-            }
-            <td></td>
-          </tr>
-        }
-        <tr>
-          <th rowspan="2">interlinear</th>
-          @for (word of wordMatrix; track $index) {
-          <td>
-            <div class="configFieldWrapper">
-              @for (segment of word.segments; track segment.index) {
-                @let literal = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-                <input
-                  #field
-                  type="text"
-                  class="configField"
-                  [name]="'fieldTranslation' + segment.index"
-                  [placeholder]="segment.word"
-                  [style.width.px]="calcFieldSize(segment, literal)" (input)="updateLexical(sourceLanguage, field, segment)"
-                  [value]="literal"
-                />
-              }
-            </div>
-          </td>
-          }
-          <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(wordMatrix)">×</button></td>
-        </tr>
-        <tr>
-          <td [colSpan]="wordList.length">
-            @for (word of wordMatrix; track $index) {
-              @for (segment of word.segments; track segment.index) {
-                @let value = segment.word | lexical : parsedBook : sourceLanguageAttributes : pipeUpdaterController;
-                @if (value.length) {<span [class]="'prisma'+getTranslationColor(segment.index)">{{value}}</span>&nbsp;}
-              }
-            }
-          </td>
-        </tr>
-        <tr>
-          <th>scriptures</th>
-          @for (word of wordMatrix; track $index; let y = $index) {
-            <td>
-              @for (translationSegment of word.segments; track $index) {
-                <select #interlinear
-                  (change)="onChangeInterlinearToBaseScripture(translationSegment.index, translationSegment.word, interlinear.value)"
-                  [ngModel]="getInterlinear(translationSegment.index)"
-                  [name]="'translationToSourceInterlinear' + $index">
-                  <option value=""></option>
-                  @for (originWords of originWordMatrix; track $index) {
-                    @for (segment of originWords.segments; track $index) {
-                      <option [value]="castSegmentIntoMetadataIndex(segment)">({{segment.index}} - {{segment.word}} )</option>
-                    }
-                  }
-                </select>
-              }
-            </td>
-          }
-          <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
-        </tr>
-      </table>
-    </div>
-    <button (click)="minified = !minified" type="button"></button>
-  </div>
+        </td>
+      }
+      <td><button type="button" (click)="cleanTranslationInterlinear()">×</button></td>
+    </tr>
+  </app-scripture-metadata-component>
 
   @if (customTranslation) {
     <app-custom-translation-component

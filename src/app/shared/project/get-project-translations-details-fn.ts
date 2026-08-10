@@ -21,14 +21,14 @@ export function getProjectTranslationsDetailsFn(
   const indexNotFound = -1;
 
   project.structure.forEach(structure => {
-    const { source, customTranslation } = structure.metadata;
+    const { source, customTranslationTarget } = structure.metadata;
     const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
-    if (indexMetadata === indexNotFound && customTranslation) {
+    if (indexMetadata === indexNotFound && customTranslationTarget) {
       targetResultset.push({
         type: 'translation',
         source,
-        target: customTranslation,
+        target: customTranslationTarget,
         languageSource: codexMetadataRecord[source].language,
         languageTarget: project.target.language
       });

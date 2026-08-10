@@ -36,21 +36,21 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => await this.saveFile(project, structure.metadata.target, current, data));
+    project.structure.forEach(async structure => await this.saveFile(project, structure.metadata.metadataTarget, current, data));
   }
 
   async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
       if (structure.interlinear) {
-        structure.interlinear.forEach(async interlinear => await this.saveFile(project, interlinear.target, current, data));
+        structure.interlinear.forEach(async interlinear => await this.saveFile(project, interlinear.interlinearTarget, current, data));
       }
     });
   }
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
-      if (structure.metadata.customTranslation) {
-        await this.saveFile(project, structure.metadata.customTranslation, current, data);
+      if (structure.metadata.customTranslationTarget) {
+        await this.saveFile(project, structure.metadata.customTranslationTarget, current, data);
       }
 
       if (structure.interlinear) {

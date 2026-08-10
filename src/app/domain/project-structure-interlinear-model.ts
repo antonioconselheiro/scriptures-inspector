@@ -1,8 +1,7 @@
 import { KeyInterlinear } from './key-interlinear-type';
-import { KeyTranslation } from './key-translation-type';
+import { ProjectStructureMetadata } from './project-structure-metadata-model';
 
-export interface ProjectStructureInterlinear {
+export interface ProjectStructureInterlinear extends ProjectStructureMetadata {
   source: string;
-  target: KeyInterlinear;
-  customTranslation: KeyTranslation | null;
+  interlinearTarget: KeyInterlinear;
 }

@@ -3,14 +3,7 @@
   "repositories": {
     "bible": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
-  "translationViewer": [
-    {
-      "associatedTo": [
-        "geez-mashafa-qeddus"
-      ],
-      "translation": "@bible/bible-af-afr3353"
-    }
-  ],
+  "translationViewer": [],
   "target": {
     "language": "portuguese",
     "books": {
@@ -219,30 +212,30 @@
   },
   "structure": [
     {
-      "metadata": {
-        "source": "hebrew-stuttgartensia",
-        "target": "hebrew-stuttgartensia-portuguese-metadata",
-        "customTranslation": "hebrew-stuttgartensia-custom-portuguese-translation"
-      },
+      "source": "hebrew-stuttgartensia",
+      "metadataTarget": "hebrew-stuttgartensia-portuguese-metadata",
+      "customTranslationTarget": "hebrew-stuttgartensia-custom-portuguese-translation"
       "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
-          "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation"
+          "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
+          "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation",
+          "interlinear": []
         }
       ]
     },
     {
-      "metadata": {
-        "source": "greek-elzeviriana",
-        "target": "greek-elzeviriana-portuguese-metadata",
-        "customTranslation": "greek-elzeviriana-custom-portuguese-translation"
-      },
+      "source": "greek-elzeviriana",
+      "metadataTarget": "greek-elzeviriana-portuguese-metadata",
+      "customTranslation": "greek-elzeviriana-custom-portuguese-translation"
       "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
-          "target": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation"
+          "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
+          "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+          "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation",
+          "interlinear": []
         }
       ]
     }

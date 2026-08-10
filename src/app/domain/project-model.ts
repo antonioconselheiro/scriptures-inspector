@@ -1,5 +1,5 @@
 import { AssociatedTranslation } from './associated-translation-model';
-import { ProjectStructure } from './project-structure-model';
+import { ProjectStructureMetadata } from './project-structure-metadata-model';
 import { ProjectTarget } from './project-target-model';
 
 export interface Project {
@@ -8,5 +8,5 @@ export interface Project {
   repositories?: { [alias: string]: string };
   target: ProjectTarget;
   translationViewer?: Array<AssociatedTranslation>;
-  structure: Array<ProjectStructure>;
+  structure: Array<ProjectStructureMetadata>;
 }

@@ -6,12 +6,18 @@ import { BookVerse } from '@domain/book-verse-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData } from '@domain/project-data-model';
+import { Project } from '@domain/project-model';
+import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
+import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
+import { InterlinearComponent } from '../interlinear/interlinear-component';
 import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
 import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
@@ -24,6 +30,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
     LexicalPipe,
     FormsModule,
     FunctionProxyPipe,
+    InterlinearComponent,
     CustomTranslationComponent,
     AddPatternContextMenuTrigger
   ],
@@ -33,7 +40,16 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   @Input()
-  source!: string;
+  title = 'Metadata';
+
+  @Input()
+  structure!: ProjectStructureMetadata | ProjectStructureInterlinear;
+
+  @Input()
+  project!: Project;
+
+  @Input()
+  projectData: ProjectData = {};
 
   @Input()
   current!: CurrentChapter;
@@ -60,17 +76,19 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   customTranslation: BookTranslationTarget | undefined;
 
   @Input()
-  viewingTranslationBookRecord: {
-    readonly [source: string]: TranslationViewing;
-  } = {};
+  viewingTranslationBookRecord: { [source: string]: TranslationViewing; } = {};
 
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
+
+  @Input()
+  getColor: (segmentIndex: number) => string = (segmentIndex: number) => String(segmentIndex % 7 + 1);
 
   minified = false;
 
   constructor(
     private dataService: ProjectDataService,
+    protected systemService: SystemService,
     protected metadataService: ProjectMetadataService
   ) {
     super();
@@ -96,7 +114,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     this.metadataService.removeUnusedMetadata(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(),
+      this.current,
       this.sourceVerse,
       wordMatrix,
       wordIndex
@@ -106,7 +124,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       input.checked,
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(),
+      this.current,
       this.sourceVerse,
       word
     );
@@ -120,7 +138,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     return this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
       this.sourceLanguage,
-      this.getCurrent(),
+      this.current,
       word
     );
   }
@@ -130,6 +148,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       return;
     }
 
-    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.getCurrent());
+    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.current);
   }
 }

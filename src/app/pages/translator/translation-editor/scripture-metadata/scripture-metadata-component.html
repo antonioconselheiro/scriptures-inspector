@@ -1,5 +1,5 @@
 @if (sourceVerse) {
-  <h3>Metadata</h3>
+  <h3>{{title}}</h3>
 
   @let wordList = splitByLanguageWordSeparator(sourceVerse.text);
   @let wordMatrix = splitIntoMatrix(sourceVerse.text);
@@ -15,7 +15,7 @@
             <th class="translationName">{{translationInformation.name}}</th>
             <td [colSpan]="wordList.length">{{translationInformation.verses[verseIndex].text}}</td>
             <td>
-              <button type="button" (click)="removeTranslationViewing(translationInformation.source)">×</button>
+              <button type="button" (click)="onRemoveTranslation(translationInformation.source)">×</button>
             </td>
           </tr>
         }
@@ -28,7 +28,7 @@
             @for (word of wordMatrix; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
-                  <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+                  <span [class]="'prisma'+getColor(segment.index)">{{segment.word}}</span>
                 }
               }
   
@@ -37,46 +37,49 @@
           </td>
           <td></td>
         </tr>
-        <tr [appAddPatternContextMenuTrigger]="addPatternMenuRef" [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
+        <tr
+          [appAddPatternContextMenuTrigger]="addPatternMenuRef"
+          [sourceLanguage]="sourceLanguage"
+          [bookTarget]="bookTarget"
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
           @for (word of wordMatrix; track $index) {
-          <td>
-            @for (segment of word.segments; track segment.index) {
-              @if (segment.word.length) {
-                <span [class]="'prisma'+(segment.index % 7 + 1)">{{segment.word}}</span>
+            <td>
+              @for (segment of word.segments; track segment.index) {
+                @if (segment.word.length) {
+                  <span [class]="'prisma'+getColor(segment.index)">{{segment.word}}</span>
+                }
               }
-            }
-          </td>
+            </td>
           }
           <td></td>
         </tr>
     
         @if (transliteration) {
-        <tr>
-          <th>transliteration</th>
-          @for (word of wordMatrix; track $index) {
-          <td>
-            @for (segment of word.segments; track segment.index) {
-              @let transliterated = segment.word | functionProxy : transliteration;
-              @if (transliterated.length) {
-                <span [class]="'prisma'+(segment.index % 7 + 1)">{{transliterated}}</span>
-              }
+          <tr>
+            <th>transliteration</th>
+            @for (word of wordMatrix; track $index) {
+              <td>
+                @for (segment of word.segments; track segment.index) {
+                  @let transliterated = segment.word | functionProxy : transliteration;
+                  @if (transliterated.length) {
+                    <span [class]="'prisma'+getColor(segment.index)">{{transliterated}}</span>
+                  }
+                }
+              </td>
             }
-          </td>
-          }
-          <td></td>
-        </tr>
+            <td></td>
+          </tr>
         }
         <tr>
           <th>God said</th>
           @for (word of wordList; track $index; let wordIndex = $index) {
-          <td>
-            <input
-              type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
-              (change)="setAsWordOfGod(wordOfGodEl, wordMatrix, wordIndex)"
-              [checked]="getScriptureMetadataWordOfGod(wordMatrix, wordIndex)"
-            />
-          </td>
+            <td>
+              <input
+                type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
+                (change)="setAsWordOfGod(wordOfGodEl, wordMatrix, wordIndex)"
+                [checked]="getScriptureMetadataWordOfGod(wordMatrix, wordIndex)"
+              />
+            </td>
           }
           <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
         </tr>
@@ -166,14 +169,37 @@
             </tr>
           }
         }
+
+        <ng-content></ng-content>
       </table>
     </div>
   
     <button (click)="minified = !minified" type="button"></button>
   </div>
+
   @if (customTranslation) {
-  <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
-    [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
-    [wordMatrix]="wordMatrix" [customTranslation]="customTranslation"></app-custom-translation-component>
+    <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
+      [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
+      [wordMatrix]="wordMatrix" [customTranslation]="customTranslation"></app-custom-translation-component>
+  }
+}
+
+@for (item of structure.interlinear; track $index) {
+  @let bookInterlinearSource = sourceBookRecord[item.source];
+  @let bookInterlinearMetadataTarget = projectData[item.metadataTarget];
+  @let bookInterlinearTarget = projectData[item.interlinearTarget];
+  @let bookCustomTranslationTarget = item.customTranslationTarget ? projectData[item.customTranslationTarget] : undefined;
+
+  @if (bookInterlinearSource) {
+    @let verseInterlinearSource = bookInterlinearSource.chapters[chapterIndex].verses[getVerseIndex(bookInterlinearTarget)];
+    @let langInterlinearSource = codexMetadataRecord[item.source].language;
+    @let parsedInterlinearBook = parseBook(bookInterlinearMetadataTarget, languageMetadataRecord[langInterlinearSource], pipeUpdaterController);
+
+    <app-interlinear-component title="Interlinear" [current]="current" [structure]="item" [sourceLanguage]="langInterlinearSource"
+      [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController" [parsedOriginBook]="parsedBook"
+      [originVerse]="verse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource" [parsedBook]="parsedInterlinearBook"
+      [bookTarget]="bookInterlinearTarget" [viewingTranslationBookRecord]="translationBookRecord"
+      [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
+    ></app-interlinear-component>
   }
 }

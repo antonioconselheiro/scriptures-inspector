@@ -24,6 +24,11 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
+import { ScriptureMetadataComponent } from '../scripture-metadata/scripture-metadata-component';
+import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
+import { SystemService } from '@shared/system/system-service';
+import { Project } from '@domain/project-model';
+import { ProjectData } from '@domain/project-data-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -31,6 +36,7 @@ import { AbstractTranslatableDirective } from '../shared/abstract-translatable-d
     FormsModule,
     LexicalPipe,
     FunctionProxyPipe,
+    ScriptureMetadataComponent,
     CustomTranslationComponent,
     AddPatternContextMenuTrigger,
     CommonModule
@@ -41,7 +47,13 @@ import { AbstractTranslatableDirective } from '../shared/abstract-translatable-d
 export class InterlinearComponent extends AbstractTranslatableDirective {
 
   @Input()
-  source!: string;
+  project!: Project;
+
+  @Input()
+  projectData!: ProjectData;
+
+  @Input()
+  structure!: ProjectStructureInterlinear;
 
   @Input()
   current!: CurrentChapter;
@@ -74,9 +86,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   customTranslation: BookTranslationTarget | undefined;
 
   @Input()
-  viewingTranslationBookRecord: {
-    readonly [source: string]: TranslationViewing;
-  } = {};
+  viewingTranslationBookRecord: { [source: string]: TranslationViewing; } = {};
 
   @Input()
   variations: Array<TargetTranslationMetadataDetail> = [];
@@ -89,6 +99,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   constructor(
     private dataService: ProjectDataService,
     protected metadataService: ProjectMetadataService,
+    protected systemService: SystemService,
     private interlinearService: ProjectInterlinearService
   ) {
     super();
