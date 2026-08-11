@@ -58,6 +58,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
+  sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
+
+  @Input()
   current!: CurrentChapter;
 
   @Input()

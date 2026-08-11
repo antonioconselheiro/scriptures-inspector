@@ -70,7 +70,7 @@
   
         <fieldset [class.minified]="minifiedFieldset[fieldsetIndex]" class="fieldsetMinifiable">
           <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}</legend>
-          <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceLanguage]="sourceCodex.language"
+          <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
             [codexMetadataRecord]="codexMetadataRecord" [projectData]="projectData" [bookTarget]="bookMetadata" [sourceBook]="selectedSourceBook"
             [sourceVerse]="verse" [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
             [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"

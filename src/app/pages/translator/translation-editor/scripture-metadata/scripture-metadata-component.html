@@ -11,7 +11,7 @@
     <div>
       <table border="1" frame="hsides" role="presentation">
         @for (translationInformation of translations; track $index) {
-          @let verseIndex = getCurrentVerseIndex(translationInformation.verses);
+          @let verseIndex = getTranslationVerseIndex(translationInformation.verses);
           <tr>
             <th class="translationName">{{translationInformation.name}}</th>
             <td [colSpan]="wordListValue.length">{{translationInformation.verses[verseIndex].text}}</td>
@@ -192,14 +192,16 @@
   @let bookCustomTranslationTarget = item.customTranslationTarget ? projectData[item.customTranslationTarget] : undefined;
 
   @if (bookInterlinearSource) {
-    @let verseInterlinearSource = bookInterlinearSource.chapters[chapterIndex].verses[getVerseIndex(bookInterlinearTarget)];
+    @let correspondingIndex = getInterlinearCorrespondingIndex(item);
+    @let verseInterlinearSource = bookInterlinearSource.chapters[correspondingIndex.chapter].verses[correspondingIndex.verse];
     @let interlinearSourceLanguage = codexMetadataRecord[item.source].language;
+    @let interlinearCurrent = getInterlinearCorrespondingCurrentChapter(item);
 
     <app-interlinear-component
-      title="Interlinear" [current]="current" [originStructure]="structure" [structure]="item"
-      [sourceLanguage]="interlinearSourceLanguage" [originLanguage]="sourceLanguage"
+      title="Interlinear" [current]="interlinearCurrent" [originStructure]="structure" [structure]="item"
+      [sourceLanguage]="interlinearSourceLanguage" [originLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
       [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController"
-      [originVerse]="verse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
+      [originVerse]="sourceVerse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
       [bookTarget]="bookInterlinearTarget" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
       [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
     ></app-interlinear-component>

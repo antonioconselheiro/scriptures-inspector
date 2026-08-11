@@ -3,9 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
+import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ParsedPatterns } from '@domain/parsed-patterns';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
@@ -23,8 +24,6 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { ParsedPatterns } from '@domain/parsed-patterns';
-import { Codex } from '@domain/codex-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -57,13 +56,13 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
+  sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
+
+  @Input()
   wordList: Array<{ word: string; separator?: string; }> | null = null;
   
   @Input()
   wordMatrix: Array<Word> | null = null;
-
-  @Input()
-  current!: CurrentChapter;
 
   @Input()
   pipeUpdaterController = 0;
@@ -73,6 +72,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   @Input()
   sourceLanguage!: LanguageUnionType;
+
+  @Input()
+  current!: CurrentChapter;
 
   @Input()
   sourceVerse!: BookVerse<{ text: string; }>;
@@ -100,6 +102,67 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     protected metadataService: ProjectMetadataService
   ) {
     super();
+  }
+
+  getTranslationVerseIndex(translationVerses: Array<BookVerse<{ text: string; }>>): number {
+    return translationVerses.findIndex((verse) => verse.verse === this.sourceVerse.verse);
+  }
+
+  getInterlinearCorrespondingCurrentChapter(interlinear: ProjectStructureInterlinear): CurrentChapter {
+    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget]; 
+    const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
+    let currentChapter = this.current.chapter;
+
+    if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
+      interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
+        if (this.current.chapter === chapter.origin && chapter.chapter !== undefined) {
+          currentChapter = chapter.chapter;
+        }
+      });
+    }
+
+    return {
+      ...this.current,
+      chapter: currentChapter
+    };
+  }
+
+  getInterlinearCorrespondingIndex(interlinear: ProjectStructureInterlinear): {
+    chapter: number;
+    verse: number;
+  } {
+    let correspondingChapterIndex = 0, correspondingVerseIndex = 0;
+    let interlinearChapter = this.current.chapter, interlinearVerse = this.sourceVerse.verse;
+    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget]; 
+    const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
+
+    if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
+      interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
+        if (this.current.chapter === chapter.origin) {
+          chapter.verses.forEach((verse) => {
+            if (verse.originChapter === this.current.chapter && verse.originVerse === this.sourceVerse.verse) {
+              interlinearChapter = chapter.chapter;
+              interlinearVerse = verse.verse;
+            }
+          });
+        }
+      });
+    }
+
+    if (bookInterlinearSource) {
+      bookInterlinearSource.chapters.forEach((chapter, chapterIndex) => {
+        if (chapter.chapter === interlinearChapter) {
+          correspondingChapterIndex = chapterIndex;
+          chapter.verses.forEach((verse, verseIndex) => {
+            if (verse.verse === interlinearVerse) {
+              correspondingVerseIndex = verseIndex;
+            }
+          });
+        }
+      });
+    }
+
+    return { chapter: correspondingChapterIndex, verse: correspondingVerseIndex };
   }
 
   splitIntoMatrix(patterns: ParsedPatterns, text: string): Array<Word> {
