@@ -1,5 +1,14 @@
-import { Book } from './book-model';
-import { BookMetadataAttributes } from './book-metadata-attributes-model';
-import { TranslationInterlinearVerse } from './translation-interlinear-verse-model';
-
-export type BookInterlinearTarget = Book<BookMetadataAttributes, Array<TranslationInterlinearVerse | null>>;
+export type BookInterlinearTarget = {
+  [source: string]: {
+    chapters: Array<{
+      origin: number;
+      chapter?: number;
+      verses: Array<{
+        originChapter?: number;
+        originVerse: number;
+        chapter?: number;
+        verse: number;
+      }>
+    }>;
+  }
+};

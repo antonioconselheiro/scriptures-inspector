@@ -1,12 +1,12 @@
-import { Directive, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, Input } from '@angular/core';
 import { BookVerse } from '@domain/book-verse-model';
+import { LanguageUnionType } from '@domain/language-union-type';
+import { Project } from '@domain/project-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
-import { AbstractInspectorDiretive } from './abstract-inspector-directive';
-import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
-import { Project } from '@domain/project-model';
 import { SystemService } from '@shared/system/system-service';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { AbstractInspectorDiretive } from './abstract-inspector-directive';
 import { ProjectDataService } from './project/project-data-service';
 
 @Directive()

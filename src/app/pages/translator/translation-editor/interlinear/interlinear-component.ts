@@ -27,6 +27,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -85,7 +86,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   sourceVerse!: SourceVerse;
 
   @Input()
-  bookTarget!: BookInterlinearTarget;
+  bookTarget!: BookMetadataTarget;
+  
+  @Input()
+  interlinearTarget!: BookInterlinearTarget;
 
   @Input()
   customTranslation: BookTranslationTarget | undefined;

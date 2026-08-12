@@ -3,12 +3,11 @@ import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { Word } from '@domain/word-model';
+import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
-import { WordSegment } from '@domain/word-segment-model';
-import { Word } from '@domain/word-model';
-import { Language } from '@domain/language-model';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {

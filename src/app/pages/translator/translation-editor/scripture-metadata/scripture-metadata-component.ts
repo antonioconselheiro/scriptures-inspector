@@ -109,8 +109,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   }
 
   getInterlinearCorrespondingCurrentChapter(interlinear: ProjectStructureInterlinear): CurrentChapter {
-    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget]; 
-    const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
+    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget];
     let currentChapter = this.current.chapter;
 
     if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
@@ -140,8 +139,15 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
         if (this.current.chapter === chapter.origin) {
           chapter.verses.forEach((verse) => {
-            if (verse.originChapter === this.current.chapter && verse.originVerse === this.sourceVerse.verse) {
-              interlinearChapter = chapter.chapter;
+            if ((verse.originChapter === undefined || verse.originChapter === this.current.chapter) && verse.originVerse === this.sourceVerse.verse) {
+              if (verse.chapter !== undefined) {
+                interlinearChapter = verse.chapter;
+              } else if (chapter.chapter !== undefined) {
+                interlinearChapter = chapter.chapter;
+              } else {
+                interlinearChapter = this.current.chapter;
+              }
+
               interlinearVerse = verse.verse;
             }
           });
