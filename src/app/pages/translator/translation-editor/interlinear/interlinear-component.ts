@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
@@ -27,7 +28,6 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -153,6 +153,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   
               this.interlinearService.saveInterlinearToBaseScripture(
                 this.bookTarget,
+                this.interlinearTarget,
+                this.originStructure.source,
                 this.current,
                 this.sourceVerse,
                 this.sourceVerse,
@@ -165,6 +167,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   
               this.interlinearService.saveInterlinearToBaseScripture(
                 this.bookTarget,
+                this.interlinearTarget,
+                this.originStructure.source,
                 this.current,
                 this.sourceVerse,
                 this.sourceVerse,
@@ -182,6 +186,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     } else {
       this.interlinearService.saveInterlinearToBaseScripture(
         this.bookTarget,
+        this.interlinearTarget,
+        this.originStructure.source,
         this.current,
         this.sourceVerse,
         this.sourceVerse,
@@ -196,6 +202,8 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     return this.interlinearService.getInterlinear(
       this.sourceLanguage,
       this.bookTarget,
+      this.interlinearTarget,
+      this.originStructure.source,
       this.current,
       this.sourceVerse,
       wordIndex
@@ -212,7 +220,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     }
 
     this.interlinearService.cleanTranslationInterlinear(
-      this.bookTarget, this.current, this.sourceVerse
+      this.bookTarget, this.interlinearTarget, this.originStructure.source, this.current, this.sourceVerse
     );
   }
 }

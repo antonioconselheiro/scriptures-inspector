@@ -10,8 +10,8 @@
   <app-scripture-metadata-component
     [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
     [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
-    [project]="project" [projectData]="projectData" [bookTarget]="bookMetadata"
-    [sourceBook]="sourceBook" [sourceVerse]="verse" [customTranslation]="bookCustomTranslation"
+    [project]="project" [projectData]="projectData" [bookTarget]="bookTarget"
+    [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
     [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
     [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor"
   >
@@ -73,7 +73,7 @@
   @if (customTranslation) {
     <app-custom-translation-component
       [bookTarget]="bookTarget"
-      [interlinear]="bookTarget"
+      [interlinear]="interlinearTarget"
       [translationLanguage]="sourceLanguage"
       [current]="current"
       [parsedBook]="parsedBook"
