@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BookChapterVerseMetadata } from '@domain/book-chapter-verse-metadata-model';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -312,7 +312,7 @@ export class ProjectCustomTranslationService {
 
   getCustomTranslationColor(
     customTranslation: BookTranslationTarget,
-    interlinear: BookInterlinearTarget | undefined,
+    interlinear: InterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -360,7 +360,7 @@ export class ProjectCustomTranslationService {
     translationLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
-    interlinear: BookInterlinearTarget | undefined,
+    interlinear: InterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordIndex: number
@@ -454,7 +454,7 @@ export class ProjectCustomTranslationService {
     translationLanguage: LanguageUnionType,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
-    interlinear: BookInterlinearTarget | undefined,
+    interlinear: InterlinearTarget | undefined,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
     wordSpanIndex: number

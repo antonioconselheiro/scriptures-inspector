@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
@@ -20,51 +20,78 @@ export class ProjectInterlinearService {
     private systemService: SystemService
   ) { }
 
+  createInterlinearToBaseScriptureIfNotExists(
+    interlinearTarget: InterlinearTarget,
+    originStructureSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse
+  ): {
+    interlinearChapterIndex: number,
+    interlinearVerseIndex: number
+  } {
+    interlinearTarget[originStructureSource] = interlinearTarget[originStructureSource] || {};
+    interlinearTarget[originStructureSource].chapters = interlinearTarget[originStructureSource].chapters || [];
+    let interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.findIndex(chapter => chapter.chapter === current.chapter);
+
+    if (interlinearChapterIndex === this.indexNotFound) {
+      //  TODO: encaixar na posição correta e não no final
+      interlinearTarget[originStructureSource].chapters.push({
+        origin: current.chapter,
+        chapter: current.chapter,
+        verses: []
+      });
+
+      interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.length - 1;
+    }
+
+    interlinearTarget[originStructureSource]
+      .chapters[interlinearChapterIndex].verses = interlinearTarget[originStructureSource]
+      .chapters[interlinearChapterIndex].verses || [];
+
+    let interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex]
+      .verses.findIndex(verse => verse.verse === sourceVerse.verse);
+
+    if (interlinearVerseIndex === this.indexNotFound) {
+      //  TODO: encaixar na posição correta e não no final
+      interlinearTarget[originStructureSource].chapters[interlinearChapterIndex].verses.push({
+        originChapter: current.chapter,
+        chapter: current.chapter,
+        verse: sourceVerse.verse,
+        originVerse: sourceVerse.verse,
+        words: []
+      });
+      interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex].verses.length - 1;
+    }
+
+    return {
+      interlinearChapterIndex,
+      interlinearVerseIndex
+    };
+  }
+
   saveInterlinearToBaseScripture(
-    bookTarget: BookMetadataTarget,
-    interlinearTarget: BookInterlinearTarget,
+    interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
     sourceVerse: SourceVerse,
-    translationVerse: SourceVerse,
     translationWordIndex: number,
     translationWord: string,
     interlinearOptionValue: string
   ): void {
     const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
-    const scriptureVerseNumber = sourceVerse.verse;
-    const interlinearVerseNumber = translationVerse.verse;
-    const chapterIndex = bookTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
-    if (chapterIndex === this.indexNotFound || !bookTarget.chapters[chapterIndex]) {
-      bookTarget.chapters[chapterIndex] = {
-        chapter: current.chapter,
-        verses: []
-      };
-    }
+    const indexes = this.createInterlinearToBaseScriptureIfNotExists(interlinearTarget, originStructureSource, current, sourceVerse);
+    const wordInterlinearAssociation = interlinearTarget[originStructureSource]
+      .chapters[indexes.interlinearChapterIndex]
+      .verses[indexes.interlinearVerseIndex];
 
-    if (!bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index]) {
-      bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index] = [];
-    }
-
-    if (scriptureWordIndex === 0 && scriptureWord === undefined) {
-      bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex] = null;
-    } else {
-      bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex] = {
-        origin: {
-          verse: scriptureVerseNumber,
-          index: scriptureWordIndex,
-          word: scriptureWord
-        },
-
-        translation: {
-          verse: interlinearVerseNumber,
-          index: translationWordIndex,
-          word: translationWord
-        }
-      };
-    }
+    wordInterlinearAssociation.words[translationWordIndex] = {
+      originIndex: scriptureWordIndex,
+      originWord: scriptureWord,
+      translationIndex: translationWordIndex,
+      translationWord: translationWord
+    };
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
@@ -72,7 +99,7 @@ export class ProjectInterlinearService {
   getInterlinear(
     language: LanguageUnionType,
     bookTarget: BookMetadataTarget,
-    interlinearTarget: BookInterlinearTarget,
+    interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
     translationVerse: SourceVerse,
@@ -101,7 +128,7 @@ export class ProjectInterlinearService {
 
   cleanTranslationInterlinear(
     bookTarget: BookMetadataTarget,
-    interlinearTarget: BookInterlinearTarget,
+    interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
     translationVerse: SourceVerse

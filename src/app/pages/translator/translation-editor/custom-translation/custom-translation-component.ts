@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
@@ -38,7 +38,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
   // se não a tradução considera apenas o escrito original na propriedade 'data'
   @Input()
-  interlinear?: BookInterlinearTarget;
+  interlinear?: InterlinearTarget;
 
   @Input()
   translationLanguage!: LanguageUnionType;

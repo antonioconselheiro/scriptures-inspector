@@ -1,6 +1,7 @@
 # Scriptures Inspector
 
-João 1:1 No princípio era o Verbo, e o Verbo estava com Deus, e o Verbo era Deus. 
+Zacarias 4:6
+⁶ E respondeu-me, dizendo: Esta é a palavra do Senhor a Zorobabel, dizendo: Não por força nem por violência, mas sim pelo meu Espírito, diz o Senhor dos Exércitos.
 
 https://antonioconselheiro.github.io/scriptures-inspector/
 

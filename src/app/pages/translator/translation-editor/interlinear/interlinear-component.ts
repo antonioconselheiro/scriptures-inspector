@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { Codex } from '@domain/codex-model';
@@ -89,7 +89,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   bookTarget!: BookMetadataTarget;
   
   @Input()
-  interlinearTarget!: BookInterlinearTarget;
+  interlinearTarget!: InterlinearTarget;
 
   @Input()
   customTranslation: BookTranslationTarget | undefined;
@@ -152,11 +152,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
               previousValue = this.getInterlinear(segment.index);
   
               this.interlinearService.saveInterlinearToBaseScripture(
-                this.bookTarget,
                 this.interlinearTarget,
                 this.originStructure.source,
                 this.current,
-                this.sourceVerse,
                 this.sourceVerse,
                 translationWordIndex,
                 translationWord,
@@ -166,11 +164,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
               const currentValue = this.getInterlinear(segment.index);
   
               this.interlinearService.saveInterlinearToBaseScripture(
-                this.bookTarget,
                 this.interlinearTarget,
                 this.originStructure.source,
                 this.current,
-                this.sourceVerse,
                 this.sourceVerse,
                 segment.index,
                 segment.word,
@@ -185,11 +181,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
       setTimeout(() => this.pipeUpdaterController++);
     } else {
       this.interlinearService.saveInterlinearToBaseScripture(
-        this.bookTarget,
         this.interlinearTarget,
         this.originStructure.source,
         this.current,
-        this.sourceVerse,
         this.sourceVerse,
         translationWordIndex,
         translationWord,

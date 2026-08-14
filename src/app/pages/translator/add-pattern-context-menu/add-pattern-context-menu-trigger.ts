@@ -1,6 +1,6 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { AddPatternContextMenu } from './add-pattern-context-menu';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 
@@ -16,7 +16,7 @@ export class AddPatternContextMenuTrigger {
   sourceLanguage!: LanguageUnionType;
 
   @Input()
-  bookTarget!: BookMetadataTarget | BookInterlinearTarget;
+  bookTarget!: BookMetadataTarget | InterlinearTarget;
 
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {

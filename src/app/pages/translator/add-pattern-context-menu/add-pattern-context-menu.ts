@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { BookInterlinearTarget } from '@domain/book-interlinear-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
@@ -22,7 +22,7 @@ export class AddPatternContextMenu {
   sourceLanguage!: LanguageUnionType;
 
   @Input()
-  bookTarget!: BookMetadataTarget | BookInterlinearTarget;
+  bookTarget!: BookMetadataTarget | InterlinearTarget;
 
   @Input()
   current: CurrentChapter | null = null;
