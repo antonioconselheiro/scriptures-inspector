@@ -21,7 +21,7 @@ export function getProjectTranslationsDetailsFn(
   const indexNotFound = -1;
 
   project.structure.forEach(structure => {
-    const { source, customTranslationTarget } = structure.metadata;
+    const { source, customTranslationTarget } = structure;
     const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
     if (indexMetadata === indexNotFound && customTranslationTarget) {
@@ -36,14 +36,14 @@ export function getProjectTranslationsDetailsFn(
 
     if (structure.interlinear) {
       structure.interlinear.forEach(interlinear => {
-        const { source, customTranslation } = interlinear;
+        const { source, customTranslationTarget } = interlinear;
         const indexInterlinear = targetResultset.findIndex(target => target.source === source);
 
-        if (indexInterlinear === indexNotFound && customTranslation) {
+        if (indexInterlinear === indexNotFound && customTranslationTarget) {
           targetResultset.push({
             type: 'translation',
             source,
-            target: customTranslation,
+            target: customTranslationTarget,
             languageSource: codexMetadataRecord[source].language,
             languageTarget: project.target.language
           });

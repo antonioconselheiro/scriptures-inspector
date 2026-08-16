@@ -27,11 +27,12 @@ export class ProjectMetadataService {
     private systemService: SystemService
   ) { }
 
-  createIfNotExistsWordMetadata(
+  createWordMetadataIfNotExists(
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentChapter,
     verse: SourceVerse,
+    verseIndex: number,
     word: Word
   ): {
     [key: string]: ScriptureVerseMetadataWord;
@@ -44,15 +45,15 @@ export class ProjectMetadataService {
       };
     }
 
-    if (!bookMetadata.chapters[chapterIndex].verses[current.verseIndex]) {
-      bookMetadata.chapters[chapterIndex].verses[current.verseIndex] = {
+    if (!bookMetadata.chapters[chapterIndex].verses[verseIndex]) {
+      bookMetadata.chapters[chapterIndex].verses[verseIndex] = {
         verse: verse.verse,
         metadata: {}
       }
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata || {};
-    bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata = metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata || {};
+    bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata = metadata;
 
     word.segments.forEach(segment => {
       const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
@@ -71,11 +72,12 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentChapter,
     verse: SourceVerse,
+    verseIndex: number,
     wordMatrix: Array<Word>,
     wordIndex: number
   ): void {
     const language = languageMetadataRecord[sourceLanguage];
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, wordMatrix[wordIndex]);
+    const wordMetadata = this.createWordMetadataIfNotExists(bookMetadata, sourceLanguage, current, verse, verseIndex, wordMatrix[wordIndex]);
     const keys: Array<string> = [];
 
     wordMatrix.forEach(word => {
@@ -100,9 +102,10 @@ export class ProjectMetadataService {
     sourceLanguage: LanguageUnionType,
     current: CurrentChapter,
     verse: SourceVerse,
+    verseIndex: number,
     word: Word
   ): void {
-    const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, word);
+    const wordMetadata = this.createWordMetadataIfNotExists(bookMetadata, sourceLanguage, current, verse, verseIndex, word);
     word.segments.forEach(segment => {
       const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
       if (checked) {
@@ -119,6 +122,7 @@ export class ProjectMetadataService {
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentChapter,
+    verseIndex: number,
     word: Word
   ): boolean {
     const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
@@ -127,12 +131,12 @@ export class ProjectMetadataService {
       !bookMetadata.chapters ||
       chapterIndex === this.indexNotFound ||
       !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
+      !bookMetadata.chapters[chapterIndex].verses[verseIndex]
     ) {
       return false;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata;
     if (!metadata || !word.segments[0]) {
       return false;
     }
@@ -183,19 +187,20 @@ export class ProjectMetadataService {
 
   cleanWordOfGodFromVerse(
     bookMetadata: BookMetadataTarget,
-    current: CurrentChapter
+    current: CurrentChapter,
+    verseIndex: number
   ): void {
     const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
     if (
       chapterIndex === this.indexNotFound ||
       !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex].verses[current.verseIndex]
+      !bookMetadata.chapters[chapterIndex].verses[verseIndex]
     ) {
       return;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata;
+    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata;
     if (!metadata) {
       return;
     }

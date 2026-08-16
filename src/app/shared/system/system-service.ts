@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CurrentBook } from '@domain/current-book-model';
+import { KeyInterlinear } from '@domain/key-interlinear-type';
+import { KeyMetadata } from '@domain/key-metadata-type';
+import { KeyTranslation } from '@domain/key-translation-type';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
@@ -36,7 +39,7 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => await this.saveFile(project, structure.metadata.metadataTarget, current, data));
+    project.structure.forEach(async structure => await this.saveFile(project, structure.metadataTarget, current, data));
   }
 
   async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
@@ -49,21 +52,21 @@ export class SystemService {
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
     project.structure.forEach(async structure => {
-      if (structure.metadata.customTranslationTarget) {
-        await this.saveFile(project, structure.metadata.customTranslationTarget, current, data);
+      if (structure.customTranslationTarget) {
+        await this.saveFile(project, structure.customTranslationTarget, current, data);
       }
 
       if (structure.interlinear) {
         structure.interlinear.forEach(async interlinear => {
-          if (interlinear.customTranslation) {
-            await this.saveFile(project, interlinear.customTranslation, current, data);
+          if (interlinear.customTranslationTarget) {
+            await this.saveFile(project, interlinear.customTranslationTarget, current, data);
           }
         });
       }
     });
   }
 
-  private async saveFile(project: Project, target: string, current: CurrentBook, content: ProjectData): Promise<void> {
+  private async saveFile(project: Project, target: KeyMetadata | KeyTranslation | KeyInterlinear, current: CurrentBook, content: ProjectData): Promise<void> {
     return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
   }
 

@@ -62,21 +62,21 @@
   
     @if (current && selectedSourceBook) {
       @let chapterIndex = getChapterIndex(current, selectedSourceBook.chapters);
-      @for (verse of selectedSourceBook.chapters[chapterIndex].verses; track $index; let fieldsetIndex = $index) {
+      @for (verse of selectedSourceBook.chapters[chapterIndex].verses; track $index; let verseIndex = $index) {
 
         <h2 class="verseTitle">
-          {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}
+          {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse}}
         </h2>
   
-        <fieldset [class.minified]="minifiedFieldset[fieldsetIndex]" class="fieldsetMinifiable">
-          <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse | verseNumber}}</legend>
+        <fieldset [class.minified]="minifiedFieldset[verseIndex]" class="fieldsetMinifiable">
+          <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse}}</legend>
           <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
             [codexMetadataRecord]="codexMetadataRecord" [projectData]="projectData" [bookTarget]="bookMetadata" [sourceBook]="selectedSourceBook"
-            [sourceVerse]="verse" [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
+            [sourceVerse]="verse" [verseIndex]="verseIndex" [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
             [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
           ></app-scripture-metadata-component>
 
-          <button (click)="minifiedFieldset[fieldsetIndex] = !minifiedFieldset[fieldsetIndex]" type="button"></button>
+          <button (click)="minifiedFieldset[verseIndex] = !minifiedFieldset[verseIndex]" type="button"></button>
         </fieldset>
       }
     }

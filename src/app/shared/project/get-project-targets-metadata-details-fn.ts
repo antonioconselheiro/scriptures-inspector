@@ -10,33 +10,15 @@ export function getProjectTargetsMetadataDetailsFn(
   const indexNotFound = -1;
 
   project.structure.forEach(structure => {
-    const { source, metadataTarget: target } = structure.metadata;
+    const { source, metadataTarget: target } = structure;
     const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
     if (indexMetadata === indexNotFound) {
       targetResultset.push({
-        type: 'metadata',
         source,
         target,
         languageSource: codexMetadataRecord[source].language,
         languageTarget: project.target.language
-      });
-    }
-
-    if (structure.interlinear) {
-      structure.interlinear.forEach(interlinear => {
-        const { source, interlinearTarget: target } = interlinear;
-        const indexInterlinear = targetResultset.findIndex(target => target.source === source);
-
-        if (indexInterlinear === indexNotFound) {
-          targetResultset.push({
-            type: 'interlinear',
-            source,
-            target,
-            languageSource: codexMetadataRecord[source].language,
-            languageTarget: project.target.language
-          });
-        }
       });
     }
   });

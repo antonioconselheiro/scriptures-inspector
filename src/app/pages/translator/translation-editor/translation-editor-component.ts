@@ -33,13 +33,11 @@ import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
 import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
-import { VerseNumberPipe } from './shared/verse-number-pipe';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 
 @Component({
   selector: 'app-translation-editor-component',
   imports: [
-    VerseNumberPipe,
     FormsModule,
     AsyncModalModule,
     AddPatternContextMenu,

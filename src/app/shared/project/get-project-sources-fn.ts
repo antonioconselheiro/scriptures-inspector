@@ -4,11 +4,11 @@ export function getProjectSourcesFn(project: Project): Array<string> {
   return project.structure.map(structure => {
     if (structure.interlinear) {
       return [
-        structure.metadata.source,
+        structure.source,
         ...structure.interlinear.map(interlinear => interlinear.source)
       ];
     }
 
-    return [structure.metadata.source];
+    return [structure.source];
   }).flat();
 }

@@ -80,6 +80,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   sourceVerse!: BookVerse<{ text: string; }>;
 
   @Input()
+  verseIndex!: number;
+
+  @Input()
   bookTarget!: BookMetadataTarget;
 
   @Input()
@@ -186,6 +189,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.sourceLanguage,
       this.current,
       this.sourceVerse,
+      this.verseIndex,
       wordMatrix,
       wordIndex
     );
@@ -196,6 +200,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.sourceLanguage,
       this.current,
       this.sourceVerse,
+      this.verseIndex,
       word
     );
   }
@@ -209,6 +214,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.bookTarget,
       this.sourceLanguage,
       this.current,
+      this.verseIndex,
       word
     );
   }
@@ -218,6 +224,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       return;
     }
 
-    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.current);
+    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.current, this.verseIndex);
   }
 }
