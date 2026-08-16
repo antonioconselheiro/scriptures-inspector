@@ -1,7 +1,7 @@
 import { Project } from '@domain/project-model';
 
 export function getProjectSourcesFn(project: Project): Array<string> {
-  return project.structure.map(structure => {
+  return project.structures.map(structure => {
     if (structure.interlinear) {
       return [
         structure.source,

@@ -1,9 +1,12 @@
 import { Codex } from '@domain/codex-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { Project } from '@domain/project-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
+import { ProjectTarget } from '@domain/project-target-model';
 
 export function getProjectTranslationsDetailsFn(
-  project: Project, codexMetadataRecord: Record<string, Codex<LanguageUnionType>>
+  structures: Array<ProjectStructureMetadata>,
+  target: ProjectTarget,
+  codexMetadataRecord: Record<string, Codex<LanguageUnionType>>
 ): Array<{
   type: 'translation';
   source: string;
@@ -18,39 +21,24 @@ export function getProjectTranslationsDetailsFn(
     languageTarget: string;
     target: `${string}-translation`;
   }> = [];
-  const indexNotFound = -1;
+  const results: { [key: string]: typeof targetResultset[0] } = {};
 
-  project.structure.forEach(structure => {
+  structures.forEach(structure => {
     const { source, customTranslationTarget } = structure;
-    const indexMetadata = targetResultset.findIndex(target => target.source === source);
 
-    if (indexMetadata === indexNotFound && customTranslationTarget) {
-      targetResultset.push({
+    if (customTranslationTarget) {
+      results[customTranslationTarget] = {
         type: 'translation',
         source,
         target: customTranslationTarget,
         languageSource: codexMetadataRecord[source].language,
-        languageTarget: project.target.language
-      });
+        languageTarget: target.language
+      };
     }
 
-    if (structure.interlinear) {
-      structure.interlinear.forEach(interlinear => {
-        const { source, customTranslationTarget } = interlinear;
-        const indexInterlinear = targetResultset.findIndex(target => target.source === source);
-
-        if (indexInterlinear === indexNotFound && customTranslationTarget) {
-          targetResultset.push({
-            type: 'translation',
-            source,
-            target: customTranslationTarget,
-            languageSource: codexMetadataRecord[source].language,
-            languageTarget: project.target.language
-          });
-        }
-      });
-    }
+    getProjectTranslationsDetailsFn(structure.interlinear || [], target, codexMetadataRecord)
+      .forEach(detail => results[detail.target] = detail);
   });
 
-  return targetResultset;
+  return Object.values(results);
 }

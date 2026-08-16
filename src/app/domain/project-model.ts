@@ -8,5 +8,5 @@ export interface Project {
   repositories?: { [alias: string]: string };
   target: ProjectTarget;
   translationViewer?: Array<AssociatedTranslation>;
-  structure: Array<ProjectStructureMetadata>;
+  structures: Array<ProjectStructureMetadata>;
 }

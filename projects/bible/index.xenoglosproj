@@ -210,32 +210,30 @@
       }
     }
   },
-  "structure": [
+  "structures": [
     {
       "source": "hebrew-stuttgartensia",
       "metadataTarget": "hebrew-stuttgartensia-portuguese-metadata",
-      "customTranslationTarget": "hebrew-stuttgartensia-custom-portuguese-translation"
+      "customTranslationTarget": "hebrew-stuttgartensia-custom-portuguese-translation",
       "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
           "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
           "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslation": "geez-mashafa-qeddus-custom-portuguese-translation",
-          "interlinear": []
+          "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
         }
       ]
     },
     {
       "source": "greek-elzeviriana",
       "metadataTarget": "greek-elzeviriana-portuguese-metadata",
-      "customTranslation": "greek-elzeviriana-custom-portuguese-translation"
+      "customTranslationTarget": "greek-elzeviriana-custom-portuguese-translation",
       "interlinear": [
         {
           "source": "geez-mashafa-qeddus",
           "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
           "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation",
-          "interlinear": []
+          "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
         }
       ]
     }

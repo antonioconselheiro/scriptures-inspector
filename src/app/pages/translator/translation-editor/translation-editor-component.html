@@ -54,7 +54,7 @@
 <app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
 
 @if (project && codexMetadataRecord) {
-  @for (structure of project.structure; track $index) {
+  @for (structure of project.structures; track $index) {
     @let sourceCodex = codexMetadataRecord[structure.source];
     @let selectedSourceBook = sourceBookRecord[structure.source];
     @let bookMetadata = projectData[structure.metadataTarget];
@@ -65,11 +65,11 @@
       @for (verse of selectedSourceBook.chapters[chapterIndex].verses; track $index; let verseIndex = $index) {
 
         <h2 class="verseTitle">
-          {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse}}
+          {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse.verse}}
         </h2>
   
         <fieldset [class.minified]="minifiedFieldset[verseIndex]" class="fieldsetMinifiable">
-          <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse}}</legend>
+          <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse.verse}}</legend>
           <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
             [codexMetadataRecord]="codexMetadataRecord" [projectData]="projectData" [bookTarget]="bookMetadata" [sourceBook]="selectedSourceBook"
             [sourceVerse]="verse" [verseIndex]="verseIndex" [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"

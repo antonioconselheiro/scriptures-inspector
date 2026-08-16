@@ -66,7 +66,7 @@ export class TranslationViewerManager implements OnInit {
       return [];
     }
 
-    return getProjectTargetsMetadataDetailsFn(this.project, codexMetadataRecord);
+    return getProjectTargetsMetadataDetailsFn(this.project.structures, this.project.target, codexMetadataRecord);
   }
 
   loadTranslation(associatedToEl: HTMLSelectElement, translationEl: HTMLSelectElement): void {

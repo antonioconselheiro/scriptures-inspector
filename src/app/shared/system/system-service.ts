@@ -39,11 +39,11 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => await this.saveFile(project, structure.metadataTarget, current, data));
+    project.structures.forEach(async structure => await this.saveFile(project, structure.metadataTarget, current, data));
   }
 
   async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => {
+    project.structures.forEach(async structure => {
       if (structure.interlinear) {
         structure.interlinear.forEach(async interlinear => await this.saveFile(project, interlinear.interlinearTarget, current, data));
       }
@@ -51,7 +51,7 @@ export class SystemService {
   }
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structure.forEach(async structure => {
+    project.structures.forEach(async structure => {
       if (structure.customTranslationTarget) {
         await this.saveFile(project, structure.customTranslationTarget, current, data);
       }

@@ -4,12 +4,12 @@ import { KeyTranslation } from '@domain/key-translation-type';
 import { Project } from '@domain/project-model';
 
 export function getProjectTargetsFn(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
-  return project.structure.map(structure => {
+  return project.structures.map(structure => {
     if (structure.interlinear) {
       return [
         structure.metadataTarget,
         structure.customTranslationTarget,
-        ...structure.interlinear.map(interlinear => [interlinear.interlinearTarget, interlinear.customTranslationTarget]).flat()
+        ...structure.interlinear.map(interlinear => [interlinear.metadataTarget, interlinear.interlinearTarget, interlinear.customTranslationTarget]).flat()
       ];
     }
 

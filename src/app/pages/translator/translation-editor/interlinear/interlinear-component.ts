@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -32,11 +32,11 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 @Component({
   selector: 'app-interlinear-component',
   imports: [
+    CommonModule,
     FormsModule,
     LexicalPipe,
-    ScriptureMetadataComponent,
+    forwardRef(() => ScriptureMetadataComponent),
     CustomTranslationComponent,
-    CommonModule
   ],
   templateUrl: './interlinear-component.html',
   styleUrl: './interlinear-component.scss'

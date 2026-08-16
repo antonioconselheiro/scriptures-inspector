@@ -8,12 +8,12 @@
   @let originWordMatrix = splitIntoMatrix(originLanguage, originParsedBook.patterns, originVerse);
 
   <app-scripture-metadata-component
-    [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
+    title="Interlinear" [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
     [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
     [project]="project" [projectData]="projectData" [bookTarget]="bookTarget"
     [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
     [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
-    [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor"
+    [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor.bind(this)"
   >
     <tr>
       <th rowspan="2">interlinear</th>

@@ -241,13 +241,13 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   getProjectTargetsMetadataDetails(
     project: Project, codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> }
   ): Array<TargetMetadataDetail> {
-    return getProjectTargetsMetadataDetailsFn(project, codexMetadataRecord);
+    return getProjectTargetsMetadataDetailsFn(project.structures, project.target, codexMetadataRecord);
   }
 
   getProjectTranslationsDetails(
     project: Project, codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> }
   ): Array<TargetTranslationMetadataDetail> {
-    return getProjectTranslationsDetailsFn(project, codexMetadataRecord);
+    return getProjectTranslationsDetailsFn(project.structures, project.target, codexMetadataRecord);
   }
 
   getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
