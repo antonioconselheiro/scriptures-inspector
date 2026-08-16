@@ -22,7 +22,7 @@ export class AddPatternContextMenu {
   sourceLanguage!: LanguageUnionType;
 
   @Input()
-  bookTarget!: BookMetadataTarget | InterlinearTarget;
+  bookTarget!: BookMetadataTarget;
 
   @Input()
   current: CurrentChapter | null = null;

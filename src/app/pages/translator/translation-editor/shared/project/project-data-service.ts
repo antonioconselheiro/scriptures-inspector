@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-chapter-verse-word-target-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedPatterns } from '@domain/parsed-patterns';
@@ -11,12 +12,20 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 })
 export class ProjectDataService {
 
-  castSegmentIntoMetadataIndex(
+  castSegmentIntoMetadataIndexSerialized(
     language: LanguageUnionType,
     segment: WordSegment
   ): string {
     const word = languageMetadataRecord[language].normalizeFn && languageMetadataRecord[language].normalizeFn(segment.word) || segment.word;
     return `${segment.index}-${word}`;
+  }
+
+  castInterlinearWordTargetIntoMetadataIndexSerialized(
+    language: LanguageUnionType,
+    interlinearMetadata: InterlinearBookChapterVerseWordTarget
+  ): string {
+    const word = languageMetadataRecord[language].normalizeFn && languageMetadataRecord[language].normalizeFn(interlinearMetadata.originWord) || interlinearMetadata.originWord;
+    return `${interlinearMetadata.originIndex}-${word}`;
   }
 
   splitIntoMatrix(language: Language, patterns: ParsedPatterns, pharse: string): Array<Word> {

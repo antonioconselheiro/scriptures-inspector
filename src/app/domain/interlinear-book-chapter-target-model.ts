@@ -2,6 +2,6 @@ import { InterlinearBookChapterVerseTarget } from './interlinear-book-chapter-ve
 
 export interface InterlinearBookChapterTarget {
   origin: number;
-  chapter?: number;
+  chapter: number;
   verses: Array<InterlinearBookChapterVerseTarget>;
 }

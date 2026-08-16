@@ -55,7 +55,7 @@ export class ProjectMetadataService {
     bookMetadata.chapters[chapterIndex].verses[current.verseIndex].metadata = metadata;
 
     word.segments.forEach(segment => {
-      const key = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
+      const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
       if (!metadata[key]) {
         metadata[key] = {
           segment: segment.word
@@ -104,7 +104,7 @@ export class ProjectMetadataService {
   ): void {
     const wordMetadata = this.createIfNotExistsWordMetadata(bookMetadata, sourceLanguage, current, verse, word);
     word.segments.forEach(segment => {
-      const key = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, segment);
+      const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
       } else {
@@ -137,7 +137,7 @@ export class ProjectMetadataService {
       return false;
     }
 
-    const segment = this.dataService.castSegmentIntoMetadataIndex(sourceLanguage, word.segments[0]);
+    const segment = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, word.segments[0]);
     const segmentData = metadata[segment];
     if (!segmentData) {
       return false;

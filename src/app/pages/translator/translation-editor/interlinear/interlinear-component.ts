@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
@@ -115,20 +115,13 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   }
 
   getTranslationColor(wordIndex: number): string {
-    const chapterIndex = this.bookTarget.chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
-    if (chapterIndex === this.indexNotFound) {
-      return '0';
-    }
-
-    const map = this.bookTarget.chapters[chapterIndex]?.verses &&
-      this.bookTarget.chapters[chapterIndex].verses[this.sourceVerse.verse.index] &&
-      this.bookTarget.chapters[chapterIndex].verses[this.sourceVerse.verse.index][wordIndex] || null;
-
-    if (!map) {
-      return '0';
-    }
-
-    return String(map.origin.index % 7 + 1);
+    return this.interlinearService.getTranslationColor(
+      this.interlinearTarget,
+      this.originStructure.source,
+      this.current,
+      this.sourceVerse,
+      wordIndex
+    );
   }
 
   splitIntoMatrix(language: LanguageUnionType, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
@@ -143,40 +136,17 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     if (!interlinearValue && confirm('Advance one word to all associations to the right?')) {
       const parsedBook = this.parseBook(this.bookTarget, this.sourceLanguage);
       const wordMatrix = this.splitIntoMatrix(this.sourceLanguage, parsedBook.patterns, this.sourceVerse);
-      let previousValue = '';
-      for (let word of wordMatrix) {
-        for (let segment of word.segments) {
-          if (segment.index >= translationWordIndex) {
-  
-            if (segment.index == translationWordIndex) {
-              previousValue = this.getInterlinear(segment.index);
-  
-              this.interlinearService.saveInterlinearToBaseScripture(
-                this.interlinearTarget,
-                this.originStructure.source,
-                this.current,
-                this.sourceVerse,
-                translationWordIndex,
-                translationWord,
-                interlinearValue
-              );
-            } else {
-              const currentValue = this.getInterlinear(segment.index);
-  
-              this.interlinearService.saveInterlinearToBaseScripture(
-                this.interlinearTarget,
-                this.originStructure.source,
-                this.current,
-                this.sourceVerse,
-                segment.index,
-                segment.word,
-                previousValue
-              );
-              previousValue = currentValue;
-            }
-          }
-        }
-      }
+      this.interlinearService.advanceOneWordToAllAssociationsToTheRight(
+        this.sourceLanguage,
+        this.interlinearTarget,
+        this.originStructure.source,
+        this.current,
+        this.sourceVerse,
+        wordMatrix,
+        translationWordIndex,
+        translationWord,
+        interlinearValue
+      );
 
       setTimeout(() => this.pipeUpdaterController++);
     } else {
@@ -192,10 +162,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     }
   }
 
-  getInterlinear(wordIndex: number): string {
-    return this.interlinearService.getInterlinear(
+  getInterlinearWordSegmentSerialized(wordIndex: number): string {
+    return this.interlinearService.getInterlinearWordSegmentSerialized(
       this.sourceLanguage,
-      this.bookTarget,
       this.interlinearTarget,
       this.originStructure.source,
       this.current,
@@ -205,7 +174,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
-    return this.dataService.castSegmentIntoMetadataIndex(this.sourceLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
   }
 
   cleanTranslationInterlinear() {
@@ -214,7 +183,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     }
 
     this.interlinearService.cleanTranslationInterlinear(
-      this.bookTarget, this.interlinearTarget, this.originStructure.source, this.current, this.sourceVerse
+      this.interlinearTarget, this.originStructure.source, this.current, this.sourceVerse
     );
   }
 }

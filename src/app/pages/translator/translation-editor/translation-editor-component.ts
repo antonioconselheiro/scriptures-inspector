@@ -61,9 +61,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   codexMetadataRecord: { [source: string]: Codex<LanguageUnionType> } | null = null;
 
-  sourceBookRecord: {
-    readonly [source: string]: SourceBook | undefined
-  } = {};
+  sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
 
   translationBookRecord: {
     [source: string]: TranslationViewing;

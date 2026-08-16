@@ -1,10 +1,9 @@
 <h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
-@let chapterIndex = getChapterIndex(current, customTranslation.chapters);
-@let verseIndex = typeof sourceVerse.verse === 'number' ? sourceVerse.verse : sourceVerse.verse.index;
-@let verse = customTranslation.chapters[chapterIndex]?.verses?.[verseIndex];
+@let indexes = getTranslationIndexes();
+@let verse = customTranslation.chapters[indexes.chapterIndex].verses[indexes.verseIndex];
 @let chapterVariations = verse?.variations;
-@let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, chapterIndex, verseIndex, pipeUpdaterController) || [];
+@let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, indexes, pipeUpdaterController) || [];
 
 <div class="buttonGroup">
   <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
@@ -93,7 +92,7 @@
               #interlinearCustomTranslationEl
               [name]="'selectInterlinearCustomTranslationEl' + wordIndex"
               [ngModel]="getCustomTranslationInterlinearValue(wordIndex)"
-              (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex, chapterIndex, verseIndex)">
+              (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex, indexes)">
               <option value=""></option>
               @for (word of wordMatrix; track $index) {
                 @for (segment of word.segments; track segment.index) {

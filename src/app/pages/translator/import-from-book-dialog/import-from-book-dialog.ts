@@ -4,6 +4,8 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { KeyMetadata } from '@domain/key-metadata-type';
+import { KeyTranslation } from '@domain/key-translation-type';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
@@ -89,18 +91,28 @@ export class ImportFromBookDialog extends ModalableDirective<{
 
   private joinProjectData(projectData: ProjectData, variations: boolean, override: boolean): void {
     Object.keys(projectData).forEach(target => {
-      const importFromBook = projectData[target];
-      const toBook = this.projectData[target];
-      if (this.hasConfigs(toBook) && this.hasConfigs(importFromBook)) {
-        this.importConfigs(toBook, importFromBook, override);
-      }
-
-      if (variations && this.isTranslation(toBook, target) && this.hasVariations(importFromBook)) {
-        Object.keys(importFromBook.variations).forEach(variationId => {
-          toBook.variations[variationId] = { ...importFromBook.variations[variationId] };
-        });
+      if (this.isMetadataKey(target) && this.isTranslationKey(target)) {
+        const importFromBook = projectData[target];
+        const toBook = this.projectData[target];
+        if (this.hasConfigs(toBook) && this.hasConfigs(importFromBook)) {
+          this.importConfigs(toBook, importFromBook, override);
+        }
+  
+        if (variations && this.isTranslation(toBook, target) && this.hasVariations(importFromBook)) {
+          Object.keys(importFromBook.variations).forEach(variationId => {
+            toBook.variations[variationId] = { ...importFromBook.variations[variationId] };
+          });
+        }
       }
     });
+  }
+
+  private isMetadataKey(key: string): key is KeyMetadata {
+    return /\-metadata$/.test(key);
+  }
+
+  private isTranslationKey(key: string): key is KeyTranslation {
+    return /\-translation$/.test(key);
   }
 
   private isTranslation(toBook: Book<object, object>, target: string): toBook is BookTranslationTarget {

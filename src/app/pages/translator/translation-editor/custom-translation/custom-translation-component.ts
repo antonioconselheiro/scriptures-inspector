@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { InterlinearTarget } from '@domain/interlinear-target-model';
+import { BookIndexes } from '@domain/book-indexes-model';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
@@ -9,6 +9,7 @@ import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
@@ -38,7 +39,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
   // se não a tradução considera apenas o escrito original na propriedade 'data'
   @Input()
-  interlinear?: InterlinearTarget;
+  interlinear?: InterlinearBookTarget;
 
   @Input()
   translationLanguage!: LanguageUnionType;
@@ -74,21 +75,20 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     super();
   }
 
-  getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
-    return chapters.findIndex(chapter => chapter.chapter === current.chapter);
+  getTranslationIndexes(): BookIndexes {
+    return this.customTranslationService.getTranslationIndexes(this.sourceBook, this.current, this.sourceVerse);
   }
 
   splitCustomTranslationWithVariations(
     customTranslation: BookTranslationTarget,
-    chapter: number,
-    verseIndex: number,
+    indexes: BookIndexes,
     pipeUpdaterController: number
   ): {
     original: Array<TranslationWordSegment>,
     variations: Record<string, Array<TranslationWordSegment>>
   } {
     pipeUpdaterController;
-    return this.customTranslationService.splitCustomTranslationWithVariations(customTranslation, chapter, verseIndex);
+    return this.customTranslationService.splitCustomTranslationWithVariations(customTranslation, indexes);
   }
 
   onChangeWordSpan(
@@ -122,7 +122,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   getCustomTranslationVerse(): { text: string } | null {
     return this.customTranslationService.getCustomTranslationVerse(
-      this.customTranslation, this.current, this.sourceVerse
+      this.sourceBook, this.customTranslation, this.current, this.sourceVerse
     );
   }
 
@@ -132,7 +132,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     }
 
     this.customTranslationService.cleanCustomTranslation(
-      input, this.customTranslation, this.current, this.sourceVerse
+      this.sourceBook, input, this.customTranslation, this.current, this.sourceVerse
     );
     this.pipeUpdaterController++;
   }
@@ -160,12 +160,13 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordIndex: number
   ): string {
     return this.customTranslationService.getCustomTranslationColor(
-      this.customTranslation, this.interlinear, this.current, this.sourceVerse, wordIndex
+      this.sourceBook, this.customTranslation, this.interlinear, this.current, this.sourceVerse, wordIndex
     );
   }
 
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
     const isWordOfGod = this.customTranslationService.isWordOfGod(
+      this.sourceBook,
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -180,6 +181,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     }
 
     const isWordOfGodOverriding = this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
+      this.sourceBook,
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -196,6 +198,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
     return this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
+      this.sourceBook,
       this.translationLanguage,
       this.bookTarget,
       this.customTranslation,
@@ -224,7 +227,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     wordSpanIndex: number
   ): string {
     return this.customTranslationService.getCustomTranslationInterlinearValue(
-      this.customTranslation, this.current, this.sourceVerse, wordSpanIndex
+      this.sourceBook, this.customTranslation, this.current, this.sourceVerse, wordSpanIndex
     );
   }
 
@@ -254,7 +257,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     id: string;
     name: string;
   }, index: number): string {
-    return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse.start}-${this.sourceVerse.verse.end}-${variation.id}-${index}`;
+    return `datalist-${this.current.book}-${this.current.chapter}-${this.sourceVerse.verse}-${variation.id}-${index}`;
   }
 
   getVariationDataListOptions(interlinearValue: string, variationId: string): Array<string> {
@@ -279,15 +282,14 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   onChangeCustomTranslationInterlinearMetadata(
     value: string,
     wordIndex: number,
-    chapterIndex: number,
-    verseIndex: number
+    indexes: BookIndexes
   ): void {
     if (!value && confirm('Advance one word to all associations to the right?')) {
-      const splittedCustomTranslation = this.customTranslationService.splitCustomTranslationWithVariations(this.customTranslation, chapterIndex, verseIndex);
+      const splittedCustomTranslation = this.customTranslationService.splitCustomTranslationWithVariations(this.customTranslation, indexes);
       let previousValue = '';
       for (let originalWordIndex = 0; originalWordIndex < splittedCustomTranslation.original.length; originalWordIndex++) {
         if (originalWordIndex >= wordIndex) {
-          
+
           if (originalWordIndex == wordIndex) {
             previousValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
             this.customTranslationService.saveCustomTranslationInterlinearMetadata(
@@ -312,11 +314,11 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
-    return this.dataService.castSegmentIntoMetadataIndex(this.translationLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndexSerialized(this.translationLanguage, segment);
   }
 
   cleanInterlinear(): void {
-    this.customTranslationService.cleanInterlinear(this.customTranslation, this.current, this.sourceVerse);
+    this.customTranslationService.cleanInterlinear(this.sourceBook, this.customTranslation, this.current, this.sourceVerse);
     this.pipeUpdaterController++;
   }
 }

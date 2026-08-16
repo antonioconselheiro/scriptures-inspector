@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { SourceVerse } from '@domain/source-verse-model';
-import { TranslationInterlinearVerse } from '@domain/translation-interlinear-verse-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { WordSegment } from '@domain/word-segment-model';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { Word } from '@domain/word-model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,48 +22,32 @@ export class ProjectInterlinearService {
     private systemService: SystemService
   ) { }
 
-  createInterlinearToBaseScriptureIfNotExists(
+  getInterlinearToBaseScripture(
     interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
-    sourceVerse: SourceVerse
+    translationVerse: SourceVerse
   ): {
     interlinearChapterIndex: number,
     interlinearVerseIndex: number
   } {
     interlinearTarget[originStructureSource] = interlinearTarget[originStructureSource] || {};
     interlinearTarget[originStructureSource].chapters = interlinearTarget[originStructureSource].chapters || [];
-    let interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    const interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.findIndex(chapter => chapter.chapter === current.chapter);
 
     if (interlinearChapterIndex === this.indexNotFound) {
-      //  TODO: encaixar na posição correta e não no final
-      interlinearTarget[originStructureSource].chapters.push({
-        origin: current.chapter,
-        chapter: current.chapter,
-        verses: []
-      });
-
-      interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.length - 1;
+      return {
+        interlinearChapterIndex: this.indexNotFound,
+        interlinearVerseIndex: this.indexNotFound
+      };
     }
 
     interlinearTarget[originStructureSource]
       .chapters[interlinearChapterIndex].verses = interlinearTarget[originStructureSource]
-      .chapters[interlinearChapterIndex].verses || [];
+        .chapters[interlinearChapterIndex].verses || [];
 
-    let interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex]
-      .verses.findIndex(verse => verse.verse === sourceVerse.verse);
-
-    if (interlinearVerseIndex === this.indexNotFound) {
-      //  TODO: encaixar na posição correta e não no final
-      interlinearTarget[originStructureSource].chapters[interlinearChapterIndex].verses.push({
-        originChapter: current.chapter,
-        chapter: current.chapter,
-        verse: sourceVerse.verse,
-        originVerse: sourceVerse.verse,
-        words: []
-      });
-      interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex].verses.length - 1;
-    }
+    const interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex]
+      .verses.findIndex(verse => verse.verse === translationVerse.verse);
 
     return {
       interlinearChapterIndex,
@@ -69,11 +55,135 @@ export class ProjectInterlinearService {
     };
   }
 
+  createInterlinearToBaseScriptureIfNotExists(
+    interlinearTarget: InterlinearTarget,
+    originStructureSource: string,
+    current: CurrentChapter,
+    translationVerse: SourceVerse
+  ): {
+    interlinearChapterIndex: number,
+    interlinearVerseIndex: number
+  } {
+    const indexes = this.getInterlinearToBaseScripture(interlinearTarget, originStructureSource, current, translationVerse);
+
+    if (indexes.interlinearChapterIndex === this.indexNotFound) {
+      const chapters = interlinearTarget[originStructureSource].chapters;
+
+      const newChapter = {
+        origin: current.chapter,
+        chapter: current.chapter,
+        verses: []
+      };
+
+      const insertIndex = chapters.findIndex(
+        chapter => chapter.chapter > current.chapter
+      );
+
+      if (insertIndex === this.indexNotFound) {
+        chapters.push(newChapter);
+        indexes.interlinearChapterIndex = chapters.length - 1;
+      } else {
+        chapters.splice(insertIndex, 0, newChapter);
+        indexes.interlinearChapterIndex = insertIndex;
+      }
+    }
+
+    if (indexes.interlinearVerseIndex === this.indexNotFound) {
+      const verses = interlinearTarget[originStructureSource]
+        .chapters[indexes.interlinearChapterIndex]
+        .verses;
+
+      const newVerse = {
+        originChapter: current.chapter,
+        chapter: current.chapter,
+        verse: translationVerse.verse,
+        originVerse: translationVerse.verse,
+        words: []
+      };
+
+      const insertIndex = verses.findIndex(
+        verse => verse.verse > translationVerse.verse
+      );
+
+      if (insertIndex === this.indexNotFound) {
+        verses.push(newVerse);
+        indexes.interlinearVerseIndex = verses.length - 1;
+      } else {
+        verses.splice(insertIndex, 0, newVerse);
+        indexes.interlinearVerseIndex = insertIndex;
+      }
+    }
+
+    return indexes;
+  }
+
+  advanceOneWordToAllAssociationsToTheRight(
+    sourceLanguage: LanguageUnionType,
+    interlinearTarget: InterlinearTarget,
+    originSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    wordMatrix: Array<Word>,
+    translationWordIndex: number,
+    translationWord: string,
+    interlinearValue: string
+  ): void {
+    let previousValue = '';
+
+    for (let word of wordMatrix) {
+      for (let segment of word.segments) {
+        if (segment.index >= translationWordIndex) {
+
+          if (segment.index == translationWordIndex) {
+            previousValue = this.getInterlinearWordSegmentSerialized(
+              sourceLanguage,
+              interlinearTarget,
+              originSource,
+              current,
+              sourceVerse,
+              segment.index
+            );
+
+            this.saveInterlinearToBaseScripture(
+              interlinearTarget,
+              originSource,
+              current,
+              sourceVerse,
+              translationWordIndex,
+              translationWord,
+              interlinearValue
+            );
+          } else {
+            const currentValue = this.getInterlinearWordSegmentSerialized(
+              sourceLanguage,
+              interlinearTarget,
+              originSource,
+              current,
+              sourceVerse,
+              segment.index
+            );
+
+            this.saveInterlinearToBaseScripture(
+              interlinearTarget,
+              originSource,
+              current,
+              sourceVerse,
+              segment.index,
+              segment.word,
+              previousValue
+            );
+            previousValue = currentValue;
+          }
+        }
+      }
+    }
+  }
+
   saveInterlinearToBaseScripture(
     interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
-    sourceVerse: SourceVerse,
+    translationVerse: SourceVerse,
     translationWordIndex: number,
     translationWord: string,
     interlinearOptionValue: string
@@ -81,7 +191,7 @@ export class ProjectInterlinearService {
     const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
     const scriptureWordIndex = Number(scriptureWordIndexString);
 
-    const indexes = this.createInterlinearToBaseScriptureIfNotExists(interlinearTarget, originStructureSource, current, sourceVerse);
+    const indexes = this.createInterlinearToBaseScriptureIfNotExists(interlinearTarget, originStructureSource, current, translationVerse);
     const wordInterlinearAssociation = interlinearTarget[originStructureSource]
       .chapters[indexes.interlinearChapterIndex]
       .verses[indexes.interlinearVerseIndex];
@@ -96,28 +206,57 @@ export class ProjectInterlinearService {
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
 
-  getInterlinear(
+  getTranslationColor(
+    interlinearTarget: InterlinearTarget,
+    originStructureSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    wordIndex: number
+  ) {
+    const indexes = this.getInterlinearToBaseScripture(
+      interlinearTarget,
+      originStructureSource,
+      current,
+      sourceVerse
+    );
+
+    if (indexes.interlinearChapterIndex === this.indexNotFound || indexes.interlinearVerseIndex === this.indexNotFound) {
+      return '0';
+    }
+
+    const interlinearWord = interlinearTarget[originStructureSource]
+      .chapters[indexes.interlinearChapterIndex]
+      .verses[indexes.interlinearVerseIndex]
+      .words[wordIndex] || null;
+
+    if (!interlinearWord) {
+      return '0';
+    }
+
+    return String(interlinearWord.originIndex % 7 + 1);
+  }
+
+  getInterlinearWordSegmentSerialized(
     language: LanguageUnionType,
-    bookTarget: BookMetadataTarget,
     interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
     translationVerse: SourceVerse,
     translationWordIndex: number
   ): string {
-    let interlinear: TranslationInterlinearVerse | null = null;
-    const chapterIndex = bookTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-    if (chapterIndex === this.indexNotFound) {
+    const indexes = this.getInterlinearToBaseScripture(interlinearTarget, originStructureSource, current, translationVerse);
+    if (indexes.interlinearChapterIndex === this.indexNotFound || indexes.interlinearVerseIndex === this.indexNotFound) {
       return '';
     }
 
     try {
-      interlinear = bookTarget.chapters[chapterIndex] &&
-        bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index] &&
-        bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index][translationWordIndex];
+      const interlinearMetadata = interlinearTarget[originStructureSource] &&
+        interlinearTarget[originStructureSource].chapters[indexes.interlinearChapterIndex] &&
+        interlinearTarget[originStructureSource].chapters[indexes.interlinearChapterIndex].verses[indexes.interlinearVerseIndex] &&
+        interlinearTarget[originStructureSource].chapters[indexes.interlinearChapterIndex].verses[indexes.interlinearVerseIndex].words[translationWordIndex] || null;
 
-      if (interlinear) {
-        return this.dataService.castSegmentIntoMetadataIndex(language, interlinear.origin);
+      if (interlinearMetadata) {
+        return this.dataService.castInterlinearWordTargetIntoMetadataIndexSerialized(language, interlinearMetadata);
       }
     } catch (e) {
       console.error(e);
@@ -127,19 +266,22 @@ export class ProjectInterlinearService {
   }
 
   cleanTranslationInterlinear(
-    bookTarget: BookMetadataTarget,
     interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,
     translationVerse: SourceVerse
   ): void {
-    const chapterIndex = bookTarget.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-    if (!bookTarget.chapters[chapterIndex]) {
+    const indexes = this.getInterlinearToBaseScripture(interlinearTarget, originStructureSource, current, translationVerse);
+    if (indexes.interlinearChapterIndex === this.indexNotFound || indexes.interlinearVerseIndex === this.indexNotFound) {
       return;
     }
 
-    if (bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index]) {
-      bookTarget.chapters[chapterIndex].verses[translationVerse.verse.index] = [];
+    const verse = interlinearTarget[originStructureSource] &&
+      interlinearTarget[originStructureSource].chapters[indexes.interlinearChapterIndex] &&
+      interlinearTarget[originStructureSource].chapters[indexes.interlinearChapterIndex].verses[indexes.interlinearVerseIndex];
+
+    if (verse && verse.words) {
+      verse.words = [];
     }
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);

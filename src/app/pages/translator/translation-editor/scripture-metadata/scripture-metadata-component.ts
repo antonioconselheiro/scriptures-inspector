@@ -114,7 +114,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
     if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
       interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
-        if (this.current.chapter === chapter.origin && chapter.chapter !== undefined) {
+        if (this.current.chapter === chapter.origin) {
           currentChapter = chapter.chapter;
         }
       });
@@ -142,10 +142,8 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
             if ((verse.originChapter === undefined || verse.originChapter === this.current.chapter) && verse.originVerse === this.sourceVerse.verse) {
               if (verse.chapter !== undefined) {
                 interlinearChapter = verse.chapter;
-              } else if (chapter.chapter !== undefined) {
-                interlinearChapter = chapter.chapter;
               } else {
-                interlinearChapter = this.current.chapter;
+                interlinearChapter = chapter.chapter;
               }
 
               interlinearVerse = verse.verse;

@@ -54,7 +54,7 @@
           @for (translationSegment of word.segments; track $index) {
             <select #interlinear
               (change)="onChangeInterlinearToBaseScripture(translationSegment.index, translationSegment.word, interlinear.value)"
-              [ngModel]="getInterlinear(translationSegment.index)"
+              [ngModel]="getInterlinearWordSegmentSerialized(translationSegment.index)"
               [name]="'translationToSourceInterlinear' + $index">
               <option value=""></option>
               @for (originWords of originWordMatrix; track $index) {
@@ -73,7 +73,7 @@
   @if (customTranslation) {
     <app-custom-translation-component
       [bookTarget]="bookTarget"
-      [interlinear]="interlinearTarget"
+      [interlinear]="interlinearTarget[structure.source]"
       [translationLanguage]="sourceLanguage"
       [current]="current"
       [parsedBook]="parsedBook"
