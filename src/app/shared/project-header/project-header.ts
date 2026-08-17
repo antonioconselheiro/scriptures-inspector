@@ -83,7 +83,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   private loadProjectCollections(project: Project): void {
     loadProjectCollectionsFn(project)
-      .then(collections => this.collections = collections)
+      .then(collections => this.collections = collections || [])
       .catch(e => console.error(e));
   }
 

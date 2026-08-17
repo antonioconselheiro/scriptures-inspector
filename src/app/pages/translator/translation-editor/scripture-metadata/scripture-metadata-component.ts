@@ -44,6 +44,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   title = 'Metadata';
 
   @Input()
+  interlinearRowspan = 2;
+
+  @Input()
   project!: Project;
   
   @Input()

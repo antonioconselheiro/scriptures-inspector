@@ -35,8 +35,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
     CommonModule,
     FormsModule,
     LexicalPipe,
-    forwardRef(() => ScriptureMetadataComponent),
-    CustomTranslationComponent,
+    forwardRef(() => ScriptureMetadataComponent)
   ],
   templateUrl: './interlinear-component.html',
   styleUrl: './interlinear-component.scss'

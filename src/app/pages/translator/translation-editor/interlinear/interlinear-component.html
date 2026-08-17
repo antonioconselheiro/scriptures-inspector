@@ -8,35 +8,13 @@
   @let originWordMatrix = splitIntoMatrix(originLanguage, originParsedBook.patterns, originVerse);
 
   <app-scripture-metadata-component
-    title="Interlinear" [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
+    title="Interlinear" [interlinearRowspan]="3" [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
     [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
     [project]="project" [projectData]="projectData" [bookTarget]="bookTarget"
     [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
     [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
     [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor.bind(this)"
   >
-    <tr>
-      <th rowspan="2">interlinear</th>
-      @for (word of wordMatrix; track $index) {
-      <td>
-        <div class="configFieldWrapper">
-          @for (segment of word.segments; track segment.index) {
-            @let literal = segment.word | lexical : parsedBook : originLanguage : pipeUpdaterController;
-            <input
-              #field
-              type="text"
-              class="configField"
-              [name]="'fieldTranslation' + segment.index"
-              [placeholder]="segment.word"
-              [style.width.px]="calcFieldSize(segment, literal)" (input)="updateLexical(sourceLanguage, field, segment)"
-              [value]="literal"
-            />
-          }
-        </div>
-      </td>
-      }
-      <td rowspan="2"><button type="button" (click)="cleanLexicalInterlinear(wordMatrix)">×</button></td>
-    </tr>
     <tr>
       <td [colSpan]="wordList.length">
         @for (word of wordMatrix; track $index) {
@@ -70,17 +48,4 @@
     </tr>
   </app-scripture-metadata-component>
 
-  @if (customTranslation) {
-    <app-custom-translation-component
-      [bookTarget]="bookTarget"
-      [interlinear]="interlinearTarget[structure.source]"
-      [translationLanguage]="sourceLanguage"
-      [current]="current"
-      [parsedBook]="parsedBook"
-      [sourceBook]="sourceBook"
-      [sourceVerse]="sourceVerse"
-      [wordMatrix]="wordMatrix"
-      [customTranslation]="customTranslation"
-    ></app-custom-translation-component>
-  }
 }
