@@ -770,23 +770,7 @@ export const bookMetadata: {
       septuaginta: false
     }
   },
-  '3SL': { // 4Q448, 11QPs
-    chapters: 0,
-    normal: '3 Salmos',
-    gringo: '3 Psalms',
-    testament: 'old',
-    language: {
-      hebraic: true
-    },
-    codex: {
-      essenes: true,
-      ethiopian: false,
-      ocidental: false,
-      septuaginta: false,
-      copta: false
-    }
-  },
-  '4SL': {
+  '3SL': {
     chapters: 0,
     normal: 'Salmos de Salomão',
     gringo: 'Psalms of Solomon',
@@ -801,6 +785,22 @@ export const bookMetadata: {
       septuaginta: false,
       essenes: false,
       syriac: false
+    }
+  },
+  '4SL': { // 4Q448, 11QPs
+    chapters: 0,
+    normal: 'Salmos Essênios',
+    gringo: 'Essenes Psalms',
+    testament: 'old',
+    language: {
+      hebraic: true
+    },
+    codex: {
+      essenes: true,
+      ethiopian: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false
     }
   },
   'PSL': { // 4QpPs

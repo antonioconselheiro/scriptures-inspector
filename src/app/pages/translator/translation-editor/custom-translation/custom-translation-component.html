@@ -1,7 +1,7 @@
 <h3>{{interlinear ? 'Interlinear ' : ''}}Custom Translation</h3>
 
 @let indexes = getTranslationIndexes();
-@let verse = customTranslation?.chapters?.[indexes.chapterIndex]?.verses?.[indexes.verseIndex];
+@let verse = customTranslation.chapters?.[indexes.chapterIndex]?.verses?.[indexes.verseIndex];
 @let chapterVariations = verse?.variations;
 @let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, indexes, pipeUpdaterController) || [];
 
