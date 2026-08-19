@@ -71,57 +71,61 @@ async function fetchWithRetry(url) {
     try {
       const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-      const text = await res.text(); // HTML bruto
-      console.log(`✅ Fetched Book ${book} Section ${section}`);
+      const text = await res.text();
       return text;
     } catch (err) {
       attempts++;
-      console.warn(`⚠️ Retry ${attempts} for Book ${book} Section ${section}`);
+      console.warn(`⚠️ Retry ${attempts} for ${url}`);
       await sleep(3000);
     }
   }
 }
 
 const baseUrl = "https://www.sacred-texts.com/bib/sep/";
-books.forEach(book => {
-  fetchWithRetry(`${baseUrl}${book.html}.htm`)
-    .then(html => {
-      codex[book.key] = codex[book.key] || { chapters: [] };
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const links = [...doc.querySelectorAll('p > a:nth-child(1)')].filter(a => /\d{1,4}/.test(a.getAttribute('href')));
-      const sections = links.map(link => {
-        const regex = new RegExp(`^${book.html}|\.htm$`, 'g');
-        const chapterLink = link.getAttribute('href');
-        const chapterNumber = chapterLink.replace(regex, '');
-        const versesList = [];
+async function run() {
+  for (let book of books) {
+    const html = await fetchWithRetry(`${baseUrl}${book.html}.htm`);
+    codex[book.key] = codex[book.key] || { chapters: [] };
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const links = [...doc.querySelectorAll('p > a:nth-child(1)')].filter(a => /\d{1,4}/.test(a.getAttribute('href')));
 
-        codex[book.key].chapters.push({
-          chapter: chapterNumber,
-          verses: versesList
-        });
-
-        fetchWithRetry(`${baseUrl}${chapterLink}`)
-          .then(chapterHtml => {
-            const chapterDoc = parser.parseFromString(chapterHtml, "text/html");
-            const verses = Array.from(chapterDoc.querySelectorAll('h3 ~ p'));
-            verses.forEach(verse => {
-              const aEl = verse.querySelector('a');
-              const verseNumber = Number(aEl.innerText);
-              aEl.remove();
-              const verseText = verse.innerHTML.replace(/&nbsp;/, ' ').trim();
-
-              versesList.push({
-                verse: verseNumber,
-                text: verseText
-              });
-            });
-          });
+    for (let link of links) {
+      const regex = new RegExp(`^${book.html}|\.htm$`, 'g');
+      const chapterLink = link.getAttribute('href');
+      const chapterNumber = Number(chapterLink.replace(regex, ''));
+      console.log(`🔄 Fetching Book ${book.name} Chapter ${chapterNumber}...`);
+      const versesList = [];
+  
+      codex[book.key].chapters.push({
+        chapter: chapterNumber,
+        verses: versesList
       });
-      console.log(`Book: ${book.name}, Sections: ${sections.join(', ')}`);
-    })
-    .catch(error => console.error(`Error fetching ${book.name}:`, error));
-});
+  
+      const chapterHtml = await fetchWithRetry(`${baseUrl}${chapterLink}`)
+      const chapterDoc = parser.parseFromString(chapterHtml, "text/html");
+      const verses = Array.from(chapterDoc.querySelectorAll('h3 ~ p:not(:empty)'));
+
+      verses.forEach(verse => {
+        const aEl = verse.querySelector('a');
+        const verseNumber = Number(aEl.innerText);
+        aEl.remove();
+        const verseText = verse.innerHTML.replace(/&nbsp;/, ' ').trim();
+
+        versesList.push({
+          verse: verseNumber,
+          text: verseText
+        });
+      });
+
+
+      console.info('✅ Fetched', book.name, 'Chapter', chapterNumber, 'with', versesList.length, 'verses');
+    }
+  }
+}
+
+run().then(() => console.info('✅ DONE'));
+
 
 /**
 Book: Genesis, Sections: 1 (31), 2 (25), 3 (24), 4 (26), 5 (32), 6 (22), 7 (24), 8 (22), 9 (29), 10 (32), 11 (32), 12 (20), 13 (18), 14 (24), 15 (21), 16 (16), 17 (27), 18 (33), 19 (38), 20 (18), 21 (34), 22 (24), 23 (20), 24 (67), 25 (34), 26 (35), 27 (46), 28 (22), 29 (35), 30 (43), 31 (54), 32 (33), 33 (20), 34 (31), 35 (29), 36 (43), 37 (36), 38 (30), 39 (23), 40 (23), 41 (57), 42 (38), 43 (34), 44 (34), 45 (28), 46 (34), 47 (31), 48 (22), 49 (33), 50 (26)
@@ -184,128 +188,3 @@ Book: Psalms, Sections: 1 (6), 2 (12), 3 (9), 4 (9), 5 (13), 6 (11), 7 (18), 8 (
 Book: Sirach, Sections: 0 (36), 1 (30), 2 (18), 3 (31), 4 (31), 5 (15), 6 (37), 7 (36), 8 (19), 9 (18), 10 (31), 11 (34), 12 (18), 13 (26), 14 (27), 15 (20), 16 (30), 17 (32), 18 (33), 19 (30), 20 (31), 21 (28), 22 (27), 23 (27), 24 (34), 25 (26), 26 (29), 27 (30), 28 (26), 29 (28), 30 (25), 31 (31), 32 (24), 33 (33), 34 (26), 35 (24), 36 (27), 37 (31), 38 (34), 39 (35), 40 (30), 41 (27), 42 (25), 43 (33), 44 (23), 45 (26), 46 (20), 47 (25), 48 (25), 49 (16), 50 (29), 51 (30)
 Book: Malachi, Sections: 1 (14), 2 (17), 3 (24)
  */
-
-/**
-✅ Estrutura geral
-Todos os livros possuem a quantidade esperada de capítulos (exceto os casos especiais já conhecidos).
-A maioria das contagens de versículos está dentro da faixa esperada para a LXX.
-Livros grandes (Gênesis, Êxodo, Isaías, Jeremias, Ezequiel, Jó, Salmos etc.) não apresentam nenhuma discrepância gritante.
-1. Sirach
-Sections: 0 (36), 1 ... 51
-
-O capítulo 0 não existe.
-
-É quase certo que houve um deslocamento de índice.
-
-2. Lamentations
-0 (0), 1 (22), 2 (22), 3 (66), 4 (22), 5 (22)
-
-Também existe um capítulo 0 inexistente.
-
-Provavelmente é apenas um marcador artificial.
-
-3. Proverbs
-Continua estranho.
-
-Você possui
-
-1-24
-30-36
-
-Enquanto o livro termina no capítulo 31.
-
-Ou seja:
-
-faltam 25–29;
-aparecem 32–36, que não existem.
-Isso continua sendo o erro mais evidente do conjunto.
-
-4. Psalms
-Agora está muito melhor.
-
-Você possui
-
-1 ... 151
-
-e o Salmo 151 possui 7 versículos, o que é perfeitamente compatível com a LXX.
-
-Nada chama atenção.
-
-5. Daniel
-Daniel 3 = 97
-
-Pode parecer enorme, mas está correto para a Septuaginta (e para Teodócio), pois inclui o Cântico dos Três Jovens.
-
-Não é erro.
-
-6. Susanna
-63
-
-e
-
-Susanna Th = 64
-
-Essa diferença é plausível.
-
-Existem manuscritos com 63 ou 64 versículos.
-
-7. Bel and the Dragon
-42
-
-Também está dentro do esperado.
-
-8. Joel
-20
-27
-5
-21
-
-Quatro capítulos.
-
-Corresponde à tradição grega.
-
-9. Malachi
-3 capítulos
-
-Também está coerente com a tradição grega.
-
-10. Odes
-As Odes variam bastante entre edições.
-
-Os valores não parecem absurdos.
-
-11. 1 Esdras
-O capítulo 8 possuir
-
-92 versículos
-
-é grande, mas totalmente plausível.
-
-12. 1 Macabeus
-O capítulo 10 possuir
-
-89 versículos
-
-Também é esperado.
-
-13. Jó
-O texto grego é consideravelmente menor que o hebraico.
-
-Os números que você possui parecem compatíveis.
-
-Conclusão
-Erros reais
-❌ Sirach possui capítulo 0.
-❌ Lamentations possui capítulo 0.
-❌ Proverbs continua claramente incorreto (capítulos faltando e capítulos inexistentes).
-Nada parece absurdamente errado
-Não encontrei nenhuma contagem como:
-
-Gênesis 1 com 500 versículos;
-Salmo 23 com 80 versículos;
-Isaías 53 com 2 versículos;
-Daniel 6 com 150 versículos.
-Ou seja, não há indícios de corrupção massiva dos dados.
-
-Minha estimativa é que mais de 99% das contagens estão plausíveis para alguma tradição da Septuaginta. Os únicos problemas realmente evidentes continuam sendo os capítulos artificiais 0 e a listagem de Provérbios, que parece ter sido gerada incorretamente.
-*/
