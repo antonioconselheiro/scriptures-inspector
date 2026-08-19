@@ -1,82 +1,122 @@
+const codex = {};
 const books = [
-  {"html":"gen","name":"Genesis"},
-  {"html":"exo","name":"Exodus"},
-  {"html":"lev","name":"Leviticus"},
-  {"html":"num","name":"Numbers"},
-  {"html":"deu","name":"Deuteronomy"},
-  {"html":"jsb","name":"Joshua (Codex Vaticanus)"},
-//  {"html":"jsa","name":"Joshua A"},
-//  {"html":"jdb","name":"Judges B"},
-  {"html":"jda","name":"Judges (Codex Alexandrinus)"},
-  {"html":"rut","name":"Ruth"},
-  {"html":"sa1","name":"1 Samuel"},
-  {"html":"sa2","name":"2 Samuel"},
-  {"html":"kg1","name":"1 Kings"},
-  {"html":"kg2","name":"2 Kings"},
-  {"html":"ch1","name":"1 Chronicles"},
-  {"html":"ch2","name":"2 Chronicles"},
-  {"html":"es1","name":"1 Esdras"},
-  {"html":"es2","name":"2 Esdras"},
-  {"html":"est","name":"Esther"},
-  {"html":"jdt","name":"Judith"},
+  {"key":"GEN", "html":"gen","name":"Genesis"},
+  {"key":"EXO", "html":"exo","name":"Exodus"},
+  {"key":"LEV", "html":"lev","name":"Leviticus"},
+  {"key":"NUM", "html":"num","name":"Numbers"},
+  {"key":"DEU", "html":"deu","name":"Deuteronomy"},
+  {"key":"JOS", "html":"jsb","name":"Joshua (Codex Vaticanus)"},
+  {"key":"JUI", "html":"jda","name":"Judges (Codex Alexandrinus)"},
+  {"key":"RUT", "html":"rut","name":"Ruth"},
+  {"key":"1SM", "html":"sa1","name":"1 Samuel"},
+  {"key":"2SM", "html":"sa2","name":"2 Samuel"},
+  {"key":"1RS", "html":"kg1","name":"1 Kings"},
+  {"key":"2RS", "html":"kg2","name":"2 Kings"},
+  {"key":"1CR", "html":"ch1","name":"1 Chronicles"},
+  {"key":"2CR", "html":"ch2","name":"2 Chronicles"},
+  {"key":"3ED", "html":"es1","name":"1 Esdras"},
+  {"key":"2ED", "html":"es2","name":"2 Esdras"},
+  {"key":"1ET", "html":"est","name":"Esther"},
+  {"key":"JDT", "html":"jdt","name":"Judith"},
+  {"key":"TOB","html":"tos","name":"Tobit (Codex Sinaiticus)"},
+  {"key":"1MA","html":"ma1","name":"1 Macabees"},
+  {"key":"2MA","html":"ma2","name":"2 Macabees"},
+  {"key":"3MA","html":"ma3","name":"3 Macabees"},
+  {"key":"4MA","html":"ma4","name":"4 Macabees"},
+  {"key":"1SL","html":"psa","name":"Psalms"},
+  {"key":"ODS","html":"ode","name":"Odes"},
+  {"key":"PRO","html":"pro","name":"Proverbs"},
+  {"key":"ECL","html":"ecc","name":"Ecclesiastes"},
+  {"key":"CAN","html":"sol","name":"Song of Solomon"},
+  {"key":"JOB","html":"job","name":"Job"},
+  {"key":"SSL","html":"wis","name":"Wisdom"},
+  {"key":"SIR","html":"sir","name":"Sirach"},
+  {"key":"3SL","html":"pss","name":"Psalms of Solomon"},
+  {"key":"OSE","html":"hos","name":"Hosea"},
+  {"key":"MIQ","html":"mic","name":"Micah"},
+  {"key":"AMO","html":"amo","name":"Amos"},
+  {"key":"JOE","html":"joe","name":"Joel"},
+  {"key":"JON","html":"jon","name":"Jonah"},
+  {"key":"OBA","html":"oba","name":"Obadiah"},
+  {"key":"NAU","html":"nah","name":"Nahum"},
+  {"key":"HAB","html":"hab","name":"Habakkuk"},
+  {"key":"SOF","html":"zep","name":"Zephaniah"},
+  {"key":"AGE","html":"hag","name":"Haggai"},
+  {"key":"ZAC","html":"zac","name":"Zechariah"},
+  {"key":"MAL","html":"mal","name":"Malachi"},
+  {"key":"ISA","html":"isa","name":"Isaiah"},
+  {"key":"1BA","html":"bar","name":"Baruch"},
+  {"key":"1JE","html":"jer","name":"Jeremiah"},
+  {"key":"2JE","html":"lam","name":"Lamentations"},
+  {"key":"3JE","html":"epj","name":"Epistle of Jeremiah"},
+  {"key":"EZE","html":"eze","name":"Ezekiel"},
+  {"key":"1DA", "html":"dan","name":"Daniel"},
+  {"key":"2DA","html":"bel","name":"Bel and the Dragon"},
+  {"key":"3DA", "html":"sus","name":"Susanna"},
+  //  {"html":"jsa","name":"Joshua A"},
+  //  {"html":"jdb","name":"Judges B"},
   // {"html":"toa","name":"Tobit BA"},
-  {"html":"tos","name":"Tobit (Codex Sinaiticus)"},
-  {"html":"ma1","name":"1 Macabees"},
-  {"html":"ma2","name":"2 Macabees"},
-  {"html":"ma3","name":"3 Macabees"},
-  {"html":"ma4","name":"4 Macabees"},
-  {"html":"psa","name":"Psalms"},
-  {"html":"ode","name":"Odes"},
-  {"html":"pro","name":"Proverbs"},
-  {"html":"ecc","name":"Ecclesiastes"},
-  {"html":"sol","name":"Song of Solomon"},
-  {"html":"job","name":"Job"},
-  {"html":"wis","name":"Wisdom"},
-  {"html":"sir","name":"Sirach"},
-  {"html":"pss","name":"Psalms of Solomon"},
-  {"html":"hos","name":"Hosea"},
-  {"html":"mic","name":"Micah"},
-  {"html":"amo","name":"Amos"},
-  {"html":"joe","name":"Joel"},
-  {"html":"jon","name":"Jonah"},
-  {"html":"oba","name":"Obadiah"},
-  {"html":"nah","name":"Nahum"},
-  {"html":"hab","name":"Habakkuk"},
-  {"html":"zep","name":"Zephaniah"},
-  {"html":"hag","name":"Haggai"},
-  {"html":"zac","name":"Zechariah"},
-  {"html":"mal","name":"Malachi"},
-  {"html":"isa","name":"Isaiah"},
-  {"html":"jer","name":"Jeremiah"},
-  {"html":"bar","name":"Baruch"},
-  {"html":"epj","name":"Epistle of Jeremiah"},
-  {"html":"lam","name":"Lamentations"},
-  {"html":"eze","name":"Ezekiel"},
-  {"html":"bel","name":"Bel and the Dragon"},
-//  {"html":"bet","name":"Bel and the Dragon Th"},
-  {"html":"dan","name":"Daniel"},
-//  {"html":"dat","name":"Daniel Th"},
-  {"html":"sus","name":"Susanna"},
+  //  {"html":"bet","name":"Bel and the Dragon Th"},
+  //  {"html":"dat","name":"Daniel Th"},
 //  {"html":"sut","name":"Susanna Th"}
 ];
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function fetchWithRetry(url) {
+  let attempts = 0;
+  while (attempts < Infinity) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+      const text = await res.text(); // HTML bruto
+      console.log(`✅ Fetched Book ${book} Section ${section}`);
+      return text;
+    } catch (err) {
+      attempts++;
+      console.warn(`⚠️ Retry ${attempts} for Book ${book} Section ${section}`);
+      await sleep(3000);
+    }
+  }
+}
+
 const baseUrl = "https://www.sacred-texts.com/bib/sep/";
 books.forEach(book => {
-  fetch(`${baseUrl}${book.html}.htm`)
-    .then(response => response.text())
+  fetchWithRetry(`${baseUrl}${book.html}.htm`)
     .then(html => {
+      codex[book.key] = codex[book.key] || { chapters: [] };
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
       const links = [...doc.querySelectorAll('p > a:nth-child(1)')].filter(a => /\d{1,4}/.test(a.getAttribute('href')));
       const sections = links.map(link => {
         const regex = new RegExp(`^${book.html}|\.htm$`, 'g');
-        const chapter = link.getAttribute('href').replace(regex, '');
-        const verses = link.parentElement.querySelectorAll('a');
-        const lastVerse = verses[verses.length - 1].innerText;
-        const chapterNumber = parseFloat(chapter);
-        const lastVerseNumber = parseFloat(lastVerse);
+        const chapterLink = link.getAttribute('href');
+        const chapterNumber = chapterLink.replace(regex, '');
+        const versesList = [];
 
-        return `${chapterNumber} (${lastVerseNumber})`;
+        codex[book.key].chapters.push({
+          chapter: chapterNumber,
+          verses: versesList
+        });
+
+        fetchWithRetry(`${baseUrl}${chapterLink}`)
+          .then(chapterHtml => {
+            const chapterDoc = parser.parseFromString(chapterHtml, "text/html");
+            const verses = Array.from(chapterDoc.querySelectorAll('h3 ~ p'));
+            verses.forEach(verse => {
+              const aEl = verse.querySelector('a');
+              const verseNumber = Number(aEl.innerText);
+              aEl.remove();
+              const verseText = verse.innerHTML.replace(/&nbsp;/, ' ').trim();
+
+              versesList.push({
+                verse: verseNumber,
+                text: verseText
+              });
+            });
+          });
       });
       console.log(`Book: ${book.name}, Sections: ${sections.join(', ')}`);
     })
