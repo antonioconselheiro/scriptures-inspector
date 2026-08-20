@@ -1,6 +1,10 @@
 {
   "name": "Gə'əz Mashafa Qeddus",
   "language": "geez",
+  "sources": [
+    "https://www.tau.ac.il/~hacohen/Biblia.html",
+    "https://github.com/BetaMasaheft/Works"
+  ],
   "books": {
     "1EN": { "name": "ሄኖክ" },
     "JUB": { "name": "መጽሐፈ ፡ ኩፋሌ" },

@@ -1,6 +1,9 @@
 {
   "name": "Mahabarata",
   "language": "sanskrit",
+  "sources": [
+    "https://www.sacred-texts.com/hin/mbs/"
+  ],
   "books": {
     "ADI": {"name": "Adi Parva"},
     "SAB": {"name": "Sabha Parva"},

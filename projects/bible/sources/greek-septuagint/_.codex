@@ -1,6 +1,9 @@
 {
   "name": "Greek Septuagint",
   "language": "greek",
+  "sources": [
+    "https://www.sacred-texts.com/bib/sep/"
+  ],
   "books": {
     "GEN": { "name": "Gênesis" },
     "EXO": { "name": "Êxodo" },

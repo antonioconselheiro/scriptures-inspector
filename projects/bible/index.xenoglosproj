@@ -98,10 +98,16 @@
       "customTranslationTarget": "hebrew-stuttgartensia-custom-portuguese-translation",
       "interlinear": [
         {
-          "source": "geez-mashafa-qeddus",
-          "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
-          "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-          "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
+          "source": "greek-septuagint",
+          "metadataTarget": "greek-septuagint-custom-portuguese-metadata",
+          "interlinearTarget": "greek-septuagint-custom-portuguese-interlinear",
+          "customTranslationTarget": "greek-septuagint-custom-portuguese-translation",
+          "interlinear": [
+            "source": "geez-mashafa-qeddus",
+            "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
+            "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+            "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
+          ]
         }
       ]
     },
