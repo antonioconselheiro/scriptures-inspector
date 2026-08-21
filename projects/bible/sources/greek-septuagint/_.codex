@@ -11,7 +11,7 @@
     "NUM": { "name": "Números" },
     "DEU": { "name": "Deuteronômio" },
     "JOS": { "name": "Josué (Códice Vaticanus)" },
-    "JUI": { "name": "Juízes (Códice Alexandrinus)" },
+    "JUI": { "name": "Juízes" },
     "RUT": { "name": "Rute" },
     "1SM": { "name": "1 Samuel" },
     "2SM": { "name": "2 Samuel" },
@@ -26,7 +26,7 @@
     "1SL": { "name": "Salmos" },
     "3SL": { "name": "Salmos de Salomão" },
     "PRO": { "name": "Provérbios" },
-    "ODS": { "name": "Odes de Salomão" }
+    "ODS": { "name": "Odes de Salomão" },
     "SSL": { "name": "Sabedoria de Salomão" },
     "ECL": { "name": "Eclesiastes" },
     "SIR": { "name": "Sirácida" },

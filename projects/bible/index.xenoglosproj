@@ -30,7 +30,7 @@
       "1SL": { "name": "Salmos" },
       "3SL": { "name": "Salmos de Salomão" },
       "PRO": { "name": "Provérbios" },
-      "ODS": { "name": "Odes de Salomão" }
+      "ODS": { "name": "Odes de Salomão" },
       "SSL": { "name": "Sabedoria de Salomão" },
       "ECL": { "name": "Eclesiastes" },
       "SIR": { "name": "Sirácida" },
@@ -61,7 +61,7 @@
       "1MA": { "name": "1 Macabeus" },
       "2MA": { "name": "2 Macabeus" },
       "3MA": { "name": "3 Macabeus" },
-      "4MA": { "name": "4 Macabeus" }
+      "4MA": { "name": "4 Macabeus" },
       "MAT": { "name": "Mateus" },
       "MAR": { "name": "Marcos" },
       "LUC": { "name": "Lucas" },
@@ -103,10 +103,12 @@
           "interlinearTarget": "greek-septuagint-custom-portuguese-interlinear",
           "customTranslationTarget": "greek-septuagint-custom-portuguese-translation",
           "interlinear": [
-            "source": "geez-mashafa-qeddus",
-            "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
-            "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
-            "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
+            {
+              "source": "geez-mashafa-qeddus",
+              "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
+              "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+              "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
+            }
           ]
         }
       ]

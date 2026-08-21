@@ -1,14 +1,15 @@
-import { Project } from '@domain/project-model';
+import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 
-export function getProjectSourcesFn(project: Project): Array<string> {
-  return project.structures.map(structure => {
+export function getProjectSourcesFn(structures: Array<ProjectStructureMetadata | ProjectStructureInterlinear>): Array<string> {
+  let sources: Array<string> = [];
+  structures.forEach(structure => {
+    sources.push(structure.source);
+
     if (structure.interlinear) {
-      return [
-        structure.source,
-        ...structure.interlinear.map(interlinear => interlinear.source)
-      ];
+      sources = [...sources, ...getProjectSourcesFn(structure.interlinear)];
     }
+  });
 
-    return [structure.source];
-  }).flat();
+  return [...new Set(sources)];
 }

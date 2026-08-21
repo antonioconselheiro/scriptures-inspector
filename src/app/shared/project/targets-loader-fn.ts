@@ -13,7 +13,7 @@ export async function targetsLoaderFn(book: string | null): Promise<ProjectData>
   const targetsCodex: ProjectData = {};
 
   if (project && book) {
-    const targets = getProjectTargetsFn(project);
+    const targets = getProjectTargetsFn(project.structures);
     await Promise.all(
       targets
         .map(target => {

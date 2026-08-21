@@ -231,11 +231,11 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   getProjectSources(project: Project): Array<string> {
-    return getProjectSourcesFn(project);
+    return getProjectSourcesFn(project.structures);
   }
 
   getProjectTargets(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
-    return getProjectTargetsFn(project);
+    return getProjectTargetsFn(project.structures);
   }
 
   getProjectTargetsMetadataDetails(

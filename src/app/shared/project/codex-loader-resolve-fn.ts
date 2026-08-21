@@ -13,7 +13,7 @@ export function codexLoaderResolveFn(): () => Promise<Record<string, Codex<Langu
     const codexRecord: Record<string, Codex<LanguageUnionType>> = {};
 
     if (project) {
-      const sources = getProjectSourcesFn(project);
+      const sources = getProjectSourcesFn(project.structures);
       const translationViewer = project.translationViewer || [];
       const projectSources = [...new Set([...sources, ...translationViewer.map(item => item.translation)])];
 

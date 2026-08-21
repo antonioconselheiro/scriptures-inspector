@@ -1,21 +1,26 @@
 import { KeyInterlinear } from '@domain/key-interlinear-type';
 import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
-import { Project } from '@domain/project-model';
+import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 
-export function getProjectTargetsFn(project: Project): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
-  return project.structures.map(structure => {
-    if (structure.interlinear) {
-      return [
-        structure.metadataTarget,
-        structure.customTranslationTarget,
-        ...structure.interlinear.map(interlinear => [interlinear.metadataTarget, interlinear.interlinearTarget, interlinear.customTranslationTarget]).flat()
-      ];
+export function getProjectTargetsFn(structures: Array<ProjectStructureMetadata | ProjectStructureInterlinear>): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
+  let targets: Array<KeyMetadata | KeyInterlinear | KeyTranslation> = [];
+  structures.forEach(structure => {
+    targets.push(structure.metadataTarget);
+    
+    if (structure.customTranslationTarget) {
+      targets.push(structure.customTranslationTarget);
     }
 
-    return [
-      structure.metadataTarget,
-      structure.customTranslationTarget
-    ];
-  }).flat().filter(v => !!v);
+    if ('interlinearTarget' in structure && structure.interlinearTarget) {
+      targets.push(structure.interlinearTarget);
+    }
+
+    if (structure.interlinear) {
+      targets = [...targets, ...getProjectTargetsFn(structure.interlinear)];
+    }
+  });
+
+  return [...new Set(targets)];
 }

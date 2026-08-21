@@ -15,7 +15,7 @@ export function sourcesLoaderResolveFn(): (route: ActivatedRouteSnapshot) => Pro
     const httpClient = inject(HttpClient);
 
     if (project && book) {
-      const sources = getProjectSourcesFn(project);
+      const sources = getProjectSourcesFn(project.structures);
       const translationViewer = project.translationViewer || [];
 
       await Promise.all(
