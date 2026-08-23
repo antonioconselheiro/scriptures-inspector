@@ -44,7 +44,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   title = 'Metadata';
 
   @Input()
-  interlinearRowspan = 2;
+  lexicalRowspan = 2;
 
   @Input()
   project!: Project;
@@ -139,7 +139,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     let correspondingChapterIndex = 0, correspondingVerseIndex = 0;
     let interlinearChapter = this.current.chapter, interlinearVerse = this.sourceVerse.verse;
     const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget]; 
-    const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
 
     if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
       interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
@@ -159,6 +158,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       });
     }
 
+    const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
     if (bookInterlinearSource) {
       bookInterlinearSource.chapters.forEach((chapter, chapterIndex) => {
         if (chapter.chapter === interlinearChapter) {

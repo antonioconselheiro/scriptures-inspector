@@ -45,12 +45,12 @@ export abstract class AbstractInspectorDiretive {
     this.pipeUpdaterController++;
   }
 
-  cleanLexicalInterlinear(wordMatrix: Array<Word>): void {
+  cleanLexicalLexical(wordMatrix: Array<Word>): void {
     if (!confirm('remove lexical interlinear from verse and from all it occurrences?')) {
       return;
     }
 
-    this.metadataService.cleanLexicalInterlinear(this.current, this.bookTarget, wordMatrix);
+    this.metadataService.cleanLexical(this.current, this.bookTarget, wordMatrix);
     this.pipeUpdaterController++;
   }
 

@@ -8,9 +8,10 @@
   @let originWordMatrix = splitIntoMatrix(originLanguage, originParsedBook.patterns, originVerse);
 
   <app-scripture-metadata-component
-    title="Interlinear" [interlinearRowspan]="3" [wordList]="wordList" [wordMatrix]="wordMatrix" [codexMetadataRecord]="codexMetadataRecord"
-    [current]="current" [structure]="structure" [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
-    [project]="project" [projectData]="projectData" [bookTarget]="bookTarget"
+    title="Interlinear" [lexicalRowspan]="3" [wordList]="wordList" [wordMatrix]="wordMatrix"
+    [codexMetadataRecord]="codexMetadataRecord" [current]="current" [structure]="structure"
+    [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord" [project]="project"
+    [projectData]="projectData" [bookTarget]="bookTarget" [verseIndex]="verseIndex"
     [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
     [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
     [pipeUpdaterController]="pipeUpdaterController" [getColor]="getTranslationColor.bind(this)"

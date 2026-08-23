@@ -61,6 +61,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
 
   @Input()
+  verseIndex!: number;
+
+  @Input()
   current!: CurrentChapter;
 
   @Input()

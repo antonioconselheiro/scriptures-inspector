@@ -171,7 +171,7 @@ export class ProjectMetadataService {
     return this.dataService.getLexical(data, sourceLanguage, word);
   }
 
-  cleanLexicalInterlinear(
+  cleanLexical(
     current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
     wordMatrix: Array<Word>
