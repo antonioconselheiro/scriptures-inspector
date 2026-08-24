@@ -188,20 +188,24 @@ export class ProjectInterlinearService {
     translationWord: string,
     interlinearOptionValue: string
   ): void {
-    const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
-    const scriptureWordIndex = Number(scriptureWordIndexString);
-
     const indexes = this.createInterlinearToBaseScriptureIfNotExists(interlinearTarget, originStructureSource, current, translationVerse);
     const wordInterlinearAssociation = interlinearTarget[originStructureSource]
       .chapters[indexes.interlinearChapterIndex]
       .verses[indexes.interlinearVerseIndex];
 
-    wordInterlinearAssociation.words[translationWordIndex] = {
-      originIndex: scriptureWordIndex,
-      originWord: scriptureWord,
-      translationIndex: translationWordIndex,
-      translationWord: translationWord
-    };
+    if (interlinearOptionValue) {
+      const [scriptureWordIndexString, scriptureWord] = interlinearOptionValue.split('-');
+      const scriptureWordIndex = Number(scriptureWordIndexString);
+  
+      wordInterlinearAssociation.words[translationWordIndex] = {
+        originIndex: scriptureWordIndex,
+        originWord: scriptureWord,
+        translationIndex: translationWordIndex,
+        translationWord: translationWord
+      };
+    } else {
+      delete wordInterlinearAssociation.words[translationWordIndex];
+    }
 
     this.systemService.triggerSaveCurrentBookInterlinear(current);
   }
@@ -221,7 +225,7 @@ export class ProjectInterlinearService {
     );
 
     if (indexes.interlinearChapterIndex === this.indexNotFound || indexes.interlinearVerseIndex === this.indexNotFound) {
-      return '0';
+      return '';
     }
 
     const interlinearWord = interlinearTarget[originStructureSource]
@@ -230,7 +234,7 @@ export class ProjectInterlinearService {
       .words[wordIndex] || null;
 
     if (!interlinearWord) {
-      return '0';
+      return '';
     }
 
     return String(interlinearWord.originIndex % 7 + 1);

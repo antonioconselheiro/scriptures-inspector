@@ -28,6 +28,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -52,9 +53,6 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   structure!: ProjectStructureInterlinear;
 
   @Input()
-  originStructure!: ProjectStructureMetadata | ProjectStructureInterlinear;
-
-  @Input()
   codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
@@ -67,19 +65,13 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   current!: CurrentChapter;
 
   @Input()
-  originLanguage!: LanguageUnionType;
-
-  @Input()
   sourceLanguage!: LanguageUnionType;
 
   @Input()
   pipeUpdaterController = 0;
 
   @Input()
-  parsedOriginBook!: ParsedBookMetadata;
-
-  @Input()
-  originVerse!: SourceVerse;
+  originToInterlinear: Array<OriginToInterlinear> = [];
 
   @Input()
   sourceBook!: SourceBook;
@@ -116,10 +108,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     super();
   }
 
-  getTranslationColor(wordIndex: number): string {
+  getTranslationColor(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear, wordIndex: number): string {
     return this.interlinearService.getTranslationColor(
       this.interlinearTarget,
-      this.originStructure.source,
+      originStructure.source,
       this.current,
       this.sourceVerse,
       wordIndex
@@ -131,6 +123,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   }
 
   onChangeInterlinearToBaseScripture(
+    originStructure: ProjectStructureMetadata | ProjectStructureInterlinear,
     translationWordIndex: number,
     translationWord: string,
     interlinearValue: string
@@ -141,7 +134,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
       this.interlinearService.advanceOneWordToAllAssociationsToTheRight(
         this.sourceLanguage,
         this.interlinearTarget,
-        this.originStructure.source,
+        originStructure.source,
         this.current,
         this.sourceVerse,
         wordMatrix,
@@ -154,7 +147,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     } else {
       this.interlinearService.saveInterlinearToBaseScripture(
         this.interlinearTarget,
-        this.originStructure.source,
+        originStructure.source,
         this.current,
         this.sourceVerse,
         translationWordIndex,
@@ -164,11 +157,11 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     }
   }
 
-  getInterlinearWordSegmentSerialized(wordIndex: number): string {
+  getInterlinearWordSegmentSerialized(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear, wordIndex: number): string {
     return this.interlinearService.getInterlinearWordSegmentSerialized(
       this.sourceLanguage,
       this.interlinearTarget,
-      this.originStructure.source,
+      originStructure.source,
       this.current,
       this.sourceVerse,
       wordIndex
@@ -179,13 +172,13 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
   }
 
-  cleanTranslationInterlinear() {
+  cleanTranslationInterlinear(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear): void {
     if (!confirm('clean interlinear association for this verse?')) {
       return;
     }
 
     this.interlinearService.cleanTranslationInterlinear(
-      this.interlinearTarget, this.originStructure.source, this.current, this.sourceVerse
+      this.interlinearTarget, originStructure.source, this.current, this.sourceVerse
     );
   }
 }

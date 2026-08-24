@@ -24,6 +24,8 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { SourceVerse } from '@domain/source-verse-model';
+import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -42,9 +44,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   @Input()
   title = 'Metadata';
-
-  @Input()
-  lexicalRowspan = 2;
 
   @Input()
   project!: Project;
@@ -98,7 +97,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Input()
-  getColor: (segmentIndex: number) => string = (segmentIndex: number) => String(segmentIndex % 7 + 1);
+  originToInterlinear?: Array<OriginToInterlinear>;
 
   minified = false;
 
@@ -112,6 +111,10 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   getTranslationVerseIndex(translationVerses: Array<BookVerse<{ text: string; }>>): number {
     return translationVerses.findIndex((verse) => verse.verse === this.sourceVerse.verse);
+  }
+
+  getColor(segmentIndex: number): string {
+    return String(segmentIndex % 7 + 1);
   }
 
   getInterlinearCorrespondingCurrentChapter(interlinear: ProjectStructureInterlinear): CurrentChapter {
@@ -220,6 +223,16 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.verseIndex,
       word
     );
+  }
+
+  getOriginToInterlinear(): Array<OriginToInterlinear> {
+    const currentOriginToInterlinear = {
+      language: this.sourceLanguage,
+      structure: this.structure,
+      verse: this.sourceVerse
+    };
+
+    return [...(this.originToInterlinear || []), currentOriginToInterlinear];
   }
 
   cleanWordOfGodFromVerse(): void {

@@ -87,7 +87,7 @@
         </tr>
     
         <tr>
-          <th [attr.rowspan]="lexicalRowspan">lexical</th>
+          <th rowspan="2">lexical</th>
           @for (word of wordMatrixValue; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
@@ -200,11 +200,11 @@
     @let interlinearCurrent = getInterlinearCorrespondingCurrentChapter(item);
 
     <app-interlinear-component
-      title="Interlinear" [current]="interlinearCurrent" [originStructure]="structure"
+      title="Interlinear" [current]="interlinearCurrent" [originToInterlinear]="getOriginToInterlinear()"
       [structure]="item" [verseIndex]="correspondingIndex.verse" [codexMetadataRecord]="codexMetadataRecord"
-      [sourceLanguage]="interlinearSourceLanguage" [originLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord"
+      [sourceLanguage]="interlinearSourceLanguage" [sourceBookRecord]="sourceBookRecord"
       [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController"
-      [originVerse]="sourceVerse" [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
+      [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
       [interlinearTarget]="bookInterlinearTarget" [bookTarget]="bookInterlinearMetadataTarget"
       [viewingTranslationBookRecord]="viewingTranslationBookRecord"
       [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
