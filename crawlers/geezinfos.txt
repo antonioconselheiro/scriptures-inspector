@@ -1,0 +1,192 @@
+Antigo Testamento — 46 títulos
+|  # | Geʿez                                       | Português ocidental                                                  |
+| -: | ------------------------------------------- | -------------------------------------------------------------------- |
+|  1 | **ኦሪት ዘልደት**                                | Gênesis                                                              |
+|  2 | **ኦሪት ዘፀአት**                                | Êxodo                                                                |
+|  3 | **ኦሪት ዘሌዋውያን**                              | Levítico                                                             |
+|  4 | **ኦሪት ዘኍልቍ**                                | Números                                                              |
+|  5 | **ኦሪት ዘዳግም**                                | Deuteronômio                                                         |
+|  6 | **ኦሪት ዘኢየሱስ**                               | Josué                                                                |
+|  7 | **ኦሪት ዘመሳፍንት**                              | Juízes                                                               |
+|  8 | **ኦሪት ዘሩት**                                 | Rute                                                                 |
+|  9 | **መጽሐፈ ነገሥት ቀዳማዊ** + **ዳግማዊ**               | 1–2 Samuel                                                           |
+| 10 | **መጽሐፈ ነገሥት ሣልሳዊ** + **ራብዓዊ**               | 1–2 Reis                                                             |
+| 11 | **መጽሐፈ ሕጹጻነ ነገሥት ቀዳማዊ**                     | 1 Crônicas                                                           |
+| 12 | **መጽሐፈ ሕጹጻነ ነገሥት ካልእ**                      | 2 Crônicas                                                           |
+| 13 | **መጽሐፈ ኩፋሌ**                                | Jubileus                                                             |
+| 14 | **መጽሐፈ ሄኖክ**                                | 1 Enoque                                                             |
+| 15 | **ዘዕዝራ ሠለስቱ**                               | Esdras + Neemias                                                     |
+| 16 | **መጽሐፈ ዘዕዝራ ክልኤቱ** + **መጽሐፈ ዕዝራ ሱቱኤል**      | 3 Esdras / Esdras grego + 4 Esdras / Esdras Sutuel                   |
+| 17 | **መጽሐፈ ዘጦቢት**                               | Tobias                                                               |
+| 18 | **መጽሐፈ ዘዮዲት**                               | Judite                                                               |
+| 19 | **መጽሐፈ ዘአስቴር**                              | Ester                                                                |
+| 20 | **መጽሐፈ ዘመቃብያን አሐዱ**                         | 1 Macabeus etíope / 1 Meqabyan                                       |
+| 21 | **መጽሐፈ ዘመቃብያን ክልኤቱ** + **መጽሐፈ ዘመቃብያን ሠለስቱ** | 2 e 3 Macabeus etíopes / 2 e 3 Meqabyan                              |
+| 22 | **መጽሐፈ ዘኢዮብ**                               | Jó                                                                   |
+| 23 | **መዝሙራት ዘዳዊት**                              | Salmos                                                               |
+| 24 | **መጽሐፈ ምሳሌ**                                | Provérbios                                                           |
+| 25 | **መጽሐፈ ተግሣጽ** (*Tägsas/Tegsats*)            | Repreensões / Provérbios 25–31                                       |
+| 26 | **መጽሐፈ ጥበበ ሰሎሞን**                           | Sabedoria de Salomão                                                 |
+| 27 | **መጽሐፈ መክብብ**                               | Eclesiastes                                                          |
+| 28 | **መጽሐፈ መሓልየ መሓልይ**                          | Cântico dos Cânticos                                                 |
+| 29 | **ትንቢተ ዘኢሳይያስ ነቢይ**                         | Isaías                                                               |
+| 30 | **ዘኤርምያስ**                                  | Jeremias — incluindo Lamentações, Baruc, Carta de Jeremias e 4 Baruc |
+| 31 | **ትንቢተ ዘሕዝቅኤል ነቢይ**                         | Ezequiel                                                             |
+| 32 | **ትንቢተ ዘዳንኤል ነቢይ**                          | Daniel                                                               |
+| 33 | **ትንቢተ ዘሆሴዕ ነቢይ**                           | Oseias                                                               |
+| 34 | **ትንቢተ ዘአሞጽ ነቢይ**                           | Amós                                                                 |
+| 35 | **ትንቢተ ዘሚክያስ ነቢይ**                          | Miqueias                                                             |
+| 36 | **ትንቢተ ዘኢዩኤል ነቢይ**                          | Joel                                                                 |
+| 37 | **ትንቢተ ዘዓብድዩ ነቢይ**                          | Obadias                                                              |
+| 38 | **ትንቢተ ዘዮናስ ነቢይ**                           | Jonas                                                                |
+| 39 | **ትንቢተ ዘናሖም ነቢይ**                           | Naum                                                                 |
+| 40 | **ትንቢተ ዘእንባቆም ነቢይ**                         | Habacuque                                                            |
+| 41 | **ትንቢተ ዘሰፎንያስ ነቢይ**                         | Sofonias                                                             |
+| 42 | **ትንቢተ ዘሓጌ ነቢይ**                            | Ageu                                                                 |
+| 43 | **ትንቢተ ዘዘካርያስ ነቢይ**                         | Zacarias                                                             |
+| 44 | **ትንቢተ ዘምልክያስ ነቢይ**                         | Malaquias                                                            |
+| 45 | **መጽሐፈ ጥበበ ሲራክ** / **ዘልደተ ሲራክ**             | Eclesiástico / Sirácida                                              |
+| 46 | **ዘዮሴፍ ወልደ በንጎርዮን**                         | Josippon / Livro de Josefo, filho de Bengorion                       |
+
+
+Antigo Testamento adaptado (versão alternativa)
+|  # | Nome em Geʿez            | Português ocidental                 |
+| -: | ------------------------ | ----------------------------------- |
+|  1 | **ኦሪት ዘፍጥረት**            | Gênesis                             |
+|  2 | **ኦሪት ዘጸአት**             | Êxodo                               |
+|  3 | **ኦሪት ዘሌዋውያን**           | Levítico                            |
+|  4 | **ኦሪት ዘኍልቍ**             | Números                             |
+|  5 | **ኦሪት ዘዳግም**             | Deuteronômio                        |
+|  6 | **መጽሐፈ ኢያሱዕ**            | Josué                               |
+|  7 | **መጽሐፈ መሳፍንት**           | Juízes                              |
+|  8 | **መጽሐፈ ሩት**              | Rute                                |
+|  9 | **መጽሐፈ ሳሙኤል ቀዳማዊ**       | 1 Samuel                            |
+| 10 | **መጽሐፈ ሳሙኤል ካልዕ**        | 2 Samuel                            |
+| 11 | **መጽሐፈ ነገሥት ቀዳማዊ**       | 1 Reis                              |
+| 12 | **መጽሐፈ ነገሥት ካልዕ**        | 2 Reis                              |
+| 13 | **መጽሐፈ ዜና መዋዕል ቀዳማዊ**    | 1 Crônicas                          |
+| 14 | **መጽሐፈ ዜና መዋዕል ካልዕ**     | 2 Crônicas                          |
+| 15 | **መጽሐፈ ኩፋሌ**             | **Jubileus**                        |
+| 16 | **መጽሐፈ ሄኖክ**             | **1 Enoque**                        |
+| 17 | **መጽሐፈ ዕዝራ**             | Esdras                              |
+| 18 | **መጽሐፈ ነህምያ**            | Neemias                             |
+| 19 | **መጽሐፈ ዕዝራ ካልዕ**         | **1 Esdras da LXX / Esdras grego**  |
+| 20 | **ዕዝራ ሱቱኤል**             | **4 Esdras / Apocalipse de Esdras** |
+| 21 | **መጽሐፈ ጦቢት**             | Tobias                              |
+| 22 | **መጽሐፈ ዮዲት**             | Judite                              |
+| 23 | **መጽሐፈ አስቴር**            | Ester                               |
+| 24 | **መጽሐፈ መቃብያን ቀዳማዊ**      | **1 Meqabyan**                      |
+| 25 | **መጽሐፈ መቃብያን ካልዕ**       | **2 Meqabyan**                      |
+| 26 | **መጽሐፈ መቃብያን ሣልሳዊ**      | **3 Meqabyan**                      |
+| 27 | **መጽሐፈ ኢዮብ**             | Jó                                  |
+| 28 | **መዝሙረ ዳዊት**             | Salmos                              |
+| 29 | **መጽሐፈ ምሳሌ**             | Provérbios                          |
+| 30 | **ተጽሕፎ** / **ተጽሐፈ ሰሎሞን** | **Repreensão / Correção (Tegsat)**  |
+| 31 | **መጽሐፈ ጥበብ**             | **Sabedoria de Salomão**            |
+| 32 | **መጽሐፈ መክብብ**            | Eclesiastes                         |
+| 33 | **መኃልየ መኃልይ**            | Cântico dos Cânticos                |
+| 34 | **መጽሐፈ ሲራክ**             | Eclesiástico / Sirácida             |
+| 35 | **መጽሐፈ ኢሳይያስ**           | Isaías                              |
+| 36 | **መጽሐፈ ኤርምያስ**           | Jeremias                            |
+| 37 | **ሰቆቃወ ኤርምያስ**           | Lamentações                         |
+| 38 | **መጽሐፈ ሕዝቅኤል**           | Ezequiel                            |
+| 39 | **መጽሐፈ ዳንኤል**            | Daniel                              |
+| 40 | **መጽሐፈ ሆሴዕ**             | Oséias                              |
+| 41 | **መጽሐፈ አሞጽ**             | Amós                                |
+| 42 | **መጽሐፈ ሚክያስ**            | Miquéias                            |
+| 43 | **መጽሐፈ ኢዩኤል**            | Joel                                |
+| 44 | **መጽሐፈ አብድዩ**            | Obadias                             |
+| 45 | **መጽሐፈ ዮናስ**             | Jonas                               |
+| 46 | **መጽሐፈ ናሆም**             | Naum                                |
+| 47 | **መጽሐፈ ዕንባቆም**           | Habacuque                           |
+| 48 | **መጽሐፈ ሶፎንያስ**           | Sofonias                            |
+| 49 | **መጽሐፈ ሐጌ**              | Ageu                                |
+| 50 | **መጽሐፈ ዘካርያስ**           | Zacarias                            |
+| 51 | **መጽሐፈ ሚልክያስ**           | Malaquias                           |
+| 52 | **መጽሐፈ ዮሴፍ ወልደ በንጎርዮን**  | **Josippon**                        |
+
+
+Novo Testamento — 35 títulos
+|  # | Geʿez                     | Português ocidental      |
+| -: | ------------------------- | ------------------------ |
+|  1 | **ወንጌል ቅዱስ ዘማቴዎስ**        | Evangelho segundo Mateus |
+|  2 | **ወንጌል ቅዱስ ዘማርቆስ**        | Evangelho segundo Marcos |
+|  3 | **ወንጌል ቅዱስ ዘሉቃስ**         | Evangelho segundo Lucas  |
+|  4 | **ወንጌል ቅዱስ ዘዮሐንስ**        | Evangelho segundo João   |
+|  5 | **ግብረ ሐዋርያት**             | Atos dos Apóstolos       |
+|  6 | **መልእክተ ጳውሎስ ወደ ሮሜ**      | Romanos                  |
+|  7 | **መልእክተ ጳውሎስ ወደ ቆሮንቶስ ፩** | 1 Coríntios              |
+|  8 | **መልእክተ ጳውሎስ ወደ ቆሮንቶስ ፪** | 2 Coríntios              |
+|  9 | **መልእክተ ጳውሎስ ወደ ገላትያ**    | Gálatas                  |
+| 10 | **መልእክተ ጳውሎስ ወደ ኤፌሶን**    | Efésios                  |
+| 11 | **መልእክተ ጳውሎስ ወደ ፊልጵስዩስ**  | Filipenses               |
+| 12 | **መልእክተ ጳውሎስ ወደ ቈላስይስ**   | Colossenses              |
+| 13 | **1 ተሰሎንቄ**               | 1 Tessalonicenses        |
+| 14 | **2 ተሰሎንቄ**               | 2 Tessalonicenses        |
+| 15 | **1 ጢሞቴዎስ**               | 1 Timóteo                |
+| 16 | **2 ጢሞቴዎስ**               | 2 Timóteo                |
+| 17 | **ቲቶ**                    | Tito                     |
+| 18 | **ፊልሞና**                  | Filemom                  |
+| 19 | **ዕብራውያን**                | Hebreus                  |
+| 20 | **1 ጴጥሮስ**                | 1 Pedro                  |
+| 21 | **2 ጴጥሮስ**                | 2 Pedro                  |
+| 22 | **1 ዮሐንስ**                | 1 João                   |
+| 23 | **2 ዮሐንስ**                | 2 João                   |
+| 24 | **3 ዮሐንስ**                | 3 João                   |
+| 25 | **ያዕቆብ**                  | Tiago                    |
+| 26 | **ይሁዳ**                   | Judas                    |
+| 27 | **ራእየ ዮሐንስ**              | Apocalipse               |
+
+|  # | Nome tradicional                  | Geʿez / forma tradicional | Português                             |
+| -: | --------------------------------- | ------------------------- | ------------------------------------- |
+| 28 | **Serʿatä Seyon**                 | **ሥርዓተ ጽዮን**              | Estatutos/Ordem de Sião               |
+| 29 | **Teʾezaz / Tizaz**               | **ትእዛዝ**                  | Mandamentos / Estatutos dos Apóstolos |
+| 30 | **Gessew / Gitsew**               | **ጌሰው**                   | Exposição / Cânones Apostólicos       |
+| 31 | **Abtelis / Abtilis**             | **አብጥሊስ**                 | Cânones Apostólicos                   |
+| 32 | **Mäṣḥafä Kidan I / Dominos I**   | **መጽሐፈ ኪዳን ፩**            | Livro do Pacto I                      |
+| 33 | **Mäṣḥafä Kidan II / Dominos II** | **መጽሐፈ ኪዳን ፪**            | Livro do Pacto II                     |
+| 34 | **Qälämentos / Clemente**         | **ቀሌምንጦስ**                | Clemente Etíope                       |
+| 35 | **Didesqelya / Didascalia**       | **ዲዳስቅልያ**                | Didascália Etíope                     |
+
+
+Versão alternativa dos títulos do Novo Testamento
+|  # | Geʿez                | Português           |
+| -: | -------------------- | ------------------- |
+|  1 | **ወንጌል ቅዱስ ማቴዎስ**    | Evangelho de Mateus |
+|  2 | **ወንጌል ቅዱስ ማርቆስ**    | Evangelho de Marcos |
+|  3 | **ወንጌል ቅዱስ ሉቃስ**     | Evangelho de Lucas  |
+|  4 | **ወንጌል ቅዱስ ዮሐንስ**    | Evangelho de João   |
+|  5 | **ግብረ ሐዋርያት**        | Atos dos Apóstolos  |
+|  6 | **መልእክተ ጳውሎስ ወደ ሮሜ** | Romanos             |
+|  7 | **ቀዳማዊ ወደ ቆሮንቶስ**    | 1 Coríntios         |
+|  8 | **ካልዕ ወደ ቆሮንቶስ**     | 2 Coríntios         |
+|  9 | **ወደ ገላትያ**          | Gálatas             |
+| 10 | **ወደ ኤፌሶን**          | Efésios             |
+| 11 | **ወደ ፊልጵስዩስ**        | Filipenses          |
+| 12 | **ወደ ቆላስይስ**         | Colossenses         |
+| 13 | **ቀዳማዊ ወደ ተሰሎንቄ**    | 1 Tessalonicenses   |
+| 14 | **ካልዕ ወደ ተሰሎንቄ**     | 2 Tessalonicenses   |
+| 15 | **ቀዳማዊ ወደ ጢሞቴዎስ**    | 1 Timóteo           |
+| 16 | **ካልዕ ወደ ጢሞቴዎስ**     | 2 Timóteo           |
+| 17 | **ወደ ቲቶ**            | Tito                |
+| 18 | **ወደ ፊልሞና**          | Filemom             |
+| 19 | **ወደ ዕብራውያን**        | Hebreus             |
+| 20 | **የያዕቆብ መልእክት**      | Tiago               |
+| 21 | **ቀዳማዊ የጴጥሮስ**       | 1 Pedro             |
+| 22 | **ካልዕ የጴጥሮስ**        | 2 Pedro             |
+| 23 | **ቀዳማዊ የዮሐንስ**       | 1 João              |
+| 24 | **ካልዕ የዮሐንስ**        | 2 João              |
+| 25 | **ሣልሳዊ የዮሐንስ**       | 3 João              |
+| 26 | **የይሁዳ መልእክት**       | Judas               |
+| 27 | **ራእየ ዮሐንስ**         | Apocalipse          |
+
+|  # | Geʿez                                | Português ocidental / identificação |
+| -: | ------------------------------------ | ----------------------------------- |
+| 28 | **ሥርዓተ ጽዮን** (*Serʿata Ṣeyon*)       | **Serata Tsion / Ordem de Sião**    |
+| 29 | **ትዕዛዝ** (*Teʾezaz*)                 | **Te'ezaz / Mandamentos ou Ordem**  |
+| 30 | **ጌተሰው** / **ጌሰው** (*Gessew/Gitsew*) | **Gessew**                          |
+| 31 | **አብጥሊስ** (*Abtilis*)                | **Abtilis / Cânones dos Apóstolos** |
+| 32 | **መጽሐፈ ቃል ኪዳን ቀዳማዊ**                 | **1º Livro da Aliança**             |
+| 33 | **መጽሐፈ ቃል ኪዳን ካልዕ**                  | **2º Livro da Aliança**             |
+| 34 | **መጽሐፈ ክሌምንጦስ**                      | **Clemente etíope**                 |
+| 35 | **ዲዳስቅልያ** (*Didasqelya*)            | **Didascalia**                      |

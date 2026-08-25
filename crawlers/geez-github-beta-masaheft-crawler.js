@@ -1,8 +1,29 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
 
+// Serʿatä Seyon (Estatutos/Ordem de Sião)                                       
+// Gessew / Gitsew (Exposição / Cânones Apostólicos)                             
+// Qälämentos / Clemente (Clemente Etíope)                                       2001-3000/LIT2680ClemPeter.xml
+// Mäṣḥafä Kidan I / Dominos I (Livro do Pacto I)                                
+// Mäṣḥafä Kidan II / Dominos II (Livro do Pacto II)                             
+// Didesqelya / Didascalia (Didascália Etíope)                                   
+
+// --------------------
+// Senodos: Melkite Index                    2001-3000/LIT2672SenodosInMe.xml
+// Apostolic Canons after Ascension          2001-3000/LIT2673CanonsAscension.xml
+// Apostolic canons                          2001-3000/LIT2675AC81.xml
+// Canons of SS. Matthew and Simon           2001-3000/LIT2640CanonsMattSimon.xml
+// Canons of S. Simon the Canaanite          2001-3000/LIT2639CanonsSimon1.xml
+// Canons of S. Simon the Canaanite (2)      2001-3000/LIT2671CanonsSimon2.xml
+// --------------------
+// Kebra Nagasta                             1001-2000/LIT1709Kebran.xml
+
 const path = '../../ethiopian-geez-literature/Works/';
 const crawlingData = [
+  {
+    finalKey: 'JUB',
+    path: '1001-2000/LIT1697Jubilees.xml'
+  },
   {
     finalKey: 'GEN',
     path: '1001-2000/LIT1546Genesi.xml'
@@ -65,7 +86,15 @@ const crawlingData = [
   },
   {
     finalKey: '2ED',
+    path: '1001-2000/LIT1377Bookof.xml'
+  },
+  {
+    finalKey: '3ED',
     path: '1001-2000/LIT1374Bookof.xml'
+  },
+  {
+    finalKey: '4ED',
+    path: '1001-2000/LIT1376Apocal.xml'
   },
   {
     finalKey: '1ET',
@@ -84,6 +113,18 @@ const crawlingData = [
     path: '1001-2000/LIT1320Eccles.xml'
   },
   {
+    finalKey: 'PRO1',
+    path: '2001-3000/LIT2396Tagsas.xml'
+  },
+  {
+    finalKey: 'PRO2',
+    path: '3001-4000/LIT3927Messale.xml'
+  },
+  {
+    finalKey: 'SSL',
+    path: '2001-3000/LIT2516Wisdom.xml'
+  },
+  {
     finalKey: 'CAN',
     path: '2001-3000/LIT2362Songof.xml'
   },
@@ -98,6 +139,14 @@ const crawlingData = [
   {
     finalKey: '2JE',
     path: '1001-2000/LIT1753Lament.xml'
+  },
+  {
+    finalKey: '1BA',
+    path: '1001-2000/LIT1202Bookof.xml'
+  },
+  {
+    finalKey: '4BA',
+    path: '2001-3000/LIT2167Parali.xml'
   },
   {
     finalKey: 'EZE',
@@ -156,6 +205,30 @@ const crawlingData = [
     path: '3001-4000/LIT3151Malachi.xml'
   },
   {
+    finalKey: 'SIR',
+    path: '2001-3000/LIT2358Sirach.xml'
+  },
+  {
+    finalKey: 'TOB',
+    path: '2001-3000/LIT2473TobitB.xml'
+  },
+  {
+    finalKey: 'JDT',
+    path: '1001-2000/LIT1701Judith.xml'
+  },
+  {
+    finalKey: '1ME',
+    path: '1001-2000/LIT1819Maccab.xml'
+  },
+  {
+    finalKey: '2ME',
+    path: '5001-6000/LIT5840SecondEthioMaccabees.xml'
+  },
+  {
+    finalKey: '3ME',
+    path: '5001-6000/LIT5839ThirdEthioMaccabees.xml'
+  },
+  {
     finalKey: 'MAT',
     path: '2001-3000/LIT2709Matthew.xml'
   },
@@ -174,6 +247,18 @@ const crawlingData = [
   {
     finalKey: 'ATO',
     path: '1001-2000/LIT1019Actsof.xml'
+  },
+  {
+    finalKey: 'ABS1',
+    path: '2001-3000/LIT2677ACABt1.xml'
+  },
+  {
+    finalKey: 'ABS2',
+    path: '2001-3000/LIT2679ACAbt2.xml'
+  },
+  {
+    finalKey: 'TZA',
+    path: '2001-3000/LIT2670AC56.xml'
   },
   {
     finalKey: 'ROM',

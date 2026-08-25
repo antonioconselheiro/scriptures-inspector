@@ -4,10 +4,11 @@ TODO
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - O projeto base tem textos geez pendentes
+[ ] - Validar minha versão do livro de Enoque com o livro desta versão: 1001-2000/LIT1340EnochE.xml
+[ ] - Parece que minha versão da LXX está faltando o Esdras LXX
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
-[ ] - O campo "size" está perguntando se deseja remover o campo quando o valor é 1 e não 0
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
@@ -29,3 +30,6 @@ TODO
   transliterado: https://gita.srimadbhagavatam.org/downloads/SB-Sanskrit/SB-Sanskrit1.html,
   traduzido para inglês: https://gita.srimadbhagavatam.org/canto1/chapter1.html
 )
+[ ] - (não mvp) Repositório com os Puranas (Brahma Puraṇa, Padma Puraṇa, Vishnu Puraṇa, Shiva Puraṇa, Bhagavata Puraṇa, Narada Puraṇa, Markandeya Puraṇa, Agni Puraṇa, Bhavishya Puraṇa, Brahmavaivarta Puraṇa, Linga Puraṇa, Varaha Puraṇa, Skanda Puraṇa, Vamana Puraṇa, Kurma Puraṇa, Matsya Puraṇa, Garuda Puraṇa, Brahmanda Puraṇa)
+[ ] - (não mvp) Repositório com os Upapuraṇas (Sanatkumāra Puraṇa, Narasimha Puraṇa, Bṛhannāradīya Puraṇa, Śiva-rahasya Puraṇa, Durvāsa Puraṇa, Kapila Puraṇa, Vāmana Puraṇa, Bhārgava Puraṇa, Varuṇa Puraṇa, Kālika Puraṇa, Sāmba Puraṇa, Nandi Puraṇa, Sūrya/Saura Puraṇa, Parāśara Puraṇa, Vasiṣṭha Puraṇa, Gaṇeśa Puraṇa, Mudgala Puraṇa, Haṃsa Puraṇa)
+[ ] - (não mvp) Repositório com outros puranas (Devī Bhāgavata Puraṇa, Kālika Puraṇa, Gaṇeśa Puraṇa, Mudgala Puraṇa, Sūrya/Saura Puraṇa, Narasimha Puraṇa, Viṣṇudharma Puraṇa, Viṣṇudharmottara Puraṇa, Śivadharma Puraṇa, Bṛhaddharma Puraṇa, Samba Puraṇa, Saura Puraṇa, Parāśara Puraṇa, Brahmāṇḍa Puraṇa, Aditya Puraṇa, Ekamra Puraṇa, Kalki Puraṇa, Dattātreya/Dattā Puraṇa, Tripurā Puraṇa, Maheshvara Puraṇa)
