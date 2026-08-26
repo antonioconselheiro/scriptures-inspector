@@ -370,65 +370,216 @@ const crawlingData = [
 const books = {};
 crawlingData.forEach(metadata => {
   const file = `${path}${metadata.path}`;
+
+  console.log(`Processing ${metadata.finalKey}: ${file}`);
+
   const xmlContent = fs.readFileSync(file, 'utf8');
-  const dom = new JSDOM(xmlContent, { contentType: 'text/xml' });
+
+  const dom = new JSDOM(xmlContent, {
+    contentType: 'text/xml'
+  });
+
   const xmlDoc = dom.window.document;
 
   const chapters = [];
-  const chapterEls = xmlDoc.querySelectorAll('body :is([subtype="chapter"], [subtype="Psalmus"])[n]');
-  if (!chapterEls.length) {
-    const els = xmlDoc.querySelectorAll('body l[n="1"]');
-    if (els.length === 1) {
-      els[0].setAttribute('n', '1');
-    } else {
-      throw new Error(`No chapter found in ${metadata.path}`);  
+
+  // ============================================================
+  // 1. PRIMEIRO: procurar capítulos / salmos
+  // ============================================================
+
+  const chapterEls = Array.from(
+    xmlDoc.querySelectorAll(
+      'body div[subtype="chapter"], ' +
+      'body div[subtype="Psalmus"]'
+    )
+  );
+
+  if (chapterEls.length === 0) {
+    const ls = xmlDoc.querySelectorAll('l[n="1"]');
+    if (ls.length === 1) {
+      ls[0].parentElement.setAttribute('n', '1');
+      chapterEls.push(ls[0].parentElement);
     }
   }
 
-  chapterEls.forEach(chapterEl => {
-    let chapterNumber = chapterEl ? Number(chapterEl.getAttribute('n')) : null;
-    if (chapterNumber === null) {
-      throw new Error(`No chapter found in ${metadata.path}`);  
+  // ============================================================
+  // 2. SE NÃO HOUVER CAPÍTULOS/SALMOS:
+  //    verificar se o documento usa PARAGRAPHS
+  // ============================================================
+
+  if (chapterEls.length === 0) {
+    const paragraphEls = Array.from(
+      xmlDoc.querySelectorAll(
+        'body div[subtype="paragraph"]'
+      )
+    );
+
+    if (paragraphEls.length === 0) {
+      throw new Error(
+        `No chapter, Psalmus or paragraph found in ${metadata.path}`
+      );
     }
-  
-    if (isNaN(chapterNumber)) {
-      throw new Error(`Chapter identified as Not a Number in ${metadata.path}`);
+
+    // ----------------------------------------------------------
+    // Descobrir os agrupamentos de paragraphs.
+    //
+    // Cada agrupamento é definido pelo div pai imediato que
+    // contém os paragraphs.
+    // ----------------------------------------------------------
+
+    const paragraphGroups = new Set();
+
+    paragraphEls.forEach(paragraphEl => {
+      const parent = paragraphEl.parentElement;
+
+      if (!parent) {
+        throw new Error(
+          `Paragraph without parent in ${metadata.path}`
+        );
+      }
+
+      paragraphGroups.add(parent);
+    });
+
+    // ----------------------------------------------------------
+    // Mais de um agrupamento = estrutura ainda não suportada.
+    // ----------------------------------------------------------
+
+    if (paragraphGroups.size > 1) {
+      throw new Error(
+        `Multiple paragraph groups found in ${metadata.path}. ` +
+        `This structure requires special handling/refactoring. ` +
+        `Found ${paragraphGroups.size} groups.`
+      );
     }
-  
-    const verses = Array.from(chapterEl.querySelectorAll(':has( l)')).map(ab => {
-      const list = [];
-      const versesEl = ab.querySelectorAll('l');
-  
-      let title = null;
-      Array.from(versesEl).forEach(verse => {
-        const content = verse.textContent.trim().replace(/\s+/g, ' ');
-        if (verse.hasAttribute('n')) {
+
+    // ----------------------------------------------------------
+    // Existe exatamente um agrupamento.
+    //
+    // Portanto:
+    //
+    //   agrupamento = capítulo 1
+    //   paragraph n = verso n
+    // ----------------------------------------------------------
+
+    const verses = [];
+
+    paragraphEls.forEach(paragraphEl => {
+      const verseNumber = paragraphEl.getAttribute('n');
+
+      if (verseNumber === null) {
+        throw new Error(
+          `Paragraph without n attribute in ${metadata.path}`
+        );
+      }
+
+      const abEls = Array.from(
+        paragraphEl.querySelectorAll(':scope > ab')
+      );
+
+      if (abEls.length === 0) {
+        throw new Error(
+          `Paragraph without direct ab element in ${metadata.path}, ` +
+          `paragraph n="${verseNumber}"`
+        );
+      }
+
+      if (abEls.length > 1) {
+        throw new Error(
+          `Paragraph has multiple ab elements in ${metadata.path}, ` +
+          `paragraph n="${verseNumber}"`
+        );
+      }
+
+      const text = abEls[0].textContent
+        .trim()
+        .replace(/\s+/g, ' ');
+
+      if (!text) {
+        throw new Error(
+          `Empty paragraph in ${metadata.path}, ` +
+          `paragraph n="${verseNumber}"`
+        );
+      }
+
+      verses.push({
+        verse: verseNumber,
+        text
+      });
+    });
+
+    chapters.push({
+      chapter: 1,
+      verses
+    });
+
+  } else {
+    // ==========================================================
+    // 3. FORMATO NORMAL:
+    //    chapter / Psalmus
+    // ==========================================================
+
+    chapterEls.forEach(chapterEl => {
+      const chapterNumber = Number(
+        chapterEl.getAttribute('n')
+      );
+
+      if (Number.isNaN(chapterNumber)) {
+        throw new Error(
+          `Chapter identified as Not a Number in ${metadata.path}`
+        );
+      }
+
+      const verses = [];
+
+      const abEls = Array.from(
+        chapterEl.querySelectorAll(':scope > ab')
+      );
+
+      abEls.forEach(ab => {
+        let title = null;
+
+        const verseEls = Array.from(
+          ab.querySelectorAll('l[n]')
+        );
+
+        verseEls.forEach(verse => {
+          const content = verse.textContent
+            .trim()
+            .replace(/\s+/g, ' ');
+
+          if (!content) {
+            return;
+          }
+
           const verseData = {
             verse: verse.getAttribute('n'),
-            text: verse.textContent.trim().replace(/\s+/g, ' ')
+            text: content
           };
-  
+
           if (title) {
             verseData.title = title;
             title = null;
           }
-  
-          list.push(verseData);
-        } else if (content) {
-          title = content;
-        }
-      });
-  
-      return list;
-    });
-  
-    chapters.push({
-      chapter: chapterNumber,
-      verses
-    });
-  });
 
-  books[metadata.finalKey] = { chapters };
+          verses.push(verseData);
+        });
+      });
+
+      chapters.push({
+        chapter: chapterNumber,
+        verses
+      });
+    });
+  }
+
+  books[metadata.finalKey] = {
+    chapters
+  };
 });
 
-fs.writeFileSync('mashafa-qeddus.json', JSON.stringify(books));
+fs.writeFileSync(
+  'mashafa-qeddus.json',
+  JSON.stringify(books, null, 2),
+  'utf8'
+);
