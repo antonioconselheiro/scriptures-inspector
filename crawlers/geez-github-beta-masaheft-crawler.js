@@ -1,13 +1,23 @@
 const fs = require('fs');
 const { JSDOM } = require('jsdom');
 
+//  Canônicos para Beta Israel, pendentes
+// --------------------
+// Testamento de Abraão
+// Testamento de Isaac
+// Testamento de Jacó
+
+//  Canônicos para a tradição de Tawahedo, pendentes
+// --------------------
+//  Josippon                                            LIT2598Yosipp.xml (conteúdo parcial)
 // Serʿatä Seyon (Estatutos/Ordem de Sião)                                       
 // Gessew / Gitsew (Exposição / Cânones Apostólicos)                             
-// Qälämentos / Clemente (Clemente Etíope)                                       2001-3000/LIT2680ClemPeter.xml
+// Qälämentos / Clemente (Clemente Etíope)              2001-3000/LIT2680ClemPeter.xml
 // Mäṣḥafä Kidan I / Dominos I (Livro do Pacto I)                                
 // Mäṣḥafä Kidan II / Dominos II (Livro do Pacto II)                             
 // Didesqelya / Didascalia (Didascália Etíope)                                   
 
+//  Autoridade apostólica, pendentes
 // --------------------
 // Senodos: Melkite Index                    2001-3000/LIT2672SenodosInMe.xml
 // Apostolic Canons after Ascension          2001-3000/LIT2673CanonsAscension.xml
@@ -15,8 +25,15 @@ const { JSDOM } = require('jsdom');
 // Canons of SS. Matthew and Simon           2001-3000/LIT2640CanonsMattSimon.xml
 // Canons of S. Simon the Canaanite          2001-3000/LIT2639CanonsSimon1.xml
 // Canons of S. Simon the Canaanite (2)      2001-3000/LIT2671CanonsSimon2.xml
+
+//  Histórico
 // --------------------
 // Kebra Nagasta                             1001-2000/LIT1709Kebran.xml
+
+// Apocrifos
+// --------------------
+//  Testamento de Adão: LIT2457Testam.xml
+//  Asunção de Isaias: LIT1671Isaiah.xml
 
 const path = '../../ethiopian-geez-literature/Works/';
 const crawlingData = [
@@ -357,36 +374,58 @@ crawlingData.forEach(metadata => {
   const dom = new JSDOM(xmlContent, { contentType: 'text/xml' });
   const xmlDoc = dom.window.document;
 
-  const chapters = Array.from(xmlDoc.querySelector('body').querySelectorAll('ab')).map(ab => {
-    const list = [];
-    let index = 0;
-    const title = ab.querySelector('title');
-    const titleContent = title?.textContent?.trim();
-    const verses = ab.querySelectorAll('l[n]');
-
-    if (title && titleContent && !/^\d+$/.test(titleContent)) {
-      list.push({
-        verse: {
-          start: "0",
-          end: "0",
-          index: index++
-        },
-        text: title.textContent.trim().replace(/\s+/g, ' ')
-      });
+  const chapters = [];
+  const chapterEls = xmlDoc.querySelectorAll('body :is([subtype="chapter"], [subtype="Psalmus"])[n]');
+  if (!chapterEls.length) {
+    const els = xmlDoc.querySelectorAll('body l[n="1"]');
+    if (els.length === 1) {
+      els[0].setAttribute('n', '1');
+    } else {
+      throw new Error(`No chapter found in ${metadata.path}`);  
     }
+  }
 
-    Array.from(verses).forEach(verse => {
-      list.push({
-        verse: {
-          start: verse.getAttribute('n'),
-          end: verse.getAttribute('n'),
-          index: index++
-        },
-        text: verse.textContent.trim().replace(/\s+/g, ' ')
+  chapterEls.forEach(chapterEl => {
+    let chapterNumber = chapterEl ? Number(chapterEl.getAttribute('n')) : null;
+    if (chapterNumber === null) {
+      throw new Error(`No chapter found in ${metadata.path}`);  
+    }
+  
+    if (isNaN(chapterNumber)) {
+      throw new Error(`Chapter identified as Not a Number in ${metadata.path}`);
+    }
+  
+    const verses = Array.from(chapterEl.querySelectorAll(':has( l)')).map(ab => {
+      const list = [];
+      const versesEl = ab.querySelectorAll('l');
+  
+      let title = null;
+      Array.from(versesEl).forEach(verse => {
+        const content = verse.textContent.trim().replace(/\s+/g, ' ');
+        if (verse.hasAttribute('n')) {
+          const verseData = {
+            verse: verse.getAttribute('n'),
+            text: verse.textContent.trim().replace(/\s+/g, ' ')
+          };
+  
+          if (title) {
+            verseData.title = title;
+            title = null;
+          }
+  
+          list.push(verseData);
+        } else if (content) {
+          title = content;
+        }
       });
+  
+      return list;
     });
-
-    return list;
+  
+    chapters.push({
+      chapter: chapterNumber,
+      verses
+    });
   });
 
   books[metadata.finalKey] = { chapters };
