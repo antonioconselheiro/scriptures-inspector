@@ -103,11 +103,11 @@ const crawlingData = [
   },
   {
     finalKey: '1ED',
-    path: '3001-4000/LIT3581Bookof.xml'
+    path: '1001-2000/LIT1376Apocal.xml'
   },
   {
     finalKey: '2ED',
-    path: '1001-2000/LIT1377Bookof.xml'
+    path: '3001-4000/LIT3581Bookof.xml'
   },
   {
     finalKey: '3ED',
@@ -115,7 +115,7 @@ const crawlingData = [
   },
   {
     finalKey: '4ED',
-    path: '1001-2000/LIT1376Apocal.xml'
+    path: '1001-2000/LIT1377Bookof.xml'
   },
   {
     finalKey: '1ET',
