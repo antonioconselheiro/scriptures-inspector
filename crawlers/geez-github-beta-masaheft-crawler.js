@@ -38,6 +38,10 @@ const { JSDOM } = require('jsdom');
 const path = '../../ethiopian-geez-literature/Works/';
 const crawlingData = [
   {
+    finalKey: '1EN',
+    path: '1001-2000/LIT1340EnochE.xml'
+  },
+  {
     finalKey: 'JUB',
     path: '1001-2000/LIT1697Jubilees.xml'
   },
@@ -367,6 +371,46 @@ const crawlingData = [
   }
 ];
 
+function logElement(element, label = 'XML Element') {
+  const info = {
+    nodeName: element.nodeName,
+    tagName: element.tagName,
+    namespaceURI: element.namespaceURI,
+    localName: element.localName,
+    id: element.id || null,
+
+    // Atributos
+    attributes: Object.fromEntries(
+      Array.from(element.attributes).map(attr => [
+        attr.name,
+        attr.value
+      ])
+    ),
+
+    // Conteúdo
+    textContent: element.textContent,
+    innerHTML: element.innerHTML,
+
+    // Estrutura
+    childElementCount: element.childElementCount,
+    children: Array.from(element.children).map(child => ({
+      tagName: child.tagName,
+      attributes: Object.fromEntries(
+        Array.from(child.attributes).map(attr => [
+          attr.name,
+          attr.value
+        ])
+      ),
+      textContent: child.textContent
+    })),
+
+    // XML completo
+    outerHTML: element.outerHTML
+  };
+
+  console.error(`[${label}]`, info);
+}
+
 const books = {};
 crawlingData.forEach(metadata => {
   const file = `${path}${metadata.path}`;
@@ -520,18 +564,41 @@ crawlingData.forEach(metadata => {
     // ==========================================================
 
     chapterEls.forEach(chapterEl => {
+      let chapterNumberSerialized = '';
+      const nEl = chapterEl.getAttribute('n');
+      const xmlId = chapterEl.getAttribute('xml:id');
+      
+      if (nEl) {
+        chapterNumberSerialized = nEl;
+      }
+
+      if (xmlId) {
+        if (['IntroductionActs', 'Ps118Spiritual'].includes(xmlId)) {
+          return;
+        } else if (/^Cap/.test(xmlId)) {
+          chapterNumberSerialized = xmlId.replace(/^Cap/, '');
+        } else if (xmlId === 'introd') {
+          chapterNumberSerialized = '0';
+        }
+      }
+
+      if (!chapterNumberSerialized) {
+        logElement(chapterEl);
+        throw new Error(`Chapter without n attribute in ${metadata.path}`);
+      }
+
       const chapterNumber = Number(
-        chapterEl.getAttribute('n')
+        chapterNumberSerialized
       );
 
       if (Number.isNaN(chapterNumber)) {
+        logElement(chapterEl);
         throw new Error(
           `Chapter identified as Not a Number in ${metadata.path}`
         );
       }
 
       const verses = [];
-
       const abEls = Array.from(
         chapterEl.querySelectorAll(':scope > ab')
       );
