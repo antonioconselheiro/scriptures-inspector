@@ -745,22 +745,20 @@ export const bookMetadata: {
     gringo: 'Esther',
     testament: 'old',
     language: {
-      geez: true,
-      greek: true,
       hebraic: true
     },
     codex: {
       ocidental: true,
-      septuaginta: true,
-      tewahedo: true,
-      betaIsrael: true,
+      septuaginta: false,
+      tewahedo: false,
+      betaIsrael: false,
       essenes: false
     }
   },
   '2ET': {
     chapters: 6,
-    normal: '2 Ester',
-    gringo: '2 Esther',
+    normal: 'Ester LXX',
+    gringo: 'Esther LXX',
     testament: 'old',
     language: {
       geez: true,

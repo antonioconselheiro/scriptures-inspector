@@ -32,8 +32,8 @@ const { JSDOM } = require('jsdom');
 
 // Apocrifos
 // --------------------
-//  Testamento de Adão: LIT2457Testam.xml
-//  Asunção de Isaias: LIT1671Isaiah.xml
+//  Testamento de Adão: LIT2457Testam.xml, https://github.com/geezorg/ebooks/blob/master/geez/religious/LET/simplified/TestamentOfAdam/TestamentOfAdam.html
+//  Asunção de Isaias: LIT1671Isaiah.xml, https://github.com/geezorg/ebooks/tree/master/geez/religious/LET/simplified/AscensionOfIsaiah
 
 const path = '../../ethiopian-geez-literature/Works/';
 const crawlingData = [
@@ -118,7 +118,7 @@ const crawlingData = [
     path: '1001-2000/LIT1377Bookof.xml'
   },
   {
-    finalKey: '1ET',
+    finalKey: '2ET',
     path: '1001-2000/LIT1362Esther.xml'
   },
   {
@@ -604,7 +604,21 @@ crawlingData.forEach(metadata => {
       );
 
       abEls.forEach(ab => {
-        let title = null;
+        if (!ab.children.length) {
+          const abContent = ab.textContent
+            .trim()
+            .replace(/\s+/g, ' ');
+
+          if (abContent.length) {
+            const abNumber = ab.getAttribute('n');
+            const verseData = {
+              verse: Number(abNumber ? abNumber : '0'),
+              text: abContent
+            };
+
+            verses.push(verseData);
+          }
+        }
 
         const verseEls = Array.from(
           ab.querySelectorAll('l[n]')
@@ -619,15 +633,11 @@ crawlingData.forEach(metadata => {
             return;
           }
 
+          const n = verse.getAttribute('n');
           const verseData = {
-            verse: verse.getAttribute('n'),
+            verse: Number(n ? n : '0'),
             text: content
           };
-
-          if (title) {
-            verseData.title = title;
-            title = null;
-          }
 
           verses.push(verseData);
         });
