@@ -3,11 +3,8 @@ TODO
 [ ] - Validar gematria com falseamento
 [ ] - Habilitar pesquisar por Ctrl + F
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
-[ ] - O projeto base tem textos geez pendentes
 [ ] - Validar minha versão do livro de Enoque com o livro desta versão: 1001-2000/LIT1340EnochE.xml
-[ ] - Preciso escolher entre os dois livros de jubileus contidos no arquivo
-[ ] - Está faltando o conteúdo de 4BA em meu derivador do canone geez
-[ ] - juntar os dois livros de proverbios de geez em um único livro e validar a quantidade de versiculos
+[ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
