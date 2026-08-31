@@ -7,7 +7,7 @@
   ],
   "books": {
     "1EN": { "name": "ሄኖክ" },
-    "JUB": { "name": "መጽሐፈ ፡ ኩፋሌ" }, falta
+    "JUB": { "name": "መጽሐፈ ፡ ኩፋሌ" },
     "GEN": { "name": "ኦሪት ፡ ዘልደት" },
     "EXO": { "name": "ኦሪት ፡ ዘፀአት" },
     "LEV": { "name": "ኦሪት ፡ ዘሌዋውያን" },
@@ -20,28 +20,28 @@
     "2SM": { "name": "መጽሐፈ ፡ ነገሥት ፡ ዳግማዊ" },
     "1RS": { "name": "መጽሐፈ ፡ ነገሥት ፡ ሣልሳዊ" },
     "2RS": { "name": "መጽሐፈ ፡ ነገሥት ፡ ራብዓዊ" },
-    "1CR": { "name": "1 Crônicas" }, falta
-    "2CR": { "name": "2 Crônicas" }, falta
-    "1ED": { "name": "ዘዕዝራ ፡ ሠለስቱ" }, falta
-    "2ED": { "name": "Neemias" }, falta
-    "3ED": { "name": "ዘዕዝራ ፡ ክልኤቱ" }, falta
-    "4ED": { "name": "ዘዕዝራ ፡ ነቢይ" }, falta
-    "1ET": { "name": "ዘአስቴር" }, falta
-    "JOB": { "name": "ዘኢዮብ" }, falta
+    "1CR": { "name": "1 Crônicas" },
+    "2CR": { "name": "2 Crônicas" },
+    "1ED": { "name": "ዘዕዝራ ፡ ሠለስቱ" },
+    "2ED": { "name": "Neemias" },
+    "3ED": { "name": "ዘዕዝራ ፡ ክልኤቱ" },
+    "4ED": { "name": "ዘዕዝራ ፡ ነቢይ" },
+    "1ET": { "name": "ዘአስቴር" },
+    "JOB": { "name": "ዘኢዮብ" },
     "1SL": { "name": "መዝሙራት ፡ ዘዳዊት" },
-    "PRO": { "name": "Provérbios" }, falta
-    "SSL": { "name": "ጥበበ ፡ ሰሎሞን" }, falta
+    "PRO": { "name": "Provérbios" },
+    "SSL": { "name": "ጥበበ ፡ ሰሎሞን" },
     "ECL": { "name": "መክብብ" },
-    "SIR": { "name": "ጥበበ ፡ ሲራክ" }, falta
+    "SIR": { "name": "ጥበበ ፡ ሲራክ" },
     "CAN": { "name": "መሓልየ ፡ መሓልይ" },
     "ISA": { "name": "ዘኢሳይያስ ፡ ነቢይ" },
-    "1BA": { "name": "ዘባሮክ" }, falta
-    "4BA": { "name": "ተረፈ ፡ ነገር ፡ ዘባሮክ" }, falta
-    "1JE": { "name": "Jeremias" }, falta
-    "2JE": { "name": "ሰቆቃወ ፡ ኤርምያስ" }, falta
-    "EZE": { "name": "Ezequiel" }, falta
-    "1DA": { "name": "ዘዳንኤል ፡ ነቢይ" }, falta
-    "OSE": { "name": "ዘሆሴዕ ፡ ነቢይ" }, falta
+    "1BA": { "name": "ዘባሮክ" },
+    "4BA": { "name": "ተረፈ ፡ ነገር ፡ ዘባሮክ" },
+    "1JE": { "name": "Jeremias" },
+    "2JE": { "name": "ሰቆቃወ ፡ ኤርምያስ" },
+    "EZE": { "name": "Ezequiel" },
+    "1DA": { "name": "ዘዳንኤል ፡ ነቢይ" },
+    "OSE": { "name": "ዘሆሴዕ ፡ ነቢይ" },
     "JOE": { "name": "ዘኢዩኤል ፡ ነቢይ" },
     "AMO": { "name": "ዘአሞጽ ፡ ነቢይ" },
     "OBA": { "name": "ዘዓብድዩ ፡ ነቢይ" },
@@ -53,8 +53,8 @@
     "AGE": { "name": "ዘሐጌ ፡ ነቢይ" },
     "ZAC": { "name": "ዘዘካርያስ ፡ ነቢይ" },
     "MAL": { "name": "ዘምልክያስ ፡ ነቢይ" },
-    "TOB": { "name": "ዘጦቢት" }, falta
-    "JDT": { "name": "ዘዮዲት" }, falta
+    "TOB": { "name": "ዘጦቢት" },
+    "JDT": { "name": "ዘዮዲት" },
     "MAT": { "name": "ወንጌል ፡ ዘማቴዎስ" },
     "MAR": { "name": "ወንጌል ፡ ዘማርቆስ" },
     "LUC": { "name": "ወንጌል ፡ ዘሉቃስ" },
