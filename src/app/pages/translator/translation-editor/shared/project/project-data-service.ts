@@ -140,14 +140,16 @@ export class ProjectDataService {
     data: { lexical: Record<string, BookMetadataAttributesLexicalModel> },
     sourceLanguage: Language,
     word: string,
-    isLastSegment: boolean
+    morpheme: 'common' | 'prefix' | 'suffix'
   ): string {
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
     const lexicalValues = data.lexical[normalizeFn(word)];
 
     if (lexicalValues) {
-      if (isLastSegment && lexicalValues.suffix) {
+      if (morpheme === 'suffix' && lexicalValues.suffix) {
         return lexicalValues.suffix;
+      } else if (morpheme === 'prefix' && lexicalValues.prefix) {
+        return lexicalValues.prefix;
       }
       
       return lexicalValues.value || '';

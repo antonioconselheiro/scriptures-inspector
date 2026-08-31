@@ -18,12 +18,12 @@ export class LexicalPipe implements PipeTransform {
     value: string,
     book: BookMetadataAttributes | ParsedBookMetadata,
     languageName: LanguageUnionType,
-    isLastSegment: boolean,
+    morpheme: 'common' | 'prefix' | 'suffix',
     listenUpdate?: number
   ): string {
     listenUpdate;
 
-    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, isLastSegment);
+    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, morpheme);
   }
 
 }

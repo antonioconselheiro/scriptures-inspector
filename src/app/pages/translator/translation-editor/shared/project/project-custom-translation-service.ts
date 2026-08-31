@@ -18,6 +18,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +89,8 @@ export class ProjectCustomTranslationService {
 
       wordMatrix.forEach(word => {
         word.segments.forEach((segment, index) => {
-          const isLastSegment = word.segments.length === index + 1;
-          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, isLastSegment));
+          const morpheme = getMorphemeFn(word.segments, index);
+          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, morpheme));
         });
       });
   
@@ -120,10 +121,10 @@ export class ProjectCustomTranslationService {
 
       wordMatrix.forEach(word => {
         word.segments.forEach((segment, index) => {
-          const isLastSegment = word.segments.length === index + 1;
+          const morpheme = getMorphemeFn(word.segments, index);
           if (
             customTranslationSplitted[segment.index].segment === this.dataService.getLexical(
-              parsedBookMetadata, sourceLanguage, segment.word, isLastSegment
+              parsedBookMetadata, sourceLanguage, segment.word, morpheme
             )
           ) {
             metadata[segment.index].value = this.dataService.castSegmentIntoMetadataIndexSerialized(translationLanguage, segment);

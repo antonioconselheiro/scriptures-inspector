@@ -35,7 +35,7 @@
         <td [colSpan]="wordList.length">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
-              @let value = segment.word | lexical : parsedBook : origin.language : segment.index === (word.segments.length - 1) : pipeUpdaterController;
+              @let value = segment.word | lexical : parsedBook : origin.language : getMorpheme(word.segments, segment.index) : pipeUpdaterController;
               @if (value.length) {<span [class]="'prisma'+getTranslationColor(origin.structure, segment.index)">{{value}}</span>&nbsp;}
             }
           }

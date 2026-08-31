@@ -26,6 +26,7 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { SourceVerse } from '@domain/source-verse-model';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
+import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -233,6 +234,10 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     };
 
     return [...(this.originToInterlinear || []), currentOriginToInterlinear];
+  }
+
+  getMorpheme(segments: Array<any>, currentIndex: number): 'common' | 'prefix' | 'suffix' {
+    return getMorphemeFn(segments, currentIndex);
   }
 
   cleanWordOfGodFromVerse(): void {

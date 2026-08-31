@@ -29,6 +29,7 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
+import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -170,6 +171,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
     return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
+  }
+
+  getMorpheme(segments: Array<any>, currentIndex: number): 'common' | 'prefix' | 'suffix' {
+    return getMorphemeFn(segments, currentIndex);
   }
 
   cleanTranslationInterlinear(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear): void {

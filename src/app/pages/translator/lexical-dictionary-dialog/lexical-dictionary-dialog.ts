@@ -25,7 +25,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   bookSource: SourceBook | null = null;
   bookMetadata: Book<BookMetadataAttributes, any> | null = null;
   language: Language | null = null;
-  lexicals: Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> = [];
+  lexicals: Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> = [];
 
   override response = new Subject<boolean | void>();
 
@@ -50,15 +50,16 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     this.lexicals = this.getLexicalDictionary();
   }
 
-  getLexicalDictionary(): Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> {
+  getLexicalDictionary(): Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> {
     if (this.bookMetadata) {
       return Object.entries(this.bookMetadata.lexical).map(([key, value]) => {
-        const entries: Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> = [];
-        if (value.value) {
+        const entries: Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> = [];
+
+        if (value.prefix) {
           entries.push({
             key,
-            value: value.value,
-            rule: 'default'
+            value: value.prefix,
+            rule: 'prefix'
           });
         }
 
@@ -70,6 +71,14 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
           });
         }
 
+        if (value.value) {
+          entries.push({
+            key,
+            value: value.value,
+            rule: 'common'
+          });
+        }
+
         return entries;
       }).flat(1);
     }
@@ -77,14 +86,18 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     return [];
   }
 
-  deleteLexical(key: string, rule: 'default' | 'suffix'): void {
+  deleteLexical(key: string, rule: 'common' | 'prefix' | 'suffix'): void {
     if (this.bookMetadata) {
-      if (rule === 'default') {
-        if (this.bookMetadata.lexical[key].suffix) {
+      if (rule === 'common') {
+        if (this.bookMetadata.lexical[key].prefix) {
+          this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].prefix;
+        } else if (this.bookMetadata.lexical[key].suffix) {
           this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].suffix;
         } else {
           delete this.bookMetadata.lexical[key];
         }
+      } else if (rule === 'prefix') {
+        delete this.bookMetadata.lexical[key].prefix;
       } else if (rule === 'suffix') {
         delete this.bookMetadata.lexical[key].suffix;
       }
