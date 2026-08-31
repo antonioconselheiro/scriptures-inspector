@@ -5,9 +5,10 @@ TODO
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - Validar minha versão do livro de Enoque com o livro desta versão: 1001-2000/LIT1340EnochE.xml
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
+[ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
+[ ] - Daniel Susana e Daniel Bel e o Dragão estão faltando na versão geez, não estão disponível no repositório de literatura etiópica em geez
 [ ] - Incluir torá samaritanico no projeto
-[ ] - Incluir septuaginta no projeto (https://www.sacred-texts.com/bib/sep/index.htm)
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
