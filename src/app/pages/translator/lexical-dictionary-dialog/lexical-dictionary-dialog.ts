@@ -25,7 +25,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   bookSource: SourceBook | null = null;
   bookMetadata: Book<BookMetadataAttributes, any> | null = null;
   language: Language | null = null;
-  lexicals: Array<{ key: string; value: string; }> = [];
+  lexicals: Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> = [];
 
   override response = new Subject<boolean | void>();
 
@@ -50,20 +50,44 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     this.lexicals = this.getLexicalDictionary();
   }
 
-  getLexicalDictionary(): Array<{ key: string; value: string; }> {
+  getLexicalDictionary(): Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> {
     if (this.bookMetadata) {
-      return Object.entries(this.bookMetadata.lexical).map(([key, value]) => ({
-        key,
-        value
-      }));
+      return Object.entries(this.bookMetadata.lexical).map(([key, value]) => {
+        const entries: Array<{ key: string; rule: 'default' | 'suffix'; value: string; }> = [];
+        if (value.value) {
+          entries.push({
+            key,
+            value: value.value,
+            rule: 'default'
+          });
+        }
+
+        if (value.suffix) {
+          entries.push({
+            key,
+            value: value.suffix,
+            rule: 'suffix'
+          });
+        }
+
+        return entries;
+      }).flat(1);
     }
 
     return [];
   }
 
-  deleteLexical(key: string): void {
+  deleteLexical(key: string, rule: 'default' | 'suffix'): void {
     if (this.bookMetadata) {
-      delete this.bookMetadata.lexical[key];
+      if (rule === 'default') {
+        if (this.bookMetadata.lexical[key].suffix) {
+          this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].suffix;
+        } else {
+          delete this.bookMetadata.lexical[key];
+        }
+      } else if (rule === 'suffix') {
+        delete this.bookMetadata.lexical[key].suffix;
+      }
     }
 
     this.lexicals = this.getLexicalDictionary();

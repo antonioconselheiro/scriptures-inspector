@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
-import { Language } from '@domain/language-model';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ProjectDataService } from './project/project-data-service';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { ProjectDataService } from './project/project-data-service';
 
 @Pipe({
   name: 'lexical'
@@ -15,10 +14,16 @@ export class LexicalPipe implements PipeTransform {
     private dataService: ProjectDataService
   ) { }
 
-  transform(value: string, book: BookMetadataAttributes | ParsedBookMetadata, languageName: LanguageUnionType, listenUpdate?: number): string {
+  transform(
+    value: string,
+    book: BookMetadataAttributes | ParsedBookMetadata,
+    languageName: LanguageUnionType,
+    isLastSegment: boolean,
+    listenUpdate?: number
+  ): string {
     listenUpdate;
 
-    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value);
+    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, isLastSegment);
   }
 
 }

@@ -159,16 +159,15 @@ export class ProjectMetadataService {
     lexicalValue: string
   ): void {
     const normalizeFn = language.normalizeFn ? language.normalizeFn : (word: string) => word;
-    bookMetadata.lexical[normalizeFn(word)] = lexicalValue;
-    this.systemService.triggerSaveCurrentBookMetadata(current);
-  }
+    const normalizedKey = normalizeFn(word);
 
-  getLexical(
-    data: Book<BookMetadataAttributes, any>,
-    sourceLanguage: Language,
-    word: string
-  ): string {
-    return this.dataService.getLexical(data, sourceLanguage, word);
+    if (!bookMetadata.lexical[normalizedKey]) {
+      bookMetadata.lexical[normalizedKey] = { value: lexicalValue };
+    } else {
+      bookMetadata.lexical[normalizedKey].value = lexicalValue;
+    }
+
+    this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
   cleanLexical(

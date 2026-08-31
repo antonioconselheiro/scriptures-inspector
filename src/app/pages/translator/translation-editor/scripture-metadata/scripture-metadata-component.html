@@ -91,7 +91,7 @@
           @for (word of wordMatrixValue; track $index) {
           <td>
             @for (segment of word.segments; track segment.index) {
-              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : pipeUpdaterController;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.index === (word.segments.length - 1) : pipeUpdaterController;
               <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
                 #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
                 (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
@@ -104,7 +104,7 @@
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index) {
-                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : pipeUpdaterController;
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.index === (word.segments.length - 1) : pipeUpdaterController;
                 @if (lexical.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical}}</span>&nbsp;}
               }
             }

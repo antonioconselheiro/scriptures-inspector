@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BookMetadataAttributesLexicalModel } from '@domain/book-metadata-attributes-lexical-model';
 import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-chapter-verse-word-target-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
@@ -136,11 +137,22 @@ export class ProjectDataService {
   }
 
   getLexical(
-    data: { lexical: Record<string, string> },
+    data: { lexical: Record<string, BookMetadataAttributesLexicalModel> },
     sourceLanguage: Language,
     word: string,
+    isLastSegment: boolean
   ): string {
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
-    return data.lexical[normalizeFn(word)] || '';
+    const lexicalValues = data.lexical[normalizeFn(word)];
+
+    if (lexicalValues) {
+      if (isLastSegment && lexicalValues.suffix) {
+        return lexicalValues.suffix;
+      }
+      
+      return lexicalValues.value || '';
+    }
+
+    return '';
   }
 }

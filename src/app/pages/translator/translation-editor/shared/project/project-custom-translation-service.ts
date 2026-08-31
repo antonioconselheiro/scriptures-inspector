@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BookChapterVerseMetadata } from '@domain/book-chapter-verse-metadata-model';
-import { InterlinearTarget } from '@domain/interlinear-target-model';
+import { BookIndexes } from '@domain/book-indexes-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -9,16 +9,15 @@ import { BookVerseTranslationTarget } from '@domain/book-verse-translation-targe
 import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translation-target-variation-model';
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/word-fragment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { SourceBook } from '@domain/source-book-model';
-import { BookIndexes } from '@domain/book-indexes-model';
-import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
 
 @Injectable({
   providedIn: 'root'
@@ -88,8 +87,9 @@ export class ProjectCustomTranslationService {
         .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
 
       wordMatrix.forEach(word => {
-        word.segments.forEach(segment => {
-          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word));
+        word.segments.forEach((segment, index) => {
+          const isLastSegment = word.segments.length === index + 1;
+          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, isLastSegment));
         });
       });
   
@@ -119,9 +119,12 @@ export class ProjectCustomTranslationService {
         .splitIntoMatrix(sourceLanguage, parsedBookMetadata.patterns, sourceVerse.text);
 
       wordMatrix.forEach(word => {
-        word.segments.forEach(segment => {
+        word.segments.forEach((segment, index) => {
+          const isLastSegment = word.segments.length === index + 1;
           if (
-            customTranslationSplitted[segment.index].segment === this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word)
+            customTranslationSplitted[segment.index].segment === this.dataService.getLexical(
+              parsedBookMetadata, sourceLanguage, segment.word, isLastSegment
+            )
           ) {
             metadata[segment.index].value = this.dataService.castSegmentIntoMetadataIndexSerialized(translationLanguage, segment);
           }

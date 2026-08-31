@@ -5,6 +5,7 @@
   
     <tr>
       <th>Word</th>
+      <th>Rule</th>
       <th>Lexical</th>
       <th></th>
     </tr>
@@ -12,8 +13,9 @@
     @for (lexical of lexicals; track $index) {
       <tr>
         <td>{{lexical.key}}</td>
+        <td>{{lexical.rule}}</td>
         <td>{{lexical.value}}</td>
-        <td><button type="button" (click)="deleteLexical(lexical.key)">×</button></td>
+        <td><button type="button" (click)="deleteLexical(lexical.key, lexical.rule)">×</button></td>
       </tr>
     }
   </table>
