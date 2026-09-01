@@ -52,6 +52,7 @@
 </app-project-header>
 
 <app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
+<app-define-field-morpheme-rule-context-menu #defineMorphemeRef></app-define-field-morpheme-rule-context-menu>
 
 @if (project && codexMetadataRecord) {
   @for (structure of project.structures; track $index) {
@@ -72,7 +73,8 @@
           <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse.verse}}</legend>
           <app-scripture-metadata-component [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
             [codexMetadataRecord]="codexMetadataRecord" [projectData]="projectData" [bookTarget]="bookMetadata" [sourceBook]="selectedSourceBook"
-            [sourceVerse]="verse" [verseIndex]="verseIndex" [customTranslation]="bookCustomTranslation" [addPatternMenuRef]="addPatternMenuRef"
+            [sourceVerse]="verse" [verseIndex]="verseIndex" [customTranslation]="bookCustomTranslation"
+            [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
             [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
           ></app-scripture-metadata-component>
 

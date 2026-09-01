@@ -89,12 +89,15 @@
         <tr>
           <th rowspan="2">lexical</th>
           @for (word of wordMatrixValue; track $index) {
-          <td>
+          <td class="fieldsLexical">
             @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : getMorpheme(word.segments, segmentIndex) : pipeUpdaterController;
-              <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word"
-                #fieldLexical [style.width.px]="calcFieldSize(segment, lexical)"
-                (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [value]="lexical" />
+              @let morpheme = getMorpheme(word.segments, segmentIndex);
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : morpheme : pipeUpdaterController;
+              <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word" #fieldLexical
+                [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
+                [morphemePosition]="morpheme" [morphemeConfigured]="lexical.config" [value]="lexical.value" [class]="lexical.config"
+                (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [style.width.px]="calcFieldSize(segment, lexical)"
+              />
             }
           </td>
           }
@@ -104,8 +107,9 @@
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : getMorpheme(word.segments, segmentIndex) : pipeUpdaterController;
-                @if (lexical.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical}}</span>&nbsp;}
+                @let morpheme = getMorpheme(word.segments, segmentIndex);
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : morpheme : pipeUpdaterController;
+                @if (lexical.value.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical.value}}</span>&nbsp;}
               }
             }
           </td>
@@ -206,8 +210,8 @@
       [project]="project" [projectData]="projectData" [pipeUpdaterController]="pipeUpdaterController"
       [sourceBook]="bookInterlinearSource" [sourceVerse]="verseInterlinearSource"
       [interlinearTarget]="bookInterlinearTarget" [bookTarget]="bookInterlinearMetadataTarget"
-      [viewingTranslationBookRecord]="viewingTranslationBookRecord"
-      [customTranslation]="bookCustomTranslationTarget" [addPatternMenuRef]="addPatternMenuRef"
+      [viewingTranslationBookRecord]="viewingTranslationBookRecord" [customTranslation]="bookCustomTranslationTarget"
+      [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
     ></app-interlinear-component>
   }
 }

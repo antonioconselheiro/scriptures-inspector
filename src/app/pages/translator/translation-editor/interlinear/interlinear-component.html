@@ -9,8 +9,8 @@
     [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord" [project]="project"
     [projectData]="projectData" [bookTarget]="bookTarget" [verseIndex]="verseIndex"
     [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
-    [addPatternMenuRef]="addPatternMenuRef" [viewingTranslationBookRecord]="viewingTranslationBookRecord"
-    [pipeUpdaterController]="pipeUpdaterController"
+    [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
+    [viewingTranslationBookRecord]="viewingTranslationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
   >
     @for (origin of originToInterlinear; track $index) {
       @let originParsedBook = parseBook(projectData[origin.structure.metadataTarget], origin.language);
@@ -35,8 +35,8 @@
         <td [colSpan]="wordList.length">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
-              @let value = segment.word | lexical : parsedBook : origin.language : getMorpheme(word.segments, segment.index) : pipeUpdaterController;
-              @if (value.length) {<span [class]="'prisma'+getTranslationColor(origin.structure, segment.index)">{{value}}</span>&nbsp;}
+              @let lexical = segment.word | lexical : parsedBook : origin.language : getMorpheme(word.segments, segment.index) : pipeUpdaterController;
+              @if (lexical.value.length) {<span [class]="'prisma'+getTranslationColor(origin.structure, segment.index)">{{lexical.value}}</span>&nbsp;}
             }
           }
         </td>

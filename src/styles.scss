@@ -1,3 +1,6 @@
+/**
+ * Importando fonts
+ */
 @font-face {
   font-family: 'hebrew';
   src: url('../public/font/hebrew.woff2') format('woff2'),
@@ -29,6 +32,9 @@
   src: url('../public/font/gentium-transliteration.ttf') format('truetype');
 }
 
+/**
+ * Elementos
+ */
 body {
   margin: 0;
   padding: 0;
@@ -113,6 +119,9 @@ fieldset.fieldsetMinifiable {
   }
 }
 
+/**
+ * Componentes
+ */
 .tableMinifiable {
   margin: 1rem auto;
   display: flex;
@@ -155,6 +164,66 @@ fieldset.fieldsetMinifiable {
     &::before {
       content: '-';
     }
+  }
+}
+
+.contextMenu {
+  position: fixed;
+  background-color: #fff;
+  border: 1px solid #aaa;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+
+  ul {
+    list-style: none;
+    padding: 5px 0;
+    margin: 0;
+
+    li {
+      padding: 6px 16px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #eee;
+      }
+    }    
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.save {
+  background-image: url('../public/save.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: none;
+
+  &.pulse {
+    animation: pulse 0.3s ease-in-out 3;
+  }
+}
+
+.loading {
+  background-image: url('../public/loading.gif');
+}
+
+.error {
+  color: red;
+  display: block;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -237,41 +306,4 @@ fieldset.fieldsetMinifiable {
 
 .godsaid {
   color: red;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.save {
-  background-image: url('../public/save.png');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border: none;
-
-  &.pulse {
-    animation: pulse 0.3s ease-in-out 3;
-  }
-}
-
-.loading {
-  background-image: url('../public/loading.gif');
-}
-
-.error {
-  color: red;
-  display: block;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
 }

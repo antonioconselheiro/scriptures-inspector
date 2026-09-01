@@ -34,6 +34,7 @@ import { TranslationVariationConfigDialog } from '../translation-variation-confi
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
+import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -41,6 +42,7 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
     FormsModule,
     AsyncModalModule,
     AddPatternContextMenu,
+    DefineFieldMorphemeRuleContextMenu,
     ScriptureMetadataComponent,
     TranslationViewerManager,
     ProjectHeader

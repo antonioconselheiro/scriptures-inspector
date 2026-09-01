@@ -25,16 +25,25 @@ export abstract class AbstractInspectorDiretive {
 
   protected abstract metadataService: ProjectMetadataService;
 
-  calcFieldSize(segment: WordSegment, value: string): number {
-    if (value.length === 2) {
-      return 21;
-    } else if (value.length) {
-      return Math.floor(value.length * 8.5);
-    } else if (segment.word.length) {
-      return Math.floor(segment.word.length * 5);
+  calcFieldSize(segment: WordSegment, lexical: { config: "common" | "prefix" | "suffix"; value: string; } | string): number {
+    let baseValue = 0;
+    if (typeof lexical === 'string') {
+      lexical = { config: 'common', value: lexical };
     }
 
-    return 30;
+    if (['prefix', 'suffix'].includes(lexical.config)) {
+      baseValue = 20;
+    }
+
+    if (lexical.value.length === 2) {
+      return 21 + baseValue;
+    } else if (lexical.value.length) {
+      return Math.floor(lexical.value.length * 8.5) + baseValue;
+    } else if (segment.word.length) {
+      return Math.floor(segment.word.length * 5) + baseValue;
+    }
+
+    return 30 + baseValue;
   }
 
     //  lexical

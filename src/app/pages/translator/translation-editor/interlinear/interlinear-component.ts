@@ -30,6 +30,7 @@ import { ProjectInterlinearService } from '../shared/project/project-interlinear
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
+import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -97,6 +98,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
+
+  @Input()
+  defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
 
   minified = false;
 

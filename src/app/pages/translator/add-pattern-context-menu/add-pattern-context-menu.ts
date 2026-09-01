@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
+import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
-import { PatternsService } from '../patterns-service';
-import { CurrentChapter } from '@domain/current-chapter-model';
 import { SystemService } from '@shared/system/system-service';
+import { PatternsService } from '../patterns-service';
 
 @Component({
   selector: 'app-add-pattern-context-menu',
   imports: [
     CommonModule
   ],
-  templateUrl: './add-pattern-context-menu.html',
-  styleUrl: './add-pattern-context-menu.scss'
+  templateUrl: './add-pattern-context-menu.html'
 })
 export class AddPatternContextMenu {
 

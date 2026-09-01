@@ -20,7 +20,7 @@ export class LexicalPipe implements PipeTransform {
     languageName: LanguageUnionType,
     morpheme: 'common' | 'prefix' | 'suffix',
     listenUpdate?: number
-  ): string {
+  ): { config: 'common' | 'prefix' | 'suffix', value: string } {
     listenUpdate;
 
     return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, morpheme);

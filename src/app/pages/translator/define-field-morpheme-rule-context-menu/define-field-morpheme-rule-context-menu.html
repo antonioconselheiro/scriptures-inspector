@@ -1,0 +1,15 @@
+@if (visible) {
+  <div
+    class="contextMenu"
+    [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  >
+    <ul>
+      <li (click)="onDefineFieldRule('common')"> @if (morphemeConfigured === 'common') {●} Lexical in all contexts</li>
+      @if (morphemePosition === 'prefix') {
+        <li (click)="onDefineFieldRule('prefix')"> @if (morphemeConfigured === 'prefix') {●} Lexical only to prefix</li>
+      } @else if (morphemePosition === 'suffix') {
+        <li (click)="onDefineFieldRule('suffix')"> @if (morphemeConfigured === 'suffix') {●} Lexical only to suffix</li>
+      }
+    </ul>
+  </div>
+}

@@ -6,6 +6,7 @@ import { BookVerse } from '@domain/book-verse-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedPatterns } from '@domain/parsed-patterns';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
@@ -14,9 +15,11 @@ import { ProjectStructureMetadata } from '@domain/project-structure-metadata-mod
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
+import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { DefineFieldMorphemeRuleContextMenuTrigger } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { InterlinearComponent } from '../interlinear/interlinear-component';
 import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
@@ -24,9 +27,7 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { SourceVerse } from '@domain/source-verse-model';
-import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
-import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
+import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -36,7 +37,8 @@ import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
     FunctionProxyPipe,
     InterlinearComponent,
     CustomTranslationComponent,
-    AddPatternContextMenuTrigger
+    AddPatternContextMenuTrigger,
+    DefineFieldMorphemeRuleContextMenuTrigger
   ],
   templateUrl: './scripture-metadata-component.html',
   styleUrl: './scripture-metadata-component.scss'
@@ -96,6 +98,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   @Input()
   addPatternMenuRef!: AddPatternContextMenu;
+
+  @Input()
+  defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
 
   @Input()
   originToInterlinear?: Array<OriginToInterlinear>;

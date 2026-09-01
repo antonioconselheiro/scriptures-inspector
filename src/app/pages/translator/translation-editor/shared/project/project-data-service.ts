@@ -141,20 +141,20 @@ export class ProjectDataService {
     sourceLanguage: Language,
     word: string,
     morpheme: 'common' | 'prefix' | 'suffix'
-  ): string {
+  ): { config: 'common' | 'prefix' | 'suffix', value: string } {
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
     const lexicalValues = data.lexical[normalizeFn(word)];
 
     if (lexicalValues) {
-      if (morpheme === 'suffix' && lexicalValues.suffix) {
-        return lexicalValues.suffix;
-      } else if (morpheme === 'prefix' && lexicalValues.prefix) {
-        return lexicalValues.prefix;
+      if (morpheme === 'suffix' && 'suffix' in lexicalValues) {
+        return { config: 'suffix', value: lexicalValues.suffix || '' };
+      } else if (morpheme === 'prefix' && 'prefix' in lexicalValues) {
+        return { config: 'prefix', value: lexicalValues.prefix || '' };
       }
       
-      return lexicalValues.value || '';
+      return { config: 'common', value: lexicalValues.value || '' };
     }
 
-    return '';
+    return { config: 'common', value: '' };
   }
 }

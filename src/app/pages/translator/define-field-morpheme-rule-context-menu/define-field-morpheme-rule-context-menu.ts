@@ -1,0 +1,58 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+
+@Component({
+  selector: 'app-define-field-morpheme-rule-context-menu',
+  imports: [
+    CommonModule
+  ],
+  templateUrl: './define-field-morpheme-rule-context-menu.html'
+})
+export class DefineFieldMorphemeRuleContextMenu {
+
+  x = 0;
+  y = 0;
+  word = '';
+  visible = false;
+  morphemePosition: 'common' | 'prefix' | 'suffix' = 'prefix';
+  morphemeConfigured: 'common' | 'prefix' | 'suffix' = 'common';
+  parsedBook!: ParsedBookMetadata;
+
+  onDefineFieldRule(type: 'common' | 'prefix' | 'suffix'): void {
+    if (!this.parsedBook.lexical[this.word]) {
+      this.parsedBook.lexical[this.word] = { value: '' };
+    }
+
+    const lexicalConfig = this.parsedBook.lexical[this.word];
+    if (type === 'common') {
+      if (this.morphemeConfigured === 'prefix') {
+        if (lexicalConfig.prefix) {
+          const shouldContinue = confirm(`Definition of ${this.word} as prefix will be removed from lexical, continue?`);
+          if (!shouldContinue) {
+            return;
+          }
+
+          delete lexicalConfig.prefix;
+        }
+      } else if (this.morphemeConfigured === 'suffix') {
+        if (lexicalConfig.suffix) {
+          const shouldContinue = confirm(`Definition of ${this.word} as suffix will be removed from lexical, continue?`);
+          if (!shouldContinue) {
+            return;
+          }
+
+          delete lexicalConfig.suffix;
+        }
+      }
+    } else if (this.morphemePosition === 'prefix' && type === 'prefix') {
+      this.morphemeConfigured = type;
+      lexicalConfig.prefix = '';
+    } else if (this.morphemePosition === 'suffix' && type === 'suffix') {
+      this.morphemeConfigured = type;
+      lexicalConfig.suffix = '';
+    }
+
+    setTimeout(() => this.visible = false);
+  }
+}

@@ -90,7 +90,7 @@ export class ProjectCustomTranslationService {
       wordMatrix.forEach(word => {
         word.segments.forEach((segment, index) => {
           const morpheme = getMorphemeFn(word.segments, index);
-          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, morpheme));
+          lexicalList.push(this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, morpheme).value);
         });
       });
   
@@ -122,11 +122,9 @@ export class ProjectCustomTranslationService {
       wordMatrix.forEach(word => {
         word.segments.forEach((segment, index) => {
           const morpheme = getMorphemeFn(word.segments, index);
-          if (
-            customTranslationSplitted[segment.index].segment === this.dataService.getLexical(
-              parsedBookMetadata, sourceLanguage, segment.word, morpheme
-            )
-          ) {
+          const { value } = this.dataService.getLexical(parsedBookMetadata, sourceLanguage, segment.word, morpheme);
+
+          if (customTranslationSplitted[segment.index].segment === value) {
             metadata[segment.index].value = this.dataService.castSegmentIntoMetadataIndexSerialized(translationLanguage, segment);
           }
         });

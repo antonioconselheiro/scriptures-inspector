@@ -1,3 +1,25 @@
 .translationName {
   padding: 0 1rem;
 }
+
+.fieldsLexical {
+  white-space: nowrap;
+
+  input {
+    display: inline-block;
+
+    &.common {
+      border: 1px inset lightgray;
+    }
+
+    &.prefix {
+      border: 1px inset lightgray;
+      border-left: 10px solid;
+    }
+
+    &.suffix {
+      border: 1px inset lightgray;
+      border-right: 10px solid;
+    }
+  }
+}
