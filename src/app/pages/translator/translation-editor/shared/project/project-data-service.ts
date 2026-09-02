@@ -45,28 +45,57 @@ export class ProjectDataService {
         }
       }
 
-      let internalLexeme: { lexeme: string; index: number } | null = null;
+      let internalLexeme: {
+        lexeme: string;
+        index: number;
+        matched: string;
+      } | null = null;
+
+      const prefetchMatcherFn = language.prefetchMatcherFn
+        ? language.prefetchMatcherFn
+        : (text: string) => text;
+
       for (let [lexeme] of patterns.lexeme) {
         if (!lexeme) {
           continue;
         }
 
-        const index = word.indexOf(lexeme);
-        if (index < 0) {
+        const matcher = new RegExp(
+          prefetchMatcherFn(lexeme),
+          'u'
+        );
+
+        const match = matcher.exec(word);
+
+        if (!match || match.index === undefined) {
           continue;
         }
 
-        if (!internalLexeme || lexeme.length > internalLexeme.lexeme.length) {
-          internalLexeme = { lexeme, index };
+        if (
+          !internalLexeme ||
+          lexeme.length > internalLexeme.lexeme.length
+        ) {
+          internalLexeme = {
+            lexeme,
+            index: match.index,
+            matched: match[0]
+          };
         }
       }
 
       if (internalLexeme) {
-        const beforeLexeme = word.slice(0, internalLexeme.index);
-        const afterLexeme = word.slice(internalLexeme.index + internalLexeme.lexeme.length);
+        const beforeLexeme = word.slice(
+          0,
+          internalLexeme.index
+        );
+
+        const afterLexeme = word.slice(
+          internalLexeme.index + internalLexeme.matched.length
+        );
+
         return [
           ...segmentWord(beforeLexeme),
-          internalLexeme.lexeme,
+          internalLexeme.matched,
           ...segmentWord(afterLexeme)
         ];
       }
@@ -153,7 +182,7 @@ export class ProjectDataService {
       } else if (morpheme === 'prefix' && 'prefix' in lexicalValues) {
         return { config: 'prefix', value: lexicalValues.prefix || '' };
       }
-      
+
       return { config: 'common', value: lexicalValues.value || '' };
     }
 

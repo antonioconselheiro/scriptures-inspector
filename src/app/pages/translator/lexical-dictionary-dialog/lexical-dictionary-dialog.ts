@@ -55,6 +55,14 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       return Object.entries(this.bookMetadata.lexical).map(([key, value]) => {
         const entries: Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> = [];
 
+        if (value.value) {
+          entries.push({
+            key,
+            value: value.value,
+            rule: 'common'
+          });
+        }
+
         if (value.prefix) {
           entries.push({
             key,
@@ -68,14 +76,6 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
             key,
             value: value.suffix,
             rule: 'suffix'
-          });
-        }
-
-        if (value.value) {
-          entries.push({
-            key,
-            value: value.value,
-            rule: 'common'
           });
         }
 
