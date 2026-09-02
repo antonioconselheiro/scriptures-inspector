@@ -7,8 +7,8 @@ import { transliterate } from 'transliteration';
 })
 export class TransliterationPipe implements PipeTransform {
 
-  transform(word: string, language: 'hebraic' | 'geez' | 'greek'): string {
-    return language === 'hebraic' ? hebrewTransliterate(word) : transliterate(word);
+  transform(word: string, language: 'hebrew' | 'geez' | 'greek'): string {
+    return language === 'hebrew' ? hebrewTransliterate(word) : transliterate(word);
   }
 
 }

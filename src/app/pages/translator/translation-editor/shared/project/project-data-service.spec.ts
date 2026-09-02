@@ -1,8 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { Language } from '@domain/language-model';
+import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { PatternsSerialized } from '@domain/patterns-serialized';
 import { ProjectDataService } from './project-data-service';
 import { ProjectMetadataService } from './project-metadata-service';
+import { demassoretifierFn } from '@shared/language-metadata/demassoretifier-fn';
+import { hebrewGematriaFn } from '@shared/language-metadata/hebrew-gematria-fn';
+import { massoretifierFn } from '@shared/language-metadata/massoretifier-fn';
+import { paleoHebrewSpellingFn } from '@shared/language-metadata/paleo-hebrew-spelling-fn';
 
 describe('ProjectDataService', () => {
   let dataService: ProjectDataService,
@@ -19,22 +24,22 @@ describe('ProjectDataService', () => {
     expect(metadataService).toBeTruthy();
   });
 
-  const language: Language = {
+  const englishLanguage: Language = {
     name: 'English',
     label: 'English'
   };
 
-  const patterns: PatternsSerialized = {
+  const englishPatterns: PatternsSerialized = {
     prefix: ['in', 'a'],
     suffix: ['el', 'iv'],
     lexeme: ['inablablivel']
   };
 
-  const word = 'inablablivel';
+  const latinCharacteresWord = 'inablablivel';
 
   it('should split into prefix and full lexeme', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({ ...patterns, lexeme: ['ablablivel'] }, language), word
+      englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablablivel'] }, englishLanguage), latinCharacteresWord
     );
 
     expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablablivel', index: 1 }]}]);
@@ -42,7 +47,7 @@ describe('ProjectDataService', () => {
 
   it('should split into prefix, lexeme and suffix', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({ ...patterns, lexeme: ['ablabliv'] }, language), word
+      englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablabliv'] }, englishLanguage), latinCharacteresWord
     );
 
     expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablabliv', index: 1 }, { word: 'el', index: 2 }]}]);
@@ -50,7 +55,7 @@ describe('ProjectDataService', () => {
 
   it('should split into prefix, lexeme and two suffixes', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({ ...patterns, lexeme: ['ablabl'] }, language), word
+      englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablabl'] }, englishLanguage), latinCharacteresWord
     );
 
     expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablabl', index: 1 }, { word: 'iv', index: 2 }, { word: 'el', index: 3 }]}]);
@@ -58,7 +63,7 @@ describe('ProjectDataService', () => {
 
   it('should split into two prefixes, lexeme and two suffixes', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({ ...patterns, lexeme: ['blabl'] }, language), word
+      englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['blabl'] }, englishLanguage), latinCharacteresWord
     );
 
     expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'a', index: 1 }, { word: 'blabl', index: 2 }, { word: 'iv', index: 3 }, { word: 'el', index: 4 }]}]);
@@ -66,11 +71,11 @@ describe('ProjectDataService', () => {
 
   it('should split many prefixes and suffixes around one internal lexeme', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({
+      englishLanguage, metadataService.parsePattern({
         prefix: ['pre', 'anti', 'neo'],
         suffix: ['tion', 'ism', 'ly', 'ness'],
         lexeme: ['core']
-      }, language),
+      }, englishLanguage),
       'preantineocoretionismlyness'
     );
 
@@ -79,11 +84,11 @@ describe('ProjectDataService', () => {
 
   it('should split many prefixes and no suffix around one internal lexeme', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({
+      englishLanguage, metadataService.parsePattern({
         prefix: ['re', 'un', 'pre', 'anti'],
         suffix: ['zz', 'yy'],
         lexeme: ['root']
-      }, language),
+      }, englishLanguage),
       'reunpreantiroot'
     );
 
@@ -92,11 +97,11 @@ describe('ProjectDataService', () => {
 
   it('should split many suffixes and no prefix around one internal lexeme', () => {
     const result = dataService.splitIntoMatrix(
-      language, metadataService.parsePattern({
+      englishLanguage, metadataService.parsePattern({
         prefix: ['xx', 'ww'],
         suffix: ['able', 'istic', 'ally', 'ness', 'less'],
         lexeme: ['root']
-      }, language),
+      }, englishLanguage),
       'rootableisticallynessless'
     );
 
@@ -105,12 +110,12 @@ describe('ProjectDataService', () => {
 
   it('should keep the largest internal lexeme when lexemes overlap', () => {
     const result = dataService.splitIntoMatrix(
-      language,
+      englishLanguage,
       metadataService.parsePattern({
         prefix: ['pre'],
         suffix: ['ly'],
         lexeme: ['core', 'supercore']
-      }, language),
+      }, englishLanguage),
       'presupercorely'
     );
 
@@ -119,15 +124,40 @@ describe('ProjectDataService', () => {
 
   it('should keep the internal lexeme when prefix and suffix have part of it', () => {
     const result = dataService.splitIntoMatrix(
-      language,
+      englishLanguage,
       metadataService.parsePattern({
         prefix: ['pre', 'presu'],
         suffix: ['re', 'ly'],
         lexeme: ['core', 'supercore']
-      }, language),
+      }, englishLanguage),
       'presupercorely'
     );
 
     expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
+  });
+
+  const hebrewLanguage: Language = {
+    name: 'Hebrew',
+    label: 'hebrew',
+    direction: 'rtl',
+    transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
+    wordSeparator: ['־', '׀', ' '],
+    normalizeFn: (text: string) => demassoretifierFn(text),
+    prefetchMatcherFn: (text: string) => massoretifierFn(text)
+  };
+
+  const hebrewWord = 'לְמִינֵ֑הוּ';
+  const hebrewPatterns: PatternsSerialized = {
+    prefix: ['ל', 'ו'],
+    suffix: ['הו', 'ו'],
+    lexeme: ['הו']
+  };
+
+  it('should group hebrew niqqud into prefixes and suffixes', () => {
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
+    );
+
+    expect(result).toEqual([{segments:[{ word: 'לְ', index: 0 }, { word: 'מִינֵ֑', index: 1 }, { word: 'הוּ', index: 2 }]}]);
   });
 });

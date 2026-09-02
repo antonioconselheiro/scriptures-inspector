@@ -5,10 +5,10 @@ export const bookMetadata: {
     gringo: string,
     testament: 'global' | 'old' | 'new',
     type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher' | 'treasure'>,
-    oldestLanguageFound?: 'aramaic' | 'hebraic' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'sogdiano' | 'english';
+    oldestLanguageFound?: 'aramaic' | 'hebrew' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'sogdiano' | 'english';
     language: {
       aramaic?: boolean,
-      hebraic?: boolean,
+      hebrew?: boolean,
       geez?: boolean,
       syriac?: boolean,
       arabic?: boolean,
@@ -108,7 +108,7 @@ export const bookMetadata: {
     oldestLanguageFound: 'geez',
     type: ['history', 'prophecy'],
     language: {
-      hebraic: true,
+      hebrew: true,
       aramaic: true,
       geez: true
     },
@@ -145,9 +145,9 @@ export const bookMetadata: {
     normal: 'Mequisedeque',
     gringo: 'Mechizedek',
     testament: 'old',
-    oldestLanguageFound: 'hebraic',
+    oldestLanguageFound: 'hebrew',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       ocidental: false,
@@ -179,7 +179,7 @@ export const bookMetadata: {
     testament: 'old',
     type: [],
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       ocidental: false,
@@ -369,7 +369,7 @@ export const bookMetadata: {
     type: ['history', 'prophecy'],
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -386,7 +386,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -403,7 +403,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -420,7 +420,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -437,7 +437,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -453,7 +453,7 @@ export const bookMetadata: {
     gringo: 'Miqsat Ma\'aseh ha-Torah',
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -469,7 +469,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -486,7 +486,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -503,7 +503,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -520,7 +520,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -538,7 +538,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -555,7 +555,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -572,7 +572,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -589,7 +589,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -606,7 +606,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -639,7 +639,7 @@ export const bookMetadata: {
     gringo: 'Apocalipse of Elijah',
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       ocidental: false,
@@ -655,7 +655,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       greek: true,
-      hebraic: true
+      hebrew: true
     },
     codex: {
       ocidental: false,
@@ -688,7 +688,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -705,7 +705,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -736,7 +736,7 @@ export const bookMetadata: {
     normal: "Zorobabel",
     gringo: "Zorobabel",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   '1ET': {
@@ -745,7 +745,7 @@ export const bookMetadata: {
     gringo: 'Esther',
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       ocidental: true,
@@ -779,7 +779,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -816,7 +816,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -866,7 +866,7 @@ export const bookMetadata: {
     gringo: 'Essenes Psalms',
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -883,7 +883,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -919,7 +919,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -976,7 +976,7 @@ export const bookMetadata: {
     normal: "Sabedoria dos Essênios",
     gringo: "Wisdom of Essenes",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'ECL': {
@@ -986,7 +986,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1002,9 +1002,9 @@ export const bookMetadata: {
     normal: 'Eclesiástico - Sirácida',
     gringo: 'Ecclesiasticus - Sirach',
     testament: 'old',
-    oldestLanguageFound: 'hebraic',
+    oldestLanguageFound: 'hebrew',
     language: {
-      hebraic: true,
+      hebrew: true,
       geez: true,
       greek: true
     },
@@ -1024,7 +1024,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1058,7 +1058,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1093,7 +1093,7 @@ export const bookMetadata: {
     testament: 'old',
     type: ['pesher'],
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1109,7 +1109,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1164,7 +1164,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       aramaic: true, // 4QJer
       greek: true
     },
@@ -1184,7 +1184,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1202,7 +1202,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1220,7 +1220,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1238,7 +1238,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true,
       aramaic: true
     },
@@ -1294,7 +1294,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1312,7 +1312,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1328,7 +1328,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1346,7 +1346,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1364,7 +1364,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1382,7 +1382,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1400,7 +1400,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1418,7 +1418,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1434,7 +1434,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1452,7 +1452,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1468,7 +1468,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1486,7 +1486,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1502,7 +1502,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1520,7 +1520,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1536,7 +1536,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1554,7 +1554,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1572,7 +1572,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1590,7 +1590,7 @@ export const bookMetadata: {
     type: ['pesher'],
     testament: 'old',
     language: {
-      hebraic: true
+      hebrew: true
     },
     codex: {
       essenes: true,
@@ -1607,7 +1607,7 @@ export const bookMetadata: {
     language: {
       geez: true,
       aramaic: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -1626,7 +1626,7 @@ export const bookMetadata: {
     testament: 'old',
     language: {
       geez: true,
-      hebraic: true,
+      hebrew: true,
       greek: true
     },
     codex: {
@@ -2042,7 +2042,7 @@ export const bookMetadata: {
     normal: "Regra da Comunidade",
     gringo: "Rule of the Community",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'RCG': { // 1QSa
@@ -2050,7 +2050,7 @@ export const bookMetadata: {
     normal: "Regra da Congregação",
     gringo: "Rule of the Congregation",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'RBE': { // 1QSb
@@ -2058,7 +2058,7 @@ export const bookMetadata: {
     normal: "Regra das Bênçãos",
     gringo: "Rule of Blessings",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'HNG': { // 1QH
@@ -2066,7 +2066,7 @@ export const bookMetadata: {
     normal: "Hinos de Ação de Graças",
     gringo: "Thanksgiving Hymns",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'DMC': { // CD
@@ -2074,7 +2074,7 @@ export const bookMetadata: {
     normal: "Documento de Damasco",
     gringo: "Damascus Document",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'GLT': { // 1QM
@@ -2082,7 +2082,7 @@ export const bookMetadata: {
     normal: "A Guerra dos Filhos da Luz contra os Filhos das Trevas",
     gringo: "The War of the Sons of Light Against the Sons of Darkness",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'TMP': { // 11QTemple
@@ -2090,7 +2090,7 @@ export const bookMetadata: {
     normal: "Rolo do Templo",
     gringo: "Temple Scroll",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'CSS': { // 4Q400
@@ -2098,7 +2098,7 @@ export const bookMetadata: {
     normal: "Cânticos do Sacrifício do Sábado",
     gringo: "Songs of the Sabbath Sacrifice",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'BEN': { // 4QBerakhot
@@ -2106,7 +2106,7 @@ export const bookMetadata: {
     normal: "Bênçãos",
     gringo: "Blessings",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'OTO': { // 4QOtot
@@ -2114,7 +2114,7 @@ export const bookMetadata: {
     normal: "Otot - Sinais e Calendários",
     gringo: "Otot - Signs and Calendars",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'CAD': { // 4Q503
@@ -2122,7 +2122,7 @@ export const bookMetadata: {
     normal: "Orações Calendáricas",
     gringo: "Calendrical Prayers",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'PSC': { // 4QPesach
@@ -2130,7 +2130,7 @@ export const bookMetadata: {
     normal: "Páscoa",
     gringo: "Pesach",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'HLI': { // 4Q251, 4Q252
@@ -2138,7 +2138,7 @@ export const bookMetadata: {
     normal: "Haláquico",
     gringo: "Halakhic",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'HLA': { // 4Q159
@@ -2146,7 +2146,7 @@ export const bookMetadata: {
     normal: "Halacá",
     gringo: "Halakhah",
     testament: "old",
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   'PCB': { // 3Q15
@@ -2155,7 +2155,7 @@ export const bookMetadata: {
     gringo: "Copper Scroll",
     testament: "old",
     type: [ "treasure" ],
-    language: { hebraic: true },
+    language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
   '1MA': {

@@ -17,8 +17,8 @@ export const languageMetadataRecord: {
     transliteration: (aramaic) => transliterate(aramaic)
   },
   'hebrew': {
-    name: 'Hebraic',
-    label: 'hebraic',
+    name: 'Hebrew',
+    label: 'hebrew',
     direction: 'rtl',
     transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
     wordSeparator: ['־', '׀', ' '],

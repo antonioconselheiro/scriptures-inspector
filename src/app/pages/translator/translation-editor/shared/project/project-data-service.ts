@@ -94,22 +94,24 @@ export class ProjectDataService {
 
     let index = 0;
     const words = this.splitByLanguageWordSeparator(language, pharse);
-      return words.map(word => {
-        const wordObject: Word = {
-          segments: segmentWord(word.word).map(word => {
-            return {
-              index: index++,
-              word
-            };
-          })
-        };
+    const wordMatrix = words.map(word => {
+      const wordObject: Word = {
+        segments: segmentWord(word.word).map(word => {
+          return {
+            index: index++,
+            word
+          };
+        })
+      };
 
-        if (word.separator !== undefined) {
-          wordObject.separator = word.separator;
-        }
+      if (word.separator !== undefined) {
+        wordObject.separator = word.separator;
+      }
 
-        return wordObject;
-      }).flat();
+      return wordObject;
+    }).flat();
+
+    return wordMatrix;
   }
 
   splitByLanguageWordSeparator(language: Language, text: string): Array<{ word: string; separator?: string; }> {
