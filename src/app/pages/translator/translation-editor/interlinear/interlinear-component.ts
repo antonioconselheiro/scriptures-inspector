@@ -19,7 +19,6 @@ import { TargetTranslationMetadataDetail } from '@domain/target-translation-meta
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
@@ -173,10 +172,6 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
     return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
-  }
-
-  getMorpheme(segments: Array<any>, currentIndex: number): 'root' | 'prefix' | 'suffix' {
-    return getMorphemeFn(segments, currentIndex);
   }
 
   cleanTranslationInterlinear(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear): void {

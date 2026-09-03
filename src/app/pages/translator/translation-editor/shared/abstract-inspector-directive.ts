@@ -25,32 +25,27 @@ export abstract class AbstractInspectorDiretive {
 
   protected abstract metadataService: ProjectMetadataService;
 
-  calcFieldSize(segment: WordSegment, lexical: { config: 'root' | 'prefix' | 'suffix'; value: string; } | string): number {
-    let baseValue = 0;
+  calcFieldSize(segmentWord: string, lexical: { config: 'root' | 'prefix' | 'suffix'; value: string; } | string): number {
     if (typeof lexical === 'string') {
       lexical = { config: 'root', value: lexical };
     }
 
-    if (['prefix', 'suffix'].includes(lexical.config)) {
-      baseValue = 20;
-    }
-
     if (lexical.value.length === 2) {
-      return 21 + baseValue;
+      return 21;
     } else if (lexical.value.length) {
-      return Math.floor(lexical.value.length * 8.5) + baseValue;
-    } else if (segment.word.length) {
-      return Math.floor(segment.word.length * 5) + baseValue;
+      return Math.floor(lexical.value.length * 8.5);
+    } else if (segmentWord.length) {
+      return Math.floor(segmentWord.length * 5);
     }
 
-    return 30 + baseValue;
+    return 30;
   }
 
     //  lexical
   updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment, morphemeConfigured: 'root' | 'prefix' | 'suffix'): void {
     const language = this.languageMetadataRecord[sourceLanguage];
     this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value, morphemeConfigured);
-    input.style.width = `${this.calcFieldSize(segment, input.value)}px`;
+    input.style.width = `${this.calcFieldSize(segment.word, input.value)}px`;
     this.pipeUpdaterController++;
   }
 

@@ -15,10 +15,10 @@ import { ProjectStructureMetadata } from '@domain/project-structure-metadata-mod
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
-import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
+import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { DefineFieldMorphemeRuleContextMenuTrigger } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu-trigger';
 import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
 import { InterlinearComponent } from '../interlinear/interlinear-component';
@@ -27,7 +27,6 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -239,10 +238,6 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     };
 
     return [...(this.originToInterlinear || []), currentOriginToInterlinear];
-  }
-
-  getMorpheme(segments: Array<any>, currentIndex: number): 'root' | 'prefix' | 'suffix' {
-    return getMorphemeFn(segments, currentIndex);
   }
 
   cleanWordOfGodFromVerse(): void {

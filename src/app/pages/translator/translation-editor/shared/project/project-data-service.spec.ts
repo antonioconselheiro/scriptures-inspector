@@ -149,7 +149,7 @@ describe('ProjectDataService', () => {
     const hebrewPatterns: PatternsSerialized = {
       prefix: ['ל', 'ו'],
       suffix: ['הו', 'ו'],
-      lexeme: ['הו']
+      lexeme: []
     };
 
     const result = dataService.splitIntoMatrix(

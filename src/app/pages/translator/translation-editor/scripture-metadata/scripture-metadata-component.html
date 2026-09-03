@@ -91,12 +91,11 @@
           @for (word of wordMatrixValue; track $index) {
           <td class="fieldsLexical">
             @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-              @let morpheme = getMorpheme(word.segments, segmentIndex);
-              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : morpheme : pipeUpdaterController;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController;
               <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word" #fieldLexical
                 [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
-                [morphemePosition]="morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
-                [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment, lexical)"
+                [morphemePosition]="segment.morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
+                [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment.word, lexical)"
                 (input)="updateLexical(sourceLanguage, fieldLexical, segment, lexical.config)"
                 [attr.title]="lexical.config === 'prefix' ? 'Lexical only to prefix' : lexical.config === 'suffix' ? 'Lexical only to suffix' : ''"
               />
@@ -109,8 +108,7 @@
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-                @let morpheme = getMorpheme(word.segments, segmentIndex);
-                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : morpheme : pipeUpdaterController;
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController;
                 @if (lexical.value.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical.value}}</span>&nbsp;}
               }
             }
