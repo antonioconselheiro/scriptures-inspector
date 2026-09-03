@@ -1,5 +1,5 @@
 export interface BookMetadataAttributesLexicalModel {
-  value: string;
+  value?: string;
   prefix?: string;
   suffix?: string;
 }

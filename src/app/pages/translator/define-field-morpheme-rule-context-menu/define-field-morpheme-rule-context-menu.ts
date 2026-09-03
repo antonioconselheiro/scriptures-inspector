@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CurrentChapter } from '@domain/current-chapter-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { SystemService } from '@shared/system/system-service';
 
 @Component({
   selector: 'app-define-field-morpheme-rule-context-menu',
@@ -19,9 +21,16 @@ export class DefineFieldMorphemeRuleContextMenu {
   morphemeConfigured: 'common' | 'prefix' | 'suffix' = 'common';
   parsedBook!: ParsedBookMetadata;
 
+  @Input()
+  current: CurrentChapter | null = null;
+
+  constructor(
+    private systemService: SystemService
+  ) {}
+
   onDefineFieldRule(type: 'common' | 'prefix' | 'suffix'): void {
     if (!this.parsedBook.lexical[this.word]) {
-      this.parsedBook.lexical[this.word] = { value: '' };
+      this.parsedBook.lexical[this.word] = {};
     }
 
     const lexicalConfig = this.parsedBook.lexical[this.word];
@@ -32,18 +41,18 @@ export class DefineFieldMorphemeRuleContextMenu {
           if (!shouldContinue) {
             return;
           }
-
-          delete lexicalConfig.prefix;
         }
+
+        delete lexicalConfig.prefix;
       } else if (this.morphemeConfigured === 'suffix') {
         if (lexicalConfig.suffix) {
           const shouldContinue = confirm(`Definition of ${this.word} as suffix will be removed from lexical, continue?`);
           if (!shouldContinue) {
             return;
           }
-
-          delete lexicalConfig.suffix;
         }
+
+        delete lexicalConfig.suffix;
       }
     } else if (this.morphemePosition === 'prefix' && type === 'prefix') {
       this.morphemeConfigured = type;
@@ -51,6 +60,11 @@ export class DefineFieldMorphemeRuleContextMenu {
     } else if (this.morphemePosition === 'suffix' && type === 'suffix') {
       this.morphemeConfigured = type;
       lexicalConfig.suffix = '';
+    }
+
+    if (this.current) {
+      this.systemService.triggerSaveCurrentBookMetadata(this.current);
+      this.systemService.triggerSaveCurrentBookInterlinear(this.current);
     }
 
     setTimeout(() => this.visible = false);

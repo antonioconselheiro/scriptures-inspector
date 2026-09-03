@@ -156,15 +156,39 @@ export class ProjectMetadataService {
     bookMetadata: Book<BookMetadataAttributes, any>,
     language: Language,
     word: string,
-    lexicalValue: string
+    lexicalValue: string,
+    morphemeConfigured: 'common' | 'prefix' | 'suffix'
   ): void {
     const normalizeFn = language.normalizeFn ? language.normalizeFn : (word: string) => word;
     const normalizedKey = normalizeFn(word);
 
-    if (!bookMetadata.lexical[normalizedKey]) {
-      bookMetadata.lexical[normalizedKey] = { value: lexicalValue };
-    } else {
-      bookMetadata.lexical[normalizedKey].value = lexicalValue;
+    if (morphemeConfigured === 'common') {
+      if (!bookMetadata.lexical[normalizedKey]) {
+        if (lexicalValue.length) {
+          bookMetadata.lexical[normalizedKey] = { value: lexicalValue };
+        }
+      } else {
+        if (lexicalValue.length) {
+          bookMetadata.lexical[normalizedKey].value = lexicalValue;
+        } else {
+          delete bookMetadata.lexical[normalizedKey].value;
+          if (Object.keys(bookMetadata.lexical[normalizedKey]).length === 0) {
+            delete bookMetadata.lexical[normalizedKey];
+          }
+        }
+      }
+    } else if (morphemeConfigured === 'prefix') {
+      if (!bookMetadata.lexical[normalizedKey]) {
+        bookMetadata.lexical[normalizedKey] = { prefix: lexicalValue };
+      } else {
+        bookMetadata.lexical[normalizedKey].prefix = lexicalValue;
+      }
+    } else if (morphemeConfigured === 'suffix') {
+      if (!bookMetadata.lexical[normalizedKey]) {
+        bookMetadata.lexical[normalizedKey] = { suffix: lexicalValue };
+      } else {
+        bookMetadata.lexical[normalizedKey].suffix = lexicalValue;
+      }
     }
 
     this.systemService.triggerSaveCurrentBookMetadata(current);

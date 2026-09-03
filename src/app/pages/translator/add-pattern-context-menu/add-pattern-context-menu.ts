@@ -16,10 +16,7 @@ import { PatternsService } from '../patterns-service';
 })
 export class AddPatternContextMenu {
 
-  @Input()
   sourceLanguage!: LanguageUnionType;
-
-  @Input()
   bookTarget!: BookMetadataTarget;
 
   @Input()

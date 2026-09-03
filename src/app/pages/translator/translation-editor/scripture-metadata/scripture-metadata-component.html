@@ -95,8 +95,10 @@
               @let lexical = segment.word | lexical : parsedBook : sourceLanguage : morpheme : pipeUpdaterController;
               <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word" #fieldLexical
                 [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
-                [morphemePosition]="morpheme" [morphemeConfigured]="lexical.config" [value]="lexical.value" [class]="lexical.config"
-                (input)="updateLexical(sourceLanguage, fieldLexical, segment)" [style.width.px]="calcFieldSize(segment, lexical)"
+                [morphemePosition]="morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
+                [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment, lexical)"
+                (input)="updateLexical(sourceLanguage, fieldLexical, segment, lexical.config)"
+                [attr.title]="lexical.config === 'prefix' ? 'Lexical only to prefix' : lexical.config === 'suffix' ? 'Lexical only to suffix' : ''"
               />
             }
           </td>

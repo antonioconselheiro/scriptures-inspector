@@ -47,9 +47,9 @@ export abstract class AbstractInspectorDiretive {
   }
 
     //  lexical
-  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment): void {
+  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment, morphemeConfigured: 'common' | 'prefix' | 'suffix'): void {
     const language = this.languageMetadataRecord[sourceLanguage];
-    this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value);
+    this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value, morphemeConfigured);
     input.style.width = `${this.calcFieldSize(segment, input.value)}px`;
     this.pipeUpdaterController++;
   }
