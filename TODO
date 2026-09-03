@@ -10,7 +10,6 @@ TODO
 [ ] - Incluir torá samaritanico no projeto
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
-[ ] - Preciso criar sobrecarga do léxico onde em uma condição de prefixo ou sufixo um léxico possa mudar o significado
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original

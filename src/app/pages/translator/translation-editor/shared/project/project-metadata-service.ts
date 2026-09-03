@@ -157,12 +157,12 @@ export class ProjectMetadataService {
     language: Language,
     word: string,
     lexicalValue: string,
-    morphemeConfigured: 'common' | 'prefix' | 'suffix'
+    morphemeConfigured: 'root' | 'prefix' | 'suffix'
   ): void {
     const normalizeFn = language.normalizeFn ? language.normalizeFn : (word: string) => word;
     const normalizedKey = normalizeFn(word);
 
-    if (morphemeConfigured === 'common') {
+    if (morphemeConfigured === 'root') {
       if (!bookMetadata.lexical[normalizedKey]) {
         if (lexicalValue.length) {
           bookMetadata.lexical[normalizedKey] = { value: lexicalValue };

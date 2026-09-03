@@ -50,7 +50,7 @@ describe('ProjectDataService', () => {
       englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablablivel'] }, englishLanguage), latinCharacteresWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablablivel', index: 1 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'in', index: 0, morpheme: 'prefix' }, { word: 'ablablivel', index: 1, morpheme: 'root' }] }]);
   });
 
   it('should split into prefix, lexeme and suffix', () => {
@@ -58,7 +58,7 @@ describe('ProjectDataService', () => {
       englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablabliv'] }, englishLanguage), latinCharacteresWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablabliv', index: 1 }, { word: 'el', index: 2 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'in', index: 0, morpheme: 'prefix' }, { word: 'ablabliv', index: 1, morpheme: 'root' }, { word: 'el', index: 2, morpheme: 'suffix' }] }]);
   });
 
   it('should split into prefix, lexeme and two suffixes', () => {
@@ -66,7 +66,7 @@ describe('ProjectDataService', () => {
       englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['ablabl'] }, englishLanguage), latinCharacteresWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'ablabl', index: 1 }, { word: 'iv', index: 2 }, { word: 'el', index: 3 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'in', index: 0, morpheme: 'prefix' }, { word: 'ablabl', index: 1, morpheme: 'root' }, { word: 'iv', index: 2, morpheme: 'suffix' }, { word: 'el', index: 3, morpheme: 'suffix' }] }]);
   });
 
   it('should split into two prefixes, lexeme and two suffixes', () => {
@@ -74,7 +74,7 @@ describe('ProjectDataService', () => {
       englishLanguage, metadataService.parsePattern({ ...englishPatterns, lexeme: ['blabl'] }, englishLanguage), latinCharacteresWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'in', index: 0 }, { word: 'a', index: 1 }, { word: 'blabl', index: 2 }, { word: 'iv', index: 3 }, { word: 'el', index: 4 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'in', index: 0, morpheme: 'prefix' }, { word: 'a', index: 1, morpheme: 'prefix' }, { word: 'blabl', index: 2, morpheme: 'root' }, { word: 'iv', index: 3, morpheme: 'suffix' }, { word: 'el', index: 4, morpheme: 'suffix' }] }]);
   });
 
   it('should split many prefixes and suffixes around one internal lexeme', () => {
@@ -87,7 +87,7 @@ describe('ProjectDataService', () => {
       'preantineocoretionismlyness'
     );
 
-    expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'anti', index: 1 }, { word: 'neo', index: 2 }, { word: 'core', index: 3 }, { word: 'tion', index: 4 }, { word: 'ism', index: 5 }, { word: 'ly', index: 6 }, { word: 'ness', index: 7 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'pre', index: 0, morpheme: 'prefix' }, { word: 'anti', index: 1, morpheme: 'prefix' }, { word: 'neo', index: 2, morpheme: 'prefix' }, { word: 'core', index: 3, morpheme: 'root' }, { word: 'tion', index: 4, morpheme: 'suffix' }, { word: 'ism', index: 5, morpheme: 'suffix' }, { word: 'ly', index: 6, morpheme: 'suffix' }, { word: 'ness', index: 7, morpheme: 'suffix' }] }]);
   });
 
   it('should split many prefixes and no suffix around one internal lexeme', () => {
@@ -100,7 +100,7 @@ describe('ProjectDataService', () => {
       'reunpreantiroot'
     );
 
-    expect(result).toEqual([{segments:[{ word: 're', index: 0 }, { word: 'un', index: 1 }, { word: 'pre', index: 2 }, { word: 'anti', index: 3 }, { word: 'root', index: 4 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 're', index: 0, morpheme: 'prefix' }, { word: 'un', index: 1, morpheme: 'prefix' }, { word: 'pre', index: 2, morpheme: 'prefix' }, { word: 'anti', index: 3, morpheme: 'prefix' }, { word: 'root', index: 4, morpheme: 'root' }] }]);
   });
 
   it('should split many suffixes and no prefix around one internal lexeme', () => {
@@ -113,7 +113,7 @@ describe('ProjectDataService', () => {
       'rootableisticallynessless'
     );
 
-    expect(result).toEqual([{segments:[{ word: 'root', index: 0 }, { word: 'able', index: 1 }, { word: 'istic', index: 2 }, { word: 'ally', index: 3 }, { word: 'ness', index: 4 }, { word: 'less', index: 5 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'root', index: 0, morpheme: 'root' }, { word: 'able', index: 1, morpheme: 'suffix' }, { word: 'istic', index: 2, morpheme: 'suffix' }, { word: 'ally', index: 3, morpheme: 'suffix' }, { word: 'ness', index: 4, morpheme: 'suffix' }, { word: 'less', index: 5, morpheme: 'suffix' }] }]);
   });
 
   it('should keep the largest internal lexeme when lexemes overlap', () => {
@@ -127,7 +127,7 @@ describe('ProjectDataService', () => {
       'presupercorely'
     );
 
-    expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'pre', index: 0, morpheme: 'prefix' }, { word: 'supercore', index: 1, morpheme: 'root' }, { word: 'ly', index: 2, morpheme: 'suffix' }] }]);
   });
 
   it('should keep the internal lexeme when prefix and suffix have part of it', () => {
@@ -141,9 +141,9 @@ describe('ProjectDataService', () => {
       'presupercorely'
     );
 
-    expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'pre', index: 0, morpheme: 'prefix' }, { word: 'supercore', index: 1, morpheme: 'root' }, { word: 'ly', index: 2, morpheme: 'suffix' }] }]);
   });
-  
+
   it('should group hebrew niqqud into prefixes and suffixes', () => {
     const hebrewWord = 'לְמִינֵ֑הוּ';
     const hebrewPatterns: PatternsSerialized = {
@@ -156,14 +156,14 @@ describe('ProjectDataService', () => {
       hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'לְ', index: 0 }, { word: 'מִינֵ֑', index: 1 }, { word: 'הוּ', index: 2 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'לְ', index: 0, morpheme: 'prefix' }, { word: 'מִינֵ֑', index: 1, morpheme: 'root' }, { word: 'הוּ', index: 2, morpheme: 'suffix' }] }]);
   });
 
   it('should respect lexemes', () => {
     const hebrewWord = 'וּרְב֗וּ';
     const hebrewPatterns: PatternsSerialized = {
       prefix: ['ו'],
-      suffix: ['בו','ו'],
+      suffix: ['בו', 'ו'],
       lexeme: ['רב']
     };
 
@@ -171,7 +171,7 @@ describe('ProjectDataService', () => {
       hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'וּ', index: 0 }, { word: 'רְב֗', index: 1 }, { word: 'וּ', index: 2 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'וּ', index: 0, morpheme: 'prefix' }, { word: 'רְב֗', index: 1, morpheme: 'root' }, { word: 'וּ', index: 2, morpheme: 'suffix' }] }]);
   });
 
   it('should choose the larger suffixes first and then move on to the shorter ones', () => {
@@ -186,6 +186,6 @@ describe('ProjectDataService', () => {
       hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
     );
 
-    expect(result).toEqual([{segments:[{ word: 'אֱלֹהִ', index: 0 }, { word: 'ים֩', index: 1 }]}]);
+    expect(result).toEqual([{ segments: [{ word: 'אֱלֹהִ', index: 0, morpheme: 'root' }, { word: 'ים֩', index: 1, morpheme: 'suffix' }] }]);
   });
 });

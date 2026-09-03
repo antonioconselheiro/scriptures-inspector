@@ -25,7 +25,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   bookSource: SourceBook | null = null;
   bookMetadata: Book<BookMetadataAttributes, any> | null = null;
   language: Language | null = null;
-  lexicals: Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> = [];
+  lexicals: Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> = [];
 
   override response = new Subject<boolean | void>();
 
@@ -50,16 +50,16 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     this.lexicals = this.getLexicalDictionary();
   }
 
-  getLexicalDictionary(): Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> {
+  getLexicalDictionary(): Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> {
     if (this.bookMetadata) {
       return Object.entries(this.bookMetadata.lexical).map(([key, value]) => {
-        const entries: Array<{ key: string; rule: 'common' | 'prefix' | 'suffix'; value: string; }> = [];
+        const entries: Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> = [];
 
         if (value.value) {
           entries.push({
             key,
             value: value.value,
-            rule: 'common'
+            rule: 'root'
           });
         }
 
@@ -86,9 +86,9 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     return [];
   }
 
-  deleteLexical(key: string, rule: 'common' | 'prefix' | 'suffix'): void {
+  deleteLexical(key: string, rule: 'root' | 'prefix' | 'suffix'): void {
     if (this.bookMetadata) {
-      if (rule === 'common') {
+      if (rule === 'root') {
         if (this.bookMetadata.lexical[key].prefix) {
           this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].prefix;
         } else if (this.bookMetadata.lexical[key].suffix) {

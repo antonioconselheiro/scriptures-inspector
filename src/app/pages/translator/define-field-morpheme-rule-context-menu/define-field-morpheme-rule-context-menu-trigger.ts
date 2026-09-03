@@ -13,10 +13,10 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
   contextMenu!: DefineFieldMorphemeRuleContextMenu;
 
   @Input()
-  morphemePosition: 'common' | 'prefix' | 'suffix' = 'common';
+  morphemePosition: 'root' | 'prefix' | 'suffix' = 'root';
 
   @Input()
-  morphemeConfigured: 'common' | 'prefix' | 'suffix' = 'common';
+  morphemeConfigured: 'root' | 'prefix' | 'suffix' = 'root';
 
   @Input()
   sourceLanguage!: LanguageUnionType;
@@ -31,7 +31,7 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
   onRightClick(event: MouseEvent) {
     event.preventDefault();
 
-    if (this.morphemePosition !== 'common') {
+    if (this.morphemePosition !== 'root') {
       const normalizeFn = languageMetadataRecord[this.sourceLanguage].normalizeFn || (w => w);
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;

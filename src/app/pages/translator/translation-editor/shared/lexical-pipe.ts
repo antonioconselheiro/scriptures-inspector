@@ -18,9 +18,9 @@ export class LexicalPipe implements PipeTransform {
     value: string,
     book: BookMetadataAttributes | ParsedBookMetadata,
     languageName: LanguageUnionType,
-    morpheme: 'common' | 'prefix' | 'suffix',
+    morpheme: 'root' | 'prefix' | 'suffix',
     listenUpdate?: number
-  ): { config: 'common' | 'prefix' | 'suffix', value: string } {
+  ): { config: 'root' | 'prefix' | 'suffix', value: string } {
     listenUpdate;
 
     return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, morpheme);

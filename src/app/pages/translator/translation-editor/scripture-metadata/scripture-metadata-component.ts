@@ -241,7 +241,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     return [...(this.originToInterlinear || []), currentOriginToInterlinear];
   }
 
-  getMorpheme(segments: Array<any>, currentIndex: number): 'common' | 'prefix' | 'suffix' {
+  getMorpheme(segments: Array<any>, currentIndex: number): 'root' | 'prefix' | 'suffix' {
     return getMorphemeFn(segments, currentIndex);
   }
 

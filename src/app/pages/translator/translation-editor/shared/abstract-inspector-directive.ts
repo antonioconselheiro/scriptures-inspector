@@ -25,10 +25,10 @@ export abstract class AbstractInspectorDiretive {
 
   protected abstract metadataService: ProjectMetadataService;
 
-  calcFieldSize(segment: WordSegment, lexical: { config: "common" | "prefix" | "suffix"; value: string; } | string): number {
+  calcFieldSize(segment: WordSegment, lexical: { config: 'root' | 'prefix' | 'suffix'; value: string; } | string): number {
     let baseValue = 0;
     if (typeof lexical === 'string') {
-      lexical = { config: 'common', value: lexical };
+      lexical = { config: 'root', value: lexical };
     }
 
     if (['prefix', 'suffix'].includes(lexical.config)) {
@@ -47,7 +47,7 @@ export abstract class AbstractInspectorDiretive {
   }
 
     //  lexical
-  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment, morphemeConfigured: 'common' | 'prefix' | 'suffix'): void {
+  updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment, morphemeConfigured: 'root' | 'prefix' | 'suffix'): void {
     const language = this.languageMetadataRecord[sourceLanguage];
     this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value, morphemeConfigured);
     input.style.width = `${this.calcFieldSize(segment, input.value)}px`;

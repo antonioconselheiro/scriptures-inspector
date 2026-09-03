@@ -34,7 +34,7 @@ export class ProjectDataService {
       ? language.prefetchMatcherFn
       : (text: string) => text;
 
-    const segmentSuffix = (word: string): string[] => {
+    const segmentSuffix = (word: string): Array<{ word: string; morpheme: 'root' | 'suffix' | 'prefix' }> => {
       if (!word) {
         return [];
       }
@@ -61,17 +61,18 @@ export class ProjectDataService {
         }
 
         const beforeSuffix = word.slice(0, match.index);
+        const segmentSuffix: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: suffix, morpheme: 'suffix' };
 
         return [
           ...segmentWord(beforeSuffix),
-          suffix
+          segmentSuffix
         ].filter(Boolean);
       }
 
-      return [word];
+      return [{ word, morpheme: 'root' }];
     };
 
-    const segmentWord = (word: string): string[] => {
+    const segmentWord = (word: string): Array<{ word: string; morpheme: 'root' | 'suffix' | 'prefix' }> => {
       if (!word) {
         return [];
       }
@@ -84,7 +85,7 @@ export class ProjectDataService {
           const lexeme = match[0];
 
           if (lexeme) {
-            return [lexeme];
+            return [{ word: lexeme, morpheme: 'root' }];
           }
         }
       }
@@ -134,9 +135,10 @@ export class ProjectDataService {
           internalLexeme.index + internalLexeme.matched.length
         );
 
+        const segmentRoot: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: internalLexeme.matched, morpheme: 'root' };
         return [
           ...segmentWord(beforeLexeme),
-          internalLexeme.matched,
+          segmentRoot,
           ...segmentSuffix(afterLexeme)
         ].filter(Boolean);
       }
@@ -156,9 +158,10 @@ export class ProjectDataService {
         }
 
         const nextWord = word.slice(prefix.length);
+        const segmentPrefix: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: prefix, morpheme: 'prefix' };
 
         return [
-          prefix,
+          segmentPrefix,
           ...segmentWord(nextWord)
         ].filter(Boolean);
       }
@@ -171,10 +174,11 @@ export class ProjectDataService {
     const words = this.splitByLanguageWordSeparator(language, pharse);
     const wordMatrix = words.map(word => {
       const wordObject: Word = {
-        segments: segmentWord(word.word).map(word => {
+        segments: segmentWord(word.word).map(segment => {
           return {
             index: index++,
-            word
+            morpheme: segment.morpheme,
+            word: segment.word
           };
         })
       };
@@ -217,8 +221,8 @@ export class ProjectDataService {
     data: { lexical: Record<string, BookMetadataAttributesLexicalModel> },
     sourceLanguage: Language,
     word: string,
-    morpheme: 'common' | 'prefix' | 'suffix'
-  ): { config: 'common' | 'prefix' | 'suffix', value: string } {
+    morpheme: 'root' | 'prefix' | 'suffix'
+  ): { config: 'root' | 'prefix' | 'suffix', value: string } {
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
     const lexicalValues = data.lexical[normalizeFn(word)];
 
@@ -229,9 +233,9 @@ export class ProjectDataService {
         return { config: 'prefix', value: lexicalValues.prefix || '' };
       }
 
-      return { config: 'common', value: lexicalValues.value || '' };
+      return { config: 'root', value: lexicalValues.value || '' };
     }
 
-    return { config: 'common', value: '' };
+    return { config: 'root', value: '' };
   }
 }

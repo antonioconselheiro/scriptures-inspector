@@ -17,8 +17,8 @@ export class DefineFieldMorphemeRuleContextMenu {
   y = 0;
   word = '';
   visible = false;
-  morphemePosition: 'common' | 'prefix' | 'suffix' = 'prefix';
-  morphemeConfigured: 'common' | 'prefix' | 'suffix' = 'common';
+  morphemePosition: 'root' | 'prefix' | 'suffix' = 'prefix';
+  morphemeConfigured: 'root' | 'prefix' | 'suffix' = 'root';
   parsedBook!: ParsedBookMetadata;
 
   @Input()
@@ -28,13 +28,13 @@ export class DefineFieldMorphemeRuleContextMenu {
     private systemService: SystemService
   ) {}
 
-  onDefineFieldRule(type: 'common' | 'prefix' | 'suffix'): void {
+  onDefineFieldRule(type: 'root' | 'prefix' | 'suffix'): void {
     if (!this.parsedBook.lexical[this.word]) {
       this.parsedBook.lexical[this.word] = {};
     }
 
     const lexicalConfig = this.parsedBook.lexical[this.word];
-    if (type === 'common') {
+    if (type === 'root') {
       if (this.morphemeConfigured === 'prefix') {
         if (lexicalConfig.prefix) {
           const shouldContinue = confirm(`Definition of ${this.word} as prefix will be removed from lexical, continue?`);

@@ -4,7 +4,7 @@
     [ngStyle]="{ top: y + 'px', left: x + 'px' }"
   >
     <ul>
-      <li (click)="onDefineFieldRule('common')"> @if (morphemeConfigured === 'common') {●} Lexical in all contexts</li>
+      <li (click)="onDefineFieldRule('root')"> @if (morphemeConfigured === 'root') {●} In all contexts</li>
       @if (morphemePosition === 'prefix') {
         <li (click)="onDefineFieldRule('prefix')"> @if (morphemeConfigured === 'prefix') {●} Lexical only to prefix</li>
       } @else if (morphemePosition === 'suffix') {

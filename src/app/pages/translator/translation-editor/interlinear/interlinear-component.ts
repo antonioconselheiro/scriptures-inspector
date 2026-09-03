@@ -7,7 +7,7 @@ import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
@@ -19,18 +19,16 @@ import { TargetTranslationMetadataDetail } from '@domain/target-translation-meta
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
-import { CustomTranslationComponent } from '../custom-translation/custom-translation-component';
+import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { ScriptureMetadataComponent } from '../scripture-metadata/scripture-metadata-component';
 import { AbstractTranslatableDirective } from '../shared/abstract-translatable-directive';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
-import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
-import { getMorphemeFn } from '@shared/language-metadata/get-morpheme-fn';
-import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -177,7 +175,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
   }
 
-  getMorpheme(segments: Array<any>, currentIndex: number): 'common' | 'prefix' | 'suffix' {
+  getMorpheme(segments: Array<any>, currentIndex: number): 'root' | 'prefix' | 'suffix' {
     return getMorphemeFn(segments, currentIndex);
   }
 
