@@ -7,7 +7,7 @@ import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
-import { ParsedPatterns } from '@domain/parsed-patterns';
+import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';

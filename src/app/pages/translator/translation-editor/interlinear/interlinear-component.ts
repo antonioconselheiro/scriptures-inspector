@@ -8,7 +8,7 @@ import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { ParsedPatterns } from '@domain/parsed-patterns';
+import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { ProjectStructureInterlinear } from '@domain/project-structure-interlinear-model';

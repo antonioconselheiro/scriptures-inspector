@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Language } from '@domain/language-model';
-import { PatternsSerialized } from '@domain/patterns-serialized';
+import { PatternsSerialized } from '@domain/patterns-serialized-model';
 import { demassoretifierFn } from '@shared/language-metadata/demassoretifier-fn';
 import { massoretifierFn } from '@shared/language-metadata/massoretifier-fn';
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Language } from '@domain/language-model';
-import { PatternsSerialized } from '@domain/patterns-serialized';
+import { PatternsSerialized } from '@domain/patterns-serialized-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { Subject } from 'rxjs';
 import { PatternsService } from '../patterns-service';

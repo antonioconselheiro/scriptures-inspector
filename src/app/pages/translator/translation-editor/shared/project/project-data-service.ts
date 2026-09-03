@@ -3,7 +3,7 @@ import { BookMetadataAttributesLexicalModel } from '@domain/book-metadata-attrib
 import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-chapter-verse-word-target-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { ParsedPatterns } from '@domain/parsed-patterns';
+import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
@@ -30,32 +30,73 @@ export class ProjectDataService {
   }
 
   splitIntoMatrix(language: Language, patterns: ParsedPatterns, pharse: string): Array<Word> {
+    const prefetchMatcherFn = language.prefetchMatcherFn
+      ? language.prefetchMatcherFn
+      : (text: string) => text;
+
+    const segmentSuffix = (word: string): string[] => {
+      if (!word) {
+        return [];
+      }
+
+      const suffixes = Array.from(patterns.suffix.entries())
+        .sort(([a], [b]) => {
+          const aNormalized = prefetchMatcherFn(a);
+          const bNormalized = prefetchMatcherFn(b);
+
+          return bNormalized.length - aNormalized.length;
+        });
+
+      for (const [, pattern] of suffixes) {
+        const match = pattern.exec(word);
+
+        if (!match || match.index === undefined) {
+          continue;
+        }
+
+        const suffix = match[0];
+
+        if (!suffix) {
+          continue;
+        }
+
+        const beforeSuffix = word.slice(0, match.index);
+
+        return [
+          ...segmentWord(beforeSuffix),
+          suffix
+        ].filter(Boolean);
+      }
+
+      return [word];
+    };
+
     const segmentWord = (word: string): string[] => {
       if (!word) {
         return [];
       }
 
-      for (let [, pattern] of patterns.lexeme) {
-        const match = word.match(pattern);
+      // 1. A palavra inteira pode ser um lexema.
+      for (const [, pattern] of patterns.lexeme) {
+        const match = pattern.exec(word);
+
         if (match) {
-          const [lexeme] = Array.from(match);
+          const lexeme = match[0];
+
           if (lexeme) {
             return [lexeme];
           }
         }
       }
 
+      // 2. Procura o maior lexema dentro da palavra.
       let internalLexeme: {
         lexeme: string;
         index: number;
         matched: string;
       } | null = null;
 
-      const prefetchMatcherFn = language.prefetchMatcherFn
-        ? language.prefetchMatcherFn
-        : (text: string) => text;
-
-      for (let [lexeme] of patterns.lexeme) {
+      for (const [lexeme] of patterns.lexeme) {
         if (!lexeme) {
           continue;
         }
@@ -96,29 +137,34 @@ export class ProjectDataService {
         return [
           ...segmentWord(beforeLexeme),
           internalLexeme.matched,
-          ...segmentWord(afterLexeme)
-        ];
+          ...segmentSuffix(afterLexeme)
+        ].filter(Boolean);
       }
 
-      for (let [, pattern] of patterns.prefix) {
-        const match = word.match(pattern);
-        if (match) {
-          const [prefix] = Array.from(match);
-          const nextWord = word.replace(pattern, '');
-          return [prefix, ...segmentWord(nextWord)].filter(eachWord => eachWord);
+      // 3. Só procura prefixo quando não existe lexema.
+      for (const [, pattern] of patterns.prefix) {
+        const match = pattern.exec(word);
+
+        if (!match) {
+          continue;
         }
-      }
 
-      for (let [, pattern] of patterns.suffix) {
-        const match = word.match(pattern);
-        if (match) {
-          const [suffix] = Array.from(match);
-          const nextWord = word.replace(pattern, '');
-          return [...segmentWord(nextWord), suffix].filter(eachWord => eachWord);
+        const prefix = match[0];
+
+        if (!prefix) {
+          continue;
         }
+
+        const nextWord = word.slice(prefix.length);
+
+        return [
+          prefix,
+          ...segmentWord(nextWord)
+        ].filter(Boolean);
       }
 
-      return [word];
+      // 4. Finalmente, procura o sufixo do maior para o menor.
+      return segmentSuffix(word);
     };
 
     let index = 0;

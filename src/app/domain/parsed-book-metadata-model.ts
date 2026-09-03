@@ -1,5 +1,5 @@
 import { BookMetadataAttributesLexicalModel } from './book-metadata-attributes-lexical-model';
-import { ParsedPatterns } from './parsed-patterns';
+import { ParsedPatterns } from './parsed-patterns-model';
 
 export interface ParsedBookMetadata {
   patterns: ParsedPatterns;

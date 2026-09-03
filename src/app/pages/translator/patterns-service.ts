@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Language } from '@domain/language-model';
-import { PatternsSerialized } from '@domain/patterns-serialized';
+import { PatternsSerialized } from '@domain/patterns-serialized-model';
 
 @Injectable({
   providedIn: 'root',
