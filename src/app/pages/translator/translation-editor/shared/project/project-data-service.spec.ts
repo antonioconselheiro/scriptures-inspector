@@ -1,13 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 import { Language } from '@domain/language-model';
-import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { PatternsSerialized } from '@domain/patterns-serialized';
+import { demassoretifierFn } from '@shared/language-metadata/demassoretifier-fn';
+import { massoretifierFn } from '@shared/language-metadata/massoretifier-fn';
+import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { ProjectDataService } from './project-data-service';
 import { ProjectMetadataService } from './project-metadata-service';
-import { demassoretifierFn } from '@shared/language-metadata/demassoretifier-fn';
-import { hebrewGematriaFn } from '@shared/language-metadata/hebrew-gematria-fn';
-import { massoretifierFn } from '@shared/language-metadata/massoretifier-fn';
-import { paleoHebrewSpellingFn } from '@shared/language-metadata/paleo-hebrew-spelling-fn';
+
+const englishLanguage: Language = {
+  name: 'English',
+  label: 'English'
+};
+
+const hebrewLanguage: Language = {
+  name: 'Hebrew',
+  label: 'hebrew',
+  direction: 'rtl',
+  transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
+  wordSeparator: ['־', '׀', ' '],
+  normalizeFn: (text: string) => demassoretifierFn(text),
+  prefetchMatcherFn: (text: string) => massoretifierFn(text)
+};
 
 describe('ProjectDataService', () => {
   let dataService: ProjectDataService,
@@ -23,11 +36,6 @@ describe('ProjectDataService', () => {
     expect(dataService).toBeTruthy();
     expect(metadataService).toBeTruthy();
   });
-
-  const englishLanguage: Language = {
-    name: 'English',
-    label: 'English'
-  };
 
   const englishPatterns: PatternsSerialized = {
     prefix: ['in', 'a'],
@@ -135,29 +143,49 @@ describe('ProjectDataService', () => {
 
     expect(result).toEqual([{segments:[{ word: 'pre', index: 0 }, { word: 'supercore', index: 1 }, { word: 'ly', index: 2 }]}]);
   });
-
-  const hebrewLanguage: Language = {
-    name: 'Hebrew',
-    label: 'hebrew',
-    direction: 'rtl',
-    transliteration: (hebrew) => hebrewTransliterateFn(hebrew),
-    wordSeparator: ['־', '׀', ' '],
-    normalizeFn: (text: string) => demassoretifierFn(text),
-    prefetchMatcherFn: (text: string) => massoretifierFn(text)
-  };
-
-  const hebrewWord = 'לְמִינֵ֑הוּ';
-  const hebrewPatterns: PatternsSerialized = {
-    prefix: ['ל', 'ו'],
-    suffix: ['הו', 'ו'],
-    lexeme: ['הו']
-  };
-
+  
   it('should group hebrew niqqud into prefixes and suffixes', () => {
+    const hebrewWord = 'לְמִינֵ֑הוּ';
+    const hebrewPatterns: PatternsSerialized = {
+      prefix: ['ל', 'ו'],
+      suffix: ['הו', 'ו'],
+      lexeme: ['הו']
+    };
+
     const result = dataService.splitIntoMatrix(
       hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
     );
 
     expect(result).toEqual([{segments:[{ word: 'לְ', index: 0 }, { word: 'מִינֵ֑', index: 1 }, { word: 'הוּ', index: 2 }]}]);
+  });
+
+  it('should respect lexemes', () => {
+    const hebrewWord = 'וּרְב֗וּ';
+    const hebrewPatterns: PatternsSerialized = {
+      prefix: ['ו'],
+      suffix: ['בו','ו'],
+      lexeme: ['רב']
+    };
+
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
+    );
+
+    expect(result).toEqual([{segments:[{ word: 'וּ', index: 0 }, { word: 'רְב֗', index: 1 }, { word: 'וּ', index: 2 }]}]);
+  });
+
+  it('should choose the larger suffixes first and then move on to the shorter ones', () => {
+    const hebrewWord = 'אֱלֹהִים֩';
+    const hebrewPatterns: PatternsSerialized = {
+      prefix: ['י'],
+      suffix: ['ים'],
+      lexeme: ['אלה']
+    };
+
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
+    );
+
+    expect(result).toEqual([{segments:[{ word: 'אֱלֹהִ', index: 0 }, { word: 'ים֩', index: 1 }]}]);
   });
 });

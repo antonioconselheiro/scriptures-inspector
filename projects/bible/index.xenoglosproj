@@ -7,88 +7,252 @@
   "target": {
     "language": "portuguese",
     "books": {
-      "GEN": { "name": "Gênesis" },
-      "1EN": { "name": "Enoque" },
-      "EXO": { "name": "Êxodo" },
-      "LEV": { "name": "Levítico" },
-      "NUM": { "name": "Números" },
-      "DEU": { "name": "Deuteronômio" },
-      "JOS": { "name": "Josué" },
-      "JUI": { "name": "Juízes" },
-      "RUT": { "name": "Rute" },
-      "1SM": { "name": "1 Samuel" },
-      "2SM": { "name": "2 Samuel" },
-      "1RS": { "name": "1 Reis" },
-      "2RS": { "name": "2 Reis" },
-      "1CR": { "name": "1 Crônicas" },
-      "2CR": { "name": "2 Crônicas" },
-      "1ED": { "name": "Esdras LXX" },
-      "2ED": { "name": "Esdras" },
-      "3ED": { "name": "Neemias" },
-      "1ET": { "name": "Ester" },
-      "JOB": { "name": "Jó" },
-      "1SL": { "name": "Salmos" },
-      "3SL": { "name": "Salmos de Salomão" },
-      "PRO": { "name": "Provérbios" },
-      "ODS": { "name": "Odes de Salomão" },
-      "SSL": { "name": "Sabedoria de Salomão" },
-      "ECL": { "name": "Eclesiastes" },
-      "SIR": { "name": "Sirácida" },
-      "CAN": { "name": "Cânticos" },
-      "ISA": { "name": "Isaías" },
-      "1BA": { "name": "Baruque" },
-      "1JE": { "name": "Jeremias" },
-      "2JE": { "name": "Lamentações" },
-      "3JE": { "name": "Carta de Jeremias" },
-      "EZE": { "name": "Ezequiel" },
-      "1DA": { "name": "Daniel" },
-      "2DA": { "name": "Susana e os Anciãos" },
-      "3DA": { "name": "Bel e o Dragão" },
-      "OSE": { "name": "Oséias" },
-      "JOE": { "name": "Joel" },
-      "AMO": { "name": "Amós" },
-      "OBA": { "name": "Obadias" },
-      "JON": { "name": "Jonas" },
-      "MIQ": { "name": "Miquéias" },
-      "NAU": { "name": "Naum" },
-      "HAB": { "name": "Habacuque" },
-      "SOF": { "name": "Sofonias" },
-      "AGE": { "name": "Ageu" },
-      "ZAC": { "name": "Zacarias" },
-      "MAL": { "name": "Malaquias" },
-      "TOB": { "name": "Tobias" },
-      "JDT": { "name": "Judite" },
-      "1MA": { "name": "1 Macabeus" },
-      "2MA": { "name": "2 Macabeus" },
-      "3MA": { "name": "3 Macabeus" },
-      "4MA": { "name": "4 Macabeus" },
-      "MAT": { "name": "Mateus" },
-      "MAR": { "name": "Marcos" },
-      "LUC": { "name": "Lucas" },
-      "JOA": { "name": "João" },
-      "ATO": { "name": "Atos" },
-      "ROM": { "name": "Romanos" },
-      "1CO": { "name": "1 Coríntios" },
-      "2CO": { "name": "2 Coríntios" },
-      "GAL": { "name": "Gálatas" },
-      "EFE": { "name": "Efésios" },
-      "FIL": { "name": "Filipenses" },
-      "COL": { "name": "Colossenses" },
-      "1TS": { "name": "1 Tessalonicenses" },
-      "2TS": { "name": "2 Tessalonicenses" },
-      "1TM": { "name": "1 Timóteo" },
-      "2TM": { "name": "2 Timóteo" },
-      "TIT": { "name": "Tito" },
-      "FLM": { "name": "Filemom" },
-      "HEB": { "name": "Hebreus" },
-      "TIA": { "name": "Tiago" },
-      "1PE": { "name": "1 Pedro" },
-      "2PE": { "name": "2 Pedro" },
-      "1JO": { "name": "1 João" },
-      "2JO": { "name": "2 João" },
-      "3JO": { "name": "3 João" },
-      "JUD": { "name": "Judas" },
-      "APO": { "name": "Apocalipse" }
+      "GEN": {
+        "name": "Gênesis"
+      },
+      "1EN": {
+        "name": "Enoque"
+      },
+      "EXO": {
+        "name": "Êxodo"
+      },
+      "LEV": {
+        "name": "Levítico"
+      },
+      "NUM": {
+        "name": "Números"
+      },
+      "DEU": {
+        "name": "Deuteronômio"
+      },
+      "JOS": {
+        "name": "Josué"
+      },
+      "JUI": {
+        "name": "Juízes"
+      },
+      "RUT": {
+        "name": "Rute"
+      },
+      "1SM": {
+        "name": "1 Samuel"
+      },
+      "2SM": {
+        "name": "2 Samuel"
+      },
+      "1RS": {
+        "name": "1 Reis"
+      },
+      "2RS": {
+        "name": "2 Reis"
+      },
+      "1CR": {
+        "name": "1 Crônicas"
+      },
+      "2CR": {
+        "name": "2 Crônicas"
+      },
+      "1ED": {
+        "name": "Esdras LXX"
+      },
+      "2ED": {
+        "name": "Esdras"
+      },
+      "3ED": {
+        "name": "Neemias"
+      },
+      "1ET": {
+        "name": "Ester"
+      },
+      "JOB": {
+        "name": "Jó"
+      },
+      "1SL": {
+        "name": "Salmos"
+      },
+      "3SL": {
+        "name": "Salmos de Salomão"
+      },
+      "PRO": {
+        "name": "Provérbios"
+      },
+      "ODS": {
+        "name": "Odes de Salomão"
+      },
+      "SSL": {
+        "name": "Sabedoria de Salomão"
+      },
+      "ECL": {
+        "name": "Eclesiastes"
+      },
+      "SIR": {
+        "name": "Sirácida"
+      },
+      "CAN": {
+        "name": "Cânticos"
+      },
+      "ISA": {
+        "name": "Isaías"
+      },
+      "1BA": {
+        "name": "Baruque"
+      },
+      "1JE": {
+        "name": "Jeremias"
+      },
+      "2JE": {
+        "name": "Lamentações"
+      },
+      "3JE": {
+        "name": "Carta de Jeremias"
+      },
+      "EZE": {
+        "name": "Ezequiel"
+      },
+      "1DA": {
+        "name": "Daniel"
+      },
+      "2DA": {
+        "name": "Susana e os Anciãos"
+      },
+      "3DA": {
+        "name": "Bel e o Dragão"
+      },
+      "OSE": {
+        "name": "Oséias"
+      },
+      "JOE": {
+        "name": "Joel"
+      },
+      "AMO": {
+        "name": "Amós"
+      },
+      "OBA": {
+        "name": "Obadias"
+      },
+      "JON": {
+        "name": "Jonas"
+      },
+      "MIQ": {
+        "name": "Miquéias"
+      },
+      "NAU": {
+        "name": "Naum"
+      },
+      "HAB": {
+        "name": "Habacuque"
+      },
+      "SOF": {
+        "name": "Sofonias"
+      },
+      "AGE": {
+        "name": "Ageu"
+      },
+      "ZAC": {
+        "name": "Zacarias"
+      },
+      "MAL": {
+        "name": "Malaquias"
+      },
+      "TOB": {
+        "name": "Tobias"
+      },
+      "JDT": {
+        "name": "Judite"
+      },
+      "1MA": {
+        "name": "1 Macabeus"
+      },
+      "2MA": {
+        "name": "2 Macabeus"
+      },
+      "3MA": {
+        "name": "3 Macabeus"
+      },
+      "4MA": {
+        "name": "4 Macabeus"
+      },
+      "MAT": {
+        "name": "Mateus"
+      },
+      "MAR": {
+        "name": "Marcos"
+      },
+      "LUC": {
+        "name": "Lucas"
+      },
+      "JOA": {
+        "name": "João"
+      },
+      "ATO": {
+        "name": "Atos"
+      },
+      "ROM": {
+        "name": "Romanos"
+      },
+      "1CO": {
+        "name": "1 Coríntios"
+      },
+      "2CO": {
+        "name": "2 Coríntios"
+      },
+      "GAL": {
+        "name": "Gálatas"
+      },
+      "EFE": {
+        "name": "Efésios"
+      },
+      "FIL": {
+        "name": "Filipenses"
+      },
+      "COL": {
+        "name": "Colossenses"
+      },
+      "1TS": {
+        "name": "1 Tessalonicenses"
+      },
+      "2TS": {
+        "name": "2 Tessalonicenses"
+      },
+      "1TM": {
+        "name": "1 Timóteo"
+      },
+      "2TM": {
+        "name": "2 Timóteo"
+      },
+      "TIT": {
+        "name": "Tito"
+      },
+      "FLM": {
+        "name": "Filemom"
+      },
+      "HEB": {
+        "name": "Hebreus"
+      },
+      "TIA": {
+        "name": "Tiago"
+      },
+      "1PE": {
+        "name": "1 Pedro"
+      },
+      "2PE": {
+        "name": "2 Pedro"
+      },
+      "1JO": {
+        "name": "1 João"
+      },
+      "2JO": {
+        "name": "2 João"
+      },
+      "3JO": {
+        "name": "3 João"
+      },
+      "JUD": {
+        "name": "Judas"
+      },
+      "APO": {
+        "name": "Apocalipse"
+      }
     }
   },
   "structures": [
