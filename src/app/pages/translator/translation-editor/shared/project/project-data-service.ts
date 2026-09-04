@@ -30,104 +30,387 @@ export class ProjectDataService {
     return `${interlinearMetadata.originIndex}-${word}`;
   }
 
-  splitIntoMatrix(language: Language, patterns: ParsedPatterns, pharse: string): Array<Word> {
-    const prefetchMatcherFn = language.prefetchMatcherFn
-      ? language.prefetchMatcherFn
+  splitIntoMatrix(
+    language: Language,
+    patterns: ParsedPatterns,
+    pharse: string
+  ): Array<Word> {
+    const normalizeFn = language.normalizeFn
+      ? language.normalizeFn
       : (text: string) => text;
 
-    const segmentSuffix = (word: string): Array<{
+    type Segment = {
       word: string;
       morpheme: MorphemeType;
-    }> => {
+    };
+
+    /**
+     * Normaliza a palavra para matching, mas mantém o mapeamento
+     * entre os índices normalizados e os índices da palavra original.
+     *
+     * Isso é necessário para idiomas como hebraico, onde:
+     *
+     *   מִינֵ֑
+     *
+     * vira:
+     *
+     *   מינה
+     *
+     * durante a comparação, mas precisamos retornar o texto original.
+     */
+    const createNormalizedWord = (word: string): {
+      normalized: string;
+      originalIndexes: number[];
+    } => {
+      const normalized = normalizeFn(word);
+
+      if (normalized === word) {
+        return {
+          normalized,
+          originalIndexes: Array.from(
+            { length: normalized.length + 1 },
+            (_, index) => index
+          )
+        };
+      }
+
+      const originalIndexes: number[] = [];
+
+      for (
+        let originalIndex = 0;
+        originalIndex <= word.length;
+        originalIndex++
+      ) {
+        const normalizedPrefix = normalizeFn(
+          word.slice(0, originalIndex)
+        );
+
+        originalIndexes[normalizedPrefix.length] = originalIndex;
+      }
+
+      let lastIndex = 0;
+
+      for (
+        let normalizedIndex = 0;
+        normalizedIndex <= normalized.length;
+        normalizedIndex++
+      ) {
+        if (
+          originalIndexes[normalizedIndex] !== undefined
+        ) {
+          lastIndex =
+            originalIndexes[normalizedIndex];
+        } else {
+          originalIndexes[normalizedIndex] = lastIndex;
+        }
+      }
+
+      return {
+        normalized,
+        originalIndexes
+      };
+    };
+
+    /**
+     * Procura um padrão no início, no final ou em qualquer posição
+     * da palavra normalizada.
+     *
+     * O resultado usa os índices da palavra original.
+     */
+    const findPattern = (
+      word: string,
+      patternText: string,
+      position: 'start' | 'end' | 'any'
+    ): {
+      word: string;
+      index: number;
+      endIndex: number;
+    } | null => {
+      if (!patternText) {
+        return null;
+      }
+
+      const {
+        normalized,
+        originalIndexes
+      } = createNormalizedWord(word);
+
+      const normalizedPattern =
+        normalizeFn(patternText);
+
+      if (!normalizedPattern) {
+        return null;
+      }
+
+      let normalizedIndex: number;
+
+      switch (position) {
+        case 'start':
+          if (!normalized.startsWith(normalizedPattern)) {
+            return null;
+          }
+
+          normalizedIndex = 0;
+          break;
+
+        case 'end':
+          if (!normalized.endsWith(normalizedPattern)) {
+            return null;
+          }
+
+          normalizedIndex =
+            normalized.length -
+            normalizedPattern.length;
+          break;
+
+        case 'any':
+          normalizedIndex =
+            normalized.indexOf(normalizedPattern);
+
+          if (normalizedIndex === -1) {
+            return null;
+          }
+
+          break;
+      }
+
+      const normalizedEndIndex =
+        normalizedIndex +
+        normalizedPattern.length;
+
+      const originalStartIndex =
+        originalIndexes[normalizedIndex];
+
+      const originalEndIndex =
+        originalIndexes[normalizedEndIndex];
+
+      if (
+        originalStartIndex === undefined ||
+        originalEndIndex === undefined
+      ) {
+        return null;
+      }
+
+      return {
+        word: word.slice(
+          originalStartIndex,
+          originalEndIndex
+        ),
+        index: originalStartIndex,
+        endIndex: originalEndIndex
+      };
+    };
+
+    /**
+     * Procura e segmenta sufixos.
+     *
+     * isWordStart / isWordEnd representam a posição do trecho
+     * em relação à PALAVRA ORIGINAL, e não ao trecho local.
+     */
+    function segmentSuffix(
+      word: string,
+      isWordStart: boolean,
+      isWordEnd: boolean
+    ): Segment[] {
       if (!word) {
         return [];
       }
 
       const suffixes = Array.from(patterns.suffix.entries())
         .sort(([a], [b]) => {
-          const aNormalized = prefetchMatcherFn(a);
-          const bNormalized = prefetchMatcherFn(b);
+          const aNormalized = normalizeFn(a);
+          const bNormalized = normalizeFn(b);
 
-          return bNormalized.length - aNormalized.length;
+          return (
+            bNormalized.length -
+            aNormalized.length
+          );
         });
 
-      for (const [, pattern] of suffixes) {
-        const match = pattern.exec(word);
+      for (const [suffixPattern] of suffixes) {
+        const match = findPattern(
+          word,
+          suffixPattern,
+          'end'
+        );
 
-        if (!match || match.index === undefined) {
+        if (!match) {
           continue;
         }
 
-        const suffix = match[0];
+        const beforeSuffix = word.slice(
+          0,
+          match.index
+        );
 
-        if (!suffix) {
+        /**
+         * O suffix não pode ser o primeiro segmento
+         * da palavra ORIGINAL.
+         *
+         * Se isWordStart === false, significa que já existe
+         * algo antes deste trecho na palavra original.
+         *
+         * Exemplo:
+         *
+         *   root + "el"
+         *
+         * Ao processar "el":
+         *
+         *   isWordStart === false
+         *   beforeSuffix === ""
+         *
+         * e isso é válido.
+         */
+        if (
+          isWordStart &&
+          !beforeSuffix
+        ) {
           continue;
         }
 
-        const beforeSuffix = word.slice(0, match.index);
-        const segmentSuffix: { word: string; morpheme: MorphemeType } = {
-          word: suffix,
-          morpheme: 'suffix'
-        };
+        /**
+         * Se existe algo antes do suffix, precisamos segmentá-lo.
+         */
+        if (beforeSuffix) {
+          const beforeSegments = segmentWord(
+            beforeSuffix,
+            isWordStart,
+            false
+          );
 
+          if (!beforeSegments.length) {
+            continue;
+          }
+
+          /**
+           * Garantia adicional:
+           * o primeiro segmento da palavra original nunca
+           * pode ser suffix.
+           */
+          if (
+            isWordStart &&
+            beforeSegments[0].morpheme === 'suffix'
+          ) {
+            continue;
+          }
+
+          return [
+            ...beforeSegments,
+            {
+              word: match.word,
+              morpheme: 'suffix'
+            }
+          ];
+        }
+
+        /**
+         * Não existe nada antes localmente, mas como
+         * isWordStart === false, este suffix já vem depois
+         * de outro segmento.
+         */
         return [
-          ...segmentWord(beforeSuffix),
-          segmentSuffix
-        ].filter(Boolean);
+          {
+            word: match.word,
+            morpheme: 'suffix'
+          }
+        ];
       }
 
-      return [{ word, morpheme: 'root' }];
-    };
+      return [
+        {
+          word,
+          morpheme: 'root'
+        }
+      ];
+    }
 
-    const segmentWord = (word: string): Array<{ word: string; morpheme: MorphemeType }> => {
+    /**
+     * Segmenta recursivamente uma palavra.
+     *
+     * isWordStart:
+     *   este trecho ainda está no início da palavra original?
+     *
+     * isWordEnd:
+     *   este trecho ainda está no final da palavra original?
+     */
+    function segmentWord(
+      word: string,
+      isWordStart = true,
+      isWordEnd = true
+    ): Segment[] {
       if (!word) {
         return [];
       }
 
-      // 1. A palavra inteira pode ser um lexema.
-      for (const [, pattern] of patterns.lexeme) {
-        const match = pattern.exec(word);
+      /**
+       * 1. A palavra inteira pode ser um lexema.
+       */
+      if (
+        isWordStart &&
+        isWordEnd
+      ) {
+        for (const [lexeme] of patterns.lexeme) {
+          const match = findPattern(
+            word,
+            lexeme,
+            'start'
+          );
 
-        if (match) {
-          const lexeme = match[0];
-
-          if (lexeme) {
-            return [{ word: lexeme, morpheme: 'root' }];
+          if (
+            match &&
+            match.index === 0 &&
+            match.endIndex === word.length
+          ) {
+            return [
+              {
+                word: match.word,
+                morpheme: 'root'
+              }
+            ];
           }
         }
       }
 
-      // 2. Procura o maior lexema dentro da palavra.
+      /**
+       * 2. Procura o maior lexema interno.
+       */
       let internalLexeme: {
         lexeme: string;
+        word: string;
         index: number;
-        matched: string;
+        endIndex: number;
       } | null = null;
 
       for (const [lexeme] of patterns.lexeme) {
-        if (!lexeme) {
-          continue;
-        }
-
-        const matcher = new RegExp(
-          prefetchMatcherFn(lexeme),
-          'u'
+        const match = findPattern(
+          word,
+          lexeme,
+          'any'
         );
 
-        const match = matcher.exec(word);
-
-        if (!match || match.index === undefined) {
+        if (!match) {
           continue;
         }
+
+        const normalizedLexeme =
+          normalizeFn(lexeme);
+
+        const currentLength =
+          internalLexeme
+            ? normalizeFn(
+              internalLexeme.lexeme
+            ).length
+            : 0;
 
         if (
           !internalLexeme ||
-          lexeme.length > internalLexeme.lexeme.length
+          normalizedLexeme.length > currentLength
         ) {
           internalLexeme = {
             lexeme,
+            word: match.word,
             index: match.index,
-            matched: match[0]
+            endIndex: match.endIndex
           };
         }
       }
@@ -139,65 +422,128 @@ export class ProjectDataService {
         );
 
         const afterLexeme = word.slice(
-          internalLexeme.index + internalLexeme.matched.length
+          internalLexeme.endIndex
         );
 
-        const segmentRoot: { word: string; morpheme: MorphemeType } = {
-          word: internalLexeme.matched,
+        const root: Segment = {
+          word: internalLexeme.word,
           morpheme: 'root'
         };
 
         return [
-          ...segmentWord(beforeLexeme),
-          segmentRoot,
-          ...segmentSuffix(afterLexeme)
+          ...segmentWord(
+            beforeLexeme,
+            isWordStart,
+            false
+          ),
+
+          root,
+
+          ...segmentSuffix(
+            afterLexeme,
+            false,
+            isWordEnd
+          )
         ].filter(Boolean);
       }
 
-      // 3. Só procura prefixo quando não existe lexema.
-      for (const [, pattern] of patterns.prefix) {
-        const match = pattern.exec(word);
+      /**
+       * 3. Procura prefixos.
+       *
+       * Um prefixo é válido se:
+       *
+       *   - estiver no início do trecho;
+       *   - deixar conteúdo depois dele OU houver conteúdo
+       *     posteriormente na palavra original.
+       *
+       * Portanto "in" é válido em:
+       *
+       *   in + ablablivel
+       *
+       * mesmo quando estamos processando o trecho local "in".
+       */
+      for (const [prefixPattern] of patterns.prefix) {
+        const match = findPattern(
+          word,
+          prefixPattern,
+          'start'
+        );
+
         if (!match) {
           continue;
         }
 
-        const prefix = match[0];
-        if (!prefix) {
+        const nextWord = word.slice(
+          match.endIndex
+        );
+
+        /**
+         * Só é inválido quando o prefixo termina
+         * também a palavra ORIGINAL.
+         *
+         * Se isWordEnd === false, ainda existe conteúdo
+         * posteriormente na palavra.
+         */
+        if (
+          !nextWord &&
+          isWordEnd
+        ) {
           continue;
         }
 
-        const nextWord = word.slice(prefix.length);
-        const segmentPrefix: { word: string; morpheme: MorphemeType } = { word: prefix, morpheme: 'prefix' };
+        const prefix: Segment = {
+          word: match.word,
+          morpheme: 'prefix'
+        };
 
         return [
-          segmentPrefix,
-          ...segmentWord(nextWord)
+          prefix,
+
+          ...segmentWord(
+            nextWord,
+            false,
+            isWordEnd
+          )
         ].filter(Boolean);
       }
 
-      // 4. Finalmente, procura o sufixo do maior para o menor.
-      return segmentSuffix(word);
-    };
+      /**
+       * 4. Finalmente procura sufixos.
+       */
+      return segmentSuffix(
+        word,
+        isWordStart,
+        isWordEnd
+      );
+    }
 
     let index = 0;
-    const words = this.splitByLanguageWordSeparator(language, pharse);
-    const wordMatrix = words.map(word => {
-      const wordObject: Word = {
-        segments: segmentWord(word.word).map(segment => {
-          return {
+
+    const words = this.splitByLanguageWordSeparator(
+      language,
+      pharse
+    );
+
+    const wordMatrix = words
+      .map(word => {
+        const wordObject: Word = {
+          segments: segmentWord(
+            word.word
+          ).map(segment => ({
             index: index++,
             morpheme: segment.morpheme,
             word: segment.word
-          };
-        })
-      };
+          }))
+        };
 
-      if (word.separator !== undefined) {
-        wordObject.separator = word.separator;
-      }
+        if (word.separator !== undefined) {
+          wordObject.separator =
+            word.separator;
+        }
 
-      return wordObject;
-    }).flat();
+        return wordObject;
+      })
+      .flat();
 
     return wordMatrix;
   }

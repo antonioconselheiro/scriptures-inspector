@@ -31,7 +31,7 @@ export abstract class AbstractInspectorDiretive {
     } else if (lexicalValue.length) {
       const smalls = lexicalValue.match(/[|iItjl]/g) || [];
       const bigs = lexicalValue.match(/[ABCDEFGHJKLMNOPQRSTUVWXYZmw]/g) || []; 
-      return Math.floor(lexicalValue.length * 8.5) - (smalls.length * 8) + (bigs.length * 4);
+      return Math.floor(lexicalValue.length * 8.5) - (smalls.length * 5) + (bigs.length * 4);
     } else if (segmentWord.length) {
       return Math.floor(segmentWord.length * 5);
     }

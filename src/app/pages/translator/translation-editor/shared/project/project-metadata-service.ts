@@ -236,12 +236,48 @@ export class ProjectMetadataService {
     this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
-  parsePattern(serialized: PatternsSerialized, language: Language): ParsedPatterns {
-    const prefetchMatcherFn = language.prefetchMatcherFn ? language.prefetchMatcherFn : (t: string) => t;
-    const prefix = new Map<string, RegExp>(serialized.prefix.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}`, 'u')]));
-    const suffix = new Map<string, RegExp>(serialized.suffix.map(pattern => [pattern, new RegExp(`${prefetchMatcherFn(pattern)}$`, 'u')]));
-    const lexeme = new Map<string, RegExp>(serialized.lexeme.map(pattern => [pattern, new RegExp(`^${prefetchMatcherFn(pattern)}$`, 'u')]));
+  parsePattern(
+    serialized: PatternsSerialized,
+    language: Language
+  ): ParsedPatterns {
+    const prefetchMatcherFn = language.prefetchMatcherFn
+      ? language.prefetchMatcherFn
+      : (t: string) => t;
 
-    return { prefix, suffix, lexeme }
+    const prefix = new Map<string, RegExp>(
+      serialized.prefix.map(pattern => [
+        pattern,
+        new RegExp(
+          `^${prefetchMatcherFn(pattern)}`,
+          'u'
+        )
+      ])
+    );
+
+    const suffix = new Map<string, RegExp>(
+      serialized.suffix.map(pattern => [
+        pattern,
+        new RegExp(
+          `${prefetchMatcherFn(pattern)}$`,
+          'u'
+        )
+      ])
+    );
+
+    const lexeme = new Map<string, RegExp>(
+      serialized.lexeme.map(pattern => [
+        pattern,
+        new RegExp(
+          `^${prefetchMatcherFn(pattern)}$`,
+          'u'
+        )
+      ])
+    );
+
+    return {
+      prefix,
+      suffix,
+      lexeme
+    };
   }
 }
