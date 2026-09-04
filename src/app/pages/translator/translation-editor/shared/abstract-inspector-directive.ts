@@ -25,15 +25,13 @@ export abstract class AbstractInspectorDiretive {
 
   protected abstract metadataService: ProjectMetadataService;
 
-  calcFieldSize(segmentWord: string, lexical: { config: 'root' | 'prefix' | 'suffix'; value: string; } | string): number {
-    if (typeof lexical === 'string') {
-      lexical = { config: 'root', value: lexical };
-    }
-
-    if (lexical.value.length === 2) {
+  calcFieldSize(segmentWord: string, lexicalValue: string): number {
+    if (lexicalValue.length <= 2) {
       return 21;
-    } else if (lexical.value.length) {
-      return Math.floor(lexical.value.length * 8.5);
+    } else if (lexicalValue.length) {
+      const smalls = lexicalValue.match(/[|iIjl]/g) || [];
+      const bigs = lexicalValue.match(/[MW]/gi) || []; 
+      return Math.floor(lexicalValue.length * 8.5) - (smalls.length * 8) + (bigs.length * 4);
     } else if (segmentWord.length) {
       return Math.floor(segmentWord.length * 5);
     }

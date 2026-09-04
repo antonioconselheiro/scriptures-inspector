@@ -95,7 +95,7 @@
               <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word" #fieldLexical
                 [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
                 [morphemePosition]="segment.morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
-                [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment.word, lexical)"
+                [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment.word, lexical.value)"
                 (input)="updateLexical(sourceLanguage, fieldLexical, segment, lexical.config)"
                 [attr.title]="lexical.config === 'prefix' ? 'Lexical only to prefix' : lexical.config === 'suffix' ? 'Lexical only to suffix' : ''"
               />
