@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { MorphemeType } from '@domain/morpheme-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SystemService } from '@shared/system/system-service';
 
@@ -17,8 +18,8 @@ export class DefineFieldMorphemeRuleContextMenu {
   y = 0;
   word = '';
   visible = false;
-  morphemePosition: 'root' | 'prefix' | 'suffix' = 'prefix';
-  morphemeConfigured: 'root' | 'prefix' | 'suffix' = 'root';
+  morphemePosition: MorphemeType = 'prefix';
+  morphemeConfigured: MorphemeType = 'root';
   parsedBook!: ParsedBookMetadata;
 
   @Input()
@@ -28,7 +29,7 @@ export class DefineFieldMorphemeRuleContextMenu {
     private systemService: SystemService
   ) {}
 
-  onDefineFieldRule(type: 'root' | 'prefix' | 'suffix'): void {
+  onDefineFieldRule(type: MorphemeType): void {
     if (!this.parsedBook.lexical[this.word]) {
       this.parsedBook.lexical[this.word] = {};
     }

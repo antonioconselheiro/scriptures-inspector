@@ -1,5 +1,7 @@
+import { MorphemeType } from './morpheme-type';
+
 export interface WordSegment {
   index: number;
-  morpheme: 'root' | 'suffix' | 'prefix';
+  morpheme: MorphemeType;
   word: string;
 }

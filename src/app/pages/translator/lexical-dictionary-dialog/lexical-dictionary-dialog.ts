@@ -9,6 +9,7 @@ import { ProjectDataService } from '../translation-editor/shared/project/project
 import { SourceBook } from '@domain/source-book-model';
 import { ProjectMetadataService } from '../translation-editor/shared/project/project-metadata-service';
 import { Language } from '@domain/language-model';
+import { MorphemeType } from '@domain/morpheme-type';
 
 @Component({
   selector: 'app-lexical-dictionary-dialog',
@@ -25,7 +26,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   bookSource: SourceBook | null = null;
   bookMetadata: Book<BookMetadataAttributes, any> | null = null;
   language: Language | null = null;
-  lexicals: Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> = [];
+  lexicals: Array<{ key: string; rule: MorphemeType; value: string; }> = [];
 
   override response = new Subject<boolean | void>();
 
@@ -50,10 +51,10 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     this.lexicals = this.getLexicalDictionary();
   }
 
-  getLexicalDictionary(): Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> {
+  getLexicalDictionary(): Array<{ key: string; rule: MorphemeType; value: string; }> {
     if (this.bookMetadata) {
       return Object.entries(this.bookMetadata.lexical).map(([key, value]) => {
-        const entries: Array<{ key: string; rule: 'root' | 'prefix' | 'suffix'; value: string; }> = [];
+        const entries: Array<{ key: string; rule: MorphemeType; value: string; }> = [];
 
         if (value.value) {
           entries.push({
@@ -86,7 +87,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     return [];
   }
 
-  deleteLexical(key: string, rule: 'root' | 'prefix' | 'suffix'): void {
+  deleteLexical(key: string, rule: MorphemeType): void {
     if (this.bookMetadata) {
       if (rule === 'root') {
         if (this.bookMetadata.lexical[key].prefix) {

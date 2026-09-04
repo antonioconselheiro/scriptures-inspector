@@ -3,6 +3,7 @@ import { DefineFieldMorphemeRuleContextMenu } from './define-field-morpheme-rule
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { MorphemeType } from '@domain/morpheme-type';
 
 @Directive({
   selector: '[appDefineFieldMorphemeRuleContextMenuTrigger]',
@@ -13,10 +14,10 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
   contextMenu!: DefineFieldMorphemeRuleContextMenu;
 
   @Input()
-  morphemePosition: 'root' | 'prefix' | 'suffix' = 'root';
+  morphemePosition: MorphemeType = 'root';
 
   @Input()
-  morphemeConfigured: 'root' | 'prefix' | 'suffix' = 'root';
+  morphemeConfigured: MorphemeType = 'root';
 
   @Input()
   sourceLanguage!: LanguageUnionType;

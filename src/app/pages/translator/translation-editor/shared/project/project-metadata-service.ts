@@ -14,6 +14,7 @@ import { Word } from '@domain/word-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { MorphemeType } from '@domain/morpheme-type';
 
 @Injectable({
   providedIn: 'root'
@@ -157,7 +158,7 @@ export class ProjectMetadataService {
     language: Language,
     word: string,
     lexicalValue: string,
-    morphemeConfigured: 'root' | 'prefix' | 'suffix'
+    morphemeConfigured: MorphemeType
   ): void {
     const normalizeFn = language.normalizeFn ? language.normalizeFn : (word: string) => word;
     const normalizedKey = normalizeFn(word);

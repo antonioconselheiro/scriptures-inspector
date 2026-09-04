@@ -4,6 +4,7 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectDataService } from './project/project-data-service';
+import { MorphemeType } from '@domain/morpheme-type';
 
 @Pipe({
   name: 'lexical'
@@ -18,9 +19,9 @@ export class LexicalPipe implements PipeTransform {
     value: string,
     book: BookMetadataAttributes | ParsedBookMetadata,
     languageName: LanguageUnionType,
-    morpheme: 'root' | 'prefix' | 'suffix',
+    morpheme: MorphemeType,
     listenUpdate?: number
-  ): { config: 'root' | 'prefix' | 'suffix', value: string } {
+  ): { config: MorphemeType, value: string } {
     listenUpdate;
 
     return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, morpheme);

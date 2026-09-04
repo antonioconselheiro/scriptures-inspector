@@ -3,6 +3,7 @@ import { BookMetadataAttributesLexicalModel } from '@domain/book-metadata-attrib
 import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-chapter-verse-word-target-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { MorphemeType } from '@domain/morpheme-type';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
@@ -34,7 +35,10 @@ export class ProjectDataService {
       ? language.prefetchMatcherFn
       : (text: string) => text;
 
-    const segmentSuffix = (word: string): Array<{ word: string; morpheme: 'root' | 'suffix' | 'prefix' }> => {
+    const segmentSuffix = (word: string): Array<{
+      word: string;
+      morpheme: MorphemeType;
+    }> => {
       if (!word) {
         return [];
       }
@@ -61,7 +65,10 @@ export class ProjectDataService {
         }
 
         const beforeSuffix = word.slice(0, match.index);
-        const segmentSuffix: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: suffix, morpheme: 'suffix' };
+        const segmentSuffix: { word: string; morpheme: MorphemeType } = {
+          word: suffix,
+          morpheme: 'suffix'
+        };
 
         return [
           ...segmentWord(beforeSuffix),
@@ -72,7 +79,7 @@ export class ProjectDataService {
       return [{ word, morpheme: 'root' }];
     };
 
-    const segmentWord = (word: string): Array<{ word: string; morpheme: 'root' | 'suffix' | 'prefix' }> => {
+    const segmentWord = (word: string): Array<{ word: string; morpheme: MorphemeType }> => {
       if (!word) {
         return [];
       }
@@ -135,7 +142,11 @@ export class ProjectDataService {
           internalLexeme.index + internalLexeme.matched.length
         );
 
-        const segmentRoot: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: internalLexeme.matched, morpheme: 'root' };
+        const segmentRoot: { word: string; morpheme: MorphemeType } = {
+          word: internalLexeme.matched,
+          morpheme: 'root'
+        };
+
         return [
           ...segmentWord(beforeLexeme),
           segmentRoot,
@@ -146,19 +157,17 @@ export class ProjectDataService {
       // 3. Só procura prefixo quando não existe lexema.
       for (const [, pattern] of patterns.prefix) {
         const match = pattern.exec(word);
-
         if (!match) {
           continue;
         }
 
         const prefix = match[0];
-
         if (!prefix) {
           continue;
         }
 
         const nextWord = word.slice(prefix.length);
-        const segmentPrefix: { word: string; morpheme: 'root' | 'suffix' | 'prefix' } = { word: prefix, morpheme: 'prefix' };
+        const segmentPrefix: { word: string; morpheme: MorphemeType } = { word: prefix, morpheme: 'prefix' };
 
         return [
           segmentPrefix,
@@ -221,8 +230,8 @@ export class ProjectDataService {
     data: { lexical: Record<string, BookMetadataAttributesLexicalModel> },
     sourceLanguage: Language,
     word: string,
-    morpheme: 'root' | 'prefix' | 'suffix'
-  ): { config: 'root' | 'prefix' | 'suffix', value: string } {
+    morpheme: MorphemeType
+  ): { config: MorphemeType, value: string } {
     const normalizeFn = sourceLanguage.normalizeFn ? sourceLanguage.normalizeFn : (word: string) => word;
     const lexicalValues = data.lexical[normalizeFn(word)];
 
