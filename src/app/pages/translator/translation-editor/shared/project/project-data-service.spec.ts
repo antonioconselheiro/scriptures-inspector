@@ -462,8 +462,6 @@ describe('ProjectDataService', () => {
       hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
     );
 
-    console.info('result:', JSON.stringify(result));
-
     expect(result).toEqual([{
       segments: [{
         word: 'הַ',
@@ -487,6 +485,47 @@ describe('ProjectDataService', () => {
       }]
     }]);
   });
+
+  it('should never define prefix after root', () => {
+  const hebrewWord = 'כוכב' + 'ים';
+
+  const hebrewPatterns: PatternsSerialized = {
+    prefix: [
+      'י'
+    ],
+    suffix: [
+      'ים'
+    ],
+    lexeme: [
+      'כוכב'
+    ]
+  };
+
+  const result = dataService.splitIntoMatrix(
+    hebrewLanguage,
+    metadataService.parsePattern(
+      hebrewPatterns,
+      hebrewLanguage
+    ),
+    hebrewWord
+  );
+
+  expect(result).toEqual([{
+    segments: [
+      {
+        word: 'כוכב',
+        index: 0,
+        morpheme: 'root'
+      },
+      {
+        word: 'ים',
+        index: 1,
+        morpheme: 'suffix'
+      }
+    ]
+  }]);
+});
+
 
   it('should never have a prefix in the end', () => {
     const hebrewWord = 'ב֖וֹ';
