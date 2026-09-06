@@ -487,44 +487,44 @@ describe('ProjectDataService', () => {
   });
 
   it('should never define prefix after root', () => {
-  const hebrewWord = 'כוכב' + 'ים';
+    const hebrewWord = 'כוכב' + 'ים';
 
-  const hebrewPatterns: PatternsSerialized = {
-    prefix: [
-      'י'
-    ],
-    suffix: [
-      'ים'
-    ],
-    lexeme: [
-      'כוכב'
-    ]
-  };
+    const hebrewPatterns: PatternsSerialized = {
+      prefix: [
+        'י'
+      ],
+      suffix: [
+        'ים'
+      ],
+      lexeme: [
+        'כוכב'
+      ]
+    };
 
-  const result = dataService.splitIntoMatrix(
-    hebrewLanguage,
-    metadataService.parsePattern(
-      hebrewPatterns,
-      hebrewLanguage
-    ),
-    hebrewWord
-  );
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage,
+      metadataService.parsePattern(
+        hebrewPatterns,
+        hebrewLanguage
+      ),
+      hebrewWord
+    );
 
-  expect(result).toEqual([{
-    segments: [
-      {
-        word: 'כוכב',
-        index: 0,
-        morpheme: 'root'
-      },
-      {
-        word: 'ים',
-        index: 1,
-        morpheme: 'suffix'
-      }
-    ]
-  }]);
-});
+    expect(result).toEqual([{
+      segments: [
+        {
+          word: 'כוכב',
+          index: 0,
+          morpheme: 'root'
+        },
+        {
+          word: 'ים',
+          index: 1,
+          morpheme: 'suffix'
+        }
+      ]
+    }]);
+  });
 
 
   it('should never have a prefix in the end', () => {
@@ -589,6 +589,37 @@ describe('ProjectDataService', () => {
       {
         word: 'a',
         index: 4,
+        morpheme: 'suffix'
+      }]
+    }]);
+  });
+
+  it('should identify suffix after prefix if there is no root', () => {
+    const hebrewWord = "לָהֶ֜ם";
+    const patterns: PatternsSerialized = {
+      prefix: ["ל", "ה", "ת"],
+      suffix: ["ם"],
+      lexeme: []
+    };
+
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(patterns, hebrewLanguage), hebrewWord
+    );
+
+    expect(result).toEqual([{
+      segments: [{
+        word: 'לָ',
+        index: 0,
+        morpheme: 'prefix'
+      },
+      {
+        word: 'הֶ֜',
+        index: 1,
+        morpheme: 'prefix'
+      },
+      {
+        word: 'ם',
+        index: 2,
         morpheme: 'suffix'
       }]
     }]);

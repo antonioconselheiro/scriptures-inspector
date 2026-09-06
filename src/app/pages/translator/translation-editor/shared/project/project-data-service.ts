@@ -441,7 +441,6 @@ export class ProjectDataService {
       ];
     };
 
-
     /**
      * =========================================================
      * SEM LEXEMA

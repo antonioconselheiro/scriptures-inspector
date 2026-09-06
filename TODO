@@ -10,6 +10,8 @@ TODO
 [ ] - Incluir torá samaritanico no projeto
 [ ] - quando todos os textos foram deslocados para a direita por selecionar uma opção vazia para uma palavra, deve-se deslocar também o size
 [ ] - quando uma associação com o texto original for selecionada para uma opção já existente na palavra posterior, deve-se também sugerir o deslocamente de toda a frase em sequência
+[ ] - Incluir um tooltip nos segmentos coloridos do texto original indicando qual número de cada segmento
+[ ] - A palavra (לָהֶ֜ם) não está sendo separado corretamente no gen 1.28, o suffixo está sendo considerado radical
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
