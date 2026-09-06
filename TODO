@@ -8,6 +8,8 @@ TODO
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Daniel Susana e Daniel Bel e o Dragão estão faltando na versão geez, não estão disponível no repositório de literatura etiópica em geez
 [ ] - Incluir torá samaritanico no projeto
+[ ] - quando todos os textos foram deslocados para a direita por selecionar uma opção vazia para uma palavra, deve-se deslocar também o size
+[ ] - quando uma associação com o texto original for selecionada para uma opção já existente na palavra posterior, deve-se também sugerir o deslocamente de toda a frase em sequência
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines

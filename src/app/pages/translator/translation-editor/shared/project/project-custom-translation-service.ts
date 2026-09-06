@@ -550,7 +550,7 @@ export class ProjectCustomTranslationService {
       const value = interlinearValue.replace(/^\d+\-/, '');
       bookChapters.forEach(chapter => {
         chapter.verses.forEach(chapterVerse => {
-          if (chapterVerse.variations) {
+          if (chapterVerse && chapterVerse.variations) {
             const variationsRecord = chapterVerse.variations[variationId] || {};
             Object.keys(variationsRecord).forEach(key => {
               const metadata = chapterVerse.metadata[Number(key)];

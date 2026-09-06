@@ -436,6 +436,58 @@ describe('ProjectDataService', () => {
     }]);
   });
 
+  it('should not define segment as prefix after root', () => {
+    const hebrewWord = 'הַכּוֹכָבִֽים' + '׃';
+    const hebrewPatterns: PatternsSerialized = {
+      "prefix": [
+        "ו",
+        "ה",
+        "י",
+        "ב",
+        "נ",
+        "כ"
+      ],
+      "suffix": [
+        "׃",
+        "ים",
+        "ה",
+        "ת"
+      ],
+      "lexeme": [
+        "כוכב"
+      ]
+    };
+
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
+    );
+
+    console.info('result:', JSON.stringify(result));
+
+    expect(result).toEqual([{
+      segments: [{
+        word: 'הַ',
+        index: 0,
+        morpheme: 'prefix'
+      },
+      {
+        word: 'כּוֹכָבִֽ',
+        index: 1,
+        morpheme: 'root'
+      },
+      {
+        word: 'ים',
+        index: 2,
+        morpheme: 'suffix'
+      },
+      {
+        word: '׃',
+        index: 3,
+        morpheme: 'suffix'
+      }]
+    }]);
+  });
+
   it('should never have a prefix in the end', () => {
     const hebrewWord = 'ב֖וֹ';
     const hebrewPatterns: PatternsSerialized = {
