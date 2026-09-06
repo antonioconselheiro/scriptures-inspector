@@ -35,9 +35,26 @@ export class ProjectDataService {
     patterns: ParsedPatterns,
     pharse: string
   ): Array<Word> {
-    const normalizeFn = language.normalizeFn
+    const normalize = language.normalizeFn
       ? language.normalizeFn
       : (text: string) => text;
+
+    type Pattern = {
+      text: string;
+      normalized: string;
+    };
+
+    type Match = {
+      start: number;
+      end: number;
+      pattern: string;
+    };
+
+    type NormalizedWord = {
+      original: string;
+      normalized: string;
+      boundaries: number[];
+    };
 
     type Segment = {
       word: string;
@@ -46,819 +63,855 @@ export class ProjectDataService {
       end: number;
     };
 
-    type Match = {
-      pattern: string;
-      start: number;
-      end: number;
-    };
+    /**
+     * Prepara todos os patterns uma única vez.
+     *
+     * O Map contém:
+     *
+     *   pattern -> RegExp
+     *
+     * Para a segmentação só precisamos da chave.
+     */
+    const preparePatterns = (
+      entries: Map<string, RegExp>
+    ): Pattern[] =>
+      Array.from(entries.keys())
+        .map(text => ({
+          text,
+          normalized: normalize(text)
+        }))
+        .filter(item => item.normalized.length > 0)
+        .sort(
+          (a, b) =>
+            b.normalized.length -
+            a.normalized.length
+        );
+
+    const prefixPatterns =
+      preparePatterns(patterns.prefix);
+
+    const suffixPatterns =
+      preparePatterns(patterns.suffix);
+
+    const lexemePatterns =
+      preparePatterns(patterns.lexeme);
 
     /**
-     * Normaliza o texto, mas preserva a correspondência entre
-     * posições do texto normalizado e posições do texto original.
+     * Normaliza a palavra preservando a correspondência
+     * entre índices normalizados e índices originais.
      *
-     * A posição representa uma fronteira:
+     * Cada grapheme é normalizado isoladamente.
      *
-     * normalizedIndex -> originalIndex
+     * Isso é importante para hebraico:
      *
-     * Exemplo conceitual:
-     *
-     *   original:   לְ מִ י נֵ ֑ ה וּ
-     *   normalized: ל  מ י נ ה    ה ו
-     *
-     * Mesmo que o normalizeFn remova niqqud, conseguimos
-     * voltar para a posição correta do texto original.
+     *   ב֖ -> ב
+     *   וֹ -> ו
      */
-    const createNormalizedWord = (
-      word: string
-    ): {
-      normalized: string;
-      originalIndexes: number[];
-    } => {
+    const normalizeWord = (
+      original: string
+    ): NormalizedWord => {
       const segmenter = new Intl.Segmenter(
         undefined,
-        {
-          granularity: 'grapheme'
+        { granularity: 'grapheme' }
+      );
+
+      let normalized = '';
+
+      const boundaries: number[] = [0];
+
+      for (const grapheme of segmenter.segment(original)) {
+        const originalStart = grapheme.index;
+        const originalEnd =
+          grapheme.index + grapheme.segment.length;
+
+        const normalizedGrapheme =
+          normalize(grapheme.segment);
+
+        if (!normalizedGrapheme) {
+          continue;
         }
-      );
 
-      const graphemes = Array.from(
-        segmenter.segment(word)
-      );
+        normalized += normalizedGrapheme;
 
-      /**
-       * Normalize the complete word exactly as normalizeFn
-       * expects to receive it.
-       *
-       * We only use the grapheme boundaries to determine where
-       * each normalized boundary belongs in the original string.
-       */
-      const normalized = normalizeFn(word);
-
-      const originalIndexes =
-        new Array<number>(normalized.length + 1);
-
-      /**
-       * For every grapheme boundary in the original word,
-       * normalize the prefix ending at that boundary.
-       *
-       * The length of that normalized prefix gives us the
-       * corresponding boundary in the normalized string.
-       *
-       * Example:
-       *
-       * original:
-       *   לְ | מִ | נֵ֑ | ה | וּ
-       *
-       * normalized:
-       *   ל  | מ  | נ  | ה | ו
-       *
-       * boundary:
-       *
-       * normalized 0 -> original 0
-       * normalized 1 -> original 2
-       * normalized 2 -> original 4
-       * normalized 3 -> original 6
-       * normalized 4 -> original 7
-       * normalized 5 -> original 9
-       */
-      originalIndexes[0] = 0;
-
-      for (const grapheme of graphemes) {
-        const originalBoundary =
-          grapheme.index +
-          grapheme.segment.length;
-
-        const normalizedBoundary =
-          normalizeFn(
-            word.slice(0, originalBoundary)
-          ).length;
-
-        originalIndexes[
-          normalizedBoundary
-        ] = originalBoundary;
-      }
-
-      /**
-       * Fill any gaps.
-       *
-       * Normally matches should begin/end on grapheme
-       * boundaries. This also makes the mapping safe when
-       * normalizeFn produces multiple characters.
-       */
-      let lastOriginalIndex = 0;
-
-      for (
-        let normalizedIndex = 0;
-        normalizedIndex <= normalized.length;
-        normalizedIndex++
-      ) {
-        if (
-          originalIndexes[normalizedIndex] !== undefined
+        /**
+         * Cada caractere normalizado aponta para:
+         *
+         * início do grapheme original
+         *
+         * exceto o último, que aponta para o fim.
+         */
+        for (
+          let i = 0;
+          i < normalizedGrapheme.length;
+          i++
         ) {
-          lastOriginalIndex =
-            originalIndexes[normalizedIndex];
-        } else {
-          originalIndexes[normalizedIndex] =
-            lastOriginalIndex;
+          boundaries.push(
+            i === normalizedGrapheme.length - 1
+              ? originalEnd
+              : originalStart
+          );
         }
       }
 
       return {
+        original,
         normalized,
-        originalIndexes
+        boundaries
       };
     };
 
-    const findAll = (
-      word: string,
-      pattern: string
+    const createSegment = (
+      word: NormalizedWord,
+      start: number,
+      end: number,
+      morpheme: MorphemeType
+    ): Segment => ({
+      word: word.original.slice(
+        word.boundaries[start],
+        word.boundaries[end]
+      ),
+      morpheme,
+      start: word.boundaries[start],
+      end: word.boundaries[end]
+    });
+
+    /**
+     * Maior pattern que começa em `position`.
+     *
+     * Os patterns já estão ordenados por tamanho.
+     */
+    const matchAt = (
+      text: string,
+      position: number,
+      patternList: Pattern[]
+    ): Match | null => {
+      for (const pattern of patternList) {
+        if (
+          text.startsWith(
+            pattern.normalized,
+            position
+          )
+        ) {
+          return {
+            start: position,
+            end:
+              position +
+              pattern.normalized.length,
+            pattern: pattern.text
+          };
+        }
+      }
+
+      return null;
+    };
+
+    /**
+     * Maior suffix que termina exatamente em `end`.
+     */
+    const matchSuffixAt = (
+      text: string,
+      end: number,
+      patternList: Pattern[]
+    ): Match | null => {
+      for (const pattern of patternList) {
+        const start =
+          end - pattern.normalized.length;
+
+        if (
+          start >= 0 &&
+          text.startsWith(
+            pattern.normalized,
+            start
+          )
+        ) {
+          return {
+            start,
+            end,
+            pattern: pattern.text
+          };
+        }
+      }
+
+      return null;
+    };
+
+    /**
+     * Procura os lexemas existentes dentro da palavra.
+     *
+     * A busca é feita uma única vez.
+     */
+    const findLexemes = (
+      normalized: string
     ): Match[] => {
-      if (!pattern) {
-        return [];
-      }
-
-      const {
-        normalized,
-        originalIndexes
-      } = createNormalizedWord(word);
-
-      /**
-       * IMPORTANT:
-       *
-       * Normalize the pattern as a complete string as well.
-       *
-       * This keeps word and pattern normalization symmetric.
-       */
-      const normalizedPattern =
-        normalizeFn(pattern);
-
-      if (!normalizedPattern) {
-        return [];
-      }
-
       const matches: Match[] = [];
 
-      let fromIndex = 0;
+      for (const pattern of lexemePatterns) {
+        let position = 0;
 
-      while (
-        fromIndex <= normalized.length
-      ) {
-        const normalizedStart =
-          normalized.indexOf(
-            normalizedPattern,
-            fromIndex
-          );
+        while (position < normalized.length) {
+          const start =
+            normalized.indexOf(
+              pattern.normalized,
+              position
+            );
 
-        if (normalizedStart === -1) {
-          break;
-        }
+          if (start === -1) {
+            break;
+          }
 
-        const normalizedEnd =
-          normalizedStart +
-          normalizedPattern.length;
+          const end =
+            start +
+            pattern.normalized.length;
 
-        const start =
-          originalIndexes[normalizedStart];
-
-        const end =
-          originalIndexes[normalizedEnd];
-
-        /**
-         * A valid morphological match must begin and end
-         * on boundaries that can be mapped back to the
-         * original word.
-         */
-        if (
-          start !== undefined &&
-          end !== undefined &&
-          end > start
-        ) {
           matches.push({
-            pattern,
             start,
-            end
+            end,
+            pattern: pattern.text
           });
-        }
 
-        /**
-         * Prevent infinite loops and allow the next match.
-         */
-        fromIndex =
-          normalizedStart +
-          Math.max(
-            normalizedPattern.length,
-            1
-          );
-      }
-
-      return matches;
-    };
-
-    const getLength = (match: Match): number =>
-      match.end - match.start;
-
-    const findPrefixesAt = (
-      word: string,
-      position: number
-    ): Match[] => {
-      const result: Match[] = [];
-
-      for (const [pattern] of patterns.prefix) {
-        for (const match of findAll(word, pattern)) {
-          if (match.start === position) {
-            result.push(match);
-          }
+          position = end;
         }
       }
 
-      return result.sort(
+      return matches.sort(
         (a, b) =>
-          getLength(b) - getLength(a)
-      );
-    };
-
-    const findSuffixesAt = (
-      word: string,
-      position: number
-    ): Match[] => {
-      const result: Match[] = [];
-
-      for (const [pattern] of patterns.suffix) {
-        for (const match of findAll(word, pattern)) {
-          if (match.start === position) {
-            result.push(match);
-          }
-        }
-      }
-
-      return result.sort(
-        (a, b) =>
-          getLength(b) - getLength(a)
-      );
-    };
-
-    const findLexemes = (
-      word: string
-    ): Match[] => {
-      const result: Match[] = [];
-
-      for (const [pattern] of patterns.lexeme) {
-        for (const match of findAll(word, pattern)) {
-          result.push(match);
-        }
-      }
-
-      /**
-       * Maior lexema primeiro.
-       *
-       * Em empate, menor posição primeiro.
-       */
-      return result.sort(
-        (a, b) =>
-          getLength(b) - getLength(a) ||
+          (b.end - b.start) -
+          (a.end - a.start) ||
           a.start - b.start
       );
     };
 
     /**
-     * prefix*
+     * =========================================================
+     * COM LEXEMA
+     * =========================================================
      *
-     * Nunca permite:
+     * prefix* + root + suffix*
      *
-     * prefix depois do root
-     * prefix consumindo o root
-     * prefix sozinho no final
+     * O lexema só é aceito quando conseguimos consumir
+     * a palavra inteira.
      */
-    const segmentPrefixes = (
-      word: string,
-      position: number,
-      rootStart: number
-    ): Segment[] | null => {
-      if (position === rootStart) {
-        return [];
-      }
-
-      if (position > rootStart) {
-        return null;
-      }
-
-      const candidates =
-        findPrefixesAt(word, position)
-          .filter(
-            match =>
-              match.end <= rootStart
-          );
-
-      for (const match of candidates) {
-        /**
-         * Um prefix não pode ser a última coisa
-         * da palavra quando não existe root depois.
-         */
-        if (
-          match.end === word.length &&
-          match.end !== rootStart
-        ) {
-          continue;
-        }
-
-        const rest =
-          segmentPrefixes(
-            word,
-            match.end,
-            rootStart
-          );
-
-        if (rest !== null) {
-          return [
-            {
-              word: word.slice(
-                match.start,
-                match.end
-              ),
-              morpheme: 'prefix',
-              start: match.start,
-              end: match.end
-            },
-            ...rest
-          ];
-        }
-      }
-
-      return null;
-    };
-
-    /**
-     * suffix*
-     *
-     * Essa função só é chamada DEPOIS do root.
-     */
-    const segmentSuffixes = (
-      word: string,
-      position: number
-    ): Segment[] | null => {
-      if (position === word.length) {
-        return [];
-      }
-
-      const candidates =
-        findSuffixesAt(
-          word,
-          position
-        );
-
-      for (const match of candidates) {
-        const rest =
-          segmentSuffixes(
-            word,
-            match.end
-          );
-
-        if (rest !== null) {
-          return [
-            {
-              word: word.slice(
-                match.start,
-                match.end
-              ),
-              morpheme: 'suffix',
-              start: match.start,
-              end: match.end
-            },
-            ...rest
-          ];
-        }
-      }
-
-      return null;
-    };
-
-    const buildAroundLexeme = (
-      word: string,
+    const segmentWithLexeme = (
+      word: NormalizedWord,
       lexeme: Match
     ): Segment[] | null => {
-      const prefixSegments =
-        segmentPrefixes(
+      /**
+       * ---------------------------------------------------------
+       * Encontra uma cadeia de patterns que:
+       *
+       *   começa em `start`
+       *   termina exatamente em `target`
+       *
+       * Os patterns já estão ordenados do maior para o menor.
+       *
+       * Isso é importante porque:
+       *
+       *   prefix = ["presu", "pre"]
+       *   lexeme = "supercore"
+       *
+       * Para "presupercore":
+       *
+       *   presu -> não chega ao lexema
+       *   pre   -> chega ao lexema
+       *
+       * Portanto o prefixo maior não pode simplesmente
+       * eliminar o lexema.
+       */
+      const findChain = (
+        text: string,
+        start: number,
+        target: number,
+        patternList: Pattern[]
+      ): Match[] | null => {
+        if (start === target) {
+          return [];
+        }
+
+        if (start > target) {
+          return null;
+        }
+
+        for (const pattern of patternList) {
+          if (
+            text.startsWith(
+              pattern.normalized,
+              start
+            )
+          ) {
+            const end =
+              start + pattern.normalized.length;
+
+            if (end > target) {
+              continue;
+            }
+
+            const rest = findChain(
+              text,
+              end,
+              target,
+              patternList
+            );
+
+            if (rest !== null) {
+              return [
+                {
+                  start,
+                  end,
+                  pattern: pattern.text
+                },
+                ...rest
+              ];
+            }
+          }
+        }
+
+        return null;
+      };
+
+      /**
+       * ---------------------------------------------------------
+       * PREFIXOS
+       * ---------------------------------------------------------
+       *
+       * Precisamos encontrar uma cadeia que termine
+       * exatamente em lexeme.start.
+       */
+      const prefixes =
+        findChain(
+          word.normalized,
+          0,
+          lexeme.start,
+          prefixPatterns
+        );
+
+      if (prefixes === null) {
+        return null;
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * SUFIXOS
+       * ---------------------------------------------------------
+       *
+       * Precisamos encontrar uma cadeia que comece exatamente
+       * em lexeme.end e termine no final da palavra.
+       */
+      const suffixes =
+        findChain(
+          word.normalized,
+          lexeme.end,
+          word.normalized.length,
+          suffixPatterns
+        );
+
+      if (suffixes === null) {
+        return null;
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * RESULTADO
+       * ---------------------------------------------------------
+       */
+      return [
+        ...prefixes.map(item =>
+          createSegment(
+            word,
+            item.start,
+            item.end,
+            'prefix'
+          )
+        ),
+
+        createSegment(
+          word,
+          lexeme.start,
+          lexeme.end,
+          'root'
+        ),
+
+        ...suffixes.map(item =>
+          createSegment(
+            word,
+            item.start,
+            item.end,
+            'suffix'
+          )
+        )
+      ];
+    };
+
+
+    /**
+     * =========================================================
+     * SEM LEXEMA
+     * =========================================================
+     *
+     * Aqui precisamos preservar as regras antigas.
+     *
+     * A estrutura permitida é:
+     *
+     *   prefix* + root + suffix*
+     *
+     * ou:
+     *
+     *   prefix* + suffix*
+     *
+     * quando prefix e suffix encostam.
+     *
+     * Porém:
+     *
+     *   suffix NÃO pode começar em zero.
+     *
+     * Isso evita transformar uma palavra inteira em suffixes.
+     */
+    const segmentWithoutLexeme = (
+      word: NormalizedWord
+    ): Segment[] => {
+      const text = word.normalized;
+      const length = text.length;
+
+      if (!length) {
+        return [];
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 1. Prefixos
+       * ---------------------------------------------------------
+       *
+       * Consumimos somente prefixos que começam em zero.
+       *
+       * Como os patterns estão ordenados por tamanho,
+       * escolhemos sempre o maior.
+       */
+      const prefixes: Match[] = [];
+
+      let prefixEnd = 0;
+
+      while (prefixEnd < length) {
+        const prefix =
+          matchAt(
+            text,
+            prefixEnd,
+            prefixPatterns
+          );
+
+        if (!prefix) {
+          break;
+        }
+
+        /**
+         * Não podemos deixar o prefixo consumir
+         * a palavra inteira.
+         *
+         * Se isso acontecer, tratamos a palavra
+         * como root abaixo.
+         */
+        if (prefix.end === length) {
+          break;
+        }
+
+        prefixes.push(prefix);
+
+        prefixEnd = prefix.end;
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 2. Procuramos suffixes da direita
+       * ---------------------------------------------------------
+       *
+       * Existe uma diferença importante aqui:
+       *
+       * NÃO procuramos suffix a partir de zero.
+       *
+       * O primeiro suffix precisa deixar pelo menos
+       * um caractere de root, EXCETO quando já existe
+       * prefixo e prefix + suffix podem encostar.
+       *
+       * Exemplo:
+       *
+       *   ababa
+       *
+       *   prefix = a
+       *
+       *   suffixes = b + a + b + a
+       *
+       * Isso é válido.
+       *
+       * Mas:
+       *
+       *   ababa
+       *
+       *   suffixes = a + b + a + b + a
+       *
+       * não é válido, pois suffix começaria em zero.
+       */
+
+      /**
+       * Primeiro tentamos encontrar uma cadeia de suffixes
+       * partindo do final.
+       *
+       * O resultado é armazenado da esquerda para a direita.
+       */
+      const suffixes: Match[] = [];
+
+      let suffixStart = length;
+
+      while (suffixStart > prefixEnd) {
+        const suffix =
+          matchSuffixAt(
+            text,
+            suffixStart,
+            suffixPatterns
+          );
+
+        if (!suffix) {
+          break;
+        }
+
+        /**
+         * Não pode atravessar os prefixos.
+         */
+        if (suffix.start < prefixEnd) {
+          break;
+        }
+
+        suffixes.unshift(suffix);
+
+        suffixStart = suffix.start;
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 3. Caso prefix + suffix sem root
+       * ---------------------------------------------------------
+       *
+       * Ex:
+       *
+       *   ב֖וֹ
+       *
+       *   prefix = ב֖
+       *   suffix = וֹ
+       *
+       * Aqui:
+       *
+       *   prefixEnd === suffixStart
+       *
+       * Portanto não existe root.
+       *
+       * Isso é deliberadamente permitido.
+       */
+      if (
+        prefixes.length > 0 &&
+        suffixes.length > 0 &&
+        suffixStart === prefixEnd
+      ) {
+        return [
+          ...prefixes.map(item =>
+            createSegment(
+              word,
+              item.start,
+              item.end,
+              'prefix'
+            )
+          ),
+
+          ...suffixes.map(item =>
+            createSegment(
+              word,
+              item.start,
+              item.end,
+              'suffix'
+            )
+          )
+        ];
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 4. Caso prefix + root + suffix
+       * ---------------------------------------------------------
+       *
+       * Se sobrou alguma coisa entre prefix e suffix,
+       * isso é o root.
+       */
+      if (
+        suffixes.length > 0 &&
+        suffixStart > prefixEnd
+      ) {
+        return [
+          ...prefixes.map(item =>
+            createSegment(
+              word,
+              item.start,
+              item.end,
+              'prefix'
+            )
+          ),
+
+          createSegment(
+            word,
+            prefixEnd,
+            suffixStart,
+            'root'
+          ),
+
+          ...suffixes.map(item =>
+            createSegment(
+              word,
+              item.start,
+              item.end,
+              'suffix'
+            )
+          )
+        ];
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 5. Caso somente prefix + root
+       * ---------------------------------------------------------
+       *
+       * Ex:
+       *
+       *   pre + word
+       */
+      if (
+        prefixes.length > 0 &&
+        prefixEnd < length
+      ) {
+        return [
+          ...prefixes.map(item =>
+            createSegment(
+              word,
+              item.start,
+              item.end,
+              'prefix'
+            )
+          ),
+
+          createSegment(
+            word,
+            prefixEnd,
+            length,
+            'root'
+          )
+        ];
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 6. Caso somente suffix
+       * ---------------------------------------------------------
+       *
+       * IMPORTANTE:
+       *
+       * suffix no início da palavra é proibido.
+       *
+       * Portanto precisamos reservar pelo menos um
+       * caractere inicial para o root.
+       *
+       * Procuramos a maior cadeia de suffixes que começa
+       * depois da primeira posição.
+       */
+      if (prefixes.length === 0) {
+        /**
+         * Testamos somente as possíveis fronteiras
+         * de início do suffix.
+         *
+         * Isso é O(n * patterns), não gera combinações.
+         */
+        for (let rootEnd = 1; rootEnd < length; rootEnd++) {
+          const candidateSuffixes: Match[] = [];
+
+          let position = rootEnd;
+          let valid = true;
+
+          while (position < length) {
+            const suffix =
+              matchAt(
+                text,
+                position,
+                suffixPatterns
+              );
+
+            if (!suffix) {
+              valid = false;
+              break;
+            }
+
+            candidateSuffixes.push(suffix);
+
+            position = suffix.end;
+          }
+
+          if (
+            valid &&
+            candidateSuffixes.length > 0 &&
+            position === length
+          ) {
+            return [
+              createSegment(
+                word,
+                0,
+                rootEnd,
+                'root'
+              ),
+
+              ...candidateSuffixes.map(item =>
+                createSegment(
+                  word,
+                  item.start,
+                  item.end,
+                  'suffix'
+                )
+              )
+            ];
+          }
+        }
+      }
+
+      /**
+       * ---------------------------------------------------------
+       * 7. Fallback
+       * ---------------------------------------------------------
+       *
+       * Se nenhuma estrutura morfológica válida foi encontrada,
+       * a palavra inteira é root.
+       */
+      return [
+        createSegment(
           word,
           0,
-          lexeme.start
-        );
-
-      if (
-        lexeme.start > 0 &&
-        prefixSegments === null
-      ) {
-        return null;
-      }
-
-      const suffixSegments =
-        segmentSuffixes(
-          word,
-          lexeme.end
-        );
-
-      if (
-        lexeme.end < word.length &&
-        suffixSegments === null
-      ) {
-        return null;
-      }
-
-      return [
-        ...(prefixSegments || []),
-
-        {
-          word: word.slice(
-            lexeme.start,
-            lexeme.end
-          ),
-          morpheme: 'root',
-          start: lexeme.start,
-          end: lexeme.end
-        },
-
-        ...(suffixSegments || [])
+          length,
+          'root'
+        )
       ];
     };
 
     /**
-     * IMPORTANTE:
-     *
-     * Não usamos mais suffix-only como solução geral.
-     *
-     * Uma palavra que começa com suffix não deve ser
-     * automaticamente transformada numa sequência de suffixes.
+     * =========================================================
+     * SEGMENTAÇÃO DE UMA PALAVRA
+     * =========================================================
      */
-    const buildWithoutLexeme = (
-      word: string
-    ): Segment[] | null => {
-      if (!word) {
-        return null;
-      }
-
-      type PrefixPath = {
-        end: number;
-        segments: Segment[];
-      };
-
-      type SuffixPath = {
-        start: number;
-        segments: Segment[];
-      };
-
-      /**
-       * Retorna todas as possíveis cadeias de prefixos
-       * começando obrigatoriamente em `position`.
-       *
-       * O prefixo nunca pode consumir a palavra inteira.
-       */
-      const findPrefixPaths = (
-        position: number
-      ): PrefixPath[] => {
-        const paths: PrefixPath[] = [
-          {
-            end: position,
-            segments: []
-          }
-        ];
-
-        const candidates =
-          findPrefixesAt(word, position);
-
-        for (const match of candidates) {
-          /**
-           * Um prefixo sozinho não pode terminar a palavra.
-           */
-          if (match.end === word.length) {
-            continue;
-          }
-
-          const rest =
-            findPrefixPaths(match.end);
-
-          for (const path of rest) {
-            paths.push({
-              end: path.end,
-              segments: [
-                {
-                  word: word.slice(
-                    match.start,
-                    match.end
-                  ),
-                  morpheme: 'prefix',
-                  start: match.start,
-                  end: match.end
-                },
-                ...path.segments
-              ]
-            });
-          }
-        }
-
-        return paths;
-      };
-
-      /**
-       * Procura uma cadeia de suffixes que começa em
-       * `position` e obrigatoriamente termina no fim da palavra.
-       */
-      const findSuffixPaths = (
-        position: number
-      ): SuffixPath[] => {
-        if (position === word.length) {
-          return [
-            {
-              start: position,
-              segments: []
-            }
-          ];
-        }
-
-        const paths: SuffixPath[] = [];
-
-        const candidates =
-          findSuffixesAt(word, position);
-
-        for (const match of candidates) {
-          const rest =
-            findSuffixPaths(match.end);
-
-          for (const path of rest) {
-            paths.push({
-              start: position,
-              segments: [
-                {
-                  word: word.slice(
-                    match.start,
-                    match.end
-                  ),
-                  morpheme: 'suffix',
-                  start: match.start,
-                  end: match.end
-                },
-                ...path.segments
-              ]
-            });
-          }
-        }
-
-        return paths;
-      };
-
-      const prefixPaths =
-        findPrefixPaths(0);
-
-      /**
-       * Maior quantidade de prefixos primeiro.
-       *
-       * Em empate, maior comprimento consumido primeiro.
-       */
-      prefixPaths.sort(
-        (a, b) =>
-          b.segments.length -
-          a.segments.length ||
-          b.end - a.end
-      );
-
-      for (const prefixPath of prefixPaths) {
-        const prefixEnd = prefixPath.end;
-
-        /**
-         * Não houve prefixo.
-         *
-         * Nesse caso o suffix NÃO pode começar em zero,
-         * porque suffix no início da palavra é proibido.
-         *
-         * Precisamos reservar pelo menos um grapheme
-         * para o root.
-         */
-        if (prefixEnd === 0) {
-          for (
-            let rootEnd = 1;
-            rootEnd < word.length;
-            rootEnd++
-          ) {
-            const suffixPaths =
-              findSuffixPaths(rootEnd);
-
-            for (const suffixPath of suffixPaths) {
-              if (
-                suffixPath.segments.length === 0
-              ) {
-                continue;
-              }
-
-              return [
-                ...prefixPath.segments,
-
-                {
-                  word: word.slice(
-                    0,
-                    rootEnd
-                  ),
-                  morpheme: 'root',
-                  start: 0,
-                  end: rootEnd
-                },
-
-                ...suffixPath.segments
-              ];
-            }
-          }
-
-          /**
-           * Não encontramos suffix.
-           *
-           * A palavra inteira é root.
-           */
-          return [
-            {
-              word,
-              morpheme: 'root',
-              start: 0,
-              end: word.length
-            }
-          ];
-        }
-
-        /**
-         * Houve prefixo.
-         *
-         * Agora procuramos suffix começando:
-         *
-         * prefixEnd <= suffixStart < word.length
-         *
-         * Se suffixStart === prefixEnd:
-         *
-         *     prefix + suffix
-         *
-         * sem root.
-         *
-         * Isso é exatamente o caso:
-         *
-         *     ב֖ + וֹ
-         */
-        for (
-          let suffixStart = prefixEnd;
-          suffixStart < word.length;
-          suffixStart++
-        ) {
-          const suffixPaths =
-            findSuffixPaths(suffixStart);
-
-          for (const suffixPath of suffixPaths) {
-            if (
-              suffixPath.segments.length === 0
-            ) {
-              continue;
-            }
-
-            /**
-             * Se existe espaço entre prefix e suffix,
-             * esse espaço é o root.
-             */
-            const rootExists =
-              suffixStart > prefixEnd;
-
-            /**
-             * Se o intervalo entre prefix e suffix
-             * não começa em uma fronteira válida,
-             * não devemos cortar o grapheme.
-             *
-             * Como findAll() trabalha com limites de
-             * grapheme, podemos simplesmente verificar
-             * se existe conteúdo real.
-             */
-            const root =
-              rootExists
-                ? {
-                  word: word.slice(
-                    prefixEnd,
-                    suffixStart
-                  ),
-                  morpheme: 'root' as MorphemeType,
-                  start: prefixEnd,
-                  end: suffixStart
-                }
-                : null;
-
-            return [
-              ...prefixPath.segments,
-
-              ...(root ? [root] : []),
-
-              ...suffixPath.segments
-            ];
-          }
-        }
-
-        /**
-         * Caso em que os prefixos consumiram tudo menos
-         * um root final, sem suffix.
-         *
-         * Ex:
-         *
-         *     pre + root
-         */
-        if (prefixEnd < word.length) {
-          return [
-            ...prefixPath.segments,
-            {
-              word: word.slice(
-                prefixEnd
-              ),
-              morpheme: 'root',
-              start: prefixEnd,
-              end: word.length
-            }
-          ];
-        }
-      }
-
-      return null;
-    };
-
     const segmentWord = (
-      word: string
+      originalWord: string
     ): Segment[] => {
-      if (!word) {
+      if (!originalWord) {
         return [];
       }
 
-      const lexemes = findLexemes(word);
+      const word =
+        normalizeWord(originalWord);
 
-      // 1. Primeiro: prefix* + maior root válido + suffix*
+      /**
+       * 1. Lexemas têm prioridade.
+       *
+       * Mas cada lexema precisa produzir uma segmentação
+       * completa da palavra.
+       */
+      const lexemes =
+        findLexemes(word.normalized);
+
+      let bestSegments: Segment[] | null = null;
+      let bestLexeme: Match | null = null;
+
       for (const lexeme of lexemes) {
         const segments =
-          buildAroundLexeme(
+          segmentWithLexeme(
             word,
             lexeme
           );
 
-        if (segments) {
-          return segments;
+        if (!segments) {
+          continue;
+        }
+
+        if (!bestSegments || !bestLexeme) {
+          bestSegments = segments;
+          bestLexeme = lexeme;
+          continue;
+        }
+
+        /**
+         * Prioridade:
+         *
+         * 1. maior lexema
+         * 2. menor quantidade de segmentos
+         * 3. lexema mais à esquerda
+         *
+         * Isso evita que um lexema interno menor
+         * "roube" partes que deveriam pertencer ao root.
+         */
+        const currentLexemeLength =
+          lexeme.end - lexeme.start;
+
+        const bestLexemeLength =
+          bestLexeme.end - bestLexeme.start;
+
+        if (
+          currentLexemeLength > bestLexemeLength ||
+          (
+            currentLexemeLength === bestLexemeLength &&
+            (
+              segments.length < bestSegments.length ||
+              (
+                segments.length === bestSegments.length &&
+                lexeme.start < bestLexeme.start
+              )
+            )
+          )
+        ) {
+          bestSegments = segments;
+          bestLexeme = lexeme;
         }
       }
 
-      // 2. Sem lexeme:
-      //
-      //    prefix* + root? + suffix*
-      //
-      //    O root pode ser vazio quando
-      //    prefix e suffix encostam.
-      const withoutLexeme =
-        buildWithoutLexeme(word);
-
-      if (withoutLexeme) {
-        return withoutLexeme;
+      if (bestSegments) {
+        return bestSegments;
       }
 
-      // 3. Fallback
-      return [
-        {
-          word,
-          morpheme: 'root',
-          start: 0,
-          end: word.length
-        }
-      ];
+      /**
+       * 2. Sem lexema.
+       */
+      return segmentWithoutLexeme(word);
     };
 
+    /**
+     * =========================================================
+     * CONSTRUÇÃO FINAL
+     * =========================================================
+     */
     let index = 0;
 
-    const words =
-      this.splitByLanguageWordSeparator(
+    return this
+      .splitByLanguageWordSeparator(
         language,
         pharse
-      );
-
-    return words
-      .map(word => {
+      )
+      .map(item => {
         const segments =
-          segmentWord(word.word);
+          segmentWord(item.word);
 
-        const wordObject: Word = {
-          segments: segments.map(
-            segment => ({
-              index: index++,
-              morpheme: segment.morpheme,
-              word: segment.word
-            })
-          )
+        const word: Word = {
+          segments: segments.map(segment => ({
+            index: index++,
+            morpheme: segment.morpheme,
+            word: segment.word
+          }))
         };
 
         if (
-          word.separator !== undefined
+          item.separator !== undefined
         ) {
-          wordObject.separator =
-            word.separator;
+          word.separator = item.separator;
         }
 
-        return wordObject;
-      })
-      .flat();
+        return word;
+      });
   }
-
-
 
   splitByLanguageWordSeparator(language: Language, text: string): Array<{ word: string; separator?: string; }> {
     const splittingChars = language.wordSeparator || [' '];
