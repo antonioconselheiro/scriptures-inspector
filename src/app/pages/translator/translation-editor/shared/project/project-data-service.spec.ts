@@ -6,6 +6,7 @@ import { massoretifierFn } from '@shared/language-metadata/massoretifier-fn';
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { ProjectDataService } from './project-data-service';
 import { ProjectMetadataService } from './project-metadata-service';
+import { Word } from '@domain/word-model';
 
 const englishLanguage: Language = {
   name: 'English',
@@ -526,7 +527,6 @@ describe('ProjectDataService', () => {
     }]);
   });
 
-
   it('should never have a prefix in the end', () => {
     const hebrewWord = 'ב֖וֹ';
     const hebrewPatterns: PatternsSerialized = {
@@ -592,6 +592,51 @@ describe('ProjectDataService', () => {
         morpheme: 'suffix'
       }]
     }]);
+  });
+
+  it('should check suffix to the end', () => {
+    const hebrewWord = "לָהֶ֜ם";
+    const hebrewPatterns: PatternsSerialized = {
+      "prefix": [
+        "ה",
+        "ל",
+        "כ"
+      ],
+      "suffix": [
+        "הם",
+        "ם"
+      ],
+      "lexeme": [
+      ]
+    };
+
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage, metadataService.parsePattern(hebrewPatterns, hebrewLanguage), hebrewWord
+    );
+
+    const shouldReturn: Word[] = [
+      {
+        "segments": [
+          {
+            "index": 0,
+            "morpheme": "prefix",
+            "word": "לָ"
+          },
+          {
+            "index": 1,
+            "morpheme": "prefix",
+            "word": "הֶ֜"
+          },
+          {
+            "index": 2,
+            "morpheme": "suffix",
+            "word": "ם"
+          }
+        ]
+      }
+    ];
+
+    expect(result).toEqual(shouldReturn);
   });
 
   it('should identify suffix after prefix if there is no root', () => {
