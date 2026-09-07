@@ -211,14 +211,15 @@ export class ProjectDataService {
     const matchSuffixAt = (
       text: string,
       end: number,
-      patternList: Pattern[]
+      patternList: Pattern[],
+      minimumStart = 0
     ): Match | null => {
       for (const pattern of patternList) {
         const start =
           end - pattern.normalized.length;
 
         if (
-          start >= 0 &&
+          start >= minimumStart &&
           text.startsWith(
             pattern.normalized,
             start
@@ -563,22 +564,15 @@ export class ProjectDataService {
           matchSuffixAt(
             text,
             suffixStart,
-            suffixPatterns
+            suffixPatterns,
+            prefixEnd
           );
 
         if (!suffix) {
           break;
         }
 
-        /**
-         * Não pode atravessar os prefixos.
-         */
-        if (suffix.start < prefixEnd) {
-          break;
-        }
-
         suffixes.unshift(suffix);
-
         suffixStart = suffix.start;
       }
 
