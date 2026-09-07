@@ -14,7 +14,7 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
-import { TranslationWordSegment } from '@domain/word-fragment-model';
+import { TranslationWordSegment } from '@domain/translation-word-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
@@ -285,22 +285,28 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     indexes: BookIndexes
   ): void {
     if (!value && confirm('Advance one word to all associations to the right?')) {
+      const verse = this.customTranslation.chapters[indexes.chapterIndex]?.verses?.[indexes.verseIndex];
       const splittedCustomTranslation = this.customTranslationService.splitCustomTranslationWithVariations(this.customTranslation, indexes);
       let previousValue = '';
+      let previousSize = 0;
       for (let originalWordIndex = 0; originalWordIndex < splittedCustomTranslation.original.length; originalWordIndex++) {
         if (originalWordIndex >= wordIndex) {
 
           if (originalWordIndex == wordIndex) {
             previousValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
+            previousSize = verse.metadata[wordIndex].size;
             this.customTranslationService.saveCustomTranslationInterlinearMetadata(
               this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
             );
           } else {
             const currentValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
+            const currentSize = verse.metadata[originalWordIndex].size;
+            verse.metadata[originalWordIndex].size = previousSize;
             this.customTranslationService.saveCustomTranslationInterlinearMetadata(
               this.sourceBook, this.sourceVerse, this.customTranslation, this.current, previousValue, originalWordIndex
             );
             previousValue = currentValue;
+            previousSize = currentSize;
           }
         }
       }

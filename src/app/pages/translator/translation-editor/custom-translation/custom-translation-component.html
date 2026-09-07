@@ -129,13 +129,13 @@
                   (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
                   [style.width.px]="calcFieldSize(word.segment, variationValueEl.value) + 20">
     
-                  <datalist [id]="dataListId">
-                    @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
-                      @if (suggestion !== variationValueEl.value) {
-                        <option [value]="suggestion"></option>
-                      }
+                <datalist [id]="dataListId">
+                  @for (suggestion of getVariationDataListOptions(getCustomTranslationInterlinearValue($index), variation.id); track $index) {
+                    @if (suggestion !== variationValueEl.value) {
+                      <option [value]="suggestion"></option>
                     }
-                  </datalist>
+                  }
+                </datalist>
               </td>
             }
 
