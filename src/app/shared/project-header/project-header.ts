@@ -34,11 +34,11 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   @Output() onProject = new EventEmitter<Project>();
   @Output() onCurrentChapter = new EventEmitter<CurrentChapter>();
-  @Output() onCurrentArtifact = new EventEmitter<CurrentArtifact>(); 
+  @Output() onCurrentArtifact = new EventEmitter<CurrentArtifact>();
 
   formSelectedCollectionOrBook = '';
   formSelectedArtifactOrChapter: number | null = null;
-  
+
   project!: Project;
   collections: FragmentCollection[] = [];
   current: CurrentChapter | CurrentArtifact | null = null;
@@ -53,7 +53,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
     private modalService: ModalService,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.readProjectFromSession();
@@ -136,6 +136,24 @@ export class ProjectHeader implements OnInit, OnDestroy {
     }
   }
 
+  zoomOut(): void {
+    const fontScale = getComputedStyle(document.body)
+      .getPropertyValue('--font-scale')
+      .trim();
+    document.body.style.setProperty('--font-scale', String(Number(fontScale) - 0.1));
+  }
+
+  resetZoom(): void {
+    document.body.style.setProperty('--font-scale', '1');
+  }
+
+  zoomIn(): void {
+    const fontScale = getComputedStyle(document.body)
+      .getPropertyValue('--font-scale')
+      .trim();
+    document.body.style.setProperty('--font-scale', String(Number(fontScale) + 0.1));
+  }
+
   open(): void {
     if (this.notNullLike(this.formSelectedCollectionOrBook) && this.notNullLike(this.formSelectedArtifactOrChapter)) {
       const [type, key] = this.formSelectedCollectionOrBook.split('-');
@@ -179,7 +197,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   save(): void {
     this.saveIsAnimating = true;
-    
+
     if (this.current) {
       if ('book' in this.current) {
         const book = this.current.book;
@@ -191,7 +209,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
         const artifact = this.current.artifact;
         // TODO: this.systemService.triggerSaveCurrentArtifactMetadata({ collection, artifact });
       }
-  
+
       setTimeout(() => {
         this.saveIsAnimating = false;
         this.cdr.detectChanges();

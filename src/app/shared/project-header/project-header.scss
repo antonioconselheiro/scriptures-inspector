@@ -8,7 +8,8 @@
   box-shadow: gray 0 0 15px;
 
   &.minimized {
-    .buttonGroup {
+    .buttonGroup,
+    .zoomButtonGroup {
       display: none !important;
     }
 
@@ -74,6 +75,25 @@ header.tools {
       border: 0;
       cursor: pointer;
       background-size: 100%;
+    }
+  }
+
+  .zoomButtonGroup {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+
+    > button {
+      width: 36px;
+      height: 36px;
+      border: 0;
+      cursor: pointer;
+      background-color: transparent;
     }
   }
 
