@@ -29,7 +29,10 @@
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
-                  <span [class]="'prisma'+getColor(segment.index)">{{segment.word}}</span>
+                  <span
+                    [attr.title]="'index:' + segment.index"
+                    [class]="'prisma'+getColor(segment.index)"
+                  >{{segment.word}}</span>
                 }
               }
   
@@ -48,7 +51,10 @@
             <td>
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
-                  <span [class]="'prisma'+getColor(segment.index)">{{segment.word}}</span>
+                  <span
+                    [attr.title]="'index:' + segment.index"
+                    [class]="'prisma'+getColor(segment.index)"
+                  >{{segment.word}}</span>
                 }
               }
             </td>
@@ -64,7 +70,10 @@
                 @for (segment of word.segments; track segment.index) {
                   @let transliterated = segment.word | functionProxy : transliteration;
                   @if (transliterated.length) {
-                    <span [class]="'prisma'+getColor(segment.index)">{{transliterated}}</span>
+                    <span
+                      [attr.title]="'index:' + segment.index"
+                      [class]="'prisma'+getColor(segment.index)"
+                    >{{transliterated}}</span>
                   }
                 }
               </td>
