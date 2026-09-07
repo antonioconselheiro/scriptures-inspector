@@ -6,6 +6,8 @@ import { transliterate } from 'transliteration';
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
 import { massoretifierFn } from "./massoretifier-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
+import { samaritanSpellingFn } from './samaritan-spelling-fn';
+import { squareHebrewSpellingFn } from './square-hebrew-spelling-fn';
 
 export const languageMetadataRecord: {
   [lang in LanguageUnionType]: Language
@@ -39,6 +41,23 @@ export const languageMetadataRecord: {
     normalizeFn: (text: string) => demassoretifierFn(text),
     prefetchMatcherFn: (text: string) => massoretifierFn(text),
     externalDictionaryLink: 'https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s'
+  },
+  'samaritan': {
+    name: 'Samaritan',
+    label: 'latin-consonantal-samaritan',
+    direction: 'rtl',
+    alternativeSpelling: [
+      {
+        name: 'Samaritan',
+        label: 'samaritan',
+        parse: (text: string) => samaritanSpellingFn(text)
+      },
+      {
+        name: 'Square Hebrew',
+        label: 'square-hebrew',
+        parse: (text: string) => squareHebrewSpellingFn(text)
+      }
+    ]
   },
   'geez': {
     name: 'Ge\'əz',

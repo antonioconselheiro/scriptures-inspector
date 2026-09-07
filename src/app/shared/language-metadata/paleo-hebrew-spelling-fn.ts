@@ -121,8 +121,8 @@ const iconography = [
   }
 ];
 
-export function paleoHebrewSpellingFn(value: string): string {
-  const paleo = value.split(/[ ־׀]/).map(word => {
+export function paleoHebrewSpellingFn(text: string): string {
+  const paleo = text.split(/[ ־׀]/).map(word => {
     for (let index = 0; index < iconography.length; index++) {
       word = word.replace(iconography[index].matcher, iconography[index].paleo);
     }

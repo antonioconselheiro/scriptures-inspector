@@ -1,0 +1,14 @@
+{
+  "name": "Samaritan Pentateuch",
+  "language": "samaritan",
+  "sources": [
+    "https://github.com/DT-UCPH/sp"
+  ],
+  "books": {
+    "GEN": { "name": "Gênesis" },
+    "EXO": { "name": "Êxodo" },
+    "LEV": { "name": "Levítico" },
+    "NUM": { "name": "Números" },
+    "DEU": { "name": "Deuteronômio" }
+  }
+}

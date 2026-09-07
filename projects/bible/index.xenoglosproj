@@ -264,16 +264,22 @@
         {
           "source": "greek-septuagint",
           "metadataTarget": "greek-septuagint-custom-portuguese-metadata",
-          "interlinearTarget": "greek-septuagint-custom-portuguese-interlinear",
+          "interlinearTarget": "greek-septuagint-hebrew-stuttgartensia-interlinear",
           "customTranslationTarget": "greek-septuagint-custom-portuguese-translation",
           "interlinear": [
             {
               "source": "geez-mashafa-qeddus",
               "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
-              "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+              "interlinearTarget": "geez-mashafa-qeddus-greek-septuagint-hebrew-stuttgartensia-interlinear",
               "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
             }
           ]
+        },
+        {
+          "source": "samaritan-pentateuch",
+          "metadataTarget": "samaritan-pentateuch-custom-portuguese-metadata",
+          "interlinearTarget": "samaritan-pentateuch-hebrew-stuttgartensia-interlinear",
+          "customTranslationTarget": "samaritan-pentateuch-custom-portuguese-translation"
         }
       ]
     },
@@ -285,7 +291,7 @@
         {
           "source": "geez-mashafa-qeddus",
           "metadataTarget": "geez-mashafa-qeddus-custom-portuguese-metadata",
-          "interlinearTarget": "geez-mashafa-qeddus-custom-portuguese-interlinear",
+          "interlinearTarget": "geez-mashafa-qeddus-greek-elzeviriana-interlinear",
           "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
         }
       ]
