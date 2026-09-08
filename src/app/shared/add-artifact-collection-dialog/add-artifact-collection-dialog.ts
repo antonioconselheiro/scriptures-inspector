@@ -46,6 +46,10 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
     this.subscribeProjectCollections();
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
   private subscribeProjectCollections(): void {
     this.collections = this.collectionsStatefull.currentValue;
     this.subscriptions.add(this.collectionsStatefull.data$.subscribe({

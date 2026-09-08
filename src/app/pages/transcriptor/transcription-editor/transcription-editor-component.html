@@ -1,16 +1,8 @@
 <app-project-header (onProject)="onProjectChange($event)" (onCurrentArtifact)="onCurrentArtifactChange($event)"></app-project-header>
 
-<table>
-  <tr>
-    <th>Transcription</th>
-    <td>
-      <input type="text" />
-    </td>
-  </tr>
-</table>
-
 <form>
   <fieldset>
+    <legend>Show</legend>
     <div>
       <label>Imagem Base</label>
       <input type="checkbox" />
@@ -25,5 +17,14 @@
       <label>Edit Transcript Positioning</label>
       <input type="checkbox" />
     </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Transcription</legend>
+    <textarea placeholder="Transcription"></textarea>
+  </fieldset>
+
+  <fieldset>
+    <img [src]="getImage()" />
   </fieldset>
 </form>
