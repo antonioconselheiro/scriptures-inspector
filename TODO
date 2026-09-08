@@ -6,19 +6,6 @@ TODO
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
-[ ] - (não mvp) Daniel Susana e Daniel Bel e o Dragão estão faltando na versão geez, não estão disponível no repositório de literatura etiópica em geez
-[ ] - (não mvp) Livros pendentes de Beta Israel em ge'ez:
- - Testamento de Abraão;
- - Testamento de Isaac;
- - Testamento de Jacó;
-[ ] - (não mvp) Livros pendentes de Mashafa Qeddus em ge'ez:
-- Josippon LIT2598Yosipp.xml (conteúdo parcial);
-- Serʿatä Seyon (Estatutos/Ordem de Sião);
-- Gessew / Gitsew (Exposição / Cânones Apostólicos);
-- Qälämentos / Clemente (Clemente Etíope) (2001-3000/LIT2680ClemPeter.xml);
-- Mäṣḥafä Kidan I / Dominos I (Livro do Pacto I);
-- Mäṣḥafä Kidan II / Dominos II (Livro do Pacto II);
-- Didesqelya / Didascalia (Didascália Etíope);
 [ ] - quando uma associação com o texto original for selecionada para uma opção já existente na palavra posterior, deve-se também sugerir o deslocamente de toda a frase em sequência
 [ ] - quando a escritura traduzida é traduzida de uma tradução, tendo dois ou mais níveis de associação interlinear, então a representação de cores deve ser exibida para cada nível de escritura de onde a tradução se deriva, da escritura mais antiga, da tradução e etc, ex: tradução em ge'ez deve ter as cores de associação do ge'ez com a septuaginta e do ge'ez com as cores da associação da septuaginta com o hebraico, tendo ainda uma outra associação por cores direta do ge'ez com o hebraico, ou seja:
  geez com as cores do hebraico; 
@@ -33,6 +20,19 @@ TODO
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
 [ ] - (não mvp fragmentator) incluir meio de renomear arquivos importados
+[ ] - (não mvp) Daniel Susana e Daniel Bel e o Dragão estão faltando na versão geez, não estão disponível no repositório de literatura etiópica em geez
+[ ] - (não mvp) Livros pendentes de Beta Israel em ge'ez:
+ - Testamento de Abraão;
+ - Testamento de Isaac;
+ - Testamento de Jacó;
+[ ] - (não mvp) Livros pendentes de Mashafa Qeddus em ge'ez:
+- Josippon LIT2598Yosipp.xml (conteúdo parcial);
+- Serʿatä Seyon (Estatutos/Ordem de Sião);
+- Gessew / Gitsew (Exposição / Cânones Apostólicos);
+- Qälämentos / Clemente (Clemente Etíope) (2001-3000/LIT2680ClemPeter.xml);
+- Mäṣḥafä Kidan I / Dominos I (Livro do Pacto I);
+- Mäṣḥafä Kidan II / Dominos II (Livro do Pacto II);
+- Didesqelya / Didascalia (Didascália Etíope);
 [ ] - (não mvp) botão que permita identificar onde há outras ocorrências nas escrituras ou em um livro de um determinado lexico
 [ ] - (não mvp) fazer com que prisma dê continuidade da cor em que o último versículo terminou
 [ ] - (não mvp) criar tela de versiculator para criação de novos projetos ou edição de projetos existentes

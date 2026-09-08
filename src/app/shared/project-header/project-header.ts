@@ -11,8 +11,8 @@ import { AddArtifactCollectionDialog } from '@shared/add-artifact-collection-dia
 import { EditArtifactsInCollectionDialog } from '@shared/edit-artifacts-in-collection-dialog/edit-artifacts-in-collection-dialog';
 import { LoadingObservable } from '@shared/loading/loading-service';
 import { getProjectFn } from '@shared/project/get-project-fn';
-import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
+import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 
@@ -50,6 +50,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private systemService: SystemService,
+    private collectionsStatefull: CollectionsStatefull,
     private modalService: ModalService,
     private cdr: ChangeDetectorRef,
     private router: Router
@@ -57,7 +58,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.readProjectFromSession();
-    this.loadProjectCollections(this.project);
+    this.subscribeProjectCollections(this.project);
     this.subscribeParams();
     this.subscribeSaveProject();
   }
@@ -81,10 +82,12 @@ export class ProjectHeader implements OnInit, OnDestroy {
     }
   }
 
-  private loadProjectCollections(project: Project): void {
-    loadProjectCollectionsFn(project)
-      .then(collections => this.collections = collections || [])
-      .catch(e => console.error(e));
+  private subscribeProjectCollections(project: Project): void {
+    this.collections = this.collectionsStatefull.currentValue;
+    this.subscriptions.add(this.collectionsStatefull.data$.subscribe({
+      next: collections => this.collections = collections || []
+    }));
+    this.collectionsStatefull.update(project);
   }
 
   private subscribeSaveProject(): void {

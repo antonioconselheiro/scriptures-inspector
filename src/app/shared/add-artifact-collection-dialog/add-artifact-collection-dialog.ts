@@ -4,9 +4,9 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { deleteDirectoryFn } from '@shared/project/delete-directory-fn';
-import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
-import { Subject } from 'rxjs';
+import { CollectionsStatefull } from '@shared/system/collections-statefull';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-add-artifact-collection-dialog',
@@ -26,8 +26,11 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
 
+  private subscriptions = new Subscription();
+
   constructor(
     fb: FormBuilder,
+    private collectionsStatefull: CollectionsStatefull,
     private cdr: ChangeDetectorRef
   ) {
     super();
@@ -40,16 +43,17 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
     project: Project;
   }): void {
     this.project = data.project;
-    this.loadProjectCollections(data.project);
+    this.subscribeProjectCollections();
   }
 
-  private loadProjectCollections(project: Project): void {
-    loadProjectCollectionsFn(project)
-      .then(collections => {
-        this.collections = collections;
+  private subscribeProjectCollections(): void {
+    this.collections = this.collectionsStatefull.currentValue;
+    this.subscriptions.add(this.collectionsStatefull.data$.subscribe({
+      next: collections => {
+        this.collections = collections || [];
         this.cdr.detectChanges();
-      })
-      .catch(e => console.error(e));
+    }
+    }));
   }
 
   deleteCollection(project: Project, folder: string): void {
@@ -58,6 +62,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
         .then(success => {
           if (success) {
             this.collections = this.collections.filter(c => c.folder !== folder);
+            this.collectionsStatefull.update(project);
             this.cdr.detectChanges();
           } else {
             console.error(`Failed to delete directory: ${folder}`);
@@ -105,7 +110,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
         description: collectionDescription || '',
         order: []
       })
-        .then(() => this.loadProjectCollections(project!))
+        .then(() => this.collectionsStatefull.update(project))
         .catch(e => console.error(e));
     }
   }
