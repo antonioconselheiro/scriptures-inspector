@@ -159,7 +159,8 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   open(): void {
     if (this.notNullLike(this.formSelectedCollectionOrBook) && this.notNullLike(this.formSelectedArtifactOrChapter)) {
-      const [type, key] = this.formSelectedCollectionOrBook.split('-');
+      const [type, ...keyParts] = this.formSelectedCollectionOrBook.split('-');
+      const key = keyParts.join('-');
       const chapterOrArtifact = String(this.formSelectedArtifactOrChapter);
       let path: string[] = [];
 
