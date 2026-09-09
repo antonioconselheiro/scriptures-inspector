@@ -4,7 +4,7 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { ImagesPreview } from '@shared/images-preview/images-preview';
-import { LoadingObservable } from '@shared/loading/loading-service';
+import { LoadingObservable } from '@shared/loading/loading-observable';
 import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';

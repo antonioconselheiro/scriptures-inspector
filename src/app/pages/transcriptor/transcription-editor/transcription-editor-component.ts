@@ -16,9 +16,7 @@ import { DefineVectorDialog } from '../define-vector-dialog/define-vector-dialog
   imports: [
     CommonModule,
     ProjectHeader,
-    AsyncModalModule,
-    DefineVectorDialog,
-    DefineTranscriptionDialog
+    AsyncModalModule
   ],
   templateUrl: './transcription-editor-component.html',
   styleUrl: './transcription-editor-component.scss'
@@ -96,6 +94,9 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   openDialogDefineVector(): void {
     this.modalService
       .createModal(DefineVectorDialog)
+      .setData({
+        fragmentImage: this.getImage()
+      })
       .setOutletName('main')
       .build();
   }

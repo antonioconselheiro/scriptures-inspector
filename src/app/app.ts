@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
-import { LoadingObservable } from '@shared/loading/loading-service';
+import { LoadingObservable } from '@shared/loading/loading-observable';
 import { Subscription } from 'rxjs';
 import { MainDialogComponent } from './shared/main-dialog/main-dialog';
 

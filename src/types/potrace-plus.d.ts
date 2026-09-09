@@ -800,6 +800,23 @@ interface PotracePlusConstructor {
     ): Promise<PotracePlusResult>;
 }
 
+type GetSVGOptions = {
+  toRelative?: boolean;
+  toShorthands?: boolean;
+  decimals?: number;
+  addDimensions?: boolean;
+  optimize?: boolean;
+  minifyD?: boolean;
+  reorder?: boolean;
+  recode?: boolean;
+};
+
+type GetSVG = (
+  pathDataArray: string[],
+  width: number,
+  height: number,
+  options?: GetSVGOptions
+) => string;
 
 /* ========================================================================== */
 /*                              GLOBAL FUNCTION                               */
@@ -826,4 +843,6 @@ interface Window {
      * Global Potrace Plus constructor/function.
      */
     PotracePlus: PotracePlusConstructor;
+
+    getSVG: GetSVG;
 }

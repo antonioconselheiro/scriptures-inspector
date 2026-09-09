@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { Project } from '@domain/project-model';
-import { LoadingObservable } from '@shared/loading/loading-service';
+import { LoadingObservable } from '@shared/loading/loading-observable';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { SystemService } from '@shared/system/system-service';

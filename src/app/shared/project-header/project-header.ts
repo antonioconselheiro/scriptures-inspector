@@ -9,7 +9,7 @@ import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { AddArtifactCollectionDialog } from '@shared/add-artifact-collection-dialog/add-artifact-collection-dialog';
 import { EditArtifactsInCollectionDialog } from '@shared/edit-artifacts-in-collection-dialog/edit-artifacts-in-collection-dialog';
-import { LoadingObservable } from '@shared/loading/loading-service';
+import { LoadingObservable } from '@shared/loading/loading-observable';
 import { getProjectFn } from '@shared/project/get-project-fn';
 import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
