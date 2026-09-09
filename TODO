@@ -14,6 +14,8 @@ TODO
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - dpkg: aviso: a interpretar o ficheiro '/var/lib/dpkg/status' perto da linha 50237 pacote 'scriptures-inspector': falta o campo 'Maintainer'
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
+[ ] - (mvp fragmentator) para inserir o texto de transcrição pode ser aberto uma dialog para inserção do texto e a edição deve ser permitida somente se não houver edição do posicionamento da transcrição no vetor, se já estiver uma palavra que seja posicionada, então o texto deve ser editado pela interface de posicionamento
+[ ] - (mvp fragmentator) Incluir potrance para definir SVG mascara do fragmento (https://herrstrietzel.github.io/potrace-plus/)
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
 [ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) componente para associação da transcrição com livro/capítulo 

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AsyncModalModule } from '@belomonte/async-modal-ngx';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { CurrentArtifact } from '@domain/current-artifact-model';
 import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
@@ -8,16 +8,20 @@ import { ProjectHeader } from '@shared/project-header/project-header';
 import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { Subscription } from 'rxjs';
+import { DefineTranscriptionDialog } from '../define-transcription-dialog/define-transcription-dialog';
+import { DefineVectorDialog } from '../define-vector-dialog/define-vector-dialog';
 
 @Component({
   selector: 'app-transcription-editor-component',
   imports: [
+    CommonModule,
     ProjectHeader,
     AsyncModalModule,
-    CommonModule
+    DefineVectorDialog,
+    DefineTranscriptionDialog
   ],
   templateUrl: './transcription-editor-component.html',
-  styleUrl: './transcription-editor-component.scss',
+  styleUrl: './transcription-editor-component.scss'
 })
 export class TranscriptionEditorComponent implements OnInit, OnDestroy {
 
@@ -29,6 +33,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    private modalService: ModalService,
     private collectionsStatefull: CollectionsStatefull
   ) { }
 
@@ -43,20 +48,17 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   }
 
   onProjectChange(project: Project | null): void {
-    console.info('run onProjectChange, project:', project);
     this.project = project;
     this.updateArtifactFolder();
   }
 
   onCurrentArtifactChange(current: CurrentArtifact | null): void {
-    console.info('run onCurrentArtifactChange, current:', current);
     this.current = current;
     this.updateArtifactFolder();
     this.updateCurrentCollectionDetails();
   }
 
   updateCurrentCollectionDetails(): void {
-    console.info('run updateCurrentCollectionDetails, current:', this.current);
     const current = this.current;
     if (current) {
       this.currentCollectionDetail = this.collectionsStatefull.currentValue.find(collection => collection.folder === current.collection) || null;
@@ -76,12 +78,19 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   getImage(): string {
     const currentCollectionDetail = this.currentCollectionDetail;
     const current = this.current;
-    console.info('currentCollectionDetail:', currentCollectionDetail);
-    console.info('current:', current);
+
     if (currentCollectionDetail && current) {
       return 'local://' + encodeURIComponent(`${this.folder}/${currentCollectionDetail.order[current.artifact] || ''}`);
     } else {
       return '';
     }
+  }
+
+  openDialogIncludeTranscription(): void {
+    this.modalService.createModal(DefineTranscriptionDialog);
+  }
+
+  openDialogDefineVector(): void {
+    this.modalService.createModal(DefineVectorDialog);
   }
 }
