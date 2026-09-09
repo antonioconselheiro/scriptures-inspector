@@ -26,7 +26,8 @@
     "strictTemplates": true
   },
   "files": [
-    "src/types/global.d.ts"
+    "src/types/global.d.ts",
+    "src/types/potrace-plus.d.ts"
   ],
   "references": [
     {

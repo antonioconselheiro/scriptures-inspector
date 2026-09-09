@@ -87,10 +87,16 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   }
 
   openDialogIncludeTranscription(): void {
-    this.modalService.createModal(DefineTranscriptionDialog);
+    this.modalService
+      .createModal(DefineTranscriptionDialog)
+      .setOutletName('main')
+      .build();
   }
 
   openDialogDefineVector(): void {
-    this.modalService.createModal(DefineVectorDialog);
+    this.modalService
+      .createModal(DefineVectorDialog)
+      .setOutletName('main')
+      .build();
   }
 }

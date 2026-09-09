@@ -12,5 +12,6 @@ export class DefineVectorDialog extends ModalableDirective<{}, void> {
   override response = new Subject<void>();
 
   override onInjectData(data: {}): void {
+    new PotracePlus('teste');
   }
 }
