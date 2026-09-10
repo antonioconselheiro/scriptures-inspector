@@ -476,6 +476,12 @@ interface PotracePlusOptions {
      */
     blur?: number;
 
+    /**
+     * Split SVG paths into separate elements.
+     *
+     * Default: `true`.
+     */
+    split?: boolean;
 
     /* ---------------------------- SVG processing -------------------------- */
 
@@ -525,6 +531,13 @@ interface PotracePlusOptions {
      * Default: `3`.
      */
     decimals?: number;
+
+    /**
+     * Force retracing even if settings haven't changed.
+     *
+     * Default: `false`.
+     */
+    recode?: boolean;
 
 
     /* ----------------------------- Extra output --------------------------- */

@@ -1,91 +1,25 @@
 <div>
   <form [formGroup]="settingsForm">
     <aside class="aside aside-1 hgh-100 scrollbar scroll-content-ld scroll-track pdd-1em pos-rlt ovr-scr">
-
-      <header class="pst-sticky top-0 bg z-ind-1000">
-        <h1>Potrace settings</h1>
-        <p>See <a href="https://pythonhosted.org/pypotrace/ref.html">potrace documentation</a></p>
-      </header>
-
       <h3>Filter</h3>
       <p>
         <label>Brightness</label>
-        <input type="range" id="brightness" name="brightness" value="1" min="0" max="2" step="0.1"
-          data-type="--range-number">
+        <input type="range" formControlName="brightness" name="brightness" (change)="updateSVG()" value="1" min="0" max="2" step="0.1" data-type="--range-number">
       </p>
       <p>
         <label>Contrast</label>
-        <input type="range" id="contrast" name="contrast" value="1" min="0" max="10" step="0.1"
-          data-type="--range-number">
-      <p>
+        <input type="range" formControlName="contrast" name="contrast" (change)="updateSVG()" value="1" min="0" max="10" step="0.1" data-type="--range-number">
+      </p>
       <p>
         <label>Blur</label>
-        <input type="range" id="blur" name="blur" value="0" min="0" max="10" step="0.1" data-type="--range-number">
-
-      <p>
-        <label><input type="checkbox" name="invert">invert</label>
-      </p>
-
-      <p>
-        <label class="wdt-100">turdsize <input type="number" value="1" min="0" step="0.1" name="turdsize"
-            data-info="reduces noise"> </label>
+        <input type="range" formControlName="blur" name="blur" (change)="updateSVG()" value="0" min="0" max="10" step="0.1" data-type="--range-number">
       </p>
       <p>
-        <label class="wdt-100">opttolerance<input type="number" value="1" min="0" name="opttolerance" min="0" step="0.1"
-            data-info="adds more aggressive smoothing"> </label>
+        <label><input type="checkbox" formControlName="invert" name="invert" (change)="updateSVG()">invert</label>
       </p>
-      <p>
-        <label class="wdt-100">alphamax<input type="number" value="1" min="0" step="0.1" name="alphamax"
-            data-info="lower values retain more corners/straight lines"> </label>
-      </p>
-      <p></p>
-      <label class="wdt-100"><input type="checkbox" name="optcurve"
-          data-info="optmization reduces filesize significantly by path simplification" checked>optcurve</label>
-
-      <p>
-        <label class="fnt-wgt-700">turnpolicy</label>
-        <select name="turnpolicy" id="turnpolicy">
-          <option value="majority" selected>majority</option>
-          <option value="minority">minority</option>
-          <option value="black">black</option>
-          <option value="white">white</option>
-          <option value="left">left</option>
-          <option value="right">right</option>
-          <option value="random">random</option>
-        </select>
-      </p>
-
-      <p><label class="wdt-100">MaxSize<input type="number" name="maxSize" value="2500"
-            data-info="Maximum side length for tracing canvas – reduce size for faster rendering and reduzed details"></label>
-      </p>
-
-      <h3>SVG settings</h3>
-      <p>
-        <label><input type="checkbox" name="crop" checked>crop</label>
-        <label><input type="checkbox" name="toRelative" checked>toRelative</label>
-        <label><input type="checkbox" name="toShorthands" checked>toShorthands</label>
-        <label><input type="checkbox" name="split" checked data-info="Creates multiple path elements">split</label>
-        <label> <input type="checkbox" name="optimize"
-            data-info="optimizes starting points and removes colinear/flat segments" checked>Optimize
-          Segments</label>
-      </p>
-
-      <h3>SVG string optimization</h3>
-      <p><label><input type="radio" name="minifyD" value="0" checked>minify</label>
-        <label><input type="radio" name="minifyD" value="1">verbose</label>
-        <label><input type="radio" name="minifyD" value="2">beautify</label>
-      </p>
-      <p>
-        <label class="wdt-100">decimals <input type="number" name="decimals" min="0" value="1"
-            data-info="reduces floating point precision: reduces filesize significantly!"></label>
-      </p>
-
-      <p><label><input type="checkbox" name="addDimensions" data-info="adds width and height attributes to SVG"
-            checked>addDimensions</label></p>
-
     </aside>
   </form>
   <div>
-    <img [src]="fragmentImage" alt="Fragment Image" />
+    <img #imgPreview [src]="fragmentImage" alt="Fragment Image" />
   </div>
 </div>
