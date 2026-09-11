@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
-import { LoadingObservable } from '@shared/loading/loading-observable';
+import { readImageBase64 } from '@shared/project/read-image-base64-fn';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -22,6 +22,15 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   @ViewChild('imgPreview', { static: true })
   imgPreview!: ElementRef<HTMLImageElement>;
+
+  tracedSvg = '';
+
+  imageFilter = {
+    invert: 0,
+    blur: 0,
+    brightness: 0,
+    contrast: 0
+  };
 
   defaultOptions: Partial<PotracePlusOptions> = {
     crop: true,
@@ -53,7 +62,12 @@ export class DefineVectorDialog extends ModalableDirective<{
   }
 
   override onInjectData(data: { fragmentImage: string }): void {
-    this.fragmentImage = data.fragmentImage;
+    readImageBase64(data.fragmentImage)
+      .then(base64 => {
+        console.info('[web] base64:', base64);
+        this.fragmentImage = base64 || '';
+      })
+      .catch(e => console.error(e));
   }
 
   getSettings(): PotracePlusOptions {
@@ -65,51 +79,44 @@ export class DefineVectorDialog extends ModalableDirective<{
     } as PotracePlusOptions;
   }
 
+  get imageFilterStyle(): string {
+    const { invert, blur, brightness, contrast } = this.imageFilter;
+
+    return `invert(${invert}) blur(${blur}px) brightness(${brightness}) contrast(${contrast})`;
+  }
+
   async updateSVG(): Promise<void> {
     const settings = this.getSettings();
     let { brightness, contrast, invert, blur, split } = settings;
+
+    this.imageFilter.invert = !invert ? 0 : 1;
+    this.imageFilter.blur = blur || 0;
+    this.imageFilter.brightness = brightness || 0;
+    this.imageFilter.contrast = contrast || 0;
+
     let traced: PotracePlusResult;
 
     settings.recode = false;
 
     try {
-      traced = await PotracePlus(this.imgPreview.nativeElement, settings as PotracePlusOptions);
-    } catch {
-      console.warn("Could't trace image – please try another filter setting or reset settings");
+      traced = await PotracePlus(this.imgPreview.nativeElement.src, settings as PotracePlusOptions);
+    } catch (e) {
+      console.warn("Could't trace image – please try another filter setting or reset settings", e);
       return;
     }
 
-    let { svg, svgSplit, d, bb, w, h, scaleAdjust } = traced
-    let blobSvg = new Blob([svg]);
+    const { svg, svgSplit, d, bb, w, h, scaleAdjust } = traced;
 
     // return splited or combined svg
-    let traced_svg = !split ? svg : svgSplit;
+    this.tracedSvg = !split ? svg : svgSplit;
 
-    // downloadLink
-    btnSvg.href = URL.createObjectURL(blobSvg);
 
-    // filters
-    invert = !invert ? '0' : '1';
-    let filter = `filter:grayscale(1) invert(${invert}) blur(${blur}px) brightness(${brightness}) contrast(${contrast});`;
-
-    imgPreview.style.cssText = filter;
-
-    // show markup
-    svgOut.value = traced_svg;
-    svgOutPath.value = d;
-
-    //render
-    previewTraced.innerHTML = '';
-    previewTraced.insertAdjacentHTML('beforeend', traced_svg)
-
-    /**
-     * adjust SVG preview viewBox for cropping
-     */
-    let previewSVG = previewTraced.querySelector('svg');
-    previewSVG.setAttribute('viewBox', [-bb.x / scaleAdjust, -bb.y / scaleAdjust, w, h].join(' '))
-    previewSVG.setAttribute('width', w)
-    previewSVG.setAttribute('height', h)
-
+    //const previewSVG = this.svgView.nativeElement.querySelector('svg');
+//
+    //if (previewSVG) {
+    //  previewSVG.setAttribute('viewBox', [-bb.x / scaleAdjust, -bb.y / scaleAdjust, w, h].join(' '))
+    //  previewSVG.setAttribute('width', String(w))
+    //  previewSVG.setAttribute('height', String(h))
+    //}
   }
-
 }

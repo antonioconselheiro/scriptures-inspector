@@ -1,6 +1,6 @@
-<div>
+<div class="flex">
   <form [formGroup]="settingsForm">
-    <aside class="aside aside-1 hgh-100 scrollbar scroll-content-ld scroll-track pdd-1em pos-rlt ovr-scr">
+    <aside>
       <h3>Filter</h3>
       <p>
         <label>Brightness</label>
@@ -20,6 +20,13 @@
     </aside>
   </form>
   <div>
-    <img #imgPreview [src]="fragmentImage" alt="Fragment Image" />
+    <img
+      #imgPreview
+      [src]="fragmentImage"
+      alt="Fragment Image"
+      [style.filter]="imageFilterStyle"
+    />
+
+    <div [innerHTML]="tracedSvg"></div>
   </div>
 </div>

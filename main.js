@@ -92,6 +92,32 @@ ipcMain.handle("delete-directory", async (_, folderPath) => {
   }
 });
 
+ipcMain.handle('read-image-base64', async (_, filePath) => {
+  filePath = decodeURIComponent(
+    filePath.replace("local://", "")
+  );
+
+  const buffer = await fs.readFile(filePath);
+  const ext = filePath.toLowerCase().split('.').pop();
+
+  const mimeTypes = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    svg: 'image/svg+xml'
+  };
+
+  const mime = mimeTypes[ext ?? ''] ?? 'application/octet-stream';
+  const dataStr = `data:${mime};base64,${buffer.toString('base64')}`;
+
+  console.info('[ipcMain] base64:', dataStr);
+
+  return dataStr;
+});
+
+
 const isDev = !app.isPackaged;
 
 function createWindow() {
