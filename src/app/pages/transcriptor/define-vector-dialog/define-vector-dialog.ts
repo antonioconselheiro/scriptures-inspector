@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
@@ -17,20 +17,25 @@ export class DefineVectorDialog extends ModalableDirective<{
 }, void> {
 
   override response = new Subject<void>();
-  fragmentImage = '';
   settingsForm: FormGroup;
 
   @ViewChild('imgPreview', { static: true })
   imgPreview!: ElementRef<HTMLImageElement>;
 
+  fragmentImage = '';
   tracedSvg = '';
 
-  imageFilter = {
-    invert: 0,
-    blur: 0,
-    brightness: 0,
-    contrast: 0
-  };
+  imageFilter: {
+    invert: number;
+    blur?: number;
+    brightness?: number;
+    contrast?: number;
+  } = {
+      invert: 0,
+      blur: undefined,
+      brightness: undefined,
+      contrast: undefined
+    };
 
   defaultOptions: Partial<PotracePlusOptions> = {
     crop: true,
@@ -50,6 +55,7 @@ export class DefineVectorDialog extends ModalableDirective<{
   }
 
   constructor(
+    private cdr: ChangeDetectorRef,
     private fb: FormBuilder
   ) {
     super();
@@ -64,8 +70,8 @@ export class DefineVectorDialog extends ModalableDirective<{
   override onInjectData(data: { fragmentImage: string }): void {
     readImageBase64(data.fragmentImage)
       .then(base64 => {
-        console.info('[web] base64:', base64);
         this.fragmentImage = base64 || '';
+        this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
   }
@@ -81,8 +87,12 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   get imageFilterStyle(): string {
     const { invert, blur, brightness, contrast } = this.imageFilter;
+    const style = [`invert(${invert})`];
+    if (blur !== undefined) style.push(`blur(${blur}px)`);
+    if (brightness !== undefined) style.push(`brightness(${brightness})`);
+    if (contrast !== undefined) style.push(`contrast(${contrast})`);
 
-    return `invert(${invert}) blur(${blur}px) brightness(${brightness}) contrast(${contrast})`;
+    return style.join(' ');
   }
 
   async updateSVG(): Promise<void> {
@@ -112,7 +122,7 @@ export class DefineVectorDialog extends ModalableDirective<{
 
 
     //const previewSVG = this.svgView.nativeElement.querySelector('svg');
-//
+    //
     //if (previewSVG) {
     //  previewSVG.setAttribute('viewBox', [-bb.x / scaleAdjust, -bb.y / scaleAdjust, w, h].join(' '))
     //  previewSVG.setAttribute('width', String(w))
