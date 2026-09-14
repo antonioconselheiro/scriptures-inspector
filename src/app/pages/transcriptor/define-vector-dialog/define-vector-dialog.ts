@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
 import { Subject } from 'rxjs';
@@ -40,7 +41,6 @@ export class DefineVectorDialog extends ModalableDirective<{
   defaultOptions: Partial<PotracePlusOptions> = {
     crop: true,
     toRelative: true,
-    split: false,
     toShorthands: true,
     optimize: true,
     minifyD: true,
@@ -51,11 +51,13 @@ export class DefineVectorDialog extends ModalableDirective<{
     alphamax: 1,
     optcurve: true,
     turnpolicy: 'majority',
-    maxSize: 2500
-  }
+    maxSize: 2500,
+    recode: false
+  };
 
   constructor(
     private cdr: ChangeDetectorRef,
+    private sanitizer: DomSanitizer,
     private fb: FormBuilder
   ) {
     super();
@@ -74,6 +76,10 @@ export class DefineVectorDialog extends ModalableDirective<{
         this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
+  }
+
+  get tracedSvgSafe() {
+    return this.sanitizer.bypassSecurityTrustHtml(this.tracedSvg);
   }
 
   getSettings(): PotracePlusOptions {
@@ -97,7 +103,7 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   async updateSVG(): Promise<void> {
     const settings = this.getSettings();
-    let { brightness, contrast, invert, blur, split } = settings;
+    let { brightness, contrast, invert, blur } = settings;
 
     this.imageFilter.invert = !invert ? 0 : 1;
     this.imageFilter.blur = blur || 0;
@@ -106,19 +112,17 @@ export class DefineVectorDialog extends ModalableDirective<{
 
     let traced: PotracePlusResult;
 
-    settings.recode = false;
-
     try {
-      traced = await PotracePlus(this.imgPreview.nativeElement.src, settings as PotracePlusOptions);
+      traced = await PotracePlus(this.imgPreview.nativeElement.src, settings);
     } catch (e) {
-      console.warn("Could't trace image – please try another filter setting or reset settings", e);
+      console.error("Could't trace image, error", e);
       return;
     }
 
     const { svg, svgSplit, d, bb, w, h, scaleAdjust } = traced;
 
     // return splited or combined svg
-    this.tracedSvg = !split ? svg : svgSplit;
+    this.tracedSvg = svg;
 
 
     //const previewSVG = this.svgView.nativeElement.querySelector('svg');

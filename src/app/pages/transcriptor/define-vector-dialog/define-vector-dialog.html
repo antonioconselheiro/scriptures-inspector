@@ -19,7 +19,7 @@
       </p>
     </aside>
   </form>
-  <div>
+  <div class="graphicsWrapper">
     <img
       #imgPreview
       [src]="fragmentImage"
@@ -27,6 +27,6 @@
       [style.filter]="imageFilterStyle"
     />
 
-    <div [innerHTML]="tracedSvg"></div>
+    <div class="svgWrapper" [innerHTML]="tracedSvgSafe"></div>
   </div>
 </div>

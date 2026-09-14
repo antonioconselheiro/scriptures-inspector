@@ -1,4 +1,4 @@
-import { Bitmap, getSVGData, potraceGetPathList } from "./potrace-plus.esm.js";
+import { Bitmap, getSVGData, potraceGetPathList } from "./potrace-plus.esm.min.js";
 
 self.onmessage = (e) => {
   //let { bmp, options } = e.data;
