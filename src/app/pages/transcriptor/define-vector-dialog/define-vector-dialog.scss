@@ -1,9 +1,19 @@
 .graphicsWrapper {
   position: relative;
 
+  &.loading {
+    background-color: #f8f8f8;
+
+    .svgWrapper {
+      visibility: hidden;
+    }
+  }
+
   .svgWrapper {
     position: absolute;
     top: 0;
     left: 0;
+    color: white;
+    filter: drop-shadow(5px 5px 5px #333);
   }
 }

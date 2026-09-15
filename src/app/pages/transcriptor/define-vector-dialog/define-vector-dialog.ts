@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-define-vector-dialog',
   imports: [
+    FormsModule,
     ReactiveFormsModule
   ],
   templateUrl: './define-vector-dialog.html',
@@ -22,6 +23,8 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   @ViewChild('imgPreview', { static: true })
   imgPreview!: ElementRef<HTMLImageElement>;
+
+  processingSVG = false;
 
   fragmentImage = '';
   tracedSvg = '';
@@ -65,7 +68,9 @@ export class DefineVectorDialog extends ModalableDirective<{
       brightness: [1],
       contrast: [1],
       blur: [0],
-      invert: [false]
+      invert: [false],
+      showImage: [true],
+      showVector: [true]
     });
   }
 
@@ -80,6 +85,14 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   get tracedSvgSafe() {
     return this.sanitizer.bypassSecurityTrustHtml(this.tracedSvg);
+  }
+
+  get showImage(): boolean {
+    return this.settingsForm.get('showImage')?.value ?? false;
+  }
+
+  get showVector(): boolean {
+    return this.settingsForm.get('showVector')?.value ?? false;
   }
 
   getSettings(): PotracePlusOptions {
@@ -102,6 +115,7 @@ export class DefineVectorDialog extends ModalableDirective<{
   }
 
   async updateSVG(): Promise<void> {
+    this.processingSVG = true;
     const settings = this.getSettings();
     let { brightness, contrast, invert, blur } = settings;
 
@@ -121,16 +135,24 @@ export class DefineVectorDialog extends ModalableDirective<{
 
     const { svg, svgSplit, d, bb, w, h, scaleAdjust } = traced;
 
-    // return splited or combined svg
-    this.tracedSvg = svg;
 
+    //  Set SVG attributes
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svg, 'image/svg+xml');
 
-    //const previewSVG = this.svgView.nativeElement.querySelector('svg');
-    //
-    //if (previewSVG) {
-    //  previewSVG.setAttribute('viewBox', [-bb.x / scaleAdjust, -bb.y / scaleAdjust, w, h].join(' '))
-    //  previewSVG.setAttribute('width', String(w))
-    //  previewSVG.setAttribute('height', String(h))
-    //}
+    const previewSVG = doc.documentElement;
+
+    previewSVG.setAttribute(
+      'viewBox',
+      [-bb.x / scaleAdjust, -bb.y / scaleAdjust, w, h].join(' ')
+    );
+
+    previewSVG.setAttribute('width', String(w));
+    previewSVG.setAttribute('height', String(h));
+    previewSVG.setAttribute('fill', 'currentColor');
+
+    this.tracedSvg = new XMLSerializer().serializeToString(previewSVG);
+    this.processingSVG = false;
+    this.cdr.detectChanges();
   }
 }

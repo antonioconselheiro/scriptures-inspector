@@ -2,31 +2,46 @@
   <form [formGroup]="settingsForm">
     <aside>
       <h3>Filter</h3>
-      <p>
+      <div>
         <label>Brightness</label>
         <input type="range" formControlName="brightness" name="brightness" (change)="updateSVG()" value="1" min="0" max="2" step="0.1" data-type="--range-number">
-      </p>
-      <p>
+      </div>
+      <div>
         <label>Contrast</label>
         <input type="range" formControlName="contrast" name="contrast" (change)="updateSVG()" value="1" min="0" max="10" step="0.1" data-type="--range-number">
-      </p>
-      <p>
+      </div>
+      <div>
         <label>Blur</label>
         <input type="range" formControlName="blur" name="blur" (change)="updateSVG()" value="0" min="0" max="10" step="0.1" data-type="--range-number">
-      </p>
-      <p>
+      </div>
+      <div>
         <label><input type="checkbox" formControlName="invert" name="invert" (change)="updateSVG()">invert</label>
-      </p>
+      </div>
+      <div>
+        <label class="button" for="checkboxShowImage">
+          <span>Show Image</span>
+          <input type="checkbox" id="checkboxShowImage" name="checkboxShowImage" formControlName="showImage" />
+        </label>
+        <label class="button" for="checkboxShowVector">
+          <span>Show Vector</span>
+          <input type="checkbox" id="checkboxShowVector" name="checkboxShowVector" formControlName="showVector" />
+        </label>
+      </div>
     </aside>
   </form>
-  <div class="graphicsWrapper">
+  <div class="graphicsWrapper" [class.loading]="processingSVG">
     <img
       #imgPreview
       [src]="fragmentImage"
       alt="Fragment Image"
+      [style.visibility]="showImage ? 'visible' : 'hidden'"
       [style.filter]="imageFilterStyle"
     />
 
-    <div class="svgWrapper" [innerHTML]="tracedSvgSafe"></div>
+    <div
+      class="svgWrapper"
+      [innerHTML]="tracedSvgSafe"
+      [style.visibility]="showVector ? 'visible' : 'hidden'"
+    ></div>
   </div>
 </div>
