@@ -110,10 +110,10 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
         importImagesFn(this.selectedCollectionFiles, getArtifactCollectionFolderFn(this.project, collectionFolder))
       ])
         .then(() => {
-          alert('Arquivos importados com sucesso!');
+          alert('Files imported successfully!');
         })
         .catch(e => {
-          alert('Ocorreu um erro ao importar os arquivos.');
+          alert('An error occurred while importing the files.');
           console.error(e);
         })
         .finally(() => {
@@ -127,10 +127,10 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
     LoadingObservable.startLoading();
     this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder)
       .then(() => {
-        alert('Alterações salvas com sucesso!');
+        alert('Changes saved!');
       })
       .catch(e => {
-        alert('Ocorreu um erro ao salvar as alterações.');
+        alert('Error saving changes.');
         console.error(e);
       })
       .finally(() => {
@@ -140,13 +140,13 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   }
 
   sortAZ(): void {
-    if (confirm('Ordenar os arquivos em ordem alfabética irá alterar a ordem configurada, prosseguir?')) {
+    if (confirm('Sorting the files will change the configured order; proceed?')) {
       this.selectedCollectionFiles = [...this.selectedCollectionFiles].sort((a, b) => a.localeCompare(b));
     }
   }
 
   sortZA(): void {
-    if (confirm('Ordenar os arquivos em ordem decrescente irá alterar a ordem configurada, prosseguir?')) {
+    if (confirm('Sorting the files will change the configured order; proceed?')) {
       this.selectedCollectionFiles = [...this.selectedCollectionFiles].sort((a, b) => b.localeCompare(a));
     }
   }
