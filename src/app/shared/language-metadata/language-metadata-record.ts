@@ -8,6 +8,8 @@ import { massoretifierFn } from "./massoretifier-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
 import { samaritanSpellingFn } from './samaritan-spelling-fn';
 import { squareHebrewSpellingFn } from './square-hebrew-spelling-fn';
+import { sogdianSpellingFn } from './sogdian-spelling-fn';
+import { middlePersianSpellingFn } from './middle-persian--spelling-fn';
 
 export const languageMetadataRecord: {
   [lang in LanguageUnionType]: Language
@@ -71,6 +73,29 @@ export const languageMetadataRecord: {
     label: 'syriac',
     transliteration: (syriac) => transliterate(syriac),
     direction: 'rtl'
+  },
+  'sogdiano': {
+    name: 'Sogdian',
+    label: 'latim-sogdiano',
+    alternativeSpelling: [
+      {
+        name: 'Sogdian',
+        label: 'sogdian',
+        parse: (text: string) => sogdianSpellingFn(text)
+      }
+    ]
+  },
+  'middle-persian': {
+    name: 'Middle Persian',
+    label: 'latim-middle-persian',
+    direction: 'rtl',
+    alternativeSpelling: [
+      {
+        name: 'Middle Persian',
+        label: 'middle-persian',
+        parse: (text: string) => middlePersianSpellingFn(text)
+      }
+    ]
   },
   'arabic': {
     name: 'Arabic',
