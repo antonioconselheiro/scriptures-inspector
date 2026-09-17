@@ -16,17 +16,18 @@ import { Subject } from 'rxjs';
 })
 export class DefineVectorDialog extends ModalableDirective<{
   fragmentImage: string
-}, void> {
+}, {
+  vector: string
+}> {
 
-  override response = new Subject<void>();
+  override response = new Subject<{ vector: string } | void>();
   settingsForm: FormGroup;
 
   @ViewChild('imgPreview', { static: true })
   imgPreview!: ElementRef<HTMLImageElement>;
 
   processingSVG = false;
-
-  fragmentImage = '';
+  fragmentBase64 = '';
   tracedSvg = '';
 
   imageFilter: {
@@ -41,7 +42,7 @@ export class DefineVectorDialog extends ModalableDirective<{
       contrast: undefined
     };
 
-  defaultOptions: Partial<PotracePlusOptions> = {
+  readonly defaultOptions: Partial<PotracePlusOptions> = {
     crop: true,
     toRelative: true,
     toShorthands: true,
@@ -77,7 +78,7 @@ export class DefineVectorDialog extends ModalableDirective<{
   override onInjectData(data: { fragmentImage: string }): void {
     readImageBase64(data.fragmentImage)
       .then(base64 => {
-        this.fragmentImage = base64 || '';
+        this.fragmentBase64 = base64 || '';
         this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
@@ -127,14 +128,14 @@ export class DefineVectorDialog extends ModalableDirective<{
     let traced: PotracePlusResult;
 
     try {
-      traced = await PotracePlus(this.imgPreview.nativeElement.src, settings);
+      traced = await PotracePlus(this.fragmentBase64, settings);
     } catch (e) {
       console.error("Could't trace image, error", e);
+      this.processingSVG = false;
       return;
     }
 
-    const { svg, svgSplit, d, bb, w, h, scaleAdjust } = traced;
-
+    const { svg, bb, w, h, scaleAdjust } = traced;
 
     //  Set SVG attributes
     const parser = new DOMParser();
@@ -154,5 +155,14 @@ export class DefineVectorDialog extends ModalableDirective<{
     this.tracedSvg = new XMLSerializer().serializeToString(previewSVG);
     this.processingSVG = false;
     this.cdr.detectChanges();
+  }
+
+  cancel(): void {
+    this.close();
+  }
+
+  save(): void {
+    this.response.next({ vector: this.tracedSvg });
+    this.close();
   }
 }

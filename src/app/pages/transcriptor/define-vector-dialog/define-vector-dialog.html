@@ -33,7 +33,7 @@
   <div class="graphicsWrapper" [class.loading]="processingSVG">
     <img
       #imgPreview
-      [src]="fragmentImage"
+      [src]="fragmentBase64"
       alt="Fragment Image"
       [style.visibility]="showImage ? 'visible' : 'hidden'"
       [style.filter]="imageFilterStyle"
@@ -45,4 +45,10 @@
       [style.visibility]="showVector ? 'visible' : 'hidden'"
     ></div>
   </div>
+</div>
+
+<div>
+  <button type="button" (click)="cancel()">Cancel</button>
+
+  <button type="button" (click)="save()">Save</button>
 </div>

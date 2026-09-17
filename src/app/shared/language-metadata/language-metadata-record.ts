@@ -9,7 +9,7 @@ import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
 import { samaritanSpellingFn } from './samaritan-spelling-fn';
 import { squareHebrewSpellingFn } from './square-hebrew-spelling-fn';
 import { sogdianSpellingFn } from './sogdian-spelling-fn';
-import { middlePersianSpellingFn } from './middle-persian--spelling-fn';
+import { middlePersianSpellingFn } from './middle-persian-spelling-fn';
 
 export const languageMetadataRecord: {
   [lang in LanguageUnionType]: Language

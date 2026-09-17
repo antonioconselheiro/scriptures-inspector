@@ -1,4 +1,62 @@
-<app-project-header (onProject)="onProjectChange($event)" (onCurrentArtifact)="onCurrentArtifactChange($event)"></app-project-header>
+<app-project-header (onProject)="onProjectChange($event)"
+  (onCurrentArtifact)="onCurrentArtifactChange($event)"></app-project-header>
+
+<form [formGroup]="artifactForm" (ngSubmit)="onArtifactSubmit()">
+  <fieldset>
+    <legend>Define Artifact Properties</legend>
+
+    <div>
+      <label for="language">Language</label>
+
+      <select id="language" formControlName="language">
+        <option [ngValue]="null">Select...</option>
+
+        @for (language of languageOptions; track language.value) {
+        <option [value]="language.value">
+          {{ language.name }}
+        </option>
+        }
+      </select>
+
+      @if (
+        artifactForm.controls.language.invalid &&
+        artifactForm.controls.language.touched
+      ) {
+        <small>Language is mandatory.</small>
+      }
+    </div>
+
+
+    @if (hasSpellingOptions) {
+    <div>
+      <label for="spelling">Spelling</label>
+
+      <select id="spelling" formControlName="spelling">
+        <option [ngValue]="null">None</option>
+
+        @for (spelling of spellingOptions; track spelling.label) {
+        <option [value]="spelling.label">
+          {{ spelling.name }}
+        </option>
+        }
+      </select>
+    </div>
+    }
+  </fieldset>
+
+  <button type="submit">Define Metadata</button>
+</form>
+
+@if (artifact) {
+  <div>
+    <button type="button" (click)="openDialogIncludeTranscription(artifact)">
+      Include Transcription
+    </button>
+    <button type="button" (click)="openDialogDefineVector(artifact)">
+      Define Vector
+    </button>
+  </div>
+}
 
 <form>
   <fieldset>
@@ -17,11 +75,6 @@
       <label>Edit Transcript Positioning</label>
       <input type="checkbox" />
     </div>
-  </fieldset>
-
-  <fieldset>
-    <button type="button" (click)="openDialogIncludeTranscription()">Include Transcription</button>
-    <button type="button" (click)="openDialogDefineVector()">Define Vector</button>
   </fieldset>
 
   <fieldset>
