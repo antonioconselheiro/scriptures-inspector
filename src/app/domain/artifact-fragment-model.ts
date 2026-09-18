@@ -3,10 +3,10 @@ import { ArtifactFragmentWordPosition } from './artifact-fragment-word-position-
 import { LanguageUnionType } from './language-union-type';
 
 export interface ArtifactFragment {
-  vector: string;
-  transcription: string;
   language: LanguageUnionType;
   spelling: string;
+  vector: string;
+  transcription: string;
   positions: Array<ArtifactFragmentWordPosition>
   bookSchema: Array<ArtifactFragmentBookSchema>;
 }

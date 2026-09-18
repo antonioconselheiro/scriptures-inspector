@@ -60,24 +60,69 @@
 
 <form>
   <fieldset>
-    <legend>Show</legend>
-    <div>
-      <label>Imagem Base</label>
-      <input type="checkbox" />
-    </div>
+    @if (artifact) {
+      <legend>Edit Transcription Positioning</legend>
 
-    <div>
-      <label>Vector Editing</label>
-      <input type="checkbox" />
-    </div>
+      <div>
+        <strong>Show</strong>
+        <label for="transcriptionEditorShowImage" class="button">
+          <span>Imagem</span>
+          <input
+            type="checkbox"
+            id="transcriptionEditorShowImage"
+            #transcriptionEditorShowImage
+            (change)="showImage = transcriptionEditorShowImage.checked"
+          />
+        </label>
 
-    <div>
-      <label>Edit Transcript Positioning</label>
-      <input type="checkbox" />
-    </div>
-  </fieldset>
+        <label for="transcriptionEditorShowVector" class="button">
+          <span>Vector</span>
+          <input
+            type="checkbox"
+            id="transcriptionEditorShowVector"
+            #transcriptionEditorShowVector
+            (change)="showVector = transcriptionEditorShowVector.checked"
+          />
+        </label>
 
-  <fieldset>
-    <img [src]="getImage()" />
+        <label for="transcriptionEditorShowTranscriptionPositioning" class="button">
+          <span>Transcription Positioning</span>
+          <input
+            type="checkbox"
+            id="transcriptionEditorShowTranscriptionPositioning"
+            #transcriptionEditorShowTranscriptionPositioning
+            (change)="showTranscriptionPositioning = transcriptionEditorShowTranscriptionPositioning.checked"
+          />
+        </label>
+      </div>
+    }
+
+    <div class="graphicsWrapper">
+      <img
+        #imgPreview
+        [src]="getImage()"
+        alt="Fragment Image"
+        [style.visibility]="showImage ? 'visible' : 'hidden'"
+      />
+
+      @if (artifact) {
+        <div
+          class="svgWrapper"
+          [innerHTML]="artifact.vector"
+          [style.visibility]="showVector ? 'visible' : 'hidden'"
+        ></div>
+
+        <div
+          class="transcriptionPositioningWrapper"
+          [style.visibility]="showTranscriptionPositioning ? 'visible' : 'hidden'"
+        ></div>
+      }
+    </div>
   </fieldset>
 </form>
+
+<div>
+  <button type="button" (click)="saveArtifactData()">
+    Save
+  </button>
+</div>

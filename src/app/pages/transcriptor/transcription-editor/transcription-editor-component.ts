@@ -17,6 +17,7 @@ import { DefineTranscriptionDialog } from '../define-transcription-dialog/define
 import { DefineVectorDialog } from '../define-vector-dialog/define-vector-dialog';
 import { Language } from '@domain/language-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
+import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 
 @Component({
   selector: 'app-transcription-editor-component',
@@ -34,6 +35,10 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   project: Project | null = null;
   current: CurrentArtifact | null = null;
   artifact: ArtifactFragment | null = null;
+
+  showImage = true;
+  showVector = true;
+  showTranscriptionPositioning = true;
 
   folder = '';
   currentCollectionDetail: FragmentCollection | null = null;
@@ -131,9 +136,23 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
     if (currentCollectionDetail && current) {
       const fileName = `${this.folder}/${currentCollectionDetail.order[current.artifact]}.json`;
       readJsonFileFn<ArtifactFragment | null>(fileName)
-        .then((data) => {
-          this.artifact = data;
+        .then(data => {
+          if (data) {
+            this.artifact = data;
+          }
         });
+    }
+  }
+
+  saveArtifactData(): void {
+    if (this.artifact && this.currentCollectionDetail && this.current) {
+      const fileName = `${this.folder}/${this.currentCollectionDetail.order[this.current.artifact]}.json`;
+      writeJsonFileFn(fileName, this.artifact).then(() => {
+        alert('Artifact data saved');
+      }).catch(error => {
+        alert('Error saving artifact data');
+        console.error('Error saving artifact data:', error);
+      });
     }
   }
 
