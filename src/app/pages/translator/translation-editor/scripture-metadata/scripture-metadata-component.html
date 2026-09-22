@@ -1,4 +1,5 @@
 @if (sourceVerse) {
+  <h2>{{languageMetadataRecord[sourceLanguage].name}}</h2>
   <h3>{{title}}</h3>
 
   @let wordListValue = wordList || splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);

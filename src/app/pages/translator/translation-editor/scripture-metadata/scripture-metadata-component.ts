@@ -50,7 +50,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   @Input({ required: true })
   project!: Project;
   
-  @Input()
+  @Input({ required: true })
   projectData: ProjectData = {};
   
   @Input({ required: true })

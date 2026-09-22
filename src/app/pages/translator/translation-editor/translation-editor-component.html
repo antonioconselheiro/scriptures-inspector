@@ -72,7 +72,7 @@
         <fieldset [class.minified]="minifiedFieldset[verseIndex]" class="fieldsetMinifiable">
           <legend>{{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse.verse}}</legend>
           <app-scripture-metadata-component
-            [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
+            [project]="project" [current]="current" [structure]="structure" [sourceBookRecord]="sourceBookRecord" [sourceLanguage]="sourceCodex.language"
             [codexMetadataRecord]="codexMetadataRecord" [projectData]="projectData" [bookTarget]="bookMetadata" [sourceBook]="selectedSourceBook"
             [sourceVerse]="verse" [verseIndex]="verseIndex" [customTranslation]="bookCustomTranslation"
             [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
