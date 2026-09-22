@@ -11,10 +11,10 @@ export class AddPatternContextMenuTrigger {
   @Input('appAddPatternContextMenuTrigger')
   contextMenu!: AddPatternContextMenu;
 
-  @Input()
+  @Input({ required: true })
   sourceLanguage!: LanguageUnionType;
 
-  @Input()
+  @Input({ required: true })
   bookTarget!: BookMetadataTarget;
 
   @HostListener('contextmenu', ['$event'])

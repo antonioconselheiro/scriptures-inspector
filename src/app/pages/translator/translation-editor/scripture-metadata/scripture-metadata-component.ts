@@ -47,16 +47,16 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   @Input()
   title = 'Metadata';
 
-  @Input()
+  @Input({ required: true })
   project!: Project;
   
   @Input()
   projectData: ProjectData = {};
   
-  @Input()
+  @Input({ required: true })
   structure!: ProjectStructureMetadata | ProjectStructureInterlinear;
 
-  @Input()
+  @Input({ required: true })
   codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
@@ -71,22 +71,22 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   @Input()
   pipeUpdaterController = 0;
   
-  @Input()
+  @Input({ required: true })
   sourceBook!: SourceBook;
 
-  @Input()
+  @Input({ required: true })
   sourceLanguage!: LanguageUnionType;
 
-  @Input()
+  @Input({ required: true })
   current!: CurrentChapter;
 
-  @Input()
+  @Input({ required: true })
   sourceVerse!: BookVerse<{ text: string; }>;
 
-  @Input()
+  @Input({ required: true })
   verseIndex!: number;
 
-  @Input()
+  @Input({ required: true })
   bookTarget!: BookMetadataTarget;
 
   @Input()
@@ -95,10 +95,10 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   @Input()
   viewingTranslationBookRecord: { [source: string]: TranslationViewing; } = {};
 
-  @Input()
+  @Input({ required: true })
   addPatternMenuRef!: AddPatternContextMenu;
 
-  @Input()
+  @Input({ required: true })
   defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
 
   @Input()

@@ -45,6 +45,7 @@
     "electron-squirrel-startup": "^1.0.1",
     "hebrew-transliteration": "^2.9.1",
     "jsdom": "^27.4.0",
+    "ngx-moveable": "^0.50.0",
     "rxjs": "~7.8.0",
     "transliteration": "^2.6.1",
     "tslib": "^2.3.0",

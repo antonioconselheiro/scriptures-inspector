@@ -42,28 +42,28 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 })
 export class InterlinearComponent extends AbstractTranslatableDirective {
 
-  @Input()
+  @Input({ required: true })
   project!: Project;
 
-  @Input()
+  @Input({ required: true })
   projectData!: ProjectData;
 
-  @Input()
+  @Input({ required: true })
   structure!: ProjectStructureInterlinear;
 
-  @Input()
+  @Input({ required: true })
   codexMetadataRecord!: { [source: string]: Codex<LanguageUnionType> };
 
   @Input()
   sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
 
-  @Input()
+  @Input({ required: true })
   verseIndex!: number;
 
-  @Input()
+  @Input({ required: true })
   current!: CurrentChapter;
 
-  @Input()
+  @Input({ required: true })
   sourceLanguage!: LanguageUnionType;
 
   @Input()
@@ -72,16 +72,16 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   @Input()
   originToInterlinear: Array<OriginToInterlinear> = [];
 
-  @Input()
+  @Input({ required: true })
   sourceBook!: SourceBook;
 
-  @Input()
+  @Input({ required: true })
   sourceVerse!: SourceVerse;
 
-  @Input()
+  @Input({ required: true })
   bookTarget!: BookMetadataTarget;
   
-  @Input()
+  @Input({ required: true })
   interlinearTarget!: InterlinearTarget;
 
   @Input()
@@ -93,10 +93,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   @Input()
   variations: Array<TargetTranslationMetadataDetail> = [];
 
-  @Input()
+  @Input({ required: true })
   addPatternMenuRef!: AddPatternContextMenu;
 
-  @Input()
+  @Input({ required: true })
   defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
 
   minified = false;

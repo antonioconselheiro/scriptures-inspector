@@ -19,13 +19,13 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
   @Input()
   morphemeConfigured: MorphemeType = 'root';
 
-  @Input()
+  @Input({ required: true })
   sourceLanguage!: LanguageUnionType;
 
-  @Input()
+  @Input({ required: true })
   word!: string;
 
-  @Input()
+  @Input({ required: true })
   parsedBook!: ParsedBookMetadata;
 
   @HostListener('contextmenu', ['$event'])

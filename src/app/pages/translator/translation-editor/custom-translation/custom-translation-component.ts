@@ -33,7 +33,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 })
 export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
-  @Input()
+  @Input({ required: true })
   bookTarget!: Book<BookMetadataAttributes, any>;
 
   //  se está propriedade for inclusa, então é considerada uma tradução de uma tradução,
@@ -41,25 +41,25 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   @Input()
   interlinear?: InterlinearBookTarget;
 
-  @Input()
+  @Input({ required: true })
   translationLanguage!: LanguageUnionType;
 
-  @Input()
+  @Input({ required: true })
   current!: CurrentChapter;
 
-  @Input()
+  @Input({ required: true })
   parsedBook!: ParsedBookMetadata;
 
-  @Input()
+  @Input({ required: true })
   sourceBook!: SourceBook;
 
-  @Input()
+  @Input({ required: true })
   sourceVerse!: SourceVerse;
 
-  @Input()
+  @Input({ required: true })
   wordMatrix!: Array<Word>;
 
-  @Input()
+  @Input({ required: true })
   customTranslation!: BookTranslationTarget;
 
   minified = false;

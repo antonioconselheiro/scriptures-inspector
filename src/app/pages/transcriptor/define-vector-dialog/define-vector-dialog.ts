@@ -4,12 +4,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
 import { Subject } from 'rxjs';
+import { ArtifactTextEditorComponent } from '../artifact-text-editor';
 
 @Component({
   selector: 'app-define-vector-dialog',
   imports: [
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ArtifactTextEditorComponent
   ],
   templateUrl: './define-vector-dialog.html',
   styleUrl: './define-vector-dialog.scss',
