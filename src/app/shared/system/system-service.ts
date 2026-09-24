@@ -39,34 +39,44 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structures.forEach(async structure => await this.saveFile(project, structure.metadataTarget, current, data));
+    for (const structure of project.structures) {
+      await this.saveBookFile(project, structure.metadataTarget, current, data);
+
+      if (structure.interlinear) {
+        for (const interlinear of structure.interlinear) {
+          await this.saveBookFile(project, interlinear.metadataTarget, current, data);
+        }
+      }
+    }
   }
 
   async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structures.forEach(async structure => {
+    for (const structure of project.structures) {
       if (structure.interlinear) {
-        structure.interlinear.forEach(async interlinear => await this.saveFile(project, interlinear.interlinearTarget, current, data));
+        for (const interlinear of structure.interlinear) {
+          await this.saveBookFile(project, interlinear.interlinearTarget, current, data);
+        }
       }
-    });
+    }
   }
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    project.structures.forEach(async structure => {
+    for (const structure of project.structures) {
       if (structure.customTranslationTarget) {
-        await this.saveFile(project, structure.customTranslationTarget, current, data);
+        await this.saveBookFile(project, structure.customTranslationTarget, current, data);
       }
 
       if (structure.interlinear) {
-        structure.interlinear.forEach(async interlinear => {
+        for (const interlinear of structure.interlinear) {
           if (interlinear.customTranslationTarget) {
-            await this.saveFile(project, interlinear.customTranslationTarget, current, data);
+            await this.saveBookFile(project, interlinear.customTranslationTarget, current, data);
           }
-        });
+        }
       }
-    });
+    }
   }
 
-  private async saveFile(project: Project, target: KeyMetadata | KeyTranslation | KeyInterlinear, current: CurrentBook, content: ProjectData): Promise<void> {
+  private async saveBookFile(project: Project, target: KeyMetadata | KeyTranslation | KeyInterlinear, current: CurrentBook, content: ProjectData): Promise<void> {
     return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
   }
 
