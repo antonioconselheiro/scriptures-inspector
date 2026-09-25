@@ -143,7 +143,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       .subscribe({
         next: currentBook => {
           if (this.project) {
-            this.systemService.saveCurrentBookInterlinear(this.project, currentBook, this.projectData);
+            this.systemService.saveCurrentBookInterlinear(this.project, this.project.structures, currentBook, this.projectData);
           }
         }
       }));

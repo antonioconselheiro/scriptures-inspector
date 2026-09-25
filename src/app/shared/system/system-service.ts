@@ -54,13 +54,9 @@ export class SystemService {
   async saveCurrentBookInterlinear(project: Project, structures: Array<ProjectStructureMetadata>, current: CurrentBook, data: ProjectData): Promise<void> {
     for (const structure of structures) {
       if (structure.interlinear) {
-        for (const interlinear of structure.interlinear) {
-          await this.saveBookFile(project, interlinear.interlinearTarget, current, data);
-          const interlinearStructures = interlinear.interlinear || [];
-
-          if (interlinearStructures.length) {
-            await this.saveCurrentBookInterlinear(project, interlinearStructures, current, data);
-          }
+        for (const interlinearStructure of structure.interlinear) {
+          await this.saveBookFile(project, interlinearStructure.interlinearTarget, current, data);
+          await this.saveCurrentBookInterlinear(project, [interlinearStructure], current, data);
         }
       }
     }

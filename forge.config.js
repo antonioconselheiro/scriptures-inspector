@@ -22,6 +22,7 @@ module.exports = {
       config: {
         options: {
           icon: iconPath,
+          maintainer: 'António Conselheiro',
         },
       },
     },
