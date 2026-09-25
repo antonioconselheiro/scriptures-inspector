@@ -5,6 +5,7 @@ import { KeyMetadata } from '@domain/key-metadata-type';
 import { KeyTranslation } from '@domain/key-translation-type';
 import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
+import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
@@ -50,11 +51,16 @@ export class SystemService {
     }
   }
 
-  async saveCurrentBookInterlinear(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    for (const structure of project.structures) {
+  async saveCurrentBookInterlinear(project: Project, structures: Array<ProjectStructureMetadata>, current: CurrentBook, data: ProjectData): Promise<void> {
+    for (const structure of structures) {
       if (structure.interlinear) {
         for (const interlinear of structure.interlinear) {
           await this.saveBookFile(project, interlinear.interlinearTarget, current, data);
+          const interlinearStructures = interlinear.interlinear || [];
+
+          if (interlinearStructures.length) {
+            await this.saveCurrentBookInterlinear(project, interlinearStructures, current, data);
+          }
         }
       }
     }
@@ -76,7 +82,12 @@ export class SystemService {
     }
   }
 
-  private async saveBookFile(project: Project, target: KeyMetadata | KeyTranslation | KeyInterlinear, current: CurrentBook, content: ProjectData): Promise<void> {
+  private async saveBookFile(
+    project: Project,
+    target: KeyMetadata | KeyTranslation | KeyInterlinear,
+    current: CurrentBook,
+    content: ProjectData
+  ): Promise<void> {
     return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
   }
 
