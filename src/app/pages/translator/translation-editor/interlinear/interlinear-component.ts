@@ -28,6 +28,8 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
+import { InterlinearToolsContextMenuTrigger } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu-trigger';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -35,6 +37,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
     CommonModule,
     FormsModule,
     LexicalPipe,
+    InterlinearToolsContextMenuTrigger,
     forwardRef(() => ScriptureMetadataComponent)
   ],
   templateUrl: './interlinear-component.html',
@@ -97,6 +100,9 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   addPatternMenuRef!: AddPatternContextMenu;
 
   @Input({ required: true })
+  interlinearToolsRef!: InterlinearToolsContextMenu;
+
+  @Input({ required: true })
   defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
 
   minified = false;
@@ -130,33 +136,15 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     translationWord: string,
     interlinearValue: string
   ): void {
-    if (!interlinearValue && confirm('Advance one word to all associations to the right?')) {
-      const parsedBook = this.parseBook(this.bookTarget, this.sourceLanguage);
-      const wordMatrix = this.splitIntoMatrix(this.sourceLanguage, parsedBook.patterns, this.sourceVerse);
-      this.interlinearService.advanceOneWordToAllAssociationsToTheRight(
-        this.sourceLanguage,
-        this.interlinearTarget,
-        originStructure.source,
-        this.current,
-        this.sourceVerse,
-        wordMatrix,
-        translationWordIndex,
-        translationWord,
-        interlinearValue
-      );
-
-      setTimeout(() => this.pipeUpdaterController++);
-    } else {
-      this.interlinearService.saveInterlinearToBaseScripture(
-        this.interlinearTarget,
-        originStructure.source,
-        this.current,
-        this.sourceVerse,
-        translationWordIndex,
-        translationWord,
-        interlinearValue
-      );
-    }
+    this.interlinearService.saveInterlinearToBaseScripture(
+      this.interlinearTarget,
+      originStructure.source,
+      this.current,
+      this.sourceVerse,
+      translationWordIndex,
+      translationWord,
+      interlinearValue
+    );
   }
 
   getInterlinearWordSegmentSerialized(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear, wordIndex: number): string {

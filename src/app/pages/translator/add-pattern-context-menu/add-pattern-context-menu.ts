@@ -19,8 +19,8 @@ export class AddPatternContextMenu {
   sourceLanguage!: LanguageUnionType;
   bookTarget!: BookMetadataTarget;
 
-  @Input()
-  current: CurrentChapter | null = null;
+  @Input({ required: true })
+  current!: CurrentChapter;
 
   selectedWord = '';
   visible = false;

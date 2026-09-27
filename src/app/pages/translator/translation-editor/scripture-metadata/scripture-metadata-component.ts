@@ -27,6 +27,7 @@ import { FunctionProxyPipe } from '../shared/function-proxy-pipe';
 import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -100,6 +101,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
   @Input({ required: true })
   defineMorphemeRef!: DefineFieldMorphemeRuleContextMenu;
+
+  @Input({ required: true })
+  interlinearToolsRef!: InterlinearToolsContextMenu;
 
   @Input()
   originToInterlinear?: Array<OriginToInterlinear>;

@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { SourceVerse } from '@domain/source-verse-model';
+import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { WordSegment } from '@domain/word-segment-model';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { Word } from '@domain/word-model';
 
 @Injectable({
   providedIn: 'root'

@@ -35,17 +35,19 @@ import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metad
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
+import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
 
 @Component({
   selector: 'app-translation-editor-component',
   imports: [
     FormsModule,
     AsyncModalModule,
-    AddPatternContextMenu,
-    DefineFieldMorphemeRuleContextMenu,
     ScriptureMetadataComponent,
     TranslationViewerManager,
-    ProjectHeader
+    ProjectHeader,
+    AddPatternContextMenu,
+    DefineFieldMorphemeRuleContextMenu,
+    InterlinearToolsContextMenu
 ],
   templateUrl: './translation-editor-component.html',
   styleUrl: './translation-editor-component.scss'

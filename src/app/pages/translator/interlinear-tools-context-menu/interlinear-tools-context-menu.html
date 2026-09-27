@@ -1,0 +1,14 @@
+@if (visible) {
+  <div
+    class="contextMenu"
+    [ngStyle]="{ top: y + 'px', left: x + 'px' }"
+  >
+    <ul>
+      <li (click)="onClickFillSequentially()">Fill sequentially from here</li>
+      <li (click)="onClickAdvanceOneWordRight()">Advance one word in all to the RIGHT</li>
+      <li (click)="onClickAdvanceOneWordLeft()">Advance one word in all to the LEFT</li>
+      <li (click)="onClickReturnOneWordRight()">Return one word in all to the RIGHT</li>
+      <li (click)="onClickReturnOneWordLeft()">Return one word in all to the LEFT</li>
+    </ul>
+  </div>
+}

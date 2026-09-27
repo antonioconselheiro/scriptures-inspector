@@ -22,8 +22,8 @@ export class DefineFieldMorphemeRuleContextMenu {
   morphemeConfigured: MorphemeType = 'root';
   parsedBook!: ParsedBookMetadata;
 
-  @Input()
-  current: CurrentChapter | null = null;
+  @Input({ required: true })
+  current!: CurrentChapter;
 
   constructor(
     private systemService: SystemService

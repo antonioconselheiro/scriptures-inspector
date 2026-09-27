@@ -9,7 +9,7 @@
     [sourceLanguage]="sourceLanguage" [sourceBookRecord]="sourceBookRecord" [project]="project"
     [projectData]="projectData" [bookTarget]="bookTarget" [verseIndex]="verseIndex"
     [sourceBook]="sourceBook" [sourceVerse]="sourceVerse" [customTranslation]="customTranslation"
-    [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
+    [interlinearToolsRef]="interlinearToolsRef" [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
     [viewingTranslationBookRecord]="viewingTranslationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
   >
     @for (origin of originToInterlinear; track $index) {
@@ -45,10 +45,21 @@
         @for (word of wordMatrix; track $index; let y = $index) {
           <td>
             @for (translationSegment of word.segments; track $index) {
-              <select #interlinear
+              <select
+                #interlinear
+                [appInterlinearToolsContextMenuTrigger]="interlinearToolsRef"
                 (change)="onChangeInterlinearToBaseScripture(origin.structure, translationSegment.index, translationSegment.word, interlinear.value)"
                 [ngModel]="getInterlinearWordSegmentSerialized(origin.structure, translationSegment.index)"
-                [name]="'translationToSourceInterlinear' + $index">
+                [name]="'translationToSourceInterlinear' + $index"
+                [sourceLanguage]="sourceLanguage"
+                [interlinearTarget]="interlinearTarget"
+                [originSource]="origin.structure.source"
+                [sourceVerse]="sourceVerse"
+                [wordMatrix]="wordMatrix"
+                [translationWordIndex]="translationSegment.index"
+                [translationWord]="translationSegment.word"
+                [interlinearValue]="interlinear.value"
+              >
                 <option value=""></option>
                 @for (originWords of originWordMatrix; track $index) {
                   @for (segment of originWords.segments; track $index) {
