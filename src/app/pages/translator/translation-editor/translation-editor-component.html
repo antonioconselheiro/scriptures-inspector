@@ -55,6 +55,7 @@
   <app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
   <app-define-field-morpheme-rule-context-menu #defineMorphemeRef [current]="current"></app-define-field-morpheme-rule-context-menu>
   <app-interlinear-tools-context-menu #interlinearToolsRef [current]="current"></app-interlinear-tools-context-menu>
+  <app-verse-scroll-navigator></app-verse-scroll-navigator>
   
   @if (project && codexMetadataRecord) {
     @for (structure of project.structures; track $index) {
@@ -67,7 +68,7 @@
         @let chapterIndex = getChapterIndex(current, selectedSourceBook.chapters);
         @for (verse of selectedSourceBook.chapters[chapterIndex].verses; track $index; let verseIndex = $index) {
   
-          <h2 class="verseTitle">
+          <h2 class="verseTitle" [attr.data-verse]="verse.verse">
             {{sourceCodex.books && sourceCodex.books[current.book].name}}, {{current.chapter}}:{{verse.verse}}
           </h2>
     

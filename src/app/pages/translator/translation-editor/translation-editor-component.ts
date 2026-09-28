@@ -36,6 +36,7 @@ import { ProjectMetadataService } from './shared/project/project-metadata-servic
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
+import { VerseScrollNavigator } from './verse-scroll-navigator/verse-scroll-navigator';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -47,7 +48,8 @@ import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/i
     ProjectHeader,
     AddPatternContextMenu,
     DefineFieldMorphemeRuleContextMenu,
-    InterlinearToolsContextMenu
+    InterlinearToolsContextMenu,
+    VerseScrollNavigator
 ],
   templateUrl: './translation-editor-component.html',
   styleUrl: './translation-editor-component.scss'
