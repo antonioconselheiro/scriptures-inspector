@@ -35,6 +35,16 @@
 /**
  * Elementos
  */
+::highlight(find-in-page-match) {
+  background-color: #ffff00;
+  color: #000;
+}
+
+::highlight(find-in-page-current) {
+  background-color: #ff9632;
+  color: #000;
+}
+
 body {
   margin: 0;
   padding: 0;

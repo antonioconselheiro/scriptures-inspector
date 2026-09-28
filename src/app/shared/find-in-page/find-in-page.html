@@ -1,0 +1,17 @@
+@if (visible) {
+  <div class="findBar">
+    <input
+      #searchEl
+      type="text"
+      spellcheck="false"
+      placeholder="Find in page"
+      [value]="query"
+      (input)="onQueryChange(searchEl.value)"
+      (keydown)="onSearchKeydown($event)"
+    />
+    <span class="counter">{{ total ? current + 1 : 0 }}/{{ total }}</span>
+    <button type="button" (click)="previous()" [disabled]="!total" title="Previous (Shift+Enter)">▲</button>
+    <button type="button" (click)="next()" [disabled]="!total" title="Next (Enter)">▼</button>
+    <button type="button" (click)="close()" title="Close (Esc)">×</button>
+  </div>
+}

@@ -4,13 +4,15 @@ import { AsyncModalModule } from '@belomonte/async-modal-ngx';
 import { LoadingObservable } from '@shared/loading/loading-observable';
 import { Subscription } from 'rxjs';
 import { MainDialogComponent } from './shared/main-dialog/main-dialog';
+import { FindInPage } from './shared/find-in-page/find-in-page';
 
 @Component({
   selector: 'app-root',
   imports: [
     RouterOutlet,
     AsyncModalModule,
-    MainDialogComponent
+    MainDialogComponent,
+    FindInPage
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
