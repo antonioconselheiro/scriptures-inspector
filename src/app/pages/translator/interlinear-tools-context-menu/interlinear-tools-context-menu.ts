@@ -29,6 +29,7 @@ export class InterlinearToolsContextMenu {
   originSource!: string;
   sourceVerse!: SourceVerse;
   wordMatrix!: Array<Word>;
+  originWordMatrix!: Array<Word>;
   translationWordIndex!: number;
   translationWord!: string;
   interlinearValue!: string;
@@ -38,11 +39,21 @@ export class InterlinearToolsContextMenu {
   ) { }
 
   onClickFillSequentially(): void {
-
+    this.interlinearService.fillSequentiallyAllAssociationsToTheRight(
+      this.sourceLanguage,
+      this.interlinearTarget,
+      this.originSource,
+      this.current,
+      this.sourceVerse,
+      this.wordMatrix,
+      this.originWordMatrix,
+      this.translationWordIndex,
+      this.interlinearValue
+    );
   }
 
-  onClickAdvanceOneWordRight(): void {
-    this.interlinearService.advanceOneWordToAllAssociationsToTheRight(
+  onClickMoveOneToRight(): void {
+    this.interlinearService.moveOneWordToAllAssociationsToTheRight(
       this.sourceLanguage,
       this.interlinearTarget,
       this.originSource,
@@ -55,15 +66,16 @@ export class InterlinearToolsContextMenu {
     );
   }
 
-  onClickAdvanceOneWordLeft(): void {
-
+  onClickReturnOneToRight(): void {
+    this.interlinearService.returnOneWordToAllAssociationsToTheRight(
+      this.sourceLanguage,
+      this.interlinearTarget,
+      this.originSource,
+      this.current,
+      this.sourceVerse,
+      this.wordMatrix,
+      this.translationWordIndex
+    );
   }
 
-  onClickReturnOneWordRight(): void {
-
-  }
-
-  onClickReturnOneWordLeft(): void {
-
-  }
 }

@@ -114,7 +114,7 @@ export class ProjectInterlinearService {
     return indexes;
   }
 
-  advanceOneWordToAllAssociationsToTheRight(
+  moveOneWordToAllAssociationsToTheRight(
     sourceLanguage: LanguageUnionType,
     interlinearTarget: InterlinearTarget,
     originSource: string,
@@ -174,6 +174,99 @@ export class ProjectInterlinearService {
         }
       }
     }
+  }
+
+  returnOneWordToAllAssociationsToTheRight(
+    sourceLanguage: LanguageUnionType,
+    interlinearTarget: InterlinearTarget,
+    originSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    wordMatrix: Array<Word>,
+    translationWordIndex: number
+  ): void {
+    const segments = wordMatrix
+      .flatMap(word => word.segments)
+      .filter(segment => segment.index >= translationWordIndex);
+
+    const values = segments.map(segment => this.getInterlinearWordSegmentSerialized(
+      sourceLanguage,
+      interlinearTarget,
+      originSource,
+      current,
+      sourceVerse,
+      segment.index
+    ));
+
+    segments.forEach((segment, i) => {
+      this.saveInterlinearToBaseScripture(
+        interlinearTarget,
+        originSource,
+        current,
+        sourceVerse,
+        segment.index,
+        segment.word,
+        values[i + 1] || ''
+      );
+    });
+  }
+
+  fillSequentiallyAllAssociationsToTheRight(
+    sourceLanguage: LanguageUnionType,
+    interlinearTarget: InterlinearTarget,
+    originSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    wordMatrix: Array<Word>,
+    originWordMatrix: Array<Word>,
+    translationWordIndex: number,
+    interlinearValue: string
+  ): void {
+    const segments = wordMatrix
+      .flatMap(word => word.segments)
+      .filter(segment => segment.index >= translationWordIndex);
+    const originValues = originWordMatrix
+      .flatMap(word => word.segments)
+      .map(segment => this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment));
+
+    // starts from the clicked select value or, if empty, from the origin word at the same position
+    let originStart = originValues.indexOf(interlinearValue);
+    if (originStart === this.indexNotFound) {
+      const clickedPosition = wordMatrix
+        .flatMap(word => word.segments)
+        .findIndex(segment => segment.index === translationWordIndex);
+      originStart = Math.max(clickedPosition, 0);
+    }
+
+    const newValues = segments.map((_, i) => originValues[originStart + i] || '');
+    const hasDefinitionToOverwrite = segments.some((segment, i) => {
+      const currentValue = this.getInterlinearWordSegmentSerialized(
+        sourceLanguage,
+        interlinearTarget,
+        originSource,
+        current,
+        sourceVerse,
+        segment.index
+      );
+
+      return currentValue && currentValue !== newValues[i];
+    });
+
+    if (hasDefinitionToOverwrite && !confirm('Overwrite current definition?')) {
+      return;
+    }
+
+    segments.forEach((segment, i) => {
+      this.saveInterlinearToBaseScripture(
+        interlinearTarget,
+        originSource,
+        current,
+        sourceVerse,
+        segment.index,
+        segment.word,
+        newValues[i]
+      );
+    });
   }
 
   saveInterlinearToBaseScripture(

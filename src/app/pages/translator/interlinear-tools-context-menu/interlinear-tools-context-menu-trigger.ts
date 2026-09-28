@@ -27,6 +27,9 @@ export class InterlinearToolsContextMenuTrigger {
   
   @Input({ required: true })
   wordMatrix!: Array<Word>;
+
+  @Input({ required: true })
+  originWordMatrix!: Array<Word>;
   
   @Input({ required: true })
   translationWordIndex!: number;
@@ -51,6 +54,7 @@ export class InterlinearToolsContextMenuTrigger {
     this.contextMenu.originSource = this.originSource;
     this.contextMenu.sourceVerse = this.sourceVerse;
     this.contextMenu.wordMatrix = this.wordMatrix;
+    this.contextMenu.originWordMatrix = this.originWordMatrix;
     this.contextMenu.translationWordIndex = this.translationWordIndex;
     this.contextMenu.translationWord = this.translationWord;
     this.contextMenu.interlinearValue = this.interlinearValue;
