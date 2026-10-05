@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { AssociatedTranslation } from '@domain/associated-translation-model';
 import { Codex } from '@domain/codex-model';
@@ -80,6 +80,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    private router: Router,
     private httpClient: HttpClient,
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
@@ -266,6 +267,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     if (book) {
       this.modalService
         .createModal(ImportFromBookDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           targetMetadataDetails,
@@ -290,6 +292,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(PatternsDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           language: detail.languageSource,
@@ -313,6 +316,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(LexicalDictionaryDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           bookMetadata,
@@ -336,6 +340,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       const bookMetadata = this.projectData[detail.target];
       this.modalService
         .createModal(TranslationVariationConfigDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData(bookMetadata)
         .build()

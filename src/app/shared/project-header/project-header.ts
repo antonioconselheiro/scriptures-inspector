@@ -226,6 +226,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
     if (this.project) {
       this.modalService
         .createModal(AddArtifactCollectionDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           project: this.project
@@ -242,6 +243,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
       this.modalService
         .createModal(EditArtifactsInCollectionDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           fromFiles,

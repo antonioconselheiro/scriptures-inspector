@@ -45,6 +45,7 @@ export class WelcomeScreenComponent implements OnInit {
   createProject(): void {
       this.modalService
         .createModal(CreateProjectDialog)
+        .setBindToRoute(this.router)
         .setOutletName('main')
         .build();
         //  TODO: redirecionar para o editor?

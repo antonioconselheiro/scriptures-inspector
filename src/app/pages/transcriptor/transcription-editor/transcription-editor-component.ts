@@ -18,6 +18,7 @@ import { DefineVectorDialog } from '../define-vector-dialog/define-vector-dialog
 import { Language } from '@domain/language-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-transcription-editor-component',
@@ -63,6 +64,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
+    private router: Router,
     private modalService: ModalService,
     private collectionsStatefull: CollectionsStatefull
   ) {
@@ -199,6 +201,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   openDialogIncludeTranscription(artifact: ArtifactFragment): void {
     this.modalService
       .createModal(DefineTranscriptionDialog)
+      .setBindToRoute(this.router)
       .setOutletName('main')
       .build()
       .subscribe({
@@ -213,6 +216,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   openDialogDefineVector(artifact: ArtifactFragment): void {
     this.modalService
       .createModal(DefineVectorDialog)
+      .setBindToRoute(this.router)
       .setData({
         fragmentImage: this.getImage()
       })
