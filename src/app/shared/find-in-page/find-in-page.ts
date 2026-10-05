@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import { regexEscapeFn } from '@shared/system/regex-espace-fn';
 
 @Component({
   selector: 'app-find-in-page',
@@ -138,8 +139,7 @@ export class FindInPage implements OnDestroy {
       text += node.data;
     }
 
-    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(escaped, 'giu');
+    const regex = new RegExp(regexEscapeFn(query), 'giu');
     const ranges: Array<Range> = [];
 
     for (const match of text.matchAll(regex)) {

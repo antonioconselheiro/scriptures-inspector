@@ -6,15 +6,16 @@ import { CurrentBook } from '@domain/current-book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { MorphemeType } from '@domain/morpheme-type';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { PatternsSerialized } from '@domain/patterns-serialized-model';
 import { ScriptureVerseMetadataWord } from '@domain/scripture-verse-metadata-word-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { regexEscapeFn } from '@shared/system/regex-espace-fn';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
-import { MorphemeType } from '@domain/morpheme-type';
 
 @Injectable({
   providedIn: 'root'
@@ -236,19 +237,25 @@ export class ProjectMetadataService {
     this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
+  prefetchMatcherFn(language: Language, pattern: string): string {
+    const normalizedPattern = regexEscapeFn(pattern);
+
+    if (language.prefetchMatcherFn) {
+      return language.prefetchMatcherFn(normalizedPattern);
+    }
+
+    return normalizedPattern;
+  }
+
   parsePattern(
     serialized: PatternsSerialized,
     language: Language
   ): ParsedPatterns {
-    const prefetchMatcherFn = language.prefetchMatcherFn
-      ? language.prefetchMatcherFn
-      : (t: string) => t;
-
     const prefix = new Map<string, RegExp>(
       serialized.prefix.map(pattern => [
         pattern,
         new RegExp(
-          `^${prefetchMatcherFn(pattern)}`,
+          `^${this.prefetchMatcherFn(language, pattern)}`,
           'u'
         )
       ])
@@ -258,7 +265,7 @@ export class ProjectMetadataService {
       serialized.suffix.map(pattern => [
         pattern,
         new RegExp(
-          `${prefetchMatcherFn(pattern)}$`,
+          `${this.prefetchMatcherFn(language, pattern)}$`,
           'u'
         )
       ])
@@ -268,7 +275,7 @@ export class ProjectMetadataService {
       serialized.lexeme.map(pattern => [
         pattern,
         new RegExp(
-          `^${prefetchMatcherFn(pattern)}$`,
+          `^${this.prefetchMatcherFn(language, pattern)}$`,
           'u'
         )
       ])
