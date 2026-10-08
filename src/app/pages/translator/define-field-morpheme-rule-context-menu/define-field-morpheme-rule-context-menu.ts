@@ -30,6 +30,10 @@ export class DefineFieldMorphemeRuleContextMenu {
   ) {}
 
   onDefineFieldRule(type: MorphemeType): void {
+    setTimeout(() => this.defineFieldRule(type));
+  }
+
+  defineFieldRule(type: MorphemeType): void {
     if (!this.parsedBook.lexical[this.word]) {
       this.parsedBook.lexical[this.word] = {};
     }
@@ -68,6 +72,6 @@ export class DefineFieldMorphemeRuleContextMenu {
       this.systemService.triggerSaveCurrentBookInterlinear(this.current);
     }
 
-    setTimeout(() => this.visible = false);
+    this.visible = false;
   }
 }

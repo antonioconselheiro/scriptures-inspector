@@ -265,6 +265,12 @@
       "customTranslationTarget": "hebrew-stuttgartensia-custom-portuguese-translation",
       "interlinear": [
         {
+          "source": "samaritan-pentateuch",
+          "metadataTarget": "samaritan-pentateuch-custom-portuguese-metadata",
+          "interlinearTarget": "samaritan-pentateuch-hebrew-stuttgartensia-interlinear",
+          "customTranslationTarget": "samaritan-pentateuch-custom-portuguese-translation"
+        },
+        {
           "source": "greek-septuagint",
           "metadataTarget": "greek-septuagint-custom-portuguese-metadata",
           "interlinearTarget": "greek-septuagint-hebrew-stuttgartensia-interlinear",
@@ -277,12 +283,6 @@
               "customTranslationTarget": "geez-mashafa-qeddus-custom-portuguese-translation"
             }
           ]
-        },
-        {
-          "source": "samaritan-pentateuch",
-          "metadataTarget": "samaritan-pentateuch-custom-portuguese-metadata",
-          "interlinearTarget": "samaritan-pentateuch-hebrew-stuttgartensia-interlinear",
-          "customTranslationTarget": "samaritan-pentateuch-custom-portuguese-translation"
         }
       ]
     },
