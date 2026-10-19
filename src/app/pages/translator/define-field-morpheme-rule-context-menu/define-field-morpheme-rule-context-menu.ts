@@ -33,7 +33,7 @@ export class DefineFieldMorphemeRuleContextMenu {
     setTimeout(() => this.defineFieldRule(type));
   }
 
-  defineFieldRule(type: MorphemeType): void {
+  private defineFieldRule(type: MorphemeType): void {
     if (!this.parsedBook.lexical[this.word]) {
       this.parsedBook.lexical[this.word] = {};
     }

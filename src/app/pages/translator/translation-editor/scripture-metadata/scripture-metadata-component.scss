@@ -7,19 +7,14 @@
 
   input {
     display: inline-block;
-
-    &.root {
-      border: 1px inset lightgray;
-    }
+    border: 1px inset lightgray;
 
     &.prefix {
-      border: 1px inset lightgray;
-      border-left: 10px solid;
+      border-right: 7px solid;
     }
-
+    
     &.suffix {
-      border: 1px inset lightgray;
-      border-right: 10px solid;
+      border-left: 7px solid;
     }
   }
 }

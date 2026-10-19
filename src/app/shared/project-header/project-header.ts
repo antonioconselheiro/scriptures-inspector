@@ -212,12 +212,13 @@ export class ProjectHeader implements OnInit, OnDestroy {
         const collection = this.current.collection;
         const artifact = this.current.artifact;
         // TODO: this.systemService.triggerSaveCurrentArtifactMetadata({ collection, artifact });
+        alert('ops, not implemented yet');
       }
 
       setTimeout(() => {
         this.saveIsAnimating = false;
         this.cdr.detectChanges();
-      }, 500);
+      }, 2000);
       this.systemService.triggerSaveCurrentProject();
     }
   }

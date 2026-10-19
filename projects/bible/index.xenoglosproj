@@ -3,7 +3,20 @@
   "repositories": {
     "bible": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
-  "translationViewer": [],
+  "translationViewer": [
+    {
+      "associatedTo": [
+        "hebrew-stuttgartensia"
+      ],
+      "translation": "@bible/bible-pt-acf"
+    },
+    {
+      "associatedTo": [
+        "hebrew-stuttgartensia"
+      ],
+      "translation": "@bible/bible-pt-nvi"
+    }
+  ],
   "target": {
     "language": "portuguese",
     "books": {

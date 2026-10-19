@@ -5,13 +5,22 @@ TODO
 [ ] - (gemini) Fazer com que associações interlineares sejam derivadas com a integração gemini
 [ ] - (gemini) (mvp fragmentator) tratar svg com integração gemini
 [ ] - (gemini) (mvp fragmentator) posicionar letras da transcrição no svg usando a imagem como referência com a integração gemini
+[ ] - (holy viewer) Spelling do idioma deve ser configuravel via código
+[ ] - (holy viewer) Precisa ser configurável, escolher entre normal (WoG vermelho) ou prismal;
+[ ] - (holy viewer) Ao clicar ou passar o mouse por cima das palavras do texto original, deve-se mostrar o léxico
+[ ] - (holy viewer) Precisa poder exibir pedaços de um versículo
+[ ] - (holy viewer) Mecânica de sublinhar trechos do texto
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - Incluir botão para fixar um versículo em um idioma no header, para que acompanhe o scroll
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
+[ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Incluir exibição do texto com as configurações de word of god no metadado
 [ ] - No interlinear colorido, incluir o texto em paralelo de onde estão sendo derivadas as cores
-[ ] - Incluir meio de editar o valor do lexico no dialog 
+[ ] - Incluir meio de editar o valor do lexico no dialog
+[ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas
+[ ] - Colocar headers nos menus de sistema do electron
+[ ] - Quando se confirma a deletação de uma coluna de tradução depois de definir o size como 0, o campo que ocupa o novo lugar do deletado fica com size 0
 [ ] - Permitir ordenar a tabela de lexicos e padrões por diferentes colunas por ordem alfabética ou tamanho das palavras
 [ ] - Há frases onde tudo é praticamente palavra de Deus e apertar o checkbox um a um é demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecionar multiplos arrastando e então sincronizar o valor atualizado do que for clicado para todos os outros
 [ ] - Remover ou não a denotação massorética precisa ser algo configurável no projeto

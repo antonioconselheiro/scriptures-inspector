@@ -399,7 +399,7 @@ export class ProjectCustomTranslationService {
       customTranslationMetadataKey = this.dataService.castInterlinearWordTargetIntoMetadataIndexSerialized(translationLanguage, interlinearSegmentOrigin);
       verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
     } else {
-      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
+      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex]?.verses || [];
       verseMetadata = scriptureChapterMetadata[verseIndex] || null;
       const translationChapterMetadata = customTranslation.chapters[chapterIndex].verses || [];
       customTranslationMetadataKey = ((translationChapterMetadata[verseIndex]?.metadata || [])?.[wordIndex]?.value || '');
