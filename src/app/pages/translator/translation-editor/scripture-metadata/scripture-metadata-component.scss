@@ -10,11 +10,19 @@
     border: 1px inset lightgray;
 
     &.prefix {
-      border-right: 7px solid;
+      padding-right: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='20' viewBox='0 0 7 20'%3E%3Cpath d='M7 0 L7 20 L0 10 Z' fill='black'/%3E%3C/svg%3E");
+      background-position: right center;
+      background-size: 7px 14px;
+      background-repeat: no-repeat;
     }
     
     &.suffix {
-      border-left: 7px solid;
+      padding-left: 10px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='20' viewBox='0 0 7 20'%3E%3Cpath d='M0 0 L7 10 L0 20 Z' fill='black'/%3E%3C/svg%3E");
+      background-position: left center;
+      background-size: 7px 14px;
+      background-repeat: no-repeat;
     }
   }
 }

@@ -549,21 +549,23 @@ export class ProjectCustomTranslationService {
     if (interlinearValue) {
       const value = interlinearValue.replace(/^\d+\-/, '');
       bookChapters.forEach(chapter => {
-        chapter.verses.forEach(chapterVerse => {
-          if (chapterVerse && chapterVerse.variations) {
-            const variationsRecord = chapterVerse.variations[variationId] || {};
-            Object.keys(variationsRecord).forEach(key => {
-              const metadata = chapterVerse.metadata[Number(key)];
-              if (metadata && metadata.value) {
-                const thermValue = metadata.value.replace(/^\d+\-/, '');
-                if (thermValue === value) {
-                  suggestions.add(variationsRecord[key].value);
+        if (chapter?.verses?.length) {
+          chapter.verses.forEach(chapterVerse => {
+            if (chapterVerse && chapterVerse.variations) {
+              const variationsRecord = chapterVerse.variations[variationId] || {};
+              Object.keys(variationsRecord).forEach(key => {
+                const metadata = chapterVerse.metadata[Number(key)];
+                if (metadata && metadata.value) {
+                  const thermValue = metadata.value.replace(/^\d+\-/, '');
+                  if (thermValue === value) {
+                    suggestions.add(variationsRecord[key].value);
+                  }
                 }
-              }
-
-            });
-          }
-        });
+  
+              });
+            }
+          });
+        }
       });
     }
 

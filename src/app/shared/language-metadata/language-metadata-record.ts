@@ -48,6 +48,7 @@ export const languageMetadataRecord: {
     name: 'Samaritan',
     label: 'latin-consonantal-samaritan',
     direction: 'rtl',
+    wordSeparator: ['_', ' '],
     alternativeSpelling: [
       {
         name: 'Samaritan',

@@ -10,6 +10,11 @@ TODO
 [ ] - (holy viewer) Ao clicar ou passar o mouse por cima das palavras do texto original, deve-se mostrar o léxico
 [ ] - (holy viewer) Precisa poder exibir pedaços de um versículo
 [ ] - (holy viewer) Mecânica de sublinhar trechos do texto
+[ ] - (holy viewer) Deve ter um meio de exibir diferentes configurações de variações de tradução lado a lado para comparação, comoparações com as variações de "palavras-chave transliteradas" ou "significado dos nomes" pode ser util para o usuário final
+[ ] - Está quebrando para derivar tradução personalizada, quebrou com genesis 1.1
+[ ] - Quando houver opções disponíveis de uma variação de tradução, um icone deve ser exibido sobre o select para identificar isso
+[ ] - Variação de tradução onde números transcritos são transformados em algarismos preserva espaços entre os números, ex: "E viveu Jarede 1  6  2 anos e gerou AZ Enoque.". Pensar em solução.
+[ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença
 [ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
 [ ] - Incluir botão para fixar um versículo em um idioma no header, para que acompanhe o scroll
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
@@ -56,8 +61,8 @@ TODO
 [ ] - (não mvp) Repositório com Rigveda, Samaveda, Yajurveda e Atharvaveda em hindi e sanscrito;
 [ ] - (não mvp) Repositório com Brahmanas, Aranyakas, Upanishads em hindi e sanscrito;
 [ ] - (não mvp) Falsear minha versão do mahabarata com esta outra versão: https://www.wisdomlib.org/hinduism/book/mahabharata-sanskrit
-[ ] - (não mvp) Repositório com os manuscritos do mar morto (transcrição, tradução);
-[ ] - (não mvp) Repositório com apocrifos com suas versões em seus idiomas mais antigos e também as traduções para o português;
+[ ] - (não mvp) Repositório com os manuscritos do mar morto (transcrição, tradução, http://www.moellerhaus.com/index.htm);
+[ ] - (não mvp) Repositório com apocrifos com suas versões em seus idiomas mais antigos e também as traduções para o português (https://pseudepigrapha.org/index.html, https://messianiclearning.org/commentary/apocrypha/tobit/index.html#title&gsc.tab=0);
 [ ] - (não mvp) Repositório com Bhagavatam (
   sanscrito: https://sanskritdocuments.org/doc_purana/bhagpur-01.html,
   transliterado: https://gita.srimadbhagavatam.org/downloads/SB-Sanskrit/SB-Sanskrit1.html,
