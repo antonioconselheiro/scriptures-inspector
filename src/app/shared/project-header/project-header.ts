@@ -218,7 +218,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
       setTimeout(() => {
         this.saveIsAnimating = false;
         this.cdr.detectChanges();
-      }, 3000);
+      }, 12000);
       this.systemService.triggerSaveCurrentProject();
     }
   }

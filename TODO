@@ -19,6 +19,8 @@ TODO
 [ ] - Incluir botão para fixar um versículo em um idioma no header, para que acompanhe o scroll
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
+[ ] - Ter certeza que está salvando após uma alteração seguida da troca de uma página e outra
+[ ] - Incluir configuração que permita o software de baixar os repositórios relacionados ao projeto para trabalhar offline, ou então incluir endereços locais alternativos para casos de 404
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Incluir exibição do texto com as configurações de word of god no metadado
 [ ] - No interlinear colorido, incluir o texto em paralelo de onde estão sendo derivadas as cores
@@ -32,6 +34,8 @@ TODO
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final, configurável, para validar o aspecto geral do capítulo
+[ ] - Tornar select de livros pesquisável
+[ ] - Incluir input text de versiculo ao lado de capitulo e acioná-lo após o redirecionamento do botão go de alguma maneira
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
 [ ] - (mvp fragmentator) para inserir o texto de transcrição pode ser aberto uma dialog para inserção do texto e a edição deve ser permitida somente se não houver edição do posicionamento da transcrição no vetor, se já estiver uma palavra que seja posicionada, então o texto deve ser editado pela interface de posicionamento

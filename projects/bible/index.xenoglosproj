@@ -188,6 +188,15 @@
       "4MA": {
         "name": "4 Macabeus"
       },
+      "1ME": {
+        "name": "1 Macabeus Etíope"
+      },
+      "2ME": {
+        "name": "2 Macabeus Etíope"
+      },
+      "3ME": {
+        "name": "3 Macabeus Etíope"
+      },
       "MAT": {
         "name": "Mateus"
       },
@@ -216,7 +225,10 @@
         "name": "Gálatas"
       },
       "EFE": {
-        "name": "Efésios"
+        "name": "Epístola de Paulo aos Efésios"
+      },
+      "2EF": {
+        "name": "Epístola de Inácio aos Efésios"
       },
       "FIL": {
         "name": "Filipenses"

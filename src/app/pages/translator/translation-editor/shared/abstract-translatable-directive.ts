@@ -48,11 +48,20 @@ export abstract class AbstractTranslatableDirective extends AbstractInspectorDir
     return Object.keys(this.viewingTranslationBookRecord).map(source => {
       const translationViewing = this.viewingTranslationBookRecord[source];
       if (translationViewing.associatedTo.includes(this.structure.source)) {
-        const chapterIndex = this.viewingTranslationBookRecord[source].chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
+        const chapters = this.viewingTranslationBookRecord[source].chapters;
         const name = this.viewingTranslationBookRecord[source].name;
 
+        if (!chapters) {
+          return {
+            source,
+            name,
+            verses: []
+          }
+        }
+
+        const chapterIndex = chapters.findIndex(chapter => chapter.chapter === this.current.chapter);
         if (chapterIndex !== this.indexNotFound) {
-          const verses = this.viewingTranslationBookRecord[source].chapters[chapterIndex].verses;
+          const verses = chapters[chapterIndex].verses;
 
           return {
             source,
