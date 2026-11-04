@@ -1,10 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
-  onProjectFileOpened: (callback) => {
-    ipcRenderer.on('open-project-file', (_, filePath) => callback(filePath));
-    ipcRenderer.send('project-file-listener-ready');
-  },
+  initializeProjectOpening: () => ipcRenderer.invoke('initialize-project-opening'),
+  onProjectFileOpened: (callback) => ipcRenderer.on('open-project-file', (_, filePath) => callback(filePath)),
+  applicationStartupComplete: (maximizeWindow) => ipcRenderer.send('application-startup-complete', maximizeWindow),
   readImageBase64: (filePath) => ipcRenderer.invoke('read-image-base64', filePath),
   readJsonFile: (path) => ipcRenderer.invoke('read-json-file', path),
   writeJsonFile: (path, data) => ipcRenderer.invoke('write-json-file', path, data),

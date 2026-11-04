@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
+import { Project } from '@domain/project-model';
 import { LoadingObservable } from '@shared/loading/loading-observable';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { SystemService } from '@shared/system/system-service';
@@ -35,6 +36,7 @@ export class App implements OnInit, OnDestroy {
     window.api.onProjectFileOpened(filePath => {
       void this.openProjectFile(filePath);
     });
+    void this.initializeStartup();
   }
 
   ngOnDestroy(): void {
@@ -51,25 +53,72 @@ export class App implements OnInit, OnDestroy {
     );
   }
 
-  private async openProjectFile(filePath: string): Promise<void> {
-    LoadingObservable.startLoading();
+  private async initializeStartup(): Promise<void> {
+    let maximizeWindow = false;
     try {
-      const project = await this.systemService.loadProjectFromPath(filePath);
-      if (!project) {
-        return;
-      }
-
-      setProjectFn(project);
-      const [book] = Object.keys(project.target.books || {});
-      if (book) {
-        await this.router.navigate(['translator', 'book', book, 'chapter', 1]);
+      const filePath = await window.api.initializeProjectOpening();
+      if (filePath) {
+        maximizeWindow = await this.loadProjectAndNavigate(filePath);
       } else {
-        await this.router.navigate(['welcome']);
+        await this.navigateToWelcome();
       }
     } catch (error) {
-      console.error('Unable to open project passed to the running application:', error);
+      console.error('Unable to initialize the application:', error);
+      try {
+        await this.navigateToWelcome();
+      } catch (navigationError) {
+        console.error('Unable to display the welcome screen:', navigationError);
+      }
     } finally {
-      LoadingObservable.stopLoading();
+      await this.notifyStartupCompleteAfterRender(maximizeWindow);
+    }
+  }
+
+  private async openProjectFile(filePath: string): Promise<void> {
+    let maximizeWindow = false;
+    try {
+      maximizeWindow = await this.loadProjectAndNavigate(filePath);
+    } catch (error) {
+      console.error('Unable to open project passed to the running application:', error);
+      try {
+        await this.navigateToWelcome();
+      } catch (navigationError) {
+        console.error('Unable to display the welcome screen:', navigationError);
+      }
+    } finally {
+      await this.notifyStartupCompleteAfterRender(maximizeWindow);
+    }
+  }
+
+  private async notifyStartupCompleteAfterRender(maximizeWindow: boolean): Promise<void> {
+    await new Promise<void>(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+    window.api.applicationStartupComplete(maximizeWindow);
+  }
+
+  private async loadProjectAndNavigate(filePath: string): Promise<boolean> {
+    const project: Project | null = await this.systemService.loadProjectFromPath(filePath);
+    if (!project) {
+      throw new Error(`No project data found in "${filePath}"`);
+    }
+
+    setProjectFn(project);
+    const [book] = Object.keys(project.target.books || {});
+    const route = book
+      ? `/translator/book/${encodeURIComponent(book)}/chapter/1`
+      : '/welcome';
+    const navigated = await this.router.navigateByUrl(route);
+    if (!navigated) {
+      throw new Error(`Unable to navigate to "${route}"`);
+    }
+    return Boolean(book);
+  }
+
+  private async navigateToWelcome(): Promise<void> {
+    const navigated = await this.router.navigateByUrl('/welcome');
+    if (!navigated) {
+      throw new Error('The welcome route was not activated');
     }
   }
 }

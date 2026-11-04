@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Scriptures Inspector</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f7f5f0;
+        color: #242323;
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-app-region: drag;
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 20px;
+      }
+
+      .prisma-orbit {
+        display: flex;
+        justify-content: space-between;
+        width: 168px;
+      }
+
+      .prisma-orbit span {
+        width: 12px;
+        height: 12px;
+        border: 2px solid;
+        border-radius: 50%;
+        animation-duration: 1.4s;
+        animation-iteration-count: infinite;
+        animation-timing-function: steps(1, end);
+      }
+
+      .prisma-orbit-top span:nth-child(1),
+      .prisma-orbit-bottom span:nth-child(7) {
+        border-color: rgb(211, 1, 1);
+      }
+
+      .prisma-orbit-top span:nth-child(2),
+      .prisma-orbit-bottom span:nth-child(6) {
+        border-color: rgb(236, 106, 0);
+      }
+
+      .prisma-orbit-top span:nth-child(3),
+      .prisma-orbit-bottom span:nth-child(5) {
+        border-color: rgb(206, 203, 0);
+      }
+
+      .prisma-orbit-top span:nth-child(4),
+      .prisma-orbit-bottom span:nth-child(4) {
+        border-color: rgb(77, 187, 5);
+      }
+
+      .prisma-orbit-top span:nth-child(5),
+      .prisma-orbit-bottom span:nth-child(3) {
+        border-color: rgb(1, 146, 165);
+      }
+
+      .prisma-orbit-top span:nth-child(6),
+      .prisma-orbit-bottom span:nth-child(2) {
+        border-color: rgb(59, 0, 168);
+      }
+
+      .prisma-orbit-top span:nth-child(7),
+      .prisma-orbit-bottom span:nth-child(1) {
+        border-color: rgb(206, 1, 179);
+      }
+
+      .prisma-orbit-top span {
+        animation-name: prisma-forward;
+      }
+
+      .prisma-orbit-bottom span {
+        animation-name: prisma-backward;
+      }
+
+      .prisma-orbit span:nth-child(2) {
+        animation-delay: -0.2s;
+      }
+
+      .prisma-orbit span:nth-child(3) {
+        animation-delay: -0.4s;
+      }
+
+      .prisma-orbit span:nth-child(4) {
+        animation-delay: -0.6s;
+      }
+
+      .prisma-orbit span:nth-child(5) {
+        animation-delay: -0.8s;
+      }
+
+      .prisma-orbit span:nth-child(6) {
+        animation-delay: -1s;
+      }
+
+      .prisma-orbit span:nth-child(7) {
+        animation-delay: -1.2s;
+      }
+
+      section {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      img {
+        width: 72px;
+        height: 92px;
+        object-fit: contain;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 500;
+        letter-spacing: -0.8px;
+        white-space: nowrap;
+      }
+
+      p {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin: 0;
+        color: #66615a;
+        font-size: 14px;
+      }
+
+      .loading-dots {
+        display: inline-flex;
+        padding-left: 1px;
+      }
+
+      .loading-dots span {
+        animation: bounce 0.9s infinite ease-in-out;
+      }
+
+      .loading-dots span:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      .loading-dots span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+
+        30% {
+          transform: translateY(-4px);
+        }
+      }
+
+      @keyframes prisma-forward {
+        0% { border-color: rgb(211, 1, 1); }
+        14.285% { border-color: rgb(236, 106, 0); }
+        28.57% { border-color: rgb(206, 203, 0); }
+        42.855% { border-color: rgb(77, 187, 5); }
+        57.14% { border-color: rgb(1, 146, 165); }
+        71.425% { border-color: rgb(59, 0, 168); }
+        85.71%,
+        100% { border-color: rgb(206, 1, 179); }
+      }
+
+      @keyframes prisma-backward {
+        0% { border-color: rgb(206, 1, 179); }
+        14.285% { border-color: rgb(59, 0, 168); }
+        28.57% { border-color: rgb(1, 146, 165); }
+        42.855% { border-color: rgb(77, 187, 5); }
+        57.14% { border-color: rgb(206, 203, 0); }
+        71.425% { border-color: rgb(236, 106, 0); }
+        85.71%,
+        100% { border-color: rgb(211, 1, 1); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .prisma-orbit span,
+        .loading-dots span {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="prisma-orbit prisma-orbit-top" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="brand">
+        <img src="./script.png" alt="">
+        <section>
+          <h1>Scripture Inspectors</h1>
+          <p>
+            Loading project<span class="loading-dots" aria-hidden="true"><span>.</span><span>.</span><span>.</span></span>
+          </p>
+        </section>
+      </div>
+      <div class="prisma-orbit prisma-orbit-bottom" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </main>
+  </body>
+</html>

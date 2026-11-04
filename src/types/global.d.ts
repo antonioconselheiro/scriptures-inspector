@@ -1,7 +1,9 @@
 declare global {
   interface Window {
     api: {
+      initializeProjectOpening(): Promise<string | null>;
       onProjectFileOpened(callback: (filePath: string) => void): void;
+      applicationStartupComplete(maximizeWindow?: boolean): void;
       readImageBase64(filePath: string): Promise<string | null>;
       readJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;

@@ -9,11 +9,7 @@ https://antonioconselheiro.github.io/scriptures-inspector/
 
 Os arquivos `.xenoglosproj` são documentos JSON. O pacote Debian registra a extensão
 como `application/vnd.scriptures-inspector.xenoglosproj+json` e associa-a ao ícone do
-Scriptures Inspector. Ao abrir um desses arquivos pelo gerenciador de arquivos, o
-aplicativo carrega o projeto diretamente, sem passar pela tela de seleção.
-
-O tipo MIME é metadado do sistema operacional, não um campo embutido no documento
-JSON.
+Scriptures Inspector.
 
 ## Manutenção
 Para abrir a tela do container no host deve executar o `.devcontainer/bdeforeDevcontainer.sh`.

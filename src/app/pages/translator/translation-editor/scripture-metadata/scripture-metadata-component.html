@@ -15,7 +15,13 @@
           @let verseIndex = getTranslationVerseIndex(translationInformation.verses);
           <tr appPinRow>
             <th class="translationName">{{translationInformation.name}}</th>
-            <td [colSpan]="wordListValue.length">{{translationInformation.verses[verseIndex].text}}</td>
+            <td [colSpan]="wordListValue.length">
+              @if (translationInformation.verses[verseIndex]; as translationVerse) {
+                {{translationVerse.text}}
+              } @else {
+                —
+              }
+            </td>
             <td>
               <button type="button" (click)="onRemoveTranslation(translationInformation.source)">×</button>
             </td>

@@ -4,8 +4,12 @@ const fs = require('fs/promises');
 const { fileURLToPath, pathToFileURL } = require('url');
 
 let mainWindow;
+let splashWindow;
 let pendingProjectPath = getProjectPath(process.argv);
 let projectFileListenerReady = false;
+let mainWindowReady = false;
+let applicationStartupComplete = false;
+let maximizeMainWindowOnStartup = false;
 
 function getProjectPath(args) {
   const projectArgument = args.find(argument => /\.xenoglosproj$/i.test(argument));
@@ -21,16 +25,36 @@ function getProjectPath(args) {
 }
 
 function openProjectPath(filePath) {
-  if (projectFileListenerReady && mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('open-project-file', filePath);
-  } else {
-    pendingProjectPath = filePath;
-  }
+  pendingProjectPath = filePath;
+  applicationStartupComplete = false;
+  showSplash();
 
   if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.show();
-    mainWindow.focus();
+    mainWindow.hide();
   }
+
+  if (projectFileListenerReady && mainWindow && !mainWindow.isDestroyed()) {
+    pendingProjectPath = null;
+    mainWindow.webContents.send('open-project-file', filePath);
+  }
+}
+
+function showMainWindow() {
+  if (!applicationStartupComplete || !mainWindowReady || !mainWindow || mainWindow.isDestroyed()) {
+    return;
+  }
+
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    splashWindow.close();
+    splashWindow = null;
+  }
+
+  mainWindow.show();
+  if (maximizeMainWindowOnStartup) {
+    mainWindow.maximize();
+    maximizeMainWindowOnStartup = false;
+  }
+  mainWindow.focus();
 }
 
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
@@ -55,17 +79,28 @@ if (!hasSingleInstanceLock) {
   });
 }
 
-ipcMain.on('project-file-listener-ready', (event) => {
+ipcMain.handle('initialize-project-opening', (event) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    throw new Error('Project opening can only be initialized by the main window');
+  }
+
+  projectFileListenerReady = true;
+  const filePath = pendingProjectPath;
+  pendingProjectPath = null;
+  if (filePath) {
+    applicationStartupComplete = false;
+  }
+  return filePath;
+});
+
+ipcMain.on('application-startup-complete', (event, maximizeWindow) => {
   if (!mainWindow || event.sender !== mainWindow.webContents) {
     return;
   }
 
-  projectFileListenerReady = true;
-  if (pendingProjectPath) {
-    const filePath = pendingProjectPath;
-    pendingProjectPath = null;
-    event.sender.send('open-project-file', filePath);
-  }
+  maximizeMainWindowOnStartup = maximizeWindow === true;
+  applicationStartupComplete = true;
+  showMainWindow();
 });
 
 ipcMain.handle('read-json-file', async (_, fileName) => {
@@ -185,14 +220,108 @@ ipcMain.handle('read-image-base64', async (_, filePath) => {
 
 const isDev = !app.isPackaged;
 
+function showSplash() {
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    return;
+  }
+
+  const iconPath = isDev
+    ? path.join(__dirname, 'public', 'script.png')
+    : path.join(app.getAppPath(), 'public', 'script.png');
+  const splashPath = isDev
+    ? path.join(__dirname, 'public', 'splash.html')
+    : path.join(app.getAppPath(), 'public', 'splash.html');
+
+  splashWindow = new BrowserWindow({
+    width: 560,
+    height: 190,
+    show: true,
+    frame: false,
+    resizable: false,
+    center: true,
+    skipTaskbar: true,
+    backgroundColor: '#f7f5f0',
+    icon: iconPath,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
+  });
+  splashWindow.setMenu(null);
+  splashWindow.on('closed', () => {
+    splashWindow = null;
+  });
+  splashWindow.loadFile(splashPath, {
+    query: { loading: 'true' }
+  }).catch(error => {
+    console.error('Unable to load startup splash:', error);
+  });
+}
+
+const applicationMenu = Menu.buildFromTemplate([
+  {
+    label: 'File',
+    submenu: [
+      { role: 'close' },
+      { type: 'separator' },
+      { role: 'quit' }
+    ]
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      { role: 'undo' },
+      { role: 'redo' },
+      { type: 'separator' },
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectAll' }
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      { role: 'reload' },
+      { role: 'forceReload' },
+      { role: 'toggleDevTools' },
+      { type: 'separator' },
+      { role: 'resetZoom' },
+      { role: 'zoomIn' },
+      { role: 'zoomOut' },
+      { type: 'separator' },
+      { role: 'togglefullscreen' }
+    ]
+  },
+  {
+    label: 'Window',
+    submenu: [
+      { role: 'minimize' },
+      { role: 'zoom' },
+      { role: 'close' }
+    ]
+  }
+]);
+
 function createWindow() {
   const iconPath = isDev
     ? path.join(__dirname, 'public', 'script.png')
     : path.join(app.getAppPath(), 'public', 'script.png');
 
+  if (pendingProjectPath) {
+    showSplash();
+  }
+
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
+    minWidth: 640,
+    minHeight: 480,
+    resizable: true,
+    center: true,
+    title: 'Scripture Inspectors',
     icon: iconPath,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -203,6 +332,11 @@ function createWindow() {
       nodeIntegrationInWorker: false,
       enableWebSQL: false
     }
+  });
+  mainWindow.setMenu(applicationMenu);
+  mainWindow.once('ready-to-show', () => {
+    mainWindowReady = true;
+    showMainWindow();
   });
 
   if (isDev) {
@@ -215,13 +349,18 @@ function createWindow() {
     mainWindow.loadFile(indexPath);
   }
 
-  Menu.setApplicationMenu(menu);
   mainWindow.webContents.on('crashed', () => {
     console.error('Renderer process crashed');
   });
 
   mainWindow.webContents.on('render-process-gone', (event, details) => {
     console.error('Render process gone:', details);
+  });
+
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+    projectFileListenerReady = false;
+    mainWindowReady = false;
   });
 }
 
