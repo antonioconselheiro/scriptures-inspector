@@ -28,6 +28,7 @@ export class App implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private removeToolboxListener: (() => void) | null = null;
   private removeProjectMenuListener: (() => void) | null = null;
+  private removeStartupWindowMaximizedListener: (() => void) | null = null;
   loading: LoadingState = false;
 
   constructor(
@@ -55,6 +56,9 @@ export class App implements OnInit, OnDestroy {
         });
       }
     });
+    this.removeStartupWindowMaximizedListener = window.api.onStartupWindowMaximized(() => {
+      void this.notifyStartupRenderCompleteAfterFrames();
+    });
     window.api.onProjectFileOpened(filePath => {
       void this.openProjectFile(filePath);
     });
@@ -64,6 +68,7 @@ export class App implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.removeToolboxListener?.();
     this.removeProjectMenuListener?.();
+    this.removeStartupWindowMaximizedListener?.();
     this.subscriptions.unsubscribe();
   }
 
@@ -118,7 +123,14 @@ export class App implements OnInit, OnDestroy {
     await new Promise<void>(resolve => {
       requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
     });
-    window.api.applicationStartupComplete(maximizeWindow);
+    window.api.applicationStartupReady(maximizeWindow);
+  }
+
+  private async notifyStartupRenderCompleteAfterFrames(): Promise<void> {
+    await new Promise<void>(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+    window.api.startupRenderComplete();
   }
 
   private async loadProjectAndNavigate(filePath: string): Promise<boolean> {

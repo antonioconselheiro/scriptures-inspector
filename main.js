@@ -15,8 +15,10 @@ const toolboxVisibility = {
 let pendingProjectPath = getProjectPath(process.argv);
 let projectFileListenerReady = false;
 let mainWindowReady = false;
-let applicationStartupComplete = false;
+let applicationStartupReady = false;
 let maximizeMainWindowOnStartup = false;
+let startupMaximizeInProgress = false;
+let startupMaximizeListener = null;
 
 function getProjectPath(args) {
   const projectArgument = args.find(argument => /\.xenoglosproj$/i.test(argument));
@@ -33,7 +35,13 @@ function getProjectPath(args) {
 
 function openProjectPath(filePath) {
   pendingProjectPath = filePath;
-  applicationStartupComplete = false;
+  applicationStartupReady = false;
+  maximizeMainWindowOnStartup = false;
+  startupMaximizeInProgress = false;
+  if (startupMaximizeListener && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.removeListener('maximize', startupMaximizeListener);
+  }
+  startupMaximizeListener = null;
   showSplash();
 
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -47,21 +55,48 @@ function openProjectPath(filePath) {
 }
 
 function showMainWindow() {
-  if (!applicationStartupComplete || !mainWindowReady || !mainWindow || mainWindow.isDestroyed()) {
+  if (!applicationStartupReady || !mainWindowReady || !mainWindow || mainWindow.isDestroyed()) {
     return;
   }
 
+  if (maximizeMainWindowOnStartup) {
+    maximizeMainWindowOnStartup = false;
+    startupMaximizeInProgress = true;
+
+    if (mainWindow.isMaximized()) {
+      mainWindow.showInactive();
+      mainWindow.webContents.send('startup-window-maximized');
+    } else {
+      startupMaximizeListener = () => {
+        startupMaximizeListener = null;
+        if (startupMaximizeInProgress && mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send('startup-window-maximized');
+        }
+      };
+      mainWindow.once('maximize', startupMaximizeListener);
+      mainWindow.showInactive();
+      mainWindow.maximize();
+    }
+
+    if (splashWindow && !splashWindow.isDestroyed()) {
+      splashWindow.show();
+      splashWindow.focus();
+    }
+    return;
+  }
+
+  revealMainWindow();
+}
+
+function revealMainWindow() {
   if (splashWindow && !splashWindow.isDestroyed()) {
     splashWindow.close();
     splashWindow = null;
   }
-
-  mainWindow.show();
-  if (maximizeMainWindowOnStartup) {
-    mainWindow.maximize();
-    maximizeMainWindowOnStartup = false;
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.show();
+    mainWindow.focus();
   }
-  mainWindow.focus();
 }
 
 const hasSingleInstanceLock = app.requestSingleInstanceLock();
@@ -95,7 +130,7 @@ ipcMain.handle('initialize-project-opening', (event) => {
   const filePath = pendingProjectPath;
   pendingProjectPath = null;
   if (filePath) {
-    applicationStartupComplete = false;
+    applicationStartupReady = false;
   }
   return filePath;
 });
@@ -132,14 +167,23 @@ function sendToolboxVisibility(toolbox, visible) {
   }
 }
 
-ipcMain.on('application-startup-complete', (event, maximizeWindow) => {
+ipcMain.on('application-startup-ready', (event, maximizeWindow) => {
   if (!mainWindow || event.sender !== mainWindow.webContents) {
     return;
   }
 
   maximizeMainWindowOnStartup = maximizeWindow === true;
-  applicationStartupComplete = true;
+  applicationStartupReady = true;
   showMainWindow();
+});
+
+ipcMain.on('startup-render-complete', event => {
+  if (!mainWindow || event.sender !== mainWindow.webContents || !startupMaximizeInProgress) {
+    return;
+  }
+
+  startupMaximizeInProgress = false;
+  revealMainWindow();
 });
 
 ipcMain.handle('read-json-file', async (_, fileName) => {

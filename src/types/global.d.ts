@@ -16,7 +16,9 @@ declare global {
         verseNavigation: boolean;
         textSizeController: boolean;
       }>;
-      applicationStartupComplete(maximizeWindow?: boolean): void;
+      applicationStartupReady(maximizeWindow?: boolean): void;
+      onStartupWindowMaximized(callback: () => void): () => void;
+      startupRenderComplete(): void;
       readImageBase64(filePath: string): Promise<string | null>;
       readJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;
