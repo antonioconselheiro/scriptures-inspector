@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, HostBinding, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
@@ -15,6 +15,12 @@ import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
+
+type NavigationItem = {
+  value: string;
+  label: string;
+  group: 'book' | 'collection';
+};
 
 @Component({
   selector: 'app-project-header',
@@ -38,6 +44,9 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   formSelectedCollectionOrBook = '';
   formSelectedArtifactOrChapter: number | null = null;
+  navigationSearch = '';
+  navigationOptionsVisible = false;
+  activeNavigationIndex = -1;
 
   project!: Project;
   collections: FragmentCollection[] = [];
@@ -53,7 +62,8 @@ export class ProjectHeader implements OnInit, OnDestroy {
     private collectionsStatefull: CollectionsStatefull,
     private modalService: ModalService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private elementRef: ElementRef<HTMLElement>
   ) { }
 
   ngOnInit(): void {
@@ -65,6 +75,14 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeNavigationOptionsOutside(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+      this.navigationOptionsVisible = false;
+      this.activeNavigationIndex = -1;
+    }
   }
 
   private readProjectFromSession(): void {
@@ -262,5 +280,115 @@ export class ProjectHeader implements OnInit, OnDestroy {
         name: books[book].name
       };
     });
+  }
+
+  get filteredBookNames(): Array<{ key: string, name: string }> {
+    return this.listBookNames().filter(book => this.matchesNavigationSearch(book.name));
+  }
+
+  get filteredCollections(): FragmentCollection[] {
+    return this.collections.filter(collection => this.matchesNavigationSearch(collection.name));
+  }
+
+  get selectedNavigationLabel(): string {
+    const [type, ...keyParts] = this.formSelectedCollectionOrBook.split('-');
+    const key = keyParts.join('-');
+
+    if (type === 'book') {
+      return this.listBookNames().find(book => book.key === key)?.name ?? '';
+    }
+
+    if (type === 'collection') {
+      return this.collections.find(collection => collection.folder === key)?.name ?? '';
+    }
+
+    return '';
+  }
+
+  get filteredNavigationItems(): NavigationItem[] {
+    const books: NavigationItem[] = this.filteredBookNames.map(book => ({
+      value: `book-${book.key}`,
+      label: book.name,
+      group: 'book'
+    }));
+    const collections: NavigationItem[] = this.filteredCollections.map(collection => ({
+      value: `collection-${collection.folder}`,
+      label: collection.name,
+      group: 'collection'
+    }));
+
+    return this.context === 'transcriptor'
+      ? [...collections, ...books]
+      : [...books, ...collections];
+  }
+
+  showNavigationOptions(): void {
+    this.navigationOptionsVisible = true;
+    this.activeNavigationIndex = -1;
+  }
+
+  onNavigationSearchChange(): void {
+    this.activeNavigationIndex = -1;
+    this.navigationOptionsVisible = true;
+  }
+
+  isActiveNavigationItem(value: string): boolean {
+    return this.filteredNavigationItems[this.activeNavigationIndex]?.value === value;
+  }
+
+  selectNavigationItem(value: string): void {
+    this.formSelectedCollectionOrBook = value;
+    this.navigationSearch = '';
+    this.navigationOptionsVisible = false;
+    this.activeNavigationIndex = -1;
+  }
+
+  handleNavigationKeydown(event: KeyboardEvent): void {
+    const options = this.filteredNavigationItems;
+
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.navigationOptionsVisible = true;
+      if (!options.length) {
+        this.activeNavigationIndex = -1;
+        return;
+      }
+
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      this.activeNavigationIndex = (this.activeNavigationIndex + direction + options.length) % options.length;
+    } else if (event.key === 'Enter' && this.navigationOptionsVisible) {
+      event.preventDefault();
+      const activeItem = options[this.activeNavigationIndex];
+      if (activeItem) {
+        this.selectNavigationItem(activeItem.value);
+      }
+    } else if (event.key === 'Escape') {
+      this.navigationOptionsVisible = false;
+      this.activeNavigationIndex = -1;
+    }
+  }
+
+  private matchesNavigationSearch(label: string): boolean {
+    const query = this.normalizeNavigationSearch(this.navigationSearch);
+    if (!query) {
+      return true;
+    }
+
+    const candidate = this.normalizeNavigationSearch(label);
+    let queryIndex = 0;
+    for (const character of candidate) {
+      if (character === query[queryIndex]) {
+        queryIndex++;
+        if (queryIndex === query.length) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  private normalizeNavigationSearch(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
   }
 }

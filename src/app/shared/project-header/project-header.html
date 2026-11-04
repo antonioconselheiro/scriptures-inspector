@@ -48,15 +48,34 @@
       <legend>Navigation</legend>
 
       <div>
-        <select name="selectedBook" [(ngModel)]="formSelectedCollectionOrBook">
-          @if (context === 'translator') {
-            <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
-            <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
-          } @else if (context === 'transcriptor') {
-            <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
-            <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
+        <div class="navigationPicker">
+          <input
+            type="search"
+            name="navigationSearch"
+            role="combobox"
+            aria-label="Search books and artifact collections"
+            aria-autocomplete="list"
+            aria-controls="navigationOptions"
+            [attr.aria-expanded]="navigationOptionsVisible"
+            [placeholder]="selectedNavigationLabel || 'Search books and artifact collections'"
+            [(ngModel)]="navigationSearch"
+            (ngModelChange)="onNavigationSearchChange()"
+            (focus)="showNavigationOptions()"
+            (click)="showNavigationOptions()"
+            (keydown)="handleNavigationKeydown($event)"
+          />
+          @if (navigationOptionsVisible) {
+            <div class="navigationOptions" id="navigationOptions" role="listbox">
+              @if (context === 'translator') {
+                <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
+              } @else if (context === 'transcriptor') {
+                <ng-container *ngTemplateOutlet="collectionsTemplate"></ng-container>
+                <ng-container *ngTemplateOutlet="booksTemplate"></ng-container>
+              }
+            </div>
           }
-        </select>
+        </div>
   
         <input name="selectedChapter" class="selectedChapter" [(ngModel)]="formSelectedArtifactOrChapter" type="number" />
       </div>
@@ -78,22 +97,34 @@
 </header>
 
 <ng-template #booksTemplate>
-  @let bookNames = listBookNames();
+  @let bookNames = filteredBookNames;
   @if (bookNames.length) {
-    <optgroup label="Books">
+    <div class="navigationOptionGroup" role="group" aria-label="Books">
       @for (book of bookNames; track $index) {
-        <option [value]="'book-'+book.key">{{ book.name }}</option>
+        <button
+          type="button"
+          role="option"
+          [attr.aria-selected]="formSelectedCollectionOrBook === 'book-'+book.key"
+          [class.active]="isActiveNavigationItem('book-'+book.key)"
+          (click)="selectNavigationItem('book-'+book.key)"
+        >{{ book.name }}</button>
       }
-    </optgroup>
+    </div>
   }
 </ng-template>
 
 <ng-template #collectionsTemplate>
-  @if (collections.length) {
-    <optgroup label="Artifact Collections">
-      @for (collection of collections; track $index) {
-        <option [value]="'collection-'+collection.folder">{{ collection.name }}</option>
+  @if (filteredCollections.length) {
+    <div class="navigationOptionGroup" role="group" aria-label="Artifact Collections">
+      @for (collection of filteredCollections; track $index) {
+        <button
+          type="button"
+          role="option"
+          [attr.aria-selected]="formSelectedCollectionOrBook === 'collection-'+collection.folder"
+          [class.active]="isActiveNavigationItem('collection-'+collection.folder)"
+          (click)="selectNavigationItem('collection-'+collection.folder)"
+        >{{ collection.name }}</button>
       }
-    </optgroup>
+    </div>
   }
 </ng-template>

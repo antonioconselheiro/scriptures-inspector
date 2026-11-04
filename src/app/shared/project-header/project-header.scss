@@ -51,6 +51,66 @@
   width: 40px;
 }
 
+.navigationPicker {
+  position: relative;
+  display: inline-block;
+
+  > input {
+    width: 16rem;
+  }
+
+  .navigationOptions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1001;
+    width: max-content;
+    min-width: 100%;
+    max-width: min(32rem, 80vw);
+    max-height: 60vh;
+    overflow: auto;
+    background: #fff;
+    border: 1px solid #aaa;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+
+    .navigationOptionGroup {
+      &::before {
+        display: block;
+        padding: 4px 12px;
+        content: attr(aria-label);
+      }
+
+      display: block;
+      padding: 4px 0;
+      color: #666;
+      font-size: 0.85em;
+      font-weight: 600;
+
+      &:not(:first-child) {
+        border-top: 1px solid #ddd;
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 6px 12px;
+        border: 0;
+        background: #fff;
+        color: #222;
+        font: inherit;
+        font-weight: normal;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover,
+        &.active {
+          background: #eee;
+        }
+      }
+    }
+  }
+}
+
 header.tools {
   display: flex;
   width: 100%;
