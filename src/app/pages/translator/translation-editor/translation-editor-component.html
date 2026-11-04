@@ -55,7 +55,29 @@
   <app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
   <app-define-field-morpheme-rule-context-menu #defineMorphemeRef [current]="current"></app-define-field-morpheme-rule-context-menu>
   <app-interlinear-tools-context-menu #interlinearToolsRef [current]="current"></app-interlinear-tools-context-menu>
-  <app-verse-scroll-navigator></app-verse-scroll-navigator>
+  <div class="editorFloatingControls">
+    <app-verse-scroll-navigator></app-verse-scroll-navigator>
+    <div class="pendingLexiconControls" aria-label="Pending lexicon definitions">
+      <label class="floatingControlLabel">Léxicos pendentes</label>
+      <div class="pendingLexiconNavigation">
+        <button
+          type="button"
+          aria-label="Previous pending lexicon"
+          title="Previous pending lexicon"
+          [disabled]="pendingLexicalFieldCount === 0"
+          (click)="focusPendingLexicalField(-1)"
+        >‹</button>
+        <span aria-live="polite">{{focusedLexicalFieldNumber}}/{{pendingLexicalFieldCount}}</span>
+        <button
+          type="button"
+          aria-label="Next pending lexicon"
+          title="Next pending lexicon"
+          [disabled]="pendingLexicalFieldCount === 0"
+          (click)="focusPendingLexicalField(1)"
+        >›</button>
+      </div>
+    </div>
+  </div>
   
   @if (project && codexMetadataRecord) {
     @for (structure of project.structures; track $index) {

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
@@ -78,6 +78,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   readonly languageMetadataRecord = languageMetadataRecord;
 
   private subscriptions = new Subscription();
+  private focusedLexicalField: HTMLInputElement | null = null;
+  private lastFocusedLexicalField: HTMLInputElement | null = null;
 
   constructor(
     private router: Router,
@@ -85,7 +87,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private modalService: ModalService,
     private systemService: SystemService,
-    protected metadataService: ProjectMetadataService
+    protected metadataService: ProjectMetadataService,
+    private elementRef: ElementRef<HTMLElement>
   ) { }
 
   ngOnInit(): void {
@@ -116,6 +119,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   onCurrentChapterChange(current: CurrentChapter): void {
     this.current = current;
     this.minifiedFieldset = {};
+    this.focusedLexicalField = null;
+    this.lastFocusedLexicalField = null;
   }
 
   onDataLoaded(): void {
@@ -259,6 +264,65 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   getChapterIndex(current: CurrentChapter, chapters: Array<{ chapter: number; }>): number {
     return chapters.findIndex(chapter => chapter.chapter === current.chapter);
+  }
+
+  get pendingLexicalFieldCount(): number {
+    return this.getLexicalFields().filter(field => !field.value.trim()).length;
+  }
+
+  get focusedLexicalFieldNumber(): number {
+    const pendingFields = this.getPendingLexicalFields();
+    const activeField = this.focusedLexicalField || this.lastFocusedLexicalField;
+    const pendingFieldIndex = activeField ? pendingFields.indexOf(activeField) : -1;
+    return pendingFieldIndex < 0 ? 0 : pendingFieldIndex + 1;
+  }
+
+  @HostListener('document:focusin', ['$event'])
+  onDocumentFocusIn(event: FocusEvent): void {
+    if (this.isLexicalField(event.target)) {
+      this.focusedLexicalField = event.target;
+      this.lastFocusedLexicalField = event.target;
+    } else {
+      this.focusedLexicalField = null;
+
+      if (!(event.target instanceof HTMLElement && event.target.closest('.editorFloatingControls'))) {
+        this.lastFocusedLexicalField = null;
+      }
+    }
+  }
+
+  focusPendingLexicalField(direction: -1 | 1): void {
+    const lexicalFields = this.getLexicalFields();
+    const pendingFields = lexicalFields.filter(field => !field.value.trim());
+    if (!pendingFields.length) {
+      return;
+    }
+
+    const focusedFieldIndex = this.lastFocusedLexicalField
+      ? lexicalFields.indexOf(this.lastFocusedLexicalField)
+      : -1;
+    const nextField = direction === 1
+      ? pendingFields.find(field => lexicalFields.indexOf(field) > focusedFieldIndex) || pendingFields[0]
+      : [...pendingFields].reverse().find(field => lexicalFields.indexOf(field) < focusedFieldIndex)
+        || pendingFields[pendingFields.length - 1];
+
+    nextField.focus();
+  }
+
+  private getLexicalFields(): Array<HTMLInputElement> {
+    return Array.from(
+      this.elementRef.nativeElement.querySelectorAll<HTMLInputElement>('input[name^="fieldLexical"]')
+    );
+  }
+
+  private getPendingLexicalFields(): Array<HTMLInputElement> {
+    return this.getLexicalFields().filter(field => !field.value.trim());
+  }
+
+  private isLexicalField(target: EventTarget | null): target is HTMLInputElement {
+    return target instanceof HTMLInputElement
+      && target.matches('input[name^="fieldLexical"]')
+      && this.elementRef.nativeElement.contains(target);
   }
 
   openImportFromBookDialog(project: Project, targetMetadataDetails: TargetMetadataDetail[]): void {

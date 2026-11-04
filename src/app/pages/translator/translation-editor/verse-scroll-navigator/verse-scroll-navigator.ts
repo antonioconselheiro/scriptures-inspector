@@ -2,7 +2,11 @@ import { Component, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-verse-scroll-navigator',
-  template: `<input type="number" min="0" [value]="verse" (change)="scrollToVerse(verseEl.valueAsNumber)" #verseEl title="Go to verse" />`,
+  template: `
+    <label class="floatingControlLabel" for="verseNavigatorInput">Versículo</label>
+    <input id="verseNavigatorInput" type="number" min="0" [value]="verse"
+      (change)="scrollToVerse(verseEl.valueAsNumber)" #verseEl title="Go to verse" />
+  `,
   styleUrl: './verse-scroll-navigator.scss'
 })
 export class VerseScrollNavigator {
