@@ -21,6 +21,7 @@ TODO
 [ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
 [ ] - Ter certeza que está salvando após uma alteração seguida da troca de uma página e outra
 [ ] - Incluir configuração que permita o software de baixar os repositórios relacionados ao projeto para trabalhar offline, ou então incluir endereços locais alternativos para casos de 404
+[ ] - Criar command line que permita observar os lexicos derivados de uma frase de um projeto para apoiar a validação do projeto por agent via linha de comando
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Incluir exibição do texto com as configurações de word of god no metadado
 [ ] - No interlinear colorido, incluir o texto em paralelo de onde estão sendo derivadas as cores
@@ -34,6 +35,7 @@ TODO
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final, configurável, para validar o aspecto geral do capítulo
+[ ] - Não está sendo possível separar o sufixo de מִמֶּ֔נּוּ os caracteres נּוּ estão sempre sendo cortados em dois mesmo que configurados como sufixo agrupado, revisar regra se um sufixo maior deve ter prioridade sobre os menores
 [ ] - Tornar select de livros pesquisável
 [ ] - Incluir input text de versiculo ao lado de capitulo e acioná-lo após o redirecionamento do botão go de alguma maneira
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
