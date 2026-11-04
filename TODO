@@ -30,8 +30,6 @@ demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecio
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final (holy reader), configurável, para validar o aspecto geral do capítulo
 [ ] - Não está sendo possível separar o sufixo de מִמֶּ֔נּוּ os caracteres נּוּ estão sempre sendo cortados em dois mesmo que configurados como sufixo agrupado, revisar regra se um sufixo maior deve ter prioridade sobre os menores
-[ ] - Tornar select de livros pesquisável
-[ ] - Incluir input text de versiculo ao lado de capitulo e acioná-lo após o redirecionamento do botão go de alguma maneira
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
 [ ] - (mvp fragmentator) para inserir o texto de transcrição pode ser aberto uma dialog para inserção do texto e a edição deve ser permitida somente se não houver edição do posicionamento da transcrição no vetor, se já estiver uma palavra que seja posicionada, então o texto deve ser editado pela interface de posicionamento

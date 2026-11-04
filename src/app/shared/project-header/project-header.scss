@@ -47,8 +47,13 @@
 }
 
 .selectedArtifact,
-.selectedChapter {
+.selectedChapter,
+.selectedVerse {
   width: 40px;
+}
+
+.selectedVerse {
+  margin-left: 4px;
 }
 
 .navigationPicker {
@@ -57,6 +62,20 @@
 
   > input {
     width: 16rem;
+    height: 21px;
+
+    &:not(:focus) {
+      border: 1px outset #aaa;
+    }
+
+    &:not(:focus)::placeholder {
+      color: #222;
+      opacity: 1;
+    }
+
+    &:focus {
+      border: 1px solid #666;
+    }
   }
 
   .navigationOptions {

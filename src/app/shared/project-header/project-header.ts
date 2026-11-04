@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, HostBinding, HostListener, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalService } from '@belomonte/async-modal-ngx';
@@ -44,6 +44,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   formSelectedCollectionOrBook = '';
   formSelectedArtifactOrChapter: number | null = null;
+  formSelectedVerse: number = 1;
   navigationSearch = '';
   navigationOptionsVisible = false;
   activeNavigationIndex = -1;
@@ -62,8 +63,7 @@ export class ProjectHeader implements OnInit, OnDestroy {
     private collectionsStatefull: CollectionsStatefull,
     private modalService: ModalService,
     private cdr: ChangeDetectorRef,
-    private router: Router,
-    private elementRef: ElementRef<HTMLElement>
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -79,7 +79,8 @@ export class ProjectHeader implements OnInit, OnDestroy {
 
   @HostListener('document:click', ['$event'])
   closeNavigationOptionsOutside(event: MouseEvent): void {
-    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('.navigationPicker')) {
       this.navigationOptionsVisible = false;
       this.activeNavigationIndex = -1;
     }
@@ -147,6 +148,13 @@ export class ProjectHeader implements OnInit, OnDestroy {
         }
       }
     }));
+
+    this.subscriptions.add(this.activatedRoute.queryParams.subscribe({
+      next: queryParams => {
+        const verse = Number(queryParams['verse']);
+        this.formSelectedVerse = Number.isInteger(verse) && verse > 0 ? verse : 1;
+      }
+    }));
   }
 
   private notNullLike<T>(value: T | null | undefined): value is T {
@@ -181,9 +189,11 @@ export class ProjectHeader implements OnInit, OnDestroy {
       const key = keyParts.join('-');
       const chapterOrArtifact = String(this.formSelectedArtifactOrChapter);
       let path: string[] = [];
+      let verseToScroll: number | null = null;
 
       if (type === 'book') {
         path = ['/translator/book', key, 'chapter', chapterOrArtifact];
+        verseToScroll = this.isValidVerse(this.formSelectedVerse) ? this.formSelectedVerse : null;
       } else if (type === 'collection') {
         path = ['/transcriptor/collection', key, 'artifact', chapterOrArtifact];
       }
@@ -191,10 +201,34 @@ export class ProjectHeader implements OnInit, OnDestroy {
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
-      this.router.navigate(path)
+      this.router.navigate(path, {
+        queryParams: { verse: verseToScroll }
+      })
+        .then(navigated => {
+          if (navigated && verseToScroll !== null) {
+            this.scrollToVerseAfterNavigation(verseToScroll);
+          }
+        })
         .catch(e => console.error(e))
         .finally(() => LoadingObservable.stopLoading());
     }
+  }
+
+  private isValidVerse(verse: number | null): verse is number {
+    return verse !== null && Number.isInteger(verse) && verse > 0;
+  }
+
+  private scrollToVerseAfterNavigation(verse: number): void {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const title = Array.from(document.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse]'))
+        .find(element => Number(element.dataset['verse']) === verse);
+
+      if (title) {
+        const header = document.querySelector<HTMLElement>('app-project-header');
+        const top = title.getBoundingClientRect().top + window.scrollY - (header?.offsetHeight ?? 0);
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    }));
   }
 
   back(): void {

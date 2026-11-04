@@ -50,6 +50,7 @@
       <div>
         <div class="navigationPicker">
           <input
+            class="navigationSearchInput"
             type="search"
             name="navigationSearch"
             role="combobox"
@@ -78,6 +79,17 @@
         </div>
   
         <input name="selectedChapter" class="selectedChapter" [(ngModel)]="formSelectedArtifactOrChapter" type="number" />
+        @if (context === 'translator') {
+          <input
+            name="selectedVerse"
+            class="selectedVerse"
+            aria-label="Verse to scroll to after navigation"
+            title="Verse to scroll to after navigation"
+            [(ngModel)]="formSelectedVerse"
+            type="number"
+            min="1"
+          />
+        }
       </div>
       
       <div>
