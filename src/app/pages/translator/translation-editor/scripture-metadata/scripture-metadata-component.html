@@ -28,8 +28,29 @@
           </tr>
         }
 
+        @if (!hasInterlinearRelationship) {
+          <tr appPinRow [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+            <th rowSpan="3">scriptures</th>
+            <td [colSpan]="wordListValue.length">
+              @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
+                @for (segment of word.segments; track segment.index) {
+                  @if (segment.word.length) {
+                    <span [class]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex) ? 'godsaid' : ''">{{segment.word}}</span>
+                  }
+                }
+
+                @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
+              }
+            </td>
+            <td></td>
+          </tr>
+        }
+
         <tr appPinRow>
-          <th [rowSpan]="hasInterlinearRelationship ? 2 : 3">scriptures</th>
+          @if (hasInterlinearRelationship) {
+            <th rowSpan="2">scriptures</th>
+          }
+
           <td [colSpan]="wordListValue.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
             [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
@@ -55,6 +76,7 @@
           [sourceLanguage]="sourceLanguage"
           [bookTarget]="bookTarget"
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+
           @for (word of wordMatrixValue; track $index) {
             <td>
               @for (segment of word.segments; track segment.index) {
@@ -69,23 +91,6 @@
           }
           <td></td>
         </tr>
-
-        @if (!hasInterlinearRelationship) {
-          <tr appPinRow [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-            <td [colSpan]="wordListValue.length">
-              @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
-                @for (segment of word.segments; track segment.index) {
-                  @if (segment.word.length) {
-                    <span [class]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex) ? 'godsaid' : ''">{{segment.word}}</span>
-                  }
-                }
-
-                @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
-              }
-            </td>
-            <td></td>
-          </tr>
-        }
 
         @if (transliteration) {
           <tr appPinRow>
