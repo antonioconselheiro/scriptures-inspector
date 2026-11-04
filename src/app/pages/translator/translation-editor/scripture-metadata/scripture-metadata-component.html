@@ -85,7 +85,12 @@
         <tr>
           <th>God said</th>
           @for (word of wordListValue; track $index; let wordIndex = $index) {
-            <td>
+            <td
+              data-word-of-god-cell
+              [class.wordOfGodSelected]="isWordOfGodCellSelected(wordIndex)"
+              (pointerdown)="startWordOfGodSelection($event, wordIndex)"
+              (pointerenter)="extendWordOfGodSelection(wordIndex)"
+            >
               <input
                 type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
                 (change)="setAsWordOfGod(wordOfGodEl, wordMatrixValue, wordIndex)"

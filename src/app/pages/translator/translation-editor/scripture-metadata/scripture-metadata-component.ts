@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -109,6 +109,9 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   originToInterlinear?: Array<OriginToInterlinear>;
 
   minified = false;
+  private wordOfGodSelectionStart: number | null = null;
+  private wordOfGodSelectionEnd: number | null = null;
+  private selectingWordOfGodRange = false;
 
   constructor(
     protected dataService: ProjectDataService,
@@ -198,7 +201,18 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     wordMatrix: Array<Word>,
     wordIndex: number
   ): void {
-    const word: Word = wordMatrix[wordIndex];
+    const selectionStart = this.wordOfGodSelectionStart;
+    const selectionEnd = this.wordOfGodSelectionEnd;
+    const selectedIndexes = selectionStart !== null
+      && selectionEnd !== null
+      && wordIndex >= Math.min(selectionStart, selectionEnd)
+      && wordIndex <= Math.max(selectionStart, selectionEnd)
+      ? Array.from(
+        { length: Math.abs(selectionEnd - selectionStart) + 1 },
+        (_, offset) => Math.min(selectionStart, selectionEnd) + offset
+      )
+      : [wordIndex];
+
     this.metadataService.removeUnusedMetadata(
       this.bookTarget,
       this.sourceLanguage,
@@ -209,15 +223,69 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       wordIndex
     );
 
-    this.metadataService.setAsWordOfGod(
-      input.checked,
-      this.bookTarget,
-      this.sourceLanguage,
-      this.current,
-      this.sourceVerse,
-      this.verseIndex,
-      word
-    );
+    selectedIndexes.forEach(selectedIndex => {
+      const word: Word = wordMatrix[selectedIndex];
+      this.metadataService.setAsWordOfGod(
+        input.checked,
+        this.bookTarget,
+        this.sourceLanguage,
+        this.current,
+        this.sourceVerse,
+        this.verseIndex,
+        word
+      );
+    });
+  }
+
+  startWordOfGodSelection(event: PointerEvent, wordIndex: number): void {
+    if (event.button !== 0) {
+      return;
+    }
+
+    const startsOnCheckbox = (event.target as HTMLElement).closest('input[type="checkbox"]') !== null;
+    const clickedSelectedCell = this.isWordOfGodCellSelected(wordIndex);
+
+    if (startsOnCheckbox && clickedSelectedCell) {
+      this.selectingWordOfGodRange = false;
+      return;
+    }
+
+    this.wordOfGodSelectionStart = wordIndex;
+    this.wordOfGodSelectionEnd = wordIndex;
+    this.selectingWordOfGodRange = true;
+
+    if (!startsOnCheckbox) {
+      event.preventDefault();
+    }
+  }
+
+  extendWordOfGodSelection(wordIndex: number): void {
+    if (this.selectingWordOfGodRange && this.wordOfGodSelectionStart !== null) {
+      this.wordOfGodSelectionEnd = wordIndex;
+    }
+  }
+
+  isWordOfGodCellSelected(wordIndex: number): boolean {
+    if (this.wordOfGodSelectionStart === null || this.wordOfGodSelectionEnd === null) {
+      return false;
+    }
+
+    return wordIndex >= Math.min(this.wordOfGodSelectionStart, this.wordOfGodSelectionEnd)
+      && wordIndex <= Math.max(this.wordOfGodSelectionStart, this.wordOfGodSelectionEnd);
+  }
+
+  @HostListener('document:pointerup')
+  stopWordOfGodSelection(): void {
+    this.selectingWordOfGodRange = false;
+  }
+
+  @HostListener('document:pointerdown', ['$event'])
+  clearWordOfGodSelectionOutsideRow(event: PointerEvent): void {
+    if (!(event.target as HTMLElement).closest('[data-word-of-god-cell]')) {
+      this.wordOfGodSelectionStart = null;
+      this.wordOfGodSelectionEnd = null;
+      this.selectingWordOfGodRange = false;
+    }
   }
 
   getScriptureMetadataWordOfGod(

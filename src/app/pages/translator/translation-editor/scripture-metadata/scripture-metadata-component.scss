@@ -2,6 +2,17 @@
   padding: 0 1rem;
 }
 
+[data-word-of-god-cell] {
+  min-width: 2rem;
+  text-align: center;
+  touch-action: none;
+
+  &.wordOfGodSelected {
+    background-color: rgb(70 130 180 / 20%);
+    box-shadow: inset 0 0 0 1px steelblue;
+  }
+}
+
 .fieldsLexical {
   white-space: nowrap;
 
