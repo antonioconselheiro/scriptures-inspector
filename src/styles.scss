@@ -248,6 +248,45 @@ fieldset.fieldsetMinifiable {
   display: none !important;
 }
 
+.pin-row-button {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.1rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.1rem 0.2rem;
+  border: 0;
+  background: transparent;
+  opacity: 0.35;
+  transition: opacity 120ms ease;
+
+  svg {
+    display: block;
+  }
+}
+
+tr[appPinRow]:hover .pin-row-button,
+tr[appPinRow]:focus-within .pin-row-button {
+  opacity: 0.75;
+}
+
+tr.pinnedMetadataRow .pin-row-button {
+  opacity: 1;
+}
+
+tr.pinnedMetadataRow .pinnedRowRemoveButton {
+  display: none;
+}
+
+.pinnedRowsFooter .pinnedMetadataFirstCell {
+  width: max-content;
+  white-space: nowrap;
+}
+
 .save {
   background-image: url('../public/save.png');
   background-repeat: no-repeat;

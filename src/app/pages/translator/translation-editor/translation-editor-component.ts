@@ -37,6 +37,8 @@ import { TranslationViewerManager } from './translation-viewer-manager/translati
 import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { VerseScrollNavigator } from './verse-scroll-navigator/verse-scroll-navigator';
+import { PinnedRowsFooter } from './pinned-rows-footer/pinned-rows-footer';
+import { PinnedRowsService } from './pinned-rows-service';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -49,8 +51,10 @@ import { VerseScrollNavigator } from './verse-scroll-navigator/verse-scroll-navi
     AddPatternContextMenu,
     DefineFieldMorphemeRuleContextMenu,
     InterlinearToolsContextMenu,
-    VerseScrollNavigator
+    VerseScrollNavigator,
+    PinnedRowsFooter
 ],
+  providers: [PinnedRowsService],
   templateUrl: './translation-editor-component.html',
   styleUrl: './translation-editor-component.scss'
 })
@@ -88,7 +92,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     private modalService: ModalService,
     private systemService: SystemService,
     protected metadataService: ProjectMetadataService,
-    private elementRef: ElementRef<HTMLElement>
+    private elementRef: ElementRef<HTMLElement>,
+    private pinnedRows: PinnedRowsService
   ) { }
 
   ngOnInit(): void {
@@ -99,6 +104,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.pinnedRows.clear();
     this.subscriptions.unsubscribe();
   }
 
@@ -117,6 +123,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   onCurrentChapterChange(current: CurrentChapter): void {
+    this.pinnedRows.clear();
     this.current = current;
     this.minifiedFieldset = {};
     this.focusedLexicalField = null;

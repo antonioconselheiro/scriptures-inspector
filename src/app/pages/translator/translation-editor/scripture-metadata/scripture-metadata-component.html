@@ -13,7 +13,7 @@
       <table border="1" frame="hsides" role="presentation">
         @for (translationInformation of translations; track $index) {
           @let verseIndex = getTranslationVerseIndex(translationInformation.verses);
-          <tr>
+          <tr appPinRow>
             <th class="translationName">{{translationInformation.name}}</th>
             <td [colSpan]="wordListValue.length">{{translationInformation.verses[verseIndex].text}}</td>
             <td>
@@ -22,7 +22,7 @@
           </tr>
         }
 
-        <tr>
+        <tr appPinRow>
           <th [rowSpan]="hasInterlinearRelationship ? 2 : 3">scriptures</th>
           <td [colSpan]="wordListValue.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
             [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
@@ -44,6 +44,7 @@
         </tr>
 
         <tr
+          appPinRow
           [appAddPatternContextMenuTrigger]="addPatternMenuRef"
           [sourceLanguage]="sourceLanguage"
           [bookTarget]="bookTarget"
@@ -64,7 +65,7 @@
         </tr>
 
         @if (!hasInterlinearRelationship) {
-          <tr [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+          <tr appPinRow [attr.lang]="languageMetadataRecord[sourceLanguage].label">
             <td [colSpan]="wordListValue.length">
               @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
                 @for (segment of word.segments; track segment.index) {
@@ -81,7 +82,7 @@
         }
 
         @if (transliteration) {
-          <tr>
+          <tr appPinRow>
             <th>transliteration</th>
             @for (word of wordMatrixValue; track $index) {
               <td>
@@ -136,7 +137,7 @@
           }
           <td rowspan="2"><button (click)="cleanLexicalLexical(wordMatrixValue)" type="button">×</button></td>
         </tr>
-        <tr>
+        <tr appPinRow>
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
@@ -163,7 +164,7 @@
     
         @if (languageMetadataRecord[sourceLanguage].alternativeSpelling) {
           @for (spelling of languageMetadataRecord[sourceLanguage].alternativeSpelling; track $index) {
-            <tr>
+            <tr appPinRow>
               <th rowspan="2">{{spelling.name}}</th>
       
               @for (word of wordMatrixValue; track $index) {
@@ -183,7 +184,7 @@
               <td rowspan="2"></td>
             </tr>
       
-            <tr>
+            <tr appPinRow>
               <td [colSpan]="wordListValue.length">
                 @for (word of wordMatrixValue; track $index) {
                   @for (segment of word.segments; track segment.index) {

@@ -11,7 +11,7 @@
 <div [class.minified]="minified" class="tableMinifiable">
   <div>
     <table border="1" frame="hsides" role="presentation">
-      <tr>
+      <tr appPinRow>
         <th rowspan="3">custom</th>
         <td [colSpan]="splittedCustomTranslation.original.length">
           <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
@@ -22,7 +22,7 @@
         <td rowspan="3"><button (click)="cleanCustomTranslation(customTranslationEl)" type="button">×</button></td>
       </tr>
   
-      <tr>
+      <tr appPinRow>
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (word of splittedCustomTranslation.original; track $index) {
           @let color = getCustomTranslationColor($index);
@@ -34,7 +34,7 @@
         </td>
       </tr>
   
-      <tr>
+      <tr appPinRow>
         <td [colSpan]="splittedCustomTranslation.original.length">
           @for (word of splittedCustomTranslation.original; track $index) {
           <span [class]="isCustomTranslationWordOfGod($index) ? 'godsaid' : ''">{{word.segment}}</span>
@@ -56,7 +56,7 @@
         }
       </tr>
   
-      <tr>
+      <tr appPinRow>
         <th>interlinear</th>
         @for (word of splittedCustomTranslation.original; track $index) {
           <td>
@@ -144,7 +144,7 @@
             </td>
           </tr>
 
-          <tr>
+          <tr appPinRow>
             <td [colSpan]="splittedCustomTranslation.variations[variation.id].length">
               @for (word of splittedCustomTranslation.variations[variation.id]; track $index) {
                 @let hasVariation = getVariation(chapterVariations, variation.id, $index);

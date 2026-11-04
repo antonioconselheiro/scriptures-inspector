@@ -16,7 +16,7 @@
       @let originParsedBook = parseBook(projectData[origin.structure.metadataTarget], origin.language);
       @let originWordMatrix = splitIntoMatrix(origin.language, originParsedBook.patterns, origin.verse);
 
-      <tr>
+      <tr appPinRow>
         <th rowspan="5">interlinear <span class="interlinearSource">{{origin.structure.source}}</span></th>
         <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[origin.language].label">
           @for (word of originWordMatrix; track $index) {
@@ -31,7 +31,7 @@
         </td>
         <td></td>
       </tr>
-      <tr>
+      <tr appPinRow>
         <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
@@ -45,7 +45,7 @@
         </td>
         <td></td>
       </tr>
-      <tr>
+      <tr appPinRow>
         <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
@@ -59,7 +59,7 @@
         </td>
         <td></td>
       </tr>
-      <tr>
+      <tr appPinRow>
         <td [colSpan]="wordList.length">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {

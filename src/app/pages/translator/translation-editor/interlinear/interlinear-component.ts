@@ -30,6 +30,7 @@ import { ProjectInterlinearService } from '../shared/project/project-interlinear
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { InterlinearToolsContextMenuTrigger } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu-trigger';
+import { PinRowDirective } from '../pin-row.directive';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -37,6 +38,7 @@ import { InterlinearToolsContextMenuTrigger } from '../../interlinear-tools-cont
     CommonModule,
     FormsModule,
     LexicalPipe,
+    PinRowDirective,
     InterlinearToolsContextMenuTrigger,
     forwardRef(() => ScriptureMetadataComponent)
   ],

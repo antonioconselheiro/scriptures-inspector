@@ -29,6 +29,7 @@ import { LexicalPipe } from '../shared/lexical-pipe';
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
+import { PinRowDirective } from '../pin-row.directive';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -38,6 +39,7 @@ import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-men
     FunctionProxyPipe,
     InterlinearComponent,
     CustomTranslationComponent,
+    PinRowDirective,
     AddPatternContextMenuTrigger,
     DefineFieldMorphemeRuleContextMenuTrigger
   ],

@@ -25,12 +25,14 @@ import { ProjectCustomTranslationService } from '../shared/project/project-custo
 import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
+import { PinRowDirective } from '../pin-row.directive';
 
 @Component({
   selector: 'app-custom-translation-component',
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PinRowDirective
   ],
   templateUrl: './custom-translation-component.html',
   styleUrl: './custom-translation-component.scss'
