@@ -343,17 +343,12 @@ function updateApplicationMenu(codices = []) {
       },
       { type: 'separator' },
       {
-        label: 'Project',
-        submenu: [
-          {
-            label: 'Viewing Translation',
-            click: () => sendProjectMenuAction('viewing-translation')
-          },
-          {
-            label: 'Codex Configs',
-            submenu: codexConfigMenuItems
-          }
-        ]
+        label: 'Viewing Translation',
+        click: () => sendProjectMenuAction('viewing-translation')
+      },
+      {
+        label: 'Codex Configs',
+        submenu: codexConfigMenuItems
       }
     ]
   },

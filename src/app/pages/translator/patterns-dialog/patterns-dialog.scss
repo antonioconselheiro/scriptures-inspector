@@ -1,3 +1,16 @@
+.sortControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+}
+
 .wrapper {
   max-height: 50vh;
   overflow: auto;

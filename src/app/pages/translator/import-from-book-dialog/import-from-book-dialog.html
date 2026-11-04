@@ -1,12 +1,43 @@
 <form [formGroup]="form" (ngSubmit)="onImportFromBookSubmit()">
   <p>Import patterns and lexicals from another book into the current book.</p>
 
-  <div>
-    <select name="selectedArtifact" aria-label="Book to import from" formControlName="selectedArtifact" required>
-      @for (book of listBookNames(); track $index) {
-        <option [value]="book.key">{{ book.name }}</option>
-      }
-    </select>
+  <div class="bookPicker">
+    <input
+      type="search"
+      name="bookSearch"
+      role="combobox"
+      aria-label="Book to import from"
+      aria-autocomplete="list"
+      aria-controls="importBookOptions"
+      [attr.aria-expanded]="bookOptionsVisible"
+      [placeholder]="selectedBookName || 'Search books'"
+      [(ngModel)]="bookSearch"
+      [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="onBookSearchChange()"
+      (focus)="showBookOptions()"
+      (click)="showBookOptions()"
+      (keydown)="handleBookKeydown($event)"
+    />
+    @if (bookOptionsVisible) {
+      <div class="bookOptions" id="importBookOptions" role="listbox">
+        @if (filteredBookNames.length) {
+          <div class="bookOptionGroup" role="group" aria-label="Books">
+            @for (book of filteredBookNames; track book.key; let index = $index) {
+              <button
+                type="button"
+                role="option"
+                [attr.aria-selected]="form.get('selectedBook')?.value === book.key"
+                [class.active]="activeBookIndex === index"
+                (click)="selectBook(book.key)"
+              >{{ book.name }}</button>
+            }
+          </div>
+        }
+      </div>
+    }
+    @if (form.get('selectedBook')?.invalid && form.get('selectedBook')?.touched) {
+      <small class="error">Select a book to import from</small>
+    }
   </div>
 
   <div>

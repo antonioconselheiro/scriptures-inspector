@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-import-from-book-dialog',
   imports: [
+    FormsModule,
     ReactiveFormsModule
   ],
   templateUrl: './import-from-book-dialog.html',
@@ -33,6 +34,9 @@ export class ImportFromBookDialog extends ModalableDirective<{
   targetMetadataDetails!: TargetMetadataDetail[];
 
   form!: FormGroup<any>;
+  bookSearch = '';
+  bookOptionsVisible = false;
+  activeBookIndex = -1;
 
   override response = new Subject<void>();
 
@@ -69,12 +73,89 @@ export class ImportFromBookDialog extends ModalableDirective<{
     });
   }
 
+  get filteredBookNames(): Array<{ key: string, name: string }> {
+    const query = this.normalizeBookSearch(this.bookSearch);
+    return this.listBookNames().filter(book => {
+      if (!query) {
+        return true;
+      }
+
+      const candidate = this.normalizeBookSearch(book.name);
+      let queryIndex = 0;
+      for (const character of candidate) {
+        if (character === query[queryIndex] && ++queryIndex === query.length) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  get selectedBookName(): string {
+    const selectedBook = this.form.get('selectedBook')?.value;
+    return this.listBookNames().find(book => book.key === selectedBook)?.name ?? '';
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeBookOptionsOutside(event: MouseEvent): void {
+    const target = event.target;
+    if (!(target instanceof Element) || !target.closest('.bookPicker')) {
+      this.bookOptionsVisible = false;
+      this.activeBookIndex = -1;
+    }
+  }
+
+  showBookOptions(): void {
+    this.bookOptionsVisible = true;
+    this.activeBookIndex = -1;
+  }
+
+  onBookSearchChange(): void {
+    this.activeBookIndex = -1;
+    this.bookOptionsVisible = true;
+    if (this.bookSearch) {
+      this.form.get('selectedBook')?.setValue('');
+    }
+  }
+
+  selectBook(key: string): void {
+    this.form.get('selectedBook')?.setValue(key);
+    this.form.get('selectedBook')?.markAsTouched();
+    this.bookSearch = '';
+    this.bookOptionsVisible = false;
+    this.activeBookIndex = -1;
+  }
+
+  handleBookKeydown(event: KeyboardEvent): void {
+    const options = this.filteredBookNames;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.bookOptionsVisible = true;
+      if (!options.length) {
+        this.activeBookIndex = -1;
+        return;
+      }
+      const direction = event.key === 'ArrowDown' ? 1 : -1;
+      this.activeBookIndex = (this.activeBookIndex + direction + options.length) % options.length;
+    } else if (event.key === 'Enter' && this.bookOptionsVisible) {
+      event.preventDefault();
+      const activeBook = options[this.activeBookIndex];
+      if (activeBook) {
+        this.selectBook(activeBook.key);
+      }
+    } else if (event.key === 'Escape') {
+      this.bookOptionsVisible = false;
+      this.activeBookIndex = -1;
+    }
+  }
+
   onImportFromBookSubmit(): void {
     if (this.form.valid) {
-      const { selectedArtifact, override, variations } = this.form.value;
+      const { selectedBook, override, variations } = this.form.value;
+      const selectedBookName = this.listBookNames().find(book => book.key === selectedBook)?.name ?? selectedBook;
 
-      if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedArtifact}"?`)) {
-        targetsLoaderFn(selectedArtifact).then(projectData => {
+      if (confirm(`Are you sure you want to import ${override ? 'and override ' : ''}patterns and lexicals from "${selectedBookName}"?`)) {
+        targetsLoaderFn(selectedBook).then(projectData => {
           this.joinProjectData(projectData, variations, override);
           alert('Patterns and lexicals imported successfully');
         }).catch(e => {
@@ -83,10 +164,15 @@ export class ImportFromBookDialog extends ModalableDirective<{
         });
       }
 
-      this.form.reset();
+      this.form.reset({ selectedBook: '', override: false, variations: true });
+      this.bookSearch = '';
     } else {
       this.form.markAllAsTouched();
     }
+  }
+
+  private normalizeBookSearch(value: string): string {
+    return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
   }
 
   private joinProjectData(projectData: ProjectData, variations: boolean, override: boolean): void {
