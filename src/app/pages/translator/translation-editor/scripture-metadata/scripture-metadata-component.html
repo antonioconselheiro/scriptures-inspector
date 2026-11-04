@@ -23,7 +23,7 @@
         }
 
         <tr>
-          <th rowspan="2">scriptures</th>
+          <th [rowSpan]="hasInterlinearRelationship ? 2 : 3">scriptures</th>
           <td [colSpan]="wordListValue.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
             [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
@@ -62,6 +62,23 @@
           }
           <td></td>
         </tr>
+
+        @if (!hasInterlinearRelationship) {
+          <tr [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+            <td [colSpan]="wordListValue.length">
+              @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
+                @for (segment of word.segments; track segment.index) {
+                  @if (segment.word.length) {
+                    <span [class]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex) ? 'godsaid' : ''">{{segment.word}}</span>
+                  }
+                }
+
+                @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
+              }
+            </td>
+            <td></td>
+          </tr>
+        }
 
         @if (transliteration) {
           <tr>
@@ -202,7 +219,10 @@
   @if (customTranslation) {
     <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
       [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
-      [wordMatrix]="wordMatrixValue" [customTranslation]="customTranslation"></app-custom-translation-component>
+      [wordMatrix]="wordMatrixValue" [customTranslation]="customTranslation"
+      [projectData]="projectData" [sourceBookRecord]="sourceBookRecord"
+      [originToInterlinear]="originToInterlinear || []" [interlinearTarget]="getInterlinearTarget()"
+    ></app-custom-translation-component>
   }
 }
 
@@ -214,10 +234,11 @@
 
   @if (bookInterlinearSource) {
     @let correspondingIndex = getInterlinearCorrespondingIndex(item);
-    @let verseInterlinearSource = bookInterlinearSource.chapters[correspondingIndex.chapter].verses[correspondingIndex.verse];
+    @let verseInterlinearSource = bookInterlinearSource.chapters[correspondingIndex.chapter]?.verses?.[correspondingIndex.verse];
     @let interlinearSourceLanguage = codexMetadataRecord[item.source].language;
     @let interlinearCurrent = getInterlinearCorrespondingCurrentChapter(item);
 
+    @if (verseInterlinearSource) {
     <app-interlinear-component
       title="Interlinear" [current]="interlinearCurrent" [originToInterlinear]="getOriginToInterlinear()"
       [structure]="item" [verseIndex]="correspondingIndex.verse" [codexMetadataRecord]="codexMetadataRecord"
@@ -228,5 +249,6 @@
       [viewingTranslationBookRecord]="viewingTranslationBookRecord" [customTranslation]="bookCustomTranslationTarget"
       [interlinearToolsRef]="interlinearToolsRef" [addPatternMenuRef]="addPatternMenuRef" [defineMorphemeRef]="defineMorphemeRef"
     ></app-interlinear-component>
+    }
   }
 }

@@ -10,8 +10,11 @@ import { BookVerseTranslationTargetVariation } from '@domain/book-verse-translat
 import { BookVerseTranslationTargetVariations } from '@domain/book-verse-translation-target-variations-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { ProjectData } from '@domain/project-data-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/translation-word-segment-model';
@@ -20,6 +23,7 @@ import { WordSegment } from '@domain/word-segment-model';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
+import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 
 @Component({
@@ -40,6 +44,18 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   // se não a tradução considera apenas o escrito original na propriedade 'data'
   @Input()
   interlinear?: InterlinearBookTarget;
+
+  @Input()
+  interlinearTarget?: InterlinearTarget;
+
+  @Input()
+  originToInterlinear: Array<OriginToInterlinear> = [];
+
+  @Input()
+  projectData: ProjectData = {};
+
+  @Input()
+  sourceBookRecord: { readonly [source: string]: SourceBook | undefined } = {};
 
   @Input({ required: true })
   translationLanguage!: LanguageUnionType;
@@ -70,7 +86,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     private cdr: ChangeDetectorRef,
     private dataService: ProjectDataService,
     protected metadataService: ProjectMetadataService,
-    private customTranslationService: ProjectCustomTranslationService
+    private customTranslationService: ProjectCustomTranslationService,
+    private interlinearService: ProjectInterlinearService
   ) {
     super();
   }
@@ -165,21 +182,6 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
-    const isWordOfGod = this.customTranslationService.isWordOfGod(
-      this.sourceBook,
-      this.translationLanguage,
-      this.bookTarget,
-      this.customTranslation,
-      this.interlinear,
-      this.current,
-      this.sourceVerse,
-      wordIndex
-    );
-
-    if (isWordOfGod) {
-      return true;
-    }
-
     const isWordOfGodOverriding = this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
       this.translationLanguage,
@@ -191,12 +193,93 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       wordIndex
     );
 
-    return isWordOfGodOverriding.checked || false;
+    return isWordOfGodOverriding.checked || this.isWordOfGodFromRelatedSources(wordIndex);
+  }
+
+  private isWordOfGodFromRelatedSources(wordIndex: number): boolean {
+    const translationValue = this.getCustomTranslationInterlinearValue(wordIndex);
+    const currentWordIndex = Number(translationValue.match(/^\d+/)?.[0]);
+    if (!Number.isInteger(currentWordIndex)) {
+      return false;
+    }
+
+    const currentWord = this.wordMatrix.find(word =>
+      word.segments.some(segment => segment.index === currentWordIndex)
+    );
+    if (currentWord && this.metadataService.getScriptureMetadataWordOfGod(
+      this.bookTarget,
+      this.translationLanguage,
+      this.current,
+      this.sourceVerse.verse,
+      currentWord
+    )) {
+      return true;
+    }
+
+    if (!this.interlinearTarget) {
+      return false;
+    }
+
+    for (const origin of this.originToInterlinear) {
+      const originWordIndex = this.interlinearService.getOriginWordIndex(
+        this.interlinearTarget,
+        origin.structure.source,
+        this.current,
+        this.sourceVerse,
+        currentWordIndex
+      );
+      const originVerseReference = this.interlinearService.getOriginVerseReference(
+        this.interlinearTarget,
+        origin.structure.source,
+        this.current,
+        this.sourceVerse
+      );
+      const originSourceBook = this.sourceBookRecord[origin.structure.source];
+
+      if (originWordIndex === null || !originVerseReference || !originSourceBook) {
+        continue;
+      }
+
+      const originChapter = originSourceBook.chapters.find(chapter =>
+        chapter?.chapter === originVerseReference.chapter
+      );
+      const originVerseIndex = originChapter?.verses?.findIndex(verse =>
+        verse?.verse === originVerseReference.verse
+      ) ?? -1;
+      const originVerse = originChapter?.verses?.[originVerseIndex];
+      if (!originChapter || originVerseIndex < 0 || !originVerse) {
+        continue;
+      }
+
+      const originMetadata = this.projectData[origin.structure.metadataTarget];
+      const originLanguage = this.languageMetadataRecord[origin.language];
+      const originPatterns = this.metadataService.parsePattern(originMetadata.patterns, originLanguage);
+      const originWordMatrix = this.dataService.splitIntoMatrix(originLanguage, originPatterns, originVerse.text);
+      const originWord = originWordMatrix.find(word =>
+        word.segments.some(segment => segment.index === originWordIndex)
+      );
+      if (originWord && this.metadataService.getScriptureMetadataWordOfGod(
+        originMetadata,
+        origin.language,
+        { ...this.current, chapter: originVerseReference.chapter },
+        originVerse.verse,
+        originWord
+      )) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   getScriptureMetadataWordOfGodOverriding(
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
+    const wordOfGodFromRelatedSource = this.isWordOfGodFromRelatedSources(wordSpanIndex);
+    if (wordOfGodFromRelatedSource) {
+      return { checked: true, readonly: true };
+    }
+
     return this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
       this.translationLanguage,

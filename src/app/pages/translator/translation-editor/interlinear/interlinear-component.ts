@@ -126,6 +126,73 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     );
   }
 
+  isWordOfGod(word: Word): boolean {
+    return this.metadataService.getScriptureMetadataWordOfGod(
+      this.bookTarget,
+      this.sourceLanguage,
+      this.current,
+      this.sourceVerse.verse,
+      word
+    );
+  }
+
+  isWordOfGodFromOrigin(
+    origin: OriginToInterlinear,
+    originWordMatrix: Array<Word>,
+    translationWordIndex: number
+  ): boolean {
+    const originWordIndex = this.interlinearService.getOriginWordIndex(
+      this.interlinearTarget,
+      origin.structure.source,
+      this.current,
+      this.sourceVerse,
+      translationWordIndex
+    );
+
+    if (originWordIndex === null) {
+      return false;
+    }
+
+    const originVerseReference = this.interlinearService.getOriginVerseReference(
+      this.interlinearTarget,
+      origin.structure.source,
+      this.current,
+      this.sourceVerse
+    );
+    const originSourceBook = this.sourceBookRecord[origin.structure.source];
+    if (!originVerseReference || !originSourceBook) {
+      return false;
+    }
+
+    const originChapterIndex = originSourceBook.chapters
+      .findIndex(chapter => chapter?.chapter === originVerseReference.chapter);
+    const originChapter = originSourceBook.chapters[originChapterIndex];
+    const originVerseIndex = originChapter?.verses
+      ?.findIndex(verse => verse?.verse === originVerseReference.verse) ?? -1;
+    if (originChapterIndex < 0 || !originChapter || originVerseIndex < 0) {
+      return false;
+    }
+    const originVerse = originChapter.verses[originVerseIndex];
+    if (!originVerse) {
+      return false;
+    }
+
+    const originSegment = originWordMatrix
+      .flatMap(word => word.segments)
+      .find(segment => segment.index === originWordIndex);
+    if (!originSegment) {
+      return false;
+    }
+
+    return this.metadataService.getScriptureMetadataWordOfGod(
+      this.projectData[origin.structure.metadataTarget],
+      origin.language,
+      { ...this.current, chapter: originVerseReference.chapter },
+      originVerse.verse,
+      { segments: [originSegment] }
+    );
+  }
+
   splitIntoMatrix(language: LanguageUnionType, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
     return this.dataService.splitIntoMatrix(this.languageMetadataRecord[language], patterns, sourceVerse.text);
   }

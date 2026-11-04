@@ -39,23 +39,30 @@ export class ProjectMetadataService {
   ): {
     [key: string]: ScriptureVerseMetadataWord;
   } {
-    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-    if (chapterIndex === this.indexNotFound || !bookMetadata.chapters[chapterIndex]) {
-      bookMetadata.chapters[chapterIndex] = {
+    let chapterIndex = bookMetadata.chapters.findIndex(chapter =>
+      chapter?.chapter === current.chapter
+    );
+    if (chapterIndex === this.indexNotFound) {
+      chapterIndex = bookMetadata.chapters.length;
+      bookMetadata.chapters.push({
         chapter: current.chapter,
         verses: []
-      };
+      });
     }
 
-    if (!bookMetadata.chapters[chapterIndex].verses[verseIndex]) {
-      bookMetadata.chapters[chapterIndex].verses[verseIndex] = {
+    const verses = bookMetadata.chapters[chapterIndex].verses;
+    let verseMetadata = verses.find(item => item?.verse === verse.verse);
+    if (!verseMetadata) {
+      const targetIndex = verseIndex >= 0 && !verses[verseIndex] ? verseIndex : verses.length;
+      verseMetadata = {
         verse: verse.verse,
         metadata: {}
-      }
+      };
+      verses[targetIndex] = verseMetadata;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata || {};
-    bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata = metadata;
+    const metadata = verseMetadata.metadata || {};
+    verseMetadata.metadata = metadata;
 
     word.segments.forEach(segment => {
       const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
@@ -124,32 +131,20 @@ export class ProjectMetadataService {
     bookMetadata: BookMetadataTarget,
     sourceLanguage: LanguageUnionType,
     current: CurrentChapter,
-    verseIndex: number,
+    verseNumber: number,
     word: Word
   ): boolean {
-    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-
-    if (
-      !bookMetadata.chapters ||
-      chapterIndex === this.indexNotFound ||
-      !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex].verses[verseIndex]
-    ) {
+    const metadata = bookMetadata.chapters
+      ?.find(chapter => chapter?.chapter === current.chapter)?.verses
+      ?.find(verse => verse?.verse === verseNumber)?.metadata;
+    if (!metadata || !word.segments.length) {
       return false;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata;
-    if (!metadata || !word.segments[0]) {
-      return false;
-    }
-
-    const segment = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, word.segments[0]);
-    const segmentData = metadata[segment];
-    if (!segmentData) {
-      return false;
-    }
-
-    return segmentData.isWordOfGod || false;
+    return word.segments.some(segment => {
+      const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
+      return metadata[key]?.isWordOfGod ?? false;
+    });
   }
 
   //
@@ -213,19 +208,23 @@ export class ProjectMetadataService {
   cleanWordOfGodFromVerse(
     bookMetadata: BookMetadataTarget,
     current: CurrentChapter,
-    verseIndex: number
+    verseNumber: number
   ): void {
-    const chapterIndex = bookMetadata.chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    const chapterIndex = bookMetadata.chapters.findIndex(chapter =>
+      chapter?.chapter === current.chapter
+    );
 
     if (
       chapterIndex === this.indexNotFound ||
       !bookMetadata.chapters[chapterIndex] ||
-      !bookMetadata.chapters[chapterIndex].verses[verseIndex]
+      !bookMetadata.chapters[chapterIndex].verses
     ) {
       return;
     }
 
-    const metadata = bookMetadata.chapters[chapterIndex].verses[verseIndex].metadata;
+    const verse = bookMetadata.chapters[chapterIndex].verses
+      .find(item => item?.verse === verseNumber);
+    const metadata = verse?.metadata;
     if (!metadata) {
       return;
     }

@@ -5,6 +5,7 @@ import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { Codex } from '@domain/codex-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
@@ -122,7 +123,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   }
 
   getTranslationVerseIndex(translationVerses: Array<BookVerse<{ text: string; }>>): number {
-    return translationVerses.findIndex((verse) => verse.verse === this.sourceVerse.verse);
+    return translationVerses.findIndex(verse => verse?.verse === this.sourceVerse.verse);
   }
 
   getColor(segmentIndex: number): string {
@@ -130,20 +131,12 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   }
 
   getInterlinearCorrespondingCurrentChapter(interlinear: ProjectStructureInterlinear): CurrentChapter {
-    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget];
-    let currentChapter = this.current.chapter;
-
-    if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
-      interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
-        if (this.current.chapter === chapter.origin) {
-          currentChapter = chapter.chapter;
-        }
-      });
-    }
+    const mappedChapter = this.projectData[interlinear.interlinearTarget]?.[this.structure.source]
+      ?.chapters?.find(chapter => chapter?.origin === this.current.chapter);
 
     return {
       ...this.current,
-      chapter: currentChapter
+      chapter: mappedChapter?.chapter ?? this.current.chapter
     };
   }
 
@@ -151,41 +144,27 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     chapter: number;
     verse: number;
   } {
-    let correspondingChapterIndex = 0, correspondingVerseIndex = 0;
-    let interlinearChapter = this.current.chapter, interlinearVerse = this.sourceVerse.verse;
-    const interlinearIndexMapping = this.projectData[interlinear.interlinearTarget]; 
-
-    if (interlinearIndexMapping && interlinearIndexMapping[this.structure.source]) {
-      interlinearIndexMapping[this.structure.source].chapters.forEach((chapter) => {
-        if (this.current.chapter === chapter.origin) {
-          chapter.verses.forEach((verse) => {
-            if ((verse.originChapter === undefined || verse.originChapter === this.current.chapter) && verse.originVerse === this.sourceVerse.verse) {
-              if (verse.chapter !== undefined) {
-                interlinearChapter = verse.chapter;
-              } else {
-                interlinearChapter = chapter.chapter;
-              }
-
-              interlinearVerse = verse.verse;
-            }
-          });
-        }
-      });
-    }
-
+    const mappedVerse = this.projectData[interlinear.interlinearTarget]?.[this.structure.source]
+      ?.chapters?.find(chapter => chapter?.origin === this.current.chapter)
+      ?.verses?.find(verse =>
+        (verse?.originChapter === undefined || verse?.originChapter === this.current.chapter)
+        && verse?.originVerse === this.sourceVerse.verse
+      );
+    const interlinearChapter = mappedVerse?.chapter ?? this.current.chapter;
+    const interlinearVerse = mappedVerse?.verse ?? this.sourceVerse.verse;
     const bookInterlinearSource = this.sourceBookRecord[interlinear.source];
-    if (bookInterlinearSource) {
-      bookInterlinearSource.chapters.forEach((chapter, chapterIndex) => {
-        if (chapter.chapter === interlinearChapter) {
-          correspondingChapterIndex = chapterIndex;
-          chapter.verses.forEach((verse, verseIndex) => {
-            if (verse.verse === interlinearVerse) {
-              correspondingVerseIndex = verseIndex;
-            }
-          });
-        }
-      });
+    if (!bookInterlinearSource) {
+      return { chapter: -1, verse: -1 };
     }
+
+    const correspondingChapterIndex = bookInterlinearSource.chapters.findIndex(chapter =>
+      chapter?.chapter === interlinearChapter
+    );
+    const correspondingVerseIndex = correspondingChapterIndex < 0
+      ? -1
+      : bookInterlinearSource.chapters[correspondingChapterIndex]?.verses?.findIndex(verse =>
+        verse?.verse === interlinearVerse
+      ) ?? -1;
 
     return { chapter: correspondingChapterIndex, verse: correspondingVerseIndex };
   }
@@ -297,7 +276,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.bookTarget,
       this.sourceLanguage,
       this.current,
-      this.verseIndex,
+      this.sourceVerse.verse,
       word
     );
   }
@@ -312,11 +291,24 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     return [...(this.originToInterlinear || []), currentOriginToInterlinear];
   }
 
+  getInterlinearTarget(): InterlinearTarget | undefined {
+    if ('interlinearTarget' in this.structure) {
+      return this.projectData[this.structure.interlinearTarget];
+    }
+
+    return undefined;
+  }
+
+  get hasInterlinearRelationship(): boolean {
+    return 'interlinearTarget' in this.structure
+      || Boolean(this.originToInterlinear?.length);
+  }
+
   cleanWordOfGodFromVerse(): void {
     if (!confirm('Confirm clean words set as "word of God"?')) {
       return;
     }
 
-    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.current, this.verseIndex);
+    this.metadataService.cleanWordOfGodFromVerse(this.bookTarget, this.current, this.sourceVerse.verse);
   }
 }

@@ -30,7 +30,9 @@ export class ProjectInterlinearService {
   } {
     interlinearTarget[originStructureSource] = interlinearTarget[originStructureSource] || {};
     interlinearTarget[originStructureSource].chapters = interlinearTarget[originStructureSource].chapters || [];
-    const interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.findIndex(chapter => chapter.chapter === current.chapter);
+    const interlinearChapterIndex = interlinearTarget[originStructureSource].chapters.findIndex(chapter =>
+      chapter?.chapter === current.chapter
+    );
 
     if (interlinearChapterIndex === this.indexNotFound) {
       return {
@@ -44,7 +46,7 @@ export class ProjectInterlinearService {
         .chapters[interlinearChapterIndex].verses || [];
 
     const interlinearVerseIndex = interlinearTarget[originStructureSource].chapters[interlinearChapterIndex]
-      .verses.findIndex(verse => verse.verse === translationVerse.verse);
+      .verses?.findIndex(verse => verse?.verse === translationVerse.verse) ?? this.indexNotFound;
 
     return {
       interlinearChapterIndex,
@@ -328,6 +330,42 @@ export class ProjectInterlinearService {
     }
 
     return String(interlinearWord.originIndex % 7 + 1);
+  }
+
+  getOriginWordIndex(
+    interlinearTarget: InterlinearTarget,
+    originStructureSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    translationWordIndex: number
+  ): number | null {
+    const interlinearChapter = interlinearTarget[originStructureSource]?.chapters
+      .find(chapter => chapter?.chapter === current.chapter);
+    const interlinearVerse = interlinearChapter?.verses
+      .find(verse => verse?.verse === sourceVerse.verse);
+    const interlinearWord = interlinearVerse?.words?.[translationWordIndex];
+
+    return interlinearWord?.originIndex ?? null;
+  }
+
+  getOriginVerseReference(
+    interlinearTarget: InterlinearTarget,
+    originStructureSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse
+  ): { chapter: number; verse: number; } | null {
+    const chapter = interlinearTarget[originStructureSource]?.chapters
+      .find(item => item?.chapter === current.chapter);
+    const verse = chapter?.verses?.find(item => item?.verse === sourceVerse.verse);
+
+    if (!chapter || !verse || verse.originVerse === undefined) {
+      return null;
+    }
+
+    return {
+      chapter: verse.originChapter ?? chapter.origin,
+      verse: verse.originVerse
+    };
   }
 
   getInterlinearWordSegmentSerialized(

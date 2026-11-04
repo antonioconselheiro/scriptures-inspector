@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { BookChapterVerseMetadata } from '@domain/book-chapter-verse-metadata-model';
 import { BookIndexes } from '@domain/book-indexes-model';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
@@ -36,8 +35,14 @@ export class ProjectCustomTranslationService {
     current: CurrentChapter,
     sourceVerse: SourceVerse
   ): BookIndexes {
-    const chapterIndex = sourceBook.chapters.findIndex(chapter => chapter.chapter === current.chapter);
-    const verseIndex = sourceBook.chapters[chapterIndex].verses.findIndex(verse => verse.verse === sourceVerse.verse);
+    const chapterIndex = sourceBook.chapters?.findIndex(chapter =>
+      chapter?.chapter === current.chapter
+    ) ?? this.indexNotFound;
+    const verseIndex = chapterIndex === this.indexNotFound
+      ? this.indexNotFound
+      : sourceBook.chapters[chapterIndex]?.verses?.findIndex(verse =>
+        verse?.verse === sourceVerse.verse
+      ) ?? this.indexNotFound;
     return {
       chapterIndex,
       verseIndex
@@ -371,46 +376,50 @@ export class ProjectCustomTranslationService {
     wordIndex: number
   ): boolean {
     const { chapterIndex, verseIndex } = this.getTranslationIndexes(sourceBook, current, sourceVerse);
-
-    let verseMetadata: BookVerse<BookChapterVerseMetadata> | null,
-      customTranslationMetadataKey = '',
-      scriptureChapterMetadata: BookVerse<BookChapterVerseMetadata>[] = [];
-
-    if (interlinear) {
-      const translationMetadata = customTranslation.chapters[chapterIndex] &&
-        customTranslation.chapters[chapterIndex].verses[verseIndex]?.metadata?.[wordIndex]?.value || '';
-
-      const [translationWordIndex] = Array.from(translationMetadata.match(/^\d+/) || ['']);
-      if (!translationWordIndex) {
-        return false;
-      }
-
-      const interlinearChapter = interlinear.chapters[chapterIndex];
-      if (!interlinearChapter) {
-        return false;
-      }
-
-      const interlinearSegmentOrigin = interlinearChapter.verses[verseIndex].words[Number(translationWordIndex)] || null;
-      if (!interlinearSegmentOrigin) {
-        return false;
-      }
-
-      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex].verses || [];
-      customTranslationMetadataKey = this.dataService.castInterlinearWordTargetIntoMetadataIndexSerialized(translationLanguage, interlinearSegmentOrigin);
-      verseMetadata = scriptureChapterMetadata && scriptureChapterMetadata[verseIndex];
-    } else {
-      scriptureChapterMetadata = bookMetadata.chapters[chapterIndex]?.verses || [];
-      verseMetadata = scriptureChapterMetadata[verseIndex] || null;
-      const translationChapterMetadata = customTranslation.chapters[chapterIndex].verses || [];
-      customTranslationMetadataKey = ((translationChapterMetadata[verseIndex]?.metadata || [])?.[wordIndex]?.value || '');
-    }
-
-    if (!verseMetadata || !customTranslationMetadataKey) {
+    if (chapterIndex === this.indexNotFound || verseIndex === this.indexNotFound) {
       return false;
     }
 
-    const metadata = verseMetadata.metadata || {};
-    const dataObj = metadata[customTranslationMetadataKey];
+    const translationVerse = customTranslation.chapters[chapterIndex]?.verses[verseIndex];
+    const translationMetadataValue = translationVerse?.metadata?.[wordIndex]?.value || '';
+    if (!translationVerse) {
+      return false;
+    }
+
+    let metadataChapterNumber = current.chapter;
+    let metadataVerseNumber = sourceVerse.verse;
+    let customTranslationMetadataKey = translationMetadataValue;
+
+    if (interlinear) {
+      const translationWordIndex = Number(translationMetadataValue.match(/^\d+/)?.[0]);
+      if (!Number.isInteger(translationWordIndex)) {
+        return false;
+      }
+
+      const interlinearChapter = interlinear.chapters?.find(chapter =>
+        chapter?.chapter === current.chapter
+      );
+      const interlinearVerse = interlinearChapter?.verses?.find(verse =>
+        verse?.verse === sourceVerse.verse
+      );
+      const interlinearSegmentOrigin = interlinearVerse?.words?.[translationWordIndex];
+      if (!interlinearChapter || !interlinearVerse || !interlinearSegmentOrigin) {
+        return false;
+      }
+
+      metadataChapterNumber = interlinearVerse.originChapter ?? interlinearChapter.origin;
+      metadataVerseNumber = interlinearVerse.originVerse;
+      customTranslationMetadataKey = this.dataService.castInterlinearWordTargetIntoMetadataIndexSerialized(translationLanguage, interlinearSegmentOrigin);
+    }
+
+    if (!customTranslationMetadataKey) {
+      return false;
+    }
+
+    const metadataVerse = bookMetadata.chapters
+      ?.find(chapter => chapter?.chapter === metadataChapterNumber)?.verses
+      ?.find(verse => verse?.verse === metadataVerseNumber);
+    const dataObj = metadataVerse?.metadata?.[customTranslationMetadataKey];
     if (!dataObj) {
       return false;
     }
@@ -426,16 +435,11 @@ export class ProjectCustomTranslationService {
     wordSpanIndex: number
   ): string {
     const { chapterIndex, verseIndex } = this.getTranslationIndexes(sourceBook, current, sourceVerse);
-
-    if (chapterIndex !== this.indexNotFound) {
-      const verses = customTranslation.chapters[chapterIndex].verses;
-      if (verses && verses[verseIndex] && verses[verseIndex].metadata) {
-        const metadata = verses[verseIndex].metadata;
-        return metadata && metadata[wordSpanIndex]?.value || '';
-      }
+    if (chapterIndex === this.indexNotFound || verseIndex === this.indexNotFound) {
+      return '';
     }
 
-    return '';
+    return customTranslation.chapters[chapterIndex]?.verses[verseIndex]?.metadata?.[wordSpanIndex]?.value || '';
   }
 
   saveCustomTranslationInterlinearMetadata(
@@ -485,14 +489,14 @@ export class ProjectCustomTranslationService {
     }
 
     const { chapterIndex, verseIndex } = this.getTranslationIndexes(sourceBook, current, sourceVerse);
-    if (chapterIndex === this.indexNotFound) {
+    if (chapterIndex === this.indexNotFound || verseIndex === this.indexNotFound) {
       return {
         checked: false,
         readonly: false
       };
     }
 
-    const verses = customTranslation.chapters[chapterIndex].verses;
+    const verses = customTranslation.chapters[chapterIndex]?.verses;
     if (verses && verses[verseIndex] && verses[verseIndex].metadata) {
       const metadata = verses[verseIndex].metadata;
       return {

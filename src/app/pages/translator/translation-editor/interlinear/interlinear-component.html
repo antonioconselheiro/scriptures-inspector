@@ -17,7 +17,7 @@
       @let originWordMatrix = splitIntoMatrix(origin.language, originParsedBook.patterns, origin.verse);
 
       <tr>
-        <th rowspan="4">interlinear <span class="interlinearSource">{{origin.structure.source}}</span></th>
+        <th rowspan="5">interlinear <span class="interlinearSource">{{origin.structure.source}}</span></th>
         <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[origin.language].label">
           @for (word of originWordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
@@ -40,6 +40,20 @@
               }
             }
   
+            @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
+          }
+        </td>
+        <td></td>
+      </tr>
+      <tr>
+        <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
+          @for (word of wordMatrix; track $index) {
+            @for (segment of word.segments; track segment.index) {
+              @if (segment.word.length) {
+                <span [class]="isWordOfGod(word) || isWordOfGodFromOrigin(origin, originWordMatrix, segment.index) ? 'godsaid' : ''">{{segment.word}}</span>
+              }
+            }
+
             @if (word.separator) {{{word.separator === ' ' ? '&nbsp;' : word.separator}}}
           }
         </td>
