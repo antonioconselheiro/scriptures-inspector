@@ -7,7 +7,9 @@
       <li (click)="onAddPattern('prefix', selectedWord)">define {{ selectedWord }} as prefix</li>
       <li (click)="onAddPattern('suffix', selectedWord)">define {{ selectedWord }} as suffix</li>
       <li (click)="onAddPattern('lexeme', selectedWord)">define {{ selectedWord }} as lexeme</li>
-    <!-- <li>list occurrences</li> -->
+      <li role="separator"></li>
+      <li (click)="onCopySelection()">copiar</li>
+      <li (click)="onCopyCell()">copiar tudo</li>
     </ul>
   </div>
 }

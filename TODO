@@ -14,8 +14,7 @@ TODO
 [ ] - Está quebrando para derivar tradução personalizada, quebrou com genesis 1.1
 [ ] - Quando houver opções disponíveis de uma variação de tradução, um icone deve ser exibido sobre o select para identificar isso
 [ ] - Variação de tradução onde números transcritos são transformados em algarismos preserva espaços entre os números, ex: "E viveu Jarede 1  6  2 anos e gerou AZ Enoque.". Pensar em solução.
-[ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença
-[ ] - Incluir operações normais no menu de contexto das palavras, como "copiar" ou "copiar tudo"
+[ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença para situações que envolvem nomes, como Jarede
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
 [ ] - Ter certeza que está salvando após uma alteração seguida da troca de uma página e outra
@@ -29,7 +28,7 @@ demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecio
 [ ] - Remover ou não a denotação massorética precisa ser algo configurável no projeto
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
-[ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final, configurável, para validar o aspecto geral do capítulo
+[ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final (holy reader), configurável, para validar o aspecto geral do capítulo
 [ ] - Não está sendo possível separar o sufixo de מִמֶּ֔נּוּ os caracteres נּוּ estão sempre sendo cortados em dois mesmo que configurados como sufixo agrupado, revisar regra se um sufixo maior deve ter prioridade sobre os menores
 [ ] - Tornar select de livros pesquisável
 [ ] - Incluir input text de versiculo ao lado de capitulo e acioná-lo após o redirecionamento do botão go de alguma maneira

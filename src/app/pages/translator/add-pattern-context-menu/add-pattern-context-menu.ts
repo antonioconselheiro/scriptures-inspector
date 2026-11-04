@@ -23,6 +23,8 @@ export class AddPatternContextMenu {
   current!: CurrentChapter;
 
   selectedWord = '';
+  selectedText = '';
+  cellContent = '';
   visible = false;
   x = 0;
   y = 0;
@@ -42,6 +44,16 @@ export class AddPatternContextMenu {
       this.systemService.triggerSaveCurrentBookInterlinear(this.current);
     }
 
+    this.visible = false;
+  }
+
+  async onCopySelection(): Promise<void> {
+    await navigator.clipboard.writeText(this.selectedText);
+    this.visible = false;
+  }
+
+  async onCopyCell(): Promise<void> {
+    await navigator.clipboard.writeText(this.cellContent);
     this.visible = false;
   }
 }
