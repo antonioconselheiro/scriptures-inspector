@@ -10,7 +10,8 @@
       @for (collection of collections; track $index) {
         <tr>
           <td [title]="collection.folder">{{ collection.name }}</td>
-          <td><button type="button" (click)="deleteCollection(project, collection.folder)">×</button></td>
+          <td><button type="button" [attr.aria-label]="'Delete collection ' + collection.name"
+            (click)="deleteCollection(project, collection.folder)">×</button></td>
         </tr>
       }
     </table>
@@ -31,10 +32,12 @@
     </div>
 
     <div>
-      <label>Folder name</label>
+      <label for="projectCreateArtifactCollectionFolder">Folder name</label>
       <input
         type="text"
         name="folderName"
+        id="projectCreateArtifactCollectionFolder"
+        aria-readonly="true"
         readonly
         placeholder="Folder name"
         [ngModel]="derivateFolderName(artifactCollectionName.value)"

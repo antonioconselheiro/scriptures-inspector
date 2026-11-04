@@ -1,6 +1,11 @@
 @if (loading) {
-  <div class="loading"></div>
+  <div class="loading" [class.saveLoading]="loading === 'save'">
+    @if (loading === 'save') {
+      <div class="save pulse"></div>
+    }
+  </div>
 }
 <app-main-dialog></app-main-dialog>
 <app-find-in-page></app-find-in-page>
+<app-text-size-controller-toolbox></app-text-size-controller-toolbox>
 <router-outlet></router-outlet>

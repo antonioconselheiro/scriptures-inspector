@@ -6,7 +6,8 @@
 @let splittedCustomTranslation = splitCustomTranslationWithVariations(customTranslation, indexes, pipeUpdaterController) || [];
 
 <div class="buttonGroup">
-  <button type="button" (click)="derivateAllToCustom()"> ▼ All </button>
+  <button type="button" aria-label="Derive all to custom translation"
+    (click)="derivateAllToCustom()"> ▼ All </button>
 </div>
 <div [class.minified]="minified" class="tableMinifiable">
   <div>
@@ -15,11 +16,13 @@
         <th rowspan="3">custom</th>
         <td [colSpan]="splittedCustomTranslation.original.length">
           <input type="text" #customTranslationEl class="customTranslation" name="customTranslation"
+            aria-label="Custom translation"
             placeholder="custom translation"
             (input)="updateCustomTranslation(customTranslationEl)"
             [value]="getCustomTranslationVerse()?.text" />
         </td>
-        <td rowspan="3"><button (click)="cleanCustomTranslation(customTranslationEl)" type="button">×</button></td>
+        <td rowspan="3"><button type="button" aria-label="Clear custom translation"
+          (click)="cleanCustomTranslation(customTranslationEl)">×</button></td>
       </tr>
   
       <tr appPinRow>
@@ -49,6 +52,7 @@
         <td>
           <input
             type="number" #wordSpanEl class="wordSpan configField" name="wordSpan" placeholder="size"
+            [attr.aria-label]="'Word span for position ' + ($index + 1)"
             [value]="verse?.metadata?.[$index]?.size"
             (change)="onChangeWordSpan(verse, $index, wordSpanEl)"
           />
@@ -74,6 +78,7 @@
           <td>
             <input
               type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
+              [attr.aria-label]="'Mark custom translation segment ' + ($index + 1) + ' as Word of God'"
               (change)="setAsWordOfGodOverriding(wordOfGodEl.checked, $index)"
               [checked]="wordOfGod.checked"
               [attr.disabled]="wordOfGod.readonly ? true : null"
@@ -91,6 +96,7 @@
             <select
               #interlinearCustomTranslationEl
               [name]="'selectInterlinearCustomTranslationEl' + wordIndex"
+              [attr.aria-label]="'Link custom translation segment ' + (wordIndex + 1) + ' to scripture'"
               [ngModel]="getCustomTranslationInterlinearValue(wordIndex)"
               (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex, indexes)">
               <option value=""></option>
@@ -106,7 +112,8 @@
         @if (!splittedCustomTranslation.original.length) {
           <td></td>
         }
-        <td><button type="button" (click)="cleanInterlinear()">×</button></td>
+        <td><button type="button" aria-label="Clear custom translation interlinear links"
+          (click)="cleanInterlinear()">×</button></td>
       </tr>
   
       @if (chapterVariations) {
@@ -125,6 +132,7 @@
                   class="configField"
                   [attr.list]="dataListId"
                   name="variationValue{{dataListId}}"
+                  [attr.aria-label]="'Translation variation ' + variation.name + ', segment ' + ($index + 1)"
                   [ngModel]="variarion"
                   (input)="updateVariationValue(chapterVariations, variation.id, $index, variationValueEl.value)"
                   [style.width.px]="calcFieldSize(word.segment, variationValueEl.value) + 20">
@@ -140,7 +148,8 @@
             }
 
             <td rowspan="2">
-              <button (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])" type="button">×</button>
+              <button type="button" [attr.aria-label]="'Clear translation variation ' + variation.name"
+                (click)="cleanCustomTranslationVariation(variation, chapterVariations, splittedCustomTranslation.variations[variation.id])">×</button>
             </td>
           </tr>
 
@@ -168,5 +177,10 @@
       }
     </table>
   </div>
-  <button (click)="minified = !minified" type="button"></button>
+  <button
+    type="button"
+    [attr.aria-expanded]="!minified"
+    [attr.aria-label]="(minified ? 'Expand' : 'Collapse') + ' custom translation'"
+    (click)="minified = !minified"
+  ></button>
 </div>

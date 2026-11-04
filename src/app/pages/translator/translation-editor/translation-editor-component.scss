@@ -12,81 +12,10 @@ strong.verseTitle {
   margin-top: 1rem;
 }
 
-.languageButtonGroup {
-  display: flex;
-  flex-direction: column;
-}
-
 .literalInput {
   min-width: 20px;
 }
 
 .textCenter {
   text-align: center;
-}
-
-.editorFloatingControls {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 5;
-  display: flex;
-  align-items: flex-end;
-  gap: 0.75rem;
-  padding: 0.55rem 0.75rem;
-  border: 1px solid rgb(160 140 100 / 35%);
-  border-radius: 0.75rem;
-  background: rgb(255 250 235 / 72%);
-  box-shadow: 0 0 8px rgb(80 70 50 / 20%);
-  opacity: 0.65;
-  transition: opacity 120ms ease, background-color 120ms ease;
-
-  &:hover,
-  &:focus-within {
-    background: rgb(255 250 235 / 96%);
-    opacity: 1;
-  }
-}
-
-.floatingControlLabel {
-  color: #5e5546;
-  font-size: 0.7rem;
-  line-height: 1.2;
-  white-space: nowrap;
-}
-
-.pendingLexiconControls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  color: #8a4b08;
-}
-
-.pendingLexiconNavigation {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-weight: 600;
-
-  button {
-    min-width: 1.5rem;
-    padding: 0 0.3rem;
-    border: 1px solid #efb44b;
-    border-radius: 0.35rem;
-    background: rgb(255 244 204 / 85%);
-    color: #8a4b08;
-    font-size: 1rem;
-    line-height: 1.35;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background: #ffebad;
-    }
-
-    &:disabled {
-      cursor: default;
-      opacity: 0.55;
-    }
-  }
 }

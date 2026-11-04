@@ -1,9 +1,10 @@
-<button class="cleanButton" type="button" (click)="cleanUnusedLexical()">clean unused lexical</button>
+<button class="cleanButton" type="button" aria-label="Clean unused lexical entries"
+  (click)="cleanUnusedLexical()">clean unused lexical</button>
 
 <div class="sortControls">
   <label>
     Sort by
-    <select [ngModel]="sortBy" (ngModelChange)="onSortByChange($event)">
+    <select aria-label="Sort lexicals by" [ngModel]="sortBy" (ngModelChange)="onSortByChange($event)">
       <option value="insertion">Insertion order</option>
       <option value="word">Word</option>
       <option value="rule">Rule</option>
@@ -13,7 +14,7 @@
 
   <label>
     Order
-    <select [(ngModel)]="sortOrder" (ngModelChange)="sortLexicals()">
+    <select aria-label="Lexical sort order" [(ngModel)]="sortOrder" (ngModelChange)="sortLexicals()">
       @for (option of sortOrderOptions[sortBy]; track option.value) {
         <option [value]="option.value">{{option.label}}</option>
       }
@@ -40,9 +41,11 @@
           <td>{{transliterateWord(lexical.key)}}</td>
         }
         <td>{{lexical.rule}}</td>
-        <td><input class="lexicalInput" type="text" #lexicalInput [value]="lexical.value"
+        <td><input class="lexicalInput" type="text" #lexicalInput [attr.aria-label]="'Lexical for ' + lexical.key"
+          [value]="lexical.value"
           (input)="updateLexical(lexical, lexicalInput)" (change)="sortLexicals()"></td>
-        <td><button type="button" (click)="deleteLexical(lexical.key, lexical.rule)">×</button></td>
+        <td><button type="button" [attr.aria-label]="'Delete lexical for ' + lexical.key"
+          (click)="deleteLexical(lexical.key, lexical.rule)">×</button></td>
       </tr>
     }
     </tbody>

@@ -1,5 +1,7 @@
-<app-project-header (onProject)="onProjectChange($event)"
-  (onCurrentArtifact)="onCurrentArtifactChange($event)"></app-project-header>
+<app-project-navigation-toolbox
+  (onProject)="onProjectChange($event)"
+  (onCurrentArtifact)="onCurrentArtifactChange($event)"
+></app-project-navigation-toolbox>
 
 <form [formGroup]="artifactForm" (ngSubmit)="onArtifactSubmit()">
   <fieldset>

@@ -4,7 +4,11 @@ import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-
 import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { MorphemeType } from '@domain/morpheme-type';
+import { NormalizedWord } from './normalized-word-model';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
+import { PatternEntry } from './pattern-entry-model';
+import { PatternMatch } from './pattern-match-model';
+import { PatternSegment } from './pattern-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
@@ -39,30 +43,6 @@ export class ProjectDataService {
       ? language.normalizeFn
       : (text: string) => text;
 
-    type Pattern = {
-      text: string;
-      normalized: string;
-    };
-
-    type Match = {
-      start: number;
-      end: number;
-      pattern: string;
-    };
-
-    type NormalizedWord = {
-      original: string;
-      normalized: string;
-      boundaries: number[];
-    };
-
-    type Segment = {
-      word: string;
-      morpheme: MorphemeType;
-      start: number;
-      end: number;
-    };
-
     /**
      * Prepara todos os patterns uma única vez.
      *
@@ -74,7 +54,7 @@ export class ProjectDataService {
      */
     const preparePatterns = (
       entries: Map<string, RegExp>
-    ): Pattern[] =>
+    ): PatternEntry[] =>
       Array.from(entries.keys())
         .map(text => ({
           text,
@@ -165,7 +145,7 @@ export class ProjectDataService {
       start: number,
       end: number,
       morpheme: MorphemeType
-    ): Segment => ({
+    ): PatternSegment => ({
       word: word.original.slice(
         word.boundaries[start],
         word.boundaries[end]
@@ -183,8 +163,8 @@ export class ProjectDataService {
     const matchAt = (
       text: string,
       position: number,
-      patternList: Pattern[]
-    ): Match | null => {
+      patternList: PatternEntry[]
+    ): PatternMatch | null => {
       for (const pattern of patternList) {
         if (
           text.startsWith(
@@ -211,9 +191,9 @@ export class ProjectDataService {
     const matchSuffixAt = (
       text: string,
       end: number,
-      patternList: Pattern[],
+      patternList: PatternEntry[],
       minimumStart = 0
-    ): Match | null => {
+    ): PatternMatch | null => {
       for (const pattern of patternList) {
         const start =
           end - pattern.normalized.length;
@@ -243,8 +223,8 @@ export class ProjectDataService {
      */
     const findLexemes = (
       normalized: string
-    ): Match[] => {
-      const matches: Match[] = [];
+    ): PatternMatch[] => {
+      const matches: PatternMatch[] = [];
 
       for (const pattern of lexemePatterns) {
         let position = 0;
@@ -294,8 +274,8 @@ export class ProjectDataService {
      */
     const segmentWithLexeme = (
       word: NormalizedWord,
-      lexeme: Match
-    ): Segment[] | null => {
+      lexeme: PatternMatch
+    ): PatternSegment[] | null => {
       /**
        * ---------------------------------------------------------
        * Encontra uma cadeia de patterns que:
@@ -322,8 +302,8 @@ export class ProjectDataService {
         text: string,
         start: number,
         target: number,
-        patternList: Pattern[]
-      ): Match[] | null => {
+        patternList: PatternEntry[]
+      ): PatternMatch[] | null => {
         if (start === target) {
           return [];
         }
@@ -467,7 +447,7 @@ export class ProjectDataService {
      */
     const segmentWithoutLexeme = (
       word: NormalizedWord
-    ): Segment[] => {
+    ): PatternSegment[] => {
       const text = word.normalized;
       const length = text.length;
 
@@ -485,7 +465,7 @@ export class ProjectDataService {
        * Como os patterns estão ordenados por tamanho,
        * escolhemos sempre o maior.
        */
-      const prefixes: Match[] = [];
+      const prefixes: PatternMatch[] = [];
 
       let prefixEnd = 0;
 
@@ -555,7 +535,7 @@ export class ProjectDataService {
        *
        * O resultado é armazenado da esquerda para a direita.
        */
-      const suffixes: Match[] = [];
+      const suffixes: PatternMatch[] = [];
 
       let suffixStart = length;
 
@@ -717,7 +697,7 @@ export class ProjectDataService {
          * Isso é O(n * patterns), não gera combinações.
          */
         for (let rootEnd = 1; rootEnd < length; rootEnd++) {
-          const candidateSuffixes: Match[] = [];
+          const candidateSuffixes: PatternMatch[] = [];
 
           let position = rootEnd;
           let valid = true;
@@ -791,7 +771,7 @@ export class ProjectDataService {
      */
     const segmentWord = (
       originalWord: string
-    ): Segment[] => {
+    ): PatternSegment[] => {
       if (!originalWord) {
         return [];
       }
@@ -808,8 +788,8 @@ export class ProjectDataService {
       const lexemes =
         findLexemes(word.normalized);
 
-      let bestSegments: Segment[] | null = null;
-      let bestLexeme: Match | null = null;
+      let bestSegments: PatternSegment[] | null = null;
+      let bestLexeme: PatternMatch | null = null;
 
       for (const lexeme of lexemes) {
         const segments =

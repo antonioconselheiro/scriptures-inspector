@@ -1,60 +1,20 @@
 
-<app-project-header (onProject)="onProjectChange($event)" (onCurrentChapter)="onCurrentChapterChange($event)">
-  @if (project && codexMetadataRecord) {
-    @let targetMetadataDetails = getProjectTargetsMetadataDetails(project, codexMetadataRecord);
-    @let customTranslationsDetails = getProjectTranslationsDetails(project, codexMetadataRecord);
-  
-    <app-translation-viewer-manager
-      [project]="project"
-      [codexMetadataRecord]="codexMetadataRecord"
-      (addViewingTranslation)="onAddViewingTranslation(project, $event)"
-    ></app-translation-viewer-manager>
-  
-    <fieldset>
-      <legend>Import configs</legend>
-      <button type="button" (click)="openImportFromBookDialog(project, targetMetadataDetails)">Import from book</button>
-    </fieldset>
-  
-    <fieldset>
-      <legend>Codex Configs</legend>
-
-      <div class="languageButtonGroup">
-        @for (detail of targetMetadataDetails; track detail.source) {
-          <button type="button"
-            (click)="openCodexConfigDialog(detail, customTranslationsDetails)">{{codexMetadataRecord[detail.source].name}}</button>
-        }
-      </div>
-    </fieldset>
-  }
-</app-project-header>
+<app-project-navigation-toolbox
+  (onProject)="onProjectChange($event)"
+  (onCurrentChapter)="onCurrentChapterChange($event)"
+></app-project-navigation-toolbox>
 
 @if (current) {
   <app-add-pattern-context-menu #addPatternMenuRef [current]="current"></app-add-pattern-context-menu>
   <app-define-field-morpheme-rule-context-menu #defineMorphemeRef [current]="current"></app-define-field-morpheme-rule-context-menu>
   <app-interlinear-tools-context-menu #interlinearToolsRef [current]="current"></app-interlinear-tools-context-menu>
-  <div class="editorFloatingControls">
-    <app-verse-scroll-navigator></app-verse-scroll-navigator>
-    <div class="pendingLexiconControls" aria-label="Pending lexicon definitions">
-      <label class="floatingControlLabel">Léxicos pendentes</label>
-      <div class="pendingLexiconNavigation">
-        <button
-          type="button"
-          aria-label="Previous pending lexicon"
-          title="Previous pending lexicon"
-          [disabled]="pendingLexicalFieldCount === 0"
-          (click)="focusPendingLexicalField(-1)"
-        >‹</button>
-        <span aria-live="polite">{{focusedLexicalFieldNumber}}/{{pendingLexicalFieldCount}}</span>
-        <button
-          type="button"
-          aria-label="Next pending lexicon"
-          title="Next pending lexicon"
-          [disabled]="pendingLexicalFieldCount === 0"
-          (click)="focusPendingLexicalField(1)"
-        >›</button>
-      </div>
-    </div>
-  </div>
+  <app-verse-navigation-toolbox></app-verse-navigation-toolbox>
+  <app-pending-lexicon-navigation-toolbox
+    [visible]="(toolboxVisibility.pageNavigationVisible$ | async) ?? false"
+    [pendingCount]="pendingLexicalFieldCount"
+    [focusedNumber]="focusedLexicalFieldNumber"
+    (navigate)="focusPendingLexicalField($event)"
+  ></app-pending-lexicon-navigation-toolbox>
   
   @if (project && codexMetadataRecord) {
     @for (structure of project.structures; track $index) {
@@ -81,7 +41,12 @@
               [viewingTranslationBookRecord]="translationBookRecord" [pipeUpdaterController]="pipeUpdaterController"
             ></app-scripture-metadata-component>
   
-            <button (click)="minifiedFieldset[verseIndex] = !minifiedFieldset[verseIndex]" type="button"></button>
+            <button
+              type="button"
+              [attr.aria-expanded]="!minifiedFieldset[verseIndex]"
+              [attr.aria-label]="(minifiedFieldset[verseIndex] ? 'Expand' : 'Collapse') + ' verse ' + verse.verse + ' fields'"
+              (click)="minifiedFieldset[verseIndex] = !minifiedFieldset[verseIndex]"
+            ></button>
           </fieldset>
         }
       }

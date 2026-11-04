@@ -1,0 +1,19 @@
+<app-toolbox title="Pending Lexicons" corner="bottom-right" [visible]="visible">
+  <div class="pendingLexiconNavigation">
+    <button
+      type="button"
+      aria-label="Previous pending lexicon"
+      title="Previous pending lexicon"
+      [disabled]="pendingCount === 0"
+      (click)="navigate.emit(-1)"
+    >‹</button>
+    <span aria-live="polite">{{focusedNumber}}/{{pendingCount}}</span>
+    <button
+      type="button"
+      aria-label="Next pending lexicon"
+      title="Next pending lexicon"
+      [disabled]="pendingCount === 0"
+      (click)="navigate.emit(1)"
+    >›</button>
+  </div>
+</app-toolbox>

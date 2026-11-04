@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { AsyncPipe } from '@angular/common';
 import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, Router } from '@angular/router';
@@ -17,7 +18,8 @@ import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
-import { ProjectHeader } from '@shared/project-header/project-header';
+import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
+import { PendingLexiconNavigationToolbox } from '@shared/pending-lexicon-navigation-toolbox/pending-lexicon-navigation-toolbox';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
 import { getProjectTargetsFn } from '@shared/project/get-project-targets-fn';
 import { getProjectTargetsMetadataDetailsFn } from '@shared/project/get-project-targets-metadata-details-fn';
@@ -25,32 +27,35 @@ import { getProjectTranslationsDetailsFn } from '@shared/project/get-project-tra
 import { loadCodexMetadataFn } from '@shared/project/load-codex-metadata-fn';
 import { loadSourceBookFn } from '@shared/project/load-source-book-fn';
 import { SystemService } from '@shared/system/system-service';
+import { ToolboxVisibilityService } from '@shared/toolbox/toolbox-visibility-service';
+import { LoadingObservable } from '@shared/loading/loading-observable';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { ImportFromBookDialog } from '../import-from-book-dialog/import-from-book-dialog';
 import { CodexConfigDialog } from '../codex-config-dialog/codex-config-dialog';
+import { ViewingTranslationDialog } from '../viewing-translation-dialog/viewing-translation-dialog';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
-import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
 import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
-import { VerseScrollNavigator } from './verse-scroll-navigator/verse-scroll-navigator';
 import { PinnedRowsFooter } from './pinned-rows-footer/pinned-rows-footer';
 import { PinnedRowsService } from './pinned-rows-service';
+import { VerseNavigationToolbox } from '@shared/verse-navigation-toolbox/verse-navigation-toolbox';
 
 @Component({
   selector: 'app-translation-editor-component',
   imports: [
+    AsyncPipe,
     FormsModule,
     AsyncModalModule,
     ScriptureMetadataComponent,
-    TranslationViewerManager,
-    ProjectHeader,
+    ProjectNavigationToolbox,
     AddPatternContextMenu,
     DefineFieldMorphemeRuleContextMenu,
     InterlinearToolsContextMenu,
-    VerseScrollNavigator,
-    PinnedRowsFooter
+    PinnedRowsFooter,
+    PendingLexiconNavigationToolbox,
+    VerseNavigationToolbox
 ],
   providers: [PinnedRowsService],
   templateUrl: './translation-editor-component.html',
@@ -80,6 +85,9 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   readonly languageMetadataRecord = languageMetadataRecord;
 
   private subscriptions = new Subscription();
+  private removeMenuListeners: Array<() => void> = [];
+  private removeImmediateSaveHandler: (() => void) | null = null;
+  private activeSave: Promise<void> | null = null;
   private focusedLexicalField: HTMLInputElement | null = null;
   private lastFocusedLexicalField: HTMLInputElement | null = null;
 
@@ -91,10 +99,24 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     private systemService: SystemService,
     protected metadataService: ProjectMetadataService,
     private elementRef: ElementRef<HTMLElement>,
-    private pinnedRows: PinnedRowsService
+    private pinnedRows: PinnedRowsService,
+    readonly toolboxVisibility: ToolboxVisibilityService
   ) { }
 
   ngOnInit(): void {
+    this.removeImmediateSaveHandler = this.systemService.registerImmediateSaveHandler(
+      () => this.saveCurrentPageImmediately()
+    );
+    this.removeMenuListeners.push(window.api.onOpenCodexConfig(source => {
+      this.openCodexConfigForSource(source);
+    }));
+    this.removeMenuListeners.push(window.api.onOpenProjectMenuAction(action => {
+      if (action === 'viewing-translation') {
+        this.openViewingTranslationDialog();
+      } else if (action === 'import-from-book') {
+        this.openImportFromBookDialog();
+      }
+    }));
     this.subscribeData();
     this.subscribeSaveBookMetadata();
     this.subscribeSaveBookInterlinear();
@@ -102,6 +124,11 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.removeImmediateSaveHandler?.();
+    this.removeMenuListeners.forEach(removeListener => removeListener());
+    void window.api.updateCodexConfigMenu([]).catch(error => {
+      console.error('Unable to clear the codex config menu:', error);
+    });
     this.pinnedRows.clear();
     this.subscriptions.unsubscribe();
   }
@@ -126,6 +153,41 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     this.minifiedFieldset = {};
     this.focusedLexicalField = null;
     this.lastFocusedLexicalField = null;
+  }
+
+  private async saveCurrentPageImmediately(): Promise<void> {
+    if (this.activeSave) {
+      return this.activeSave;
+    }
+
+    const save = this.saveProjectFilesImmediately();
+    this.activeSave = save;
+    try {
+      await save;
+    } finally {
+      if (this.activeSave === save) {
+        this.activeSave = null;
+      }
+    }
+  }
+
+  private async saveProjectFilesImmediately(): Promise<void> {
+    const project = this.project;
+    if (!project) {
+      throw new Error('Cannot save because no project is loaded');
+    }
+
+    LoadingObservable.startLoading('save');
+    try {
+      const currentBook = this.current ? { book: this.current.book } : null;
+      await this.systemService.saveProjectImmediately(project, currentBook, this.projectData);
+    } catch (error) {
+      console.error('Unable to save all project files:', error);
+      alert('Some project files could not be saved. Check the console for details.');
+      throw error;
+    } finally {
+      await LoadingObservable.stopLoading();
+    }
   }
 
   onDataLoaded(): void {
@@ -245,6 +307,40 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     });
 
     this.projectData = projectData;
+    this.updateCodexConfigMenu(project);
+  }
+
+  private updateCodexConfigMenu(project: Project): void {
+    if (!this.codexMetadataRecord) {
+      return;
+    }
+
+    const codices = this.getProjectTargetsMetadataDetails(project, this.codexMetadataRecord)
+      .map(detail => ({
+        source: detail.source,
+        label: this.codexMetadataRecord?.[detail.source]?.name
+      }))
+      .filter((codex): codex is { source: string; label: string } => Boolean(codex.label));
+
+    void window.api.updateCodexConfigMenu(codices).catch(error => {
+      console.error('Unable to update the codex config menu:', error);
+    });
+  }
+
+  private openCodexConfigForSource(source: string): void {
+    if (!this.project || !this.codexMetadataRecord) {
+      return;
+    }
+
+    const detail = this.getProjectTargetsMetadataDetails(this.project, this.codexMetadataRecord)
+      .find(candidate => candidate.source === source);
+    if (!detail) {
+      console.error(`Unable to open codex config for unknown source "${source}"`);
+      return;
+    }
+
+    const customTranslationsDetails = this.getProjectTranslationsDetails(this.project, this.codexMetadataRecord);
+    this.openCodexConfigDialog(detail, customTranslationsDetails);
   }
 
   getProjectSources(project: Project): Array<string> {
@@ -290,7 +386,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     } else {
       this.focusedLexicalField = null;
 
-      if (!(event.target instanceof HTMLElement && event.target.closest('.editorFloatingControls'))) {
+      if (!(event.target instanceof HTMLElement && event.target.closest('app-pending-lexicon-navigation-toolbox'))) {
         this.lastFocusedLexicalField = null;
       }
     }
@@ -330,10 +426,12 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       && this.elementRef.nativeElement.contains(target);
   }
 
-  openImportFromBookDialog(project: Project, targetMetadataDetails: TargetMetadataDetail[]): void {
+  openImportFromBookDialog(): void {
+    const project = this.project;
     const book = this.current?.book;
 
-    if (book) {
+    if (project && this.codexMetadataRecord && book) {
+      const targetMetadataDetails = this.getProjectTargetsMetadataDetails(project, this.codexMetadataRecord);
       this.modalService
         .createModal(ImportFromBookDialog)
         .setBindToRoute(this.router)
@@ -352,6 +450,35 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
           }
         });
     }
+  }
+
+  openViewingTranslationDialog(): void {
+    const project = this.project;
+    const codexMetadataRecord = this.codexMetadataRecord;
+    if (!project || !codexMetadataRecord) {
+      return;
+    }
+
+    this.modalService
+      .createModal(ViewingTranslationDialog)
+      .setBindToRoute(this.router)
+      .setOutletName('main')
+      .setData({
+        title: 'Viewing Translation',
+        project,
+        codexMetadataRecord,
+        repositories: this.data?.['repositories']
+          ?? this.activatedRoute.parent?.snapshot.data['repositories']
+          ?? {}
+      })
+      .build()
+      .subscribe({
+        next: association => {
+          if (association) {
+            this.onAddViewingTranslation(project, association);
+          }
+        }
+      });
   }
 
   openCodexConfigDialog(

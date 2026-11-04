@@ -1,10 +1,17 @@
-const { app, protocol, net, Menu, BrowserWindow, ipcMain, dialog } = require('electron/main');
+const { app, protocol, net, Menu, BrowserWindow, ipcMain, dialog, nativeImage } = require('electron/main');
 const path = require('path');
 const fs = require('fs/promises');
 const { fileURLToPath, pathToFileURL } = require('url');
 
 let mainWindow;
 let splashWindow;
+let applicationMenu;
+const toolboxVisibility = {
+  pageNavigation: true,
+  codexNavigation: false,
+  verseNavigation: true,
+  textSizeController: false
+};
 let pendingProjectPath = getProjectPath(process.argv);
 let projectFileListenerReady = false;
 let mainWindowReady = false;
@@ -92,6 +99,38 @@ ipcMain.handle('initialize-project-opening', (event) => {
   }
   return filePath;
 });
+
+ipcMain.handle('update-codex-config-menu', (event, codices) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    throw new Error('Codex config menus can only be updated by the main window');
+  }
+  if (!Array.isArray(codices) || codices.some(codex =>
+    !codex || typeof codex.source !== 'string' || typeof codex.label !== 'string'
+  )) {
+    throw new TypeError('Codex config menu items must have a source and label');
+  }
+
+  updateApplicationMenu(codices);
+});
+
+ipcMain.handle('get-toolbox-visibility', event => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    throw new Error('Toolbox visibility can only be read by the main window');
+  }
+  return { ...toolboxVisibility };
+});
+
+function sendProjectMenuAction(action) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('open-project-menu-action', action);
+  }
+}
+
+function sendToolboxVisibility(toolbox, visible) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('toggle-toolbox', toolbox, visible);
+  }
+}
 
 ipcMain.on('application-startup-complete', (event, maximizeWindow) => {
   if (!mainWindow || event.sender !== mainWindow.webContents) {
@@ -259,10 +298,29 @@ function showSplash() {
   });
 }
 
-const applicationMenu = Menu.buildFromTemplate([
+function updateApplicationMenu(codices = []) {
+  const iconPath = isDev
+    ? path.join(__dirname, 'public', 'script.png')
+    : path.join(app.getAppPath(), 'public', 'script.png');
+  const applicationIcon = nativeImage.createFromPath(iconPath).resize({ width: 16, height: 16 });
+  const codexConfigMenuItems = codices.map(codex => ({
+    label: codex.label,
+    click: () => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('open-codex-config', codex.source);
+      }
+    }
+  }));
+  applicationMenu = Menu.buildFromTemplate([
   {
     label: 'File',
+    icon: applicationIcon,
     submenu: [
+      {
+        label: 'Save Project',
+        click: () => sendProjectMenuAction('save-project')
+      },
+      { type: 'separator' },
       { role: 'close' },
       { type: 'separator' },
       { role: 'quit' }
@@ -277,7 +335,26 @@ const applicationMenu = Menu.buildFromTemplate([
       { role: 'cut' },
       { role: 'copy' },
       { role: 'paste' },
-      { role: 'selectAll' }
+      { role: 'selectAll' },
+      { type: 'separator' },
+      {
+        label: 'Import from Book',
+        click: () => sendProjectMenuAction('import-from-book')
+      },
+      { type: 'separator' },
+      {
+        label: 'Project',
+        submenu: [
+          {
+            label: 'Viewing Translation',
+            click: () => sendProjectMenuAction('viewing-translation')
+          },
+          {
+            label: 'Codex Configs',
+            submenu: codexConfigMenuItems
+          }
+        ]
+      }
     ]
   },
   {
@@ -291,6 +368,43 @@ const applicationMenu = Menu.buildFromTemplate([
       { role: 'zoomIn' },
       { role: 'zoomOut' },
       { type: 'separator' },
+      {
+        type: 'checkbox',
+        label: 'Codex Navigation',
+        checked: toolboxVisibility.codexNavigation,
+        click: menuItem => {
+          toolboxVisibility.codexNavigation = menuItem.checked;
+          sendToolboxVisibility('codex-navigation', menuItem.checked);
+        }
+      },
+      {
+        type: 'checkbox',
+        label: 'Page Navigation',
+        checked: toolboxVisibility.pageNavigation,
+        click: menuItem => {
+          toolboxVisibility.pageNavigation = menuItem.checked;
+          sendToolboxVisibility('page-navigation', menuItem.checked);
+        }
+      },
+      {
+        type: 'checkbox',
+        label: 'Verse Navigation',
+        checked: toolboxVisibility.verseNavigation,
+        click: menuItem => {
+          toolboxVisibility.verseNavigation = menuItem.checked;
+          sendToolboxVisibility('verse-navigation', menuItem.checked);
+        }
+      },
+      {
+        type: 'checkbox',
+        label: 'Text Size Controller',
+        checked: toolboxVisibility.textSizeController,
+        click: menuItem => {
+          toolboxVisibility.textSizeController = menuItem.checked;
+          sendToolboxVisibility('text-size-controller', menuItem.checked);
+        }
+      },
+      { type: 'separator' },
       { role: 'togglefullscreen' }
     ]
   },
@@ -302,7 +416,13 @@ const applicationMenu = Menu.buildFromTemplate([
       { role: 'close' }
     ]
   }
-]);
+  ]);
+  Menu.setApplicationMenu(applicationMenu);
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.setMenu(applicationMenu);
+  }
+  return applicationMenu;
+}
 
 function createWindow() {
   const iconPath = isDev
@@ -377,6 +497,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(filePath).toString());
   });
 
+  updateApplicationMenu();
   createWindow();
 
   app.on('activate', () => {

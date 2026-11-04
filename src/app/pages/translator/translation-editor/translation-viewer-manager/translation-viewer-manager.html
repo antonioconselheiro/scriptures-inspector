@@ -1,38 +1,34 @@
-<fieldset>
-  <legend>Translation</legend>
-
+<form (submit)="$event.preventDefault(); loadTranslation(associatedToEl, translationEl)">
   @let associables = getAssociableCodex();
 
-  <div>
-    <label>Associated To: </label>
-    <select #associatedToEl name="associatedTo">
-      <option></option>
-      
+  <div class="associationField">
+    <label for="associatedTo">Associated To:</label>
+    <select #associatedToEl id="associatedTo" name="associatedTo" required>
+      <option value=""></option>
+
       @if (codexMetadataRecord) {
         @for (associable of associables; track $index) {
-          <option [attr.value]="associable.source">{{codexMetadataRecord[associable.source].name}}</option>
+          <option [value]="associable.source">{{codexMetadataRecord[associable.source].name}}</option>
         }
       }
     </select>
   </div>
 
-  <div>
-    <label>Translation: </label>
-    <select #translationEl name="translation">
-      <option></option>
-  
-      @if (repositories) {
-        @for (repository of repositories | keyvalue; track $index) {
-          <optgroup [attr.label]="repository.value.name">
-            @for (translation of repository.value.translations | keyvalue; track $index) {
-              <option [attr.value]="translation.key">{{translation.value.name}}</option>
-            }
-          </optgroup>    
-        }
+  <div class="associationField">
+    <label for="translation">Translation:</label>
+    <select #translationEl id="translation" name="translation" required>
+      <option value=""></option>
+
+      @for (repository of repositories | keyvalue; track $index) {
+        <optgroup [label]="repository.value.name">
+          @for (translation of repository.value.translations | keyvalue; track $index) {
+            <option [value]="translation.key">{{translation.value.name}}</option>
+          }
+        </optgroup>
       }
-  
     </select>
   </div>
 
-  <button (click)="loadTranslation(associatedToEl, translationEl)" type="button">Associate</button>
-</fieldset>
+  <button class="associateButton" type="submit"
+    [disabled]="!associatedToEl.value || !translationEl.value">Associate</button>
+</form>

@@ -1,13 +1,15 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AsyncModalModule } from '@belomonte/async-modal-ngx';
 import { Project } from '@domain/project-model';
-import { LoadingObservable } from '@shared/loading/loading-observable';
+import { LoadingObservable, LoadingState } from '@shared/loading/loading-observable';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { SystemService } from '@shared/system/system-service';
 import { Subscription } from 'rxjs';
 import { MainDialogComponent } from './shared/main-dialog/main-dialog';
 import { FindInPage } from './shared/find-in-page/find-in-page';
+import { ToolboxVisibilityService } from './shared/toolbox/toolbox-visibility-service';
+import { TextSizeControllerToolbox } from './shared/text-size-controller-toolbox/text-size-controller-toolbox';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +17,8 @@ import { FindInPage } from './shared/find-in-page/find-in-page';
     RouterOutlet,
     AsyncModalModule,
     MainDialogComponent,
-    FindInPage
+    FindInPage,
+    TextSizeControllerToolbox
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -23,16 +26,35 @@ import { FindInPage } from './shared/find-in-page/find-in-page';
 export class App implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
-  loading = false;
+  private removeToolboxListener: (() => void) | null = null;
+  private removeProjectMenuListener: (() => void) | null = null;
+  loading: LoadingState = false;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
-    private systemService: SystemService
+    private systemService: SystemService,
+    private toolboxVisibility: ToolboxVisibilityService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
     this.subscribeLoading();
+    void window.api.getToolboxVisibility()
+      .then(visibility => this.ngZone.run(() => this.toolboxVisibility.setAll(visibility)))
+      .catch(error => console.error('Unable to load toolbox visibility:', error));
+    this.removeToolboxListener = window.api.onToggleToolbox((toolbox, visible) => {
+      this.ngZone.run(() => this.toolboxVisibility.setVisible(toolbox, visible));
+    });
+    this.removeProjectMenuListener = window.api.onOpenProjectMenuAction(action => {
+      if (action === 'save-project') {
+        this.ngZone.run(() => {
+          void this.systemService.saveCurrentPageImmediately().catch(error => {
+            console.error('Unable to save the project:', error);
+          });
+        });
+      }
+    });
     window.api.onProjectFileOpened(filePath => {
       void this.openProjectFile(filePath);
     });
@@ -40,6 +62,8 @@ export class App implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.removeToolboxListener?.();
+    this.removeProjectMenuListener?.();
     this.subscriptions.unsubscribe();
   }
 

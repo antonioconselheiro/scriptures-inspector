@@ -1,0 +1,19 @@
+.textSizeControls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  button {
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: 0.35rem;
+    background: transparent;
+    font-size: 1.1rem;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(160 140 100 / 18%);
+    }
+  }
+}

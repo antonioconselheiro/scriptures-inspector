@@ -312,7 +312,7 @@ tr.pinnedMetadataRow .pinnedRowRemoveButton {
   border: none;
 
   &.pulse {
-    animation: pulse .5s ease-in-out 3;
+    animation: pulse .5s ease-in-out infinite;
   }
 }
 
@@ -320,6 +320,27 @@ tr.pinnedMetadataRow .pinnedRowRemoveButton {
   background-image: url('../public/loading.gif');
   background-repeat: no-repeat;
   background-position: center;
+
+  .save {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    margin: -24px 0 0 -24px;
+  }
+
+  &.saveLoading {
+    background-image: none;
+
+    .save {
+      background-image: url('../public/save.png');
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      animation: pulse .5s ease-in-out infinite;
+    }
+  }
 }
 
 .error {

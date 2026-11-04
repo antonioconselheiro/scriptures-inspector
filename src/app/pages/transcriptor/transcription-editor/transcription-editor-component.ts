@@ -8,7 +8,7 @@ import { FragmentCollection } from '@domain/fragment-collection-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { Project } from '@domain/project-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
-import { ProjectHeader } from '@shared/project-header/project-header';
+import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
 import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
   selector: 'app-transcription-editor-component',
   imports: [
     CommonModule,
-    ProjectHeader,
+    ProjectNavigationToolbox,
     ReactiveFormsModule,
     AsyncModalModule
   ],

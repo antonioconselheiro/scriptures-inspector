@@ -3,6 +3,19 @@ declare global {
     api: {
       initializeProjectOpening(): Promise<string | null>;
       onProjectFileOpened(callback: (filePath: string) => void): void;
+      updateCodexConfigMenu(codices: Array<{ source: string; label: string }>): Promise<void>;
+      onOpenCodexConfig(callback: (source: string) => void): () => void;
+      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project') => void): () => void;
+      onToggleToolbox(callback: (
+        toolbox: 'page-navigation' | 'codex-navigation' | 'verse-navigation' | 'text-size-controller',
+        visible: boolean
+      ) => void): () => void;
+      getToolboxVisibility(): Promise<{
+        pageNavigation: boolean;
+        codexNavigation: boolean;
+        verseNavigation: boolean;
+        textSizeController: boolean;
+      }>;
       applicationStartupComplete(maximizeWindow?: boolean): void;
       readImageBase64(filePath: string): Promise<string | null>;
       readJsonFile<T>(path: string): Promise<T | null>;

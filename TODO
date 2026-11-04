@@ -22,7 +22,7 @@ TODO
 [ ] - Criar command line que permita observar os lexicos derivados de uma frase de um projeto para apoiar a validação do projeto por agent via linha de comando
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas
-[ ] - Colocar headers nos menus de sistema do electron
+[ ] - Iniciar sempre com word of god e depois somente a versão prismada
 [ ] - Quando se confirma a deletação de uma coluna de tradução depois de definir o size como 0, o campo que ocupa o novo lugar do deletado fica com size 0
 demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecionar multiplos arrastando e então sincronizar o valor atualizado do que for clicado para todos os outros
 [ ] - Remover ou não a denotação massorética precisa ser algo configurável no projeto
@@ -30,6 +30,7 @@ demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecio
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final (holy reader), configurável, para validar o aspecto geral do capítulo
 [ ] - Não está sendo possível separar o sufixo de מִמֶּ֔נּוּ os caracteres נּוּ estão sempre sendo cortados em dois mesmo que configurados como sufixo agrupado, revisar regra se um sufixo maior deve ter prioridade sobre os menores
+[ ] - Os repositórios devem ser servidos e consumidos como githubpages para evitar problemas de proxy
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
 [ ] - (mvp fragmentator) para inserir o texto de transcrição pode ser aberto uma dialog para inserção do texto e a edição deve ser permitida somente se não houver edição do posicionamento da transcrição no vetor, se já estiver uma palavra que seja posicionada, então o texto deve ser editado pela interface de posicionamento

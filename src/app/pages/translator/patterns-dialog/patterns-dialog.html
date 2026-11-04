@@ -43,7 +43,8 @@
       <tr>
         <td>prefix</td>
         <td>{{pattern}}</td>
-        <td><button type="button" (click)="deletePattern('prefix', $index)">×</button></td>
+        <td><button type="button" [attr.aria-label]="'Delete prefix pattern ' + pattern"
+          (click)="deletePattern('prefix', $index)">×</button></td>
       </tr>
       }
   
@@ -51,7 +52,8 @@
       <tr>
         <td>suffix</td>
         <td>{{pattern}}</td>
-        <td><button type="button" (click)="deletePattern('suffix', $index)">×</button></td>
+        <td><button type="button" [attr.aria-label]="'Delete suffix pattern ' + pattern"
+          (click)="deletePattern('suffix', $index)">×</button></td>
       </tr>
       }
   
@@ -59,7 +61,8 @@
       <tr>
         <td>lexeme</td>
         <td>{{pattern}}</td>
-        <td><button type="button" (click)="deletePattern('lexeme', $index)">×</button></td>
+        <td><button type="button" [attr.aria-label]="'Delete lexeme pattern ' + pattern"
+          (click)="deletePattern('lexeme', $index)">×</button></td>
       </tr>
       }
     </tbody>

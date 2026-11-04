@@ -9,17 +9,8 @@ import { Subject } from 'rxjs';
 import { LexicalDictionaryDialog } from '../lexical-dictionary-dialog/lexical-dictionary-dialog';
 import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
 import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
-
-export interface CodexConfigDialogData {
-  bookMetadata: BookMetadataTarget;
-  bookSource: SourceBook | null;
-  language: Language | null;
-  languageSource: string;
-  currentBook: CurrentBook;
-  translationBook: BookTranslationTarget | null;
-}
-
-type ConfigTab = 'patterns' | 'lexical' | 'translationVariations';
+import { ConfigTab } from './config-tab-type';
+import { CodexConfigDialogData } from './codex-config-dialog-data';
 
 @Component({
   selector: 'app-codex-config-dialog',

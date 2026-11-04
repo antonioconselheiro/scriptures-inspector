@@ -1,25 +1,23 @@
 <form [formGroup]="form" (ngSubmit)="onImportFromBookSubmit()">
-  <fieldset>
-    <legend>Import to current book patterns and lexicals from another book</legend>
+  <p>Import patterns and lexicals from another book into the current book.</p>
 
-    <div>
-      <select name="selectedArtifact" formControlName="selectedArtifact" placeholder="Artifact">
-        @for (book of listBookNames(); track $index) {
+  <div>
+    <select name="selectedArtifact" aria-label="Book to import from" formControlName="selectedArtifact" required>
+      @for (book of listBookNames(); track $index) {
         <option [value]="book.key">{{ book.name }}</option>
-        }
-      </select>
-    </div>
+      }
+    </select>
+  </div>
 
-    <div>
-      <input name="variations" formControlName="variations" id="importVariations" type="checkbox" />
-      <label for="importVariations">Import variations</label>
-    </div>
+  <div>
+    <input name="variations" formControlName="variations" id="importVariations" type="checkbox" />
+    <label for="importVariations">Import variations</label>
+  </div>
 
-    <div>
-      <input name="override" formControlName="override" id="overridePatternsAndLexicals" type="checkbox" />
-      <label for="overridePatternsAndLexicals">Override existing configs</label>
-    </div>
+  <div>
+    <input name="override" formControlName="override" id="overridePatternsAndLexicals" type="checkbox" />
+    <label for="overridePatternsAndLexicals">Override existing configs</label>
+  </div>
 
-    <button type="submit">Import</button>
-  </fieldset>
+  <button type="submit">Import</button>
 </form>

@@ -1,0 +1,18 @@
+<app-toolbox
+  title="Verse Navigation"
+  corner="bottom-left"
+  [visible]="(toolboxVisibility.verseNavigationVisible$ | async) ?? false"
+>
+  <div class="verseNavigation">
+    <label for="verseNavigatorInput">Verse</label>
+    <input
+      id="verseNavigatorInput"
+      type="number"
+      min="1"
+      [value]="verse"
+      (change)="scrollToVerse(verseEl.valueAsNumber)"
+      #verseEl
+      title="Go to verse"
+    />
+  </div>
+</app-toolbox>

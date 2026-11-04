@@ -23,7 +23,8 @@
               }
             </td>
             <td>
-              <button type="button" (click)="onRemoveTranslation(translationInformation.source)">×</button>
+              <button type="button" [attr.aria-label]="'Remove translation ' + translationInformation.name"
+                (click)="onRemoveTranslation(translationInformation.source)">×</button>
             </td>
           </tr>
         }
@@ -122,12 +123,14 @@
             >
               <input
                 type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
+                [attr.aria-label]="'Mark ' + (wordList?.[wordIndex] ?? 'scripture word') + ' as Word of God'"
                 (change)="setAsWordOfGod(wordOfGodEl, wordMatrixValue, wordIndex)"
                 [checked]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex)"
               />
             </td>
           }
-          <td><button (click)="cleanWordOfGodFromVerse()" type="button">×</button></td>
+          <td><button type="button" aria-label="Clear Word of God selection"
+            (click)="cleanWordOfGodFromVerse()">×</button></td>
         </tr>
     
         <tr>
@@ -136,7 +139,8 @@
           <td class="fieldsLexical">
             @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
               @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController;
-              <input type="text" [name]="'fieldLexical' + segment.index" [placeholder]="segment.word" #fieldLexical
+              <input type="text" [name]="'fieldLexical' + segment.index" [attr.aria-label]="'Lexical for ' + segment.word"
+                [placeholder]="segment.word" #fieldLexical
                 [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
                 [morphemePosition]="segment.morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
                 [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment.word, lexical.value)"
@@ -146,7 +150,8 @@
             }
           </td>
           }
-          <td rowspan="2"><button (click)="cleanLexicalLexical(wordMatrixValue)" type="button">×</button></td>
+          <td rowspan="2"><button type="button" aria-label="Clear lexical entries for verse"
+            (click)="cleanLexicalLexical(wordMatrixValue)">×</button></td>
         </tr>
         <tr appPinRow>
           <td [colSpan]="wordListValue.length">
@@ -225,7 +230,12 @@
       </table>
     </div>
   
-    <button (click)="minified = !minified" type="button"></button>
+    <button
+      type="button"
+      [attr.aria-expanded]="!minified"
+      [attr.aria-label]="(minified ? 'Expand' : 'Collapse') + ' scripture metadata'"
+      (click)="minified = !minified"
+    ></button>
   </div>
 
   @if (customTranslation) {

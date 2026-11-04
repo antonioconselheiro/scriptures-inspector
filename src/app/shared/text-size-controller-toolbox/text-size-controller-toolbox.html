@@ -1,0 +1,11 @@
+<app-toolbox
+  title="Text Size Controller"
+  corner="top-left"
+  [visible]="(toolboxVisibility.textSizeControllerVisible$ | async) ?? false"
+>
+  <div class="textSizeControls">
+    <button type="button" aria-label="Zoom out" title="Zoom out" (click)="zoomOut()">−</button>
+    <button type="button" aria-label="Reset text size" title="Reset text size" (click)="resetZoom()">1:1</button>
+    <button type="button" aria-label="Zoom in" title="Zoom in" (click)="zoomIn()">+</button>
+  </div>
+</app-toolbox>

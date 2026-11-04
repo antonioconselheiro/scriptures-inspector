@@ -15,19 +15,8 @@ import {
 import {
   NgxMoveableModule,
 } from 'ngx-moveable';
-
-export interface ArtifactFragmentWordPosition {
-  start: number;
-  length: number;
-  x: number;
-  y: number;
-  flip: number;
-}
-
-interface FragmentView extends ArtifactFragmentWordPosition {
-  text: string;
-  index: number;
-}
+import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
+import { ArtifactFragmentView } from './artifact-fragment-view-model';
 
 @Component({
   selector: 'app-artifact-text-editor',
@@ -203,7 +192,7 @@ export class ArtifactTextEditorComponent implements AfterViewInit {
   @Output()
   fragmentsChange = new EventEmitter<ArtifactFragmentWordPosition[]>();
 
-  views: FragmentView[] = [];
+  views: ArtifactFragmentView[] = [];
 
   selectedIndex: number | null = null;
 
@@ -382,7 +371,7 @@ export class ArtifactTextEditorComponent implements AfterViewInit {
 
   onFragmentClick(
     event: MouseEvent,
-    fragment: FragmentView,
+    fragment: ArtifactFragmentView,
   ): void {
     event.stopPropagation();
 

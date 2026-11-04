@@ -1,0 +1,31 @@
+:host {
+  color: #8a4b08;
+}
+
+.pendingLexiconNavigation {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 600;
+
+  button {
+    min-width: 1.5rem;
+    padding: 0 0.3rem;
+    border: 1px solid #efb44b;
+    border-radius: 0.35rem;
+    background: rgb(255 244 204 / 85%);
+    color: #8a4b08;
+    font-size: 1rem;
+    line-height: 1.35;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background: #ffebad;
+    }
+
+    &:disabled {
+      cursor: default;
+      opacity: 0.55;
+    }
+  }
+}

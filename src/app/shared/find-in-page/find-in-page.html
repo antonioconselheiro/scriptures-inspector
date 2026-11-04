@@ -3,15 +3,16 @@
     <input
       #searchEl
       type="text"
+      aria-label="Find in page"
       spellcheck="false"
       placeholder="Find in page"
       [value]="query"
       (input)="onQueryChange(searchEl.value)"
       (keydown)="onSearchKeydown($event)"
     />
-    <span class="counter">{{ total ? current + 1 : 0 }}/{{ total }}</span>
-    <button type="button" (click)="previous()" [disabled]="!total" title="Previous (Shift+Enter)">▲</button>
-    <button type="button" (click)="next()" [disabled]="!total" title="Next (Enter)">▼</button>
-    <button type="button" (click)="close()" title="Close (Esc)">×</button>
+    <span class="counter" aria-live="polite">{{ total ? current + 1 : 0 }}/{{ total }}</span>
+    <button type="button" (click)="previous()" [disabled]="!total" aria-label="Previous result" title="Previous (Shift+Enter)">▲</button>
+    <button type="button" (click)="next()" [disabled]="!total" aria-label="Next result" title="Next (Enter)">▼</button>
+    <button type="button" (click)="close()" aria-label="Close find in page" title="Close (Esc)">×</button>
   </div>
 }

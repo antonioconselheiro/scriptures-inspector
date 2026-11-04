@@ -79,6 +79,7 @@
                 (change)="onChangeInterlinearToBaseScripture(origin.structure, translationSegment.index, translationSegment.word, interlinear.value)"
                 [ngModel]="getInterlinearWordSegmentSerialized(origin.structure, translationSegment.index)"
                 [name]="'translationToSourceInterlinear' + $index"
+                [attr.aria-label]="'Link ' + translationSegment.word + ' to source scripture'"
                 [sourceLanguage]="sourceLanguage"
                 [interlinearTarget]="interlinearTarget"
                 [originSource]="origin.structure.source"
@@ -99,7 +100,8 @@
             }
           </td>
         }
-        <td><button type="button" (click)="cleanTranslationInterlinear(origin.structure)">×</button></td>
+        <td><button type="button" [attr.aria-label]="'Clear interlinear links for ' + origin.structure.source"
+          (click)="cleanTranslationInterlinear(origin.structure)">×</button></td>
       </tr>
     }
   </app-scripture-metadata-component>

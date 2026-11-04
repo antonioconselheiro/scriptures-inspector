@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-
-interface PinnedRow {
-  placeholder: Comment;
-  rowSpans: Array<{ cell: HTMLTableCellElement; value: string | null }>;
-  onStateChange: (pinned: boolean) => void;
-}
+import { PinnedRow } from './pinned-row-model';
 
 @Injectable()
 export class PinnedRowsService {

@@ -3,6 +3,23 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('api', {
   initializeProjectOpening: () => ipcRenderer.invoke('initialize-project-opening'),
   onProjectFileOpened: (callback) => ipcRenderer.on('open-project-file', (_, filePath) => callback(filePath)),
+  updateCodexConfigMenu: (codices) => ipcRenderer.invoke('update-codex-config-menu', codices),
+  onOpenCodexConfig: (callback) => {
+    const listener = (_, source) => callback(source);
+    ipcRenderer.on('open-codex-config', listener);
+    return () => ipcRenderer.removeListener('open-codex-config', listener);
+  },
+  onOpenProjectMenuAction: (callback) => {
+    const listener = (_, action) => callback(action);
+    ipcRenderer.on('open-project-menu-action', listener);
+    return () => ipcRenderer.removeListener('open-project-menu-action', listener);
+  },
+  onToggleToolbox: (callback) => {
+    const listener = (_, toolbox, visible) => callback(toolbox, visible);
+    ipcRenderer.on('toggle-toolbox', listener);
+    return () => ipcRenderer.removeListener('toggle-toolbox', listener);
+  },
+  getToolboxVisibility: () => ipcRenderer.invoke('get-toolbox-visibility'),
   applicationStartupComplete: (maximizeWindow) => ipcRenderer.send('application-startup-complete', maximizeWindow),
   readImageBase64: (filePath) => ipcRenderer.invoke('read-image-base64', filePath),
   readJsonFile: (path) => ipcRenderer.invoke('read-json-file', path),

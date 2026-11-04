@@ -1,7 +1,7 @@
 <section #dialogPanel [class.hidden]="isClosed" [class.dragged]="dialogPosition" class="modal"
   [style.left.px]="dialogPosition?.left" [style.top.px]="dialogPosition?.top">
   <header (pointerdown)="startDragging($event)">
-    <button tabindex="1" (click)="close()" type="button">
+    <button tabindex="1" aria-label="Close dialog" (click)="close()" type="button">
       x
     </button>
     <h1>{{title}}</h1>

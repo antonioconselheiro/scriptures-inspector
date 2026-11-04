@@ -12,11 +12,8 @@ import { SourceBook } from '@domain/source-book-model';
 import { ProjectMetadataService } from '../translation-editor/shared/project/project-metadata-service';
 import { Language } from '@domain/language-model';
 import { MorphemeType } from '@domain/morpheme-type';
-
-type SortField = 'insertion' | 'word' | 'rule' | 'lexical';
-type SortOrder = 'insertion-asc' | 'insertion-desc'
-  | 'alphabetical-asc' | 'alphabetical-desc' | 'length-asc' | 'length-desc'
-  | 'prefix-first' | 'root-first' | 'suffix-first';
+import { SortField } from './sort-field-type';
+import { SortOrder } from './sort-order-type';
 
 @Component({
   selector: 'app-lexical-dictionary-dialog',

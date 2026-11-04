@@ -1,0 +1,18 @@
+<section
+  class="toolbox"
+  [hidden]="!visible"
+  [class.positioned]="position"
+  [class.top-left]="!position && corner === 'top-left'"
+  [class.top-right]="!position && corner === 'top-right'"
+  [class.bottom-left]="!position && corner === 'bottom-left'"
+  [class.bottom-right]="!position && corner === 'bottom-right'"
+  [style.left.px]="position?.left"
+  [style.top.px]="position?.top"
+>
+  <header class="toolboxHeader" (pointerdown)="startDragging($event)">
+    <span>{{title}}</span>
+  </header>
+  <div class="toolboxContent">
+    <ng-content></ng-content>
+  </div>
+</section>

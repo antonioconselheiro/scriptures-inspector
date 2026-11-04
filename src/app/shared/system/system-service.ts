@@ -23,6 +23,24 @@ export class SystemService {
   static saveCurrentBookInterlinear = new Subject<CurrentBook>();
   static saveCurrentBookCustomTranslations = new Subject<CurrentBook>();
 
+  private immediateSaveHandler: (() => Promise<void>) | null = null;
+
+  registerImmediateSaveHandler(handler: () => Promise<void>, onlyIfEmpty = false): () => void {
+    if (!onlyIfEmpty || !this.immediateSaveHandler) {
+      this.immediateSaveHandler = handler;
+    }
+
+    return () => {
+      if (this.immediateSaveHandler === handler) {
+        this.immediateSaveHandler = null;
+      }
+    };
+  }
+
+  async saveCurrentPageImmediately(): Promise<void> {
+    await this.immediateSaveHandler?.();
+  }
+
   async loadProject(): Promise<Project | null> {
     const selected = await window.api.openProject();
 
@@ -56,41 +74,36 @@ export class SystemService {
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    for (const structure of project.structures) {
-      await this.saveBookFile(project, structure.metadataTarget, current, data);
-
-      if (structure.interlinear) {
-        for (const interlinear of structure.interlinear) {
-          await this.saveBookFile(project, interlinear.metadataTarget, current, data);
-        }
-      }
-    }
+    const targets = this.getMetadataTargets(project.structures);
+    await this.saveBookTargets(project, targets, current, data);
   }
 
   async saveCurrentBookInterlinear(project: Project, structures: Array<ProjectStructureMetadata>, current: CurrentBook, data: ProjectData): Promise<void> {
-    for (const structure of structures) {
-      if (structure.interlinear) {
-        for (const interlinearStructure of structure.interlinear) {
-          await this.saveBookFile(project, interlinearStructure.interlinearTarget, current, data);
-          await this.saveCurrentBookInterlinear(project, [interlinearStructure], current, data);
-        }
-      }
-    }
+    const targets = this.getInterlinearTargets(structures);
+    await this.saveBookTargets(project, targets, current, data);
   }
 
   async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    for (const structure of project.structures) {
-      if (structure.customTranslationTarget) {
-        await this.saveBookFile(project, structure.customTranslationTarget, current, data);
-      }
+    const targets = this.getCustomTranslationTargets(project.structures);
+    await this.saveBookTargets(project, targets, current, data);
+  }
 
-      if (structure.interlinear) {
-        for (const interlinear of structure.interlinear) {
-          if (interlinear.customTranslationTarget) {
-            await this.saveBookFile(project, interlinear.customTranslationTarget, current, data);
-          }
-        }
-      }
+  async saveProjectImmediately(project: Project, current: CurrentBook | null, data: ProjectData): Promise<void> {
+    const saves: Promise<void>[] = [this.saveProjectConfig(project)];
+    if (current) {
+      saves.push(
+        this.saveCurrentBookMetadata(project, current, data),
+        this.saveCurrentBookInterlinear(project, project.structures, current, data),
+        this.saveCurrentBookCustomTranslation(project, current, data)
+      );
+    }
+
+    const results = await Promise.allSettled(saves);
+    const errors = results
+      .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+      .map(result => result.reason);
+    if (errors.length) {
+      throw new AggregateError(errors, 'One or more project files could not be saved');
     }
   }
 
@@ -100,7 +113,51 @@ export class SystemService {
     current: CurrentBook,
     content: ProjectData
   ): Promise<void> {
-    return writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, content[target]).catch(e => console.error('Error writting file:', e));
+    const targetData = content[target];
+    if (!targetData) {
+      throw new Error(`Missing project data for target "${target}"`);
+    }
+    await writeJsonFileFn(`${project.path}/targets/${target}/${current.book}.json`, targetData);
+  }
+
+  private async saveBookTargets(
+    project: Project,
+    targets: Array<KeyMetadata | KeyInterlinear | KeyTranslation>,
+    current: CurrentBook,
+    data: ProjectData
+  ): Promise<void> {
+    const results = await Promise.allSettled(
+      targets.map(target => this.saveBookFile(project, target, current, data))
+    );
+    const errors = results
+      .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+      .map(result => result.reason);
+    if (errors.length) {
+      throw new AggregateError(errors, 'One or more book files could not be saved');
+    }
+  }
+
+  private getMetadataTargets(structures: Array<ProjectStructureMetadata>): KeyMetadata[] {
+    return structures.flatMap(structure => [
+      structure.metadataTarget,
+      ...this.getMetadataTargets(structure.interlinear ?? [])
+    ]);
+  }
+
+  private getInterlinearTargets(structures: Array<ProjectStructureMetadata>): KeyInterlinear[] {
+    return structures.flatMap(structure => [
+      ...(structure.interlinear ?? []).flatMap(interlinear => [
+        interlinear.interlinearTarget,
+        ...this.getInterlinearTargets([interlinear])
+      ])
+    ]);
+  }
+
+  private getCustomTranslationTargets(structures: Array<ProjectStructureMetadata>): KeyTranslation[] {
+    return structures.flatMap(structure => [
+      ...(structure.customTranslationTarget ? [structure.customTranslationTarget] : []),
+      ...this.getCustomTranslationTargets(structure.interlinear ?? [])
+    ]);
   }
 
   async saveProjectConfig(project: Project): Promise<void> {
@@ -109,10 +166,8 @@ export class SystemService {
       delete projectClonedObject.path;
       setProjectFn(project);
 
-      writeJsonFileFn(`${project.path}/index.xenoglosproj`, projectClonedObject);
+      await writeJsonFileFn(`${project.path}/index.xenoglosproj`, projectClonedObject);
     }
-
-    return Promise.resolve();
   }
 
   triggerSaveCurrentProject(): void {

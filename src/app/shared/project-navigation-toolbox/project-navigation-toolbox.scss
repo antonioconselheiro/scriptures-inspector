@@ -1,0 +1,99 @@
+:host {
+  display: block;
+}
+
+.navigationForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.navigationInputs,
+.navigationActions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.navigationActions {
+  justify-content: flex-end;
+
+  button {
+    cursor: pointer;
+  }
+}
+
+.selectedChapter,
+.selectedVerse {
+  width: 4rem;
+}
+
+.navigationPicker {
+  position: relative;
+  display: inline-block;
+
+  > input {
+    width: 16rem;
+    height: 1.8rem;
+
+    &:not(:focus)::placeholder {
+      color: #222;
+      opacity: 1;
+    }
+
+    &:focus {
+      border: 1px solid #666;
+    }
+  }
+}
+
+.navigationOptions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1001;
+  width: max-content;
+  min-width: 100%;
+  max-width: min(32rem, 80vw);
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border: 1px solid #aaa;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+}
+
+.navigationOptionGroup {
+  display: block;
+  padding: 4px 0;
+  color: #666;
+  font-size: 0.85em;
+  font-weight: 600;
+
+  &::before {
+    display: block;
+    padding: 4px 12px;
+    content: attr(aria-label);
+  }
+
+  &:not(:first-child) {
+    border-top: 1px solid #ddd;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 6px 12px;
+    border: 0;
+    background: #fff;
+    color: #222;
+    font: inherit;
+    font-weight: normal;
+    text-align: left;
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      background: #eee;
+    }
+  }
+}
