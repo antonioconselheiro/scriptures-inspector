@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookVerse } from '@domain/book-verse-model';
+import { CurrentBook } from '@domain/current-book-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { Subject } from 'rxjs';
 import { ProjectDataService } from '../translation-editor/shared/project/project-data-service';
@@ -11,24 +13,62 @@ import { ProjectMetadataService } from '../translation-editor/shared/project/pro
 import { Language } from '@domain/language-model';
 import { MorphemeType } from '@domain/morpheme-type';
 
+type SortField = 'insertion' | 'word' | 'rule' | 'lexical';
+type SortOrder = 'insertion-asc' | 'insertion-desc'
+  | 'alphabetical-asc' | 'alphabetical-desc' | 'length-asc' | 'length-desc'
+  | 'prefix-first' | 'root-first' | 'suffix-first';
+
 @Component({
   selector: 'app-lexical-dictionary-dialog',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './lexical-dictionary-dialog.html',
   styleUrl: './lexical-dictionary-dialog.scss'
 })
 export class LexicalDictionaryDialog extends ModalableDirective<{
   bookMetadata: Book<BookMetadataAttributes, any>,
   bookSource: Readonly<Book<object, BookVerse<{ text: string; }>>>;
-  language: Language
+  language: Language;
+  currentBook: CurrentBook;
 }, boolean> implements OnInit {
 
   bookSource: SourceBook | null = null;
   bookMetadata: Book<BookMetadataAttributes, any> | null = null;
   language: Language | null = null;
+  currentBook: CurrentBook | null = null;
   lexicals: Array<{ key: string; rule: MorphemeType; value: string; }> = [];
+  sortBy: SortField = 'insertion';
+  sortOrder: SortOrder = 'insertion-asc';
+
+  readonly sortOrderOptions: Record<SortField, Array<{ value: SortOrder; label: string; }>> = {
+    insertion: [
+      { value: 'insertion-asc', label: 'Insertion order' },
+      { value: 'insertion-desc', label: 'Reverse insertion order' }
+    ],
+    word: [
+      { value: 'alphabetical-asc', label: 'Alphabetical (A–Z)' },
+      { value: 'alphabetical-desc', label: 'Alphabetical (Z–A)' },
+      { value: 'length-asc', label: 'Shortest first' },
+      { value: 'length-desc', label: 'Longest first' }
+    ],
+    lexical: [
+      { value: 'alphabetical-asc', label: 'Alphabetical (A–Z)' },
+      { value: 'alphabetical-desc', label: 'Alphabetical (Z–A)' },
+      { value: 'length-asc', label: 'Shortest first' },
+      { value: 'length-desc', label: 'Longest first' }
+    ],
+    rule: [
+      { value: 'prefix-first', label: 'Prefix first' },
+      { value: 'root-first', label: 'Root first' },
+      { value: 'suffix-first', label: 'Suffix first' }
+    ]
+  };
 
   override response = new Subject<boolean | void>();
+  private readonly collator = new Intl.Collator(undefined, {
+    usage: 'sort',
+    sensitivity: 'base',
+    numeric: true
+  });
 
   constructor(
     private dataService: ProjectDataService,
@@ -40,15 +80,82 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   override onInjectData(book: {
     bookMetadata: Book<BookMetadataAttributes, any>,
     bookSource: SourceBook;
-    language: Language
+    language: Language;
+    currentBook: CurrentBook;
   }): void {
     this.bookMetadata = book.bookMetadata;
     this.bookSource = book.bookSource;
     this.language = book.language;
+    this.currentBook = book.currentBook;
   }
 
   ngOnInit(): void {
-    this.lexicals = this.getLexicalDictionary();
+    this.sortLexicals();
+  }
+
+  onSortByChange(sortBy: SortField): void {
+    this.sortBy = sortBy;
+    this.sortOrder = sortBy === 'insertion'
+      ? 'insertion-asc'
+      : sortBy === 'rule'
+        ? 'prefix-first'
+        : 'alphabetical-asc';
+    this.sortLexicals();
+  }
+
+  sortLexicals(): void {
+    const lexicals = this.getLexicalDictionary();
+
+    if (this.sortBy === 'insertion') {
+      this.lexicals = this.sortOrder === 'insertion-desc' ? lexicals.reverse() : lexicals;
+      return;
+    }
+
+    const ruleOrder: Record<MorphemeType, number> = {
+      prefix: 0,
+      root: 1,
+      suffix: 2
+    };
+
+    if (this.sortBy === 'rule') {
+      const priority = this.sortOrder === 'root-first'
+        ? { root: 0, prefix: 1, suffix: 2 }
+        : this.sortOrder === 'suffix-first'
+          ? { suffix: 0, prefix: 1, root: 2 }
+          : { prefix: 0, root: 1, suffix: 2 };
+
+      this.lexicals = lexicals.sort((a, b) =>
+        priority[a.rule] - priority[b.rule] || ruleOrder[a.rule] - ruleOrder[b.rule]
+      );
+      return;
+    }
+
+    const valueFor = (lexical: typeof this.lexicals[number]): string =>
+      this.sortBy === 'word' ? lexical.key : lexical.value;
+    const descending = this.sortOrder === 'alphabetical-desc';
+    const byLength = this.sortOrder === 'length-asc' || this.sortOrder === 'length-desc';
+    const lengthDirection = this.sortOrder === 'length-desc' ? -1 : 1;
+
+    this.lexicals = lexicals.sort((a, b) => {
+      const aValue = valueFor(a);
+      const bValue = valueFor(b);
+      if (byLength) {
+        const lengthDifference = Array.from(aValue).length - Array.from(bValue).length;
+        if (lengthDifference) {
+          return lengthDifference * lengthDirection;
+        }
+      }
+
+      const alphabeticalDifference = this.collator.compare(
+        this.alphabeticCharactersOnly(aValue),
+        this.alphabeticCharactersOnly(bValue)
+      );
+      return descending ? -alphabeticalDifference : alphabeticalDifference;
+    });
+  }
+
+  private alphabeticCharactersOnly(value: string): string {
+    return value.normalize('NFC').replace(/[^\p{L}]/gu, '');
   }
 
   getLexicalDictionary(): Array<{ key: string; rule: MorphemeType; value: string; }> {
@@ -87,6 +194,26 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     return [];
   }
 
+  transliterateWord(word: string): string {
+    return this.language?.transliteration?.(word) ?? '';
+  }
+
+  updateLexical(lexical: typeof this.lexicals[number], input: HTMLInputElement): void {
+    if (!this.bookMetadata || !this.language || !this.currentBook) {
+      return;
+    }
+
+    this.metadataService.updateLexical(
+      this.currentBook,
+      this.bookMetadata,
+      this.language,
+      lexical.key,
+      input.value,
+      lexical.rule
+    );
+    lexical.value = input.value;
+  }
+
   deleteLexical(key: string, rule: MorphemeType): void {
     if (this.bookMetadata) {
       if (rule === 'root') {
@@ -104,7 +231,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       }
     }
 
-    this.lexicals = this.getLexicalDictionary();
+    this.sortLexicals();
   }
 
   cleanUnusedLexical(): void {
@@ -142,9 +269,10 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
       Object.keys(lexicalFoundInText).forEach(lexical => {
         if (!lexicalFoundInText[lexical]) {
           delete bookMetadata.lexical[lexical];
-          this.lexicals[this.lexicals.findIndex(value => value.key === lexical)];
         }
       });
+
+      this.sortLexicals();
     }
   }
 }

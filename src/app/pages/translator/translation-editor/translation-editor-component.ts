@@ -321,7 +321,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .setData({
           bookMetadata,
           bookSource,
-          language: this.languageMetadataRecord[detail.languageSource]
+          language: this.languageMetadataRecord[detail.languageSource],
+          currentBook: { book }
         })
         .build()
         .subscribe({

@@ -1,22 +1,50 @@
-<button class="center" type="button" (click)="cleanUnusedLexical()">clean unused lexical</button>
+<button class="cleanButton" type="button" (click)="cleanUnusedLexical()">clean unused lexical</button>
+
+<div class="sortControls">
+  <label>
+    Sort by
+    <select [ngModel]="sortBy" (ngModelChange)="onSortByChange($event)">
+      <option value="insertion">Insertion order</option>
+      <option value="word">Word</option>
+      <option value="rule">Rule</option>
+      <option value="lexical">Lexical</option>
+    </select>
+  </label>
+
+  <label>
+    Order
+    <select [(ngModel)]="sortOrder" (ngModelChange)="sortLexicals()">
+      @for (option of sortOrderOptions[sortBy]; track option.value) {
+        <option [value]="option.value">{{option.label}}</option>
+      }
+    </select>
+  </label>
+</div>
 
 <div class="wrapper">
   <table border="1" role="presentation">
-  
-    <tr>
-      <th>Word</th>
-      <th>Rule</th>
-      <th>Lexical</th>
-      <th></th>
-    </tr>
-  
+
+    <thead>
+      <tr>
+        <th [attr.colspan]="language?.transliteration ? 2 : 1">Word</th>
+        <th>Rule</th>
+        <th>Lexical</th>
+      </tr>
+    </thead>
+
+    <tbody>
     @for (lexical of lexicals; track $index) {
       <tr>
         <td>{{lexical.key}}</td>
+        @if (language?.transliteration) {
+          <td>{{transliterateWord(lexical.key)}}</td>
+        }
         <td>{{lexical.rule}}</td>
-        <td>{{lexical.value}}</td>
+        <td><input class="lexicalInput" type="text" #lexicalInput [value]="lexical.value"
+          (input)="updateLexical(lexical, lexicalInput)" (change)="sortLexicals()"></td>
         <td><button type="button" (click)="deleteLexical(lexical.key, lexical.rule)">×</button></td>
       </tr>
     }
+    </tbody>
   </table>
 </div>
