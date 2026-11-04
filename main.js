@@ -1,7 +1,72 @@
 const { app, protocol, net, Menu, BrowserWindow, ipcMain, dialog } = require('electron/main');
 const path = require('path');
 const fs = require('fs/promises');
-const { pathToFileURL } = require("url");
+const { fileURLToPath, pathToFileURL } = require('url');
+
+let mainWindow;
+let pendingProjectPath = getProjectPath(process.argv);
+let projectFileListenerReady = false;
+
+function getProjectPath(args) {
+  const projectArgument = args.find(argument => /\.xenoglosproj$/i.test(argument));
+  if (!projectArgument) {
+    return null;
+  }
+
+  const filePath = projectArgument.startsWith('file://')
+    ? fileURLToPath(projectArgument)
+    : path.resolve(projectArgument);
+
+  return path.extname(filePath).toLowerCase() === '.xenoglosproj' ? filePath : null;
+}
+
+function openProjectPath(filePath) {
+  if (projectFileListenerReady && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('open-project-file', filePath);
+  } else {
+    pendingProjectPath = filePath;
+  }
+
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.show();
+    mainWindow.focus();
+  }
+}
+
+const hasSingleInstanceLock = app.requestSingleInstanceLock();
+if (!hasSingleInstanceLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (_, commandLine) => {
+    const filePath = getProjectPath(commandLine);
+    if (filePath) {
+      openProjectPath(filePath);
+    } else if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
+  });
+
+  app.on('open-file', (event, filePath) => {
+    event.preventDefault();
+    if (path.extname(filePath).toLowerCase() === '.xenoglosproj') {
+      openProjectPath(filePath);
+    }
+  });
+}
+
+ipcMain.on('project-file-listener-ready', (event) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    return;
+  }
+
+  projectFileListenerReady = true;
+  if (pendingProjectPath) {
+    const filePath = pendingProjectPath;
+    pendingProjectPath = null;
+    event.sender.send('open-project-file', filePath);
+  }
+});
 
 ipcMain.handle('read-json-file', async (_, fileName) => {
   try {
@@ -125,7 +190,7 @@ function createWindow() {
     ? path.join(__dirname, 'public', 'script.png')
     : path.join(app.getAppPath(), 'public', 'script.png');
 
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     icon: iconPath,
@@ -161,6 +226,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  if (!hasSingleInstanceLock) {
+    return;
+  }
+
   protocol.handle("local", (request) => {
     const filePath = decodeURIComponent(
       request.url.replace("local://", "")

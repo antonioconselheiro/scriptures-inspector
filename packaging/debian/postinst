@@ -1,0 +1,17 @@
+#!/bin/sh
+set -e
+
+mime_dir=/usr/share/mime/packages
+
+cat > "$mime_dir/xenoglosproj.xml" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.scriptures-inspector.xenoglosproj+json">
+    <comment>Scriptures Inspector project</comment>
+    <icon name="application-x-xenoglosproj"/>
+    <glob pattern="*.xenoglosproj"/>
+  </mime-type>
+</mime-info>
+EOF
+install -m 0644 /usr/share/pixmaps/scriptures-inspector.png /usr/share/pixmaps/application-x-xenoglosproj.png
+update-mime-database /usr/share/mime

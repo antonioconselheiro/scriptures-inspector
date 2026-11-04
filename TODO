@@ -23,7 +23,7 @@ TODO
 [ ] - Incluir configuração que permita o software de baixar os repositórios relacionados ao projeto para trabalhar offline, ou então incluir endereços locais alternativos para casos de 404
 [ ] - Criar command line que permita observar os lexicos derivados de uma frase de um projeto para apoiar a validação do projeto por agent via linha de comando
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
-[ ] - Incluir exibição do texto com as configurações de word of god no metadado
+[X] - Incluir exibição do texto com as configurações de word of god no metadado
 [X] - No interlinear colorido, incluir o texto em paralelo de onde estão sendo derivadas as cores
 [X] - Incluir meio de editar o valor do lexico no dialog
 [ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas

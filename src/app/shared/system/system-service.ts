@@ -27,16 +27,32 @@ export class SystemService {
     const selected = await window.api.openProject();
 
     if (typeof selected === 'string') {
-      const project = await readJsonFileFn<any>(selected);
-
-      if (project) {
-        // TODO: incluir validação de schema para json do projeto
-        project.path = selected.replace(/\/index.xenoglosproj$/, '');
-        return Promise.resolve(project);
-      }
+      return this.loadProjectFromPath(selected);
     }
 
-    return Promise.resolve(null);
+    return null;
+  }
+
+  async loadProjectFromPath(filePath: string): Promise<Project | null> {
+    const project = await readJsonFileFn<Omit<Project, 'path'>>(filePath);
+    if (!project) {
+      return null;
+    }
+
+    const lastSeparator = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+    let projectDirectory = '.';
+    if (lastSeparator === 0) {
+      projectDirectory = filePath.slice(0, 1);
+    } else if (lastSeparator === 2 && filePath[1] === ':') {
+      projectDirectory = filePath.slice(0, 3);
+    } else if (lastSeparator > 0) {
+      projectDirectory = filePath.slice(0, lastSeparator);
+    }
+
+    return {
+      ...project,
+      path: projectDirectory
+    };
   }
 
   async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {

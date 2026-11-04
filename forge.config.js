@@ -23,6 +23,12 @@ module.exports = {
         options: {
           icon: iconPath,
           maintainer: 'António Conselheiro',
+          mimeType: ['application/vnd.scriptures-inspector.xenoglosproj+json'],
+          depends: ['shared-mime-info'],
+          scripts: {
+            postinst: path.resolve(__dirname, 'packaging/debian/postinst'),
+            postrm: path.resolve(__dirname, 'packaging/debian/postrm'),
+          },
         },
       },
     },

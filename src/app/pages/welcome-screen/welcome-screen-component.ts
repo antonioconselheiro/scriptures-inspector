@@ -31,15 +31,16 @@ export class WelcomeScreenComponent implements OnInit {
     }
   }
 
-  openProject(): void {
-    this.systemService
-      .loadProject()
-      .then(project => {
-        if (project) {
-          setProjectFn(project);
-          this.redirect(project);
-        }
-      });
+  async openProject(): Promise<void> {
+    try {
+      const project = await this.systemService.loadProject();
+      if (project) {
+        setProjectFn(project);
+        this.redirect(project);
+      }
+    } catch (error) {
+      console.error('Unable to open project:', error);
+    }
   }
 
   createProject(): void {
