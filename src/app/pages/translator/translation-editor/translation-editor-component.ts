@@ -28,9 +28,7 @@ import { SystemService } from '@shared/system/system-service';
 import { debounceTime, Subscription } from 'rxjs';
 import { AddPatternContextMenu } from '../add-pattern-context-menu/add-pattern-context-menu';
 import { ImportFromBookDialog } from '../import-from-book-dialog/import-from-book-dialog';
-import { LexicalDictionaryDialog } from '../lexical-dictionary-dialog/lexical-dictionary-dialog';
-import { PatternsDialog } from '../patterns-dialog/patterns-dialog';
-import { TranslationVariationConfigDialog } from '../translation-variation-config-dialog/translation-variation-config-dialog';
+import { CodexConfigDialog } from '../codex-config-dialog/codex-config-dialog';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
 import { TranslationViewerManager } from './translation-viewer-manager/translation-viewer-manager';
@@ -356,68 +354,47 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     }
   }
 
-  openPatternsDialog(detail: TargetMetadataDetail): void {
-    const book = this.current?.book;
-
-    if (book) {
-      const bookMetadata = this.projectData[detail.target];
-      this.modalService
-        .createModal(PatternsDialog)
-        .setBindToRoute(this.router)
-        .setOutletName('main')
-        .setData({
-          language: detail.languageSource,
-          patterns: bookMetadata.patterns
-        })
-        .build()
-        .subscribe({
-          next: () => {
-            this.systemService.triggerSaveCurrentBookMetadata({ book });
-            this.systemService.triggerSaveCurrentBookInterlinear({ book });
-          }
-        });
-    }
-  }
-
-  openLexicalDictionaryDialog(detail: TargetMetadataDetail): void {
+  openCodexConfigDialog(
+    detail: TargetMetadataDetail,
+    customTranslationsDetails: TargetTranslationMetadataDetail[]
+  ): void {
     const book = this.current?.book;
     const bookSource = this.sourceBookRecord[detail.source];
 
-    if (book && bookSource) {
+    if (book && this.languageMetadataRecord[detail.languageSource]) {
       const bookMetadata = this.projectData[detail.target];
+      const translationDetail = customTranslationsDetails.find(candidate => candidate.source === detail.source);
+      const translationBook = translationDetail ? this.projectData[translationDetail.target] : null;
+      let configsSaved = false;
+      const saveConfigs = (): void => {
+        if (configsSaved) {
+          return;
+        }
+
+        configsSaved = true;
+        this.systemService.triggerSaveCurrentBookMetadata({ book });
+        this.systemService.triggerSaveCurrentBookInterlinear({ book });
+        if (translationBook) {
+          this.systemService.triggerSaveCurrentBookTranslations({ book });
+        }
+      };
+
       this.modalService
-        .createModal(LexicalDictionaryDialog)
+        .createModal(CodexConfigDialog)
         .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
           bookMetadata,
-          bookSource,
-          language: this.languageMetadataRecord[detail.languageSource],
-          currentBook: { book }
+          bookSource: bookSource ?? null,
+          language: this.languageMetadataRecord[detail.languageSource] ?? null,
+          languageSource: detail.languageSource,
+          currentBook: { book },
+          translationBook
         })
         .build()
         .subscribe({
-          next: () => {
-            this.systemService.triggerSaveCurrentBookMetadata({ book });
-            this.systemService.triggerSaveCurrentBookInterlinear({ book });
-          }
-        });
-    }
-  }
-
-  openTranslationVariationsConfigDialog(detail: TargetTranslationMetadataDetail): void {
-    const book = this.current?.book;
-
-    if (book) {
-      const bookMetadata = this.projectData[detail.target];
-      this.modalService
-        .createModal(TranslationVariationConfigDialog)
-        .setBindToRoute(this.router)
-        .setOutletName('main')
-        .setData(bookMetadata)
-        .build()
-        .subscribe({
-          complete: () => this.systemService.triggerSaveCurrentBookTranslations({ book })
+          next: saveConfigs,
+          complete: saveConfigs
         });
     }
   }

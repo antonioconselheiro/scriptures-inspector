@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -15,7 +15,7 @@ import { Subject } from 'rxjs';
 })
 export class TranslationVariationConfigDialog extends ModalableDirective<BookTranslationTarget, boolean> {
 
-  book: BookTranslationTarget | null = null;
+  @Input() book: BookTranslationTarget | null = null;
   form: FormGroup<any>;
 
   override response = new Subject<boolean | void>();

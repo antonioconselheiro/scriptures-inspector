@@ -1,5 +1,5 @@
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Language } from '@domain/language-model';
@@ -20,8 +20,8 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
 
   readonly indexNotFound = -1;
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
-  patterns!: PatternsSerialized;
-  language!: string;
+  @Input() patterns!: PatternsSerialized;
+  @Input() language!: string;
   form: FormGroup<any>;
 
   override response = new Subject<PatternsSerialized | void>();

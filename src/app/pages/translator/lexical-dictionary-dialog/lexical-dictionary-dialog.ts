@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
@@ -31,10 +31,10 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   currentBook: CurrentBook;
 }, boolean> implements OnInit {
 
-  bookSource: SourceBook | null = null;
-  bookMetadata: Book<BookMetadataAttributes, any> | null = null;
-  language: Language | null = null;
-  currentBook: CurrentBook | null = null;
+  @Input() bookSource: SourceBook | null = null;
+  @Input() bookMetadata: Book<BookMetadataAttributes, any> | null = null;
+  @Input() language: Language | null = null;
+  @Input() currentBook: CurrentBook | null = null;
   lexicals: Array<{ key: string; rule: MorphemeType; value: string; }> = [];
   sortBy: SortField = 'insertion';
   sortOrder: SortOrder = 'insertion-asc';

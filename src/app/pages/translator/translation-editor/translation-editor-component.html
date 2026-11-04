@@ -16,38 +16,15 @@
     </fieldset>
   
     <fieldset>
-      <legend>Patterns</legend>
-  
+      <legend>Codex Configs</legend>
+
       <div class="languageButtonGroup">
-        @for (detail of targetMetadataDetails; track $index) {
-          <button type="button" (click)="openPatternsDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-        }
-      </div>
-    </fieldset>
-  
-    <fieldset>
-      <legend>Lexical</legend>
-  
-      <div class="languageButtonGroup">
-        @for (detail of targetMetadataDetails; track $index) {
+        @for (detail of targetMetadataDetails; track detail.source) {
           <button type="button"
-            (click)="openLexicalDictionaryDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
+            (click)="openCodexConfigDialog(detail, customTranslationsDetails)">{{codexMetadataRecord[detail.source].name}}</button>
         }
       </div>
     </fieldset>
-  
-    @if (customTranslationsDetails) {
-      <fieldset>
-        <legend>Translation Variations</legend>
-  
-        <div class="languageButtonGroup">
-          @for (detail of customTranslationsDetails; track $index) {
-            <button type="button"
-              (click)="openTranslationVariationsConfigDialog(detail)">{{codexMetadataRecord[detail.source].name}}</button>
-          }
-        </div>
-      </fieldset>
-    }
   }
 </app-project-header>
 

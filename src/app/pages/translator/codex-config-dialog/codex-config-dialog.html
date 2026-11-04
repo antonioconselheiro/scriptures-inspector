@@ -1,0 +1,28 @@
+<div class="tabs" aria-label="Codex config tabs">
+  <button type="button" [attr.aria-pressed]="activeTab === 'patterns'"
+    (click)="activeTab = 'patterns'">Patterns</button>
+  <button type="button" [attr.aria-pressed]="activeTab === 'lexical'"
+    (click)="activeTab = 'lexical'">Lexical</button>
+  <button type="button" [attr.aria-pressed]="activeTab === 'translationVariations'"
+    (click)="activeTab = 'translationVariations'">Translation Variations</button>
+</div>
+
+@if (activeTab === 'patterns') {
+  <app-patterns-dialog [patterns]="bookMetadata.patterns" [language]="languageSource"></app-patterns-dialog>
+}
+
+@if (activeTab === 'lexical') {
+  <app-lexical-dictionary-dialog
+    [bookMetadata]="bookMetadata"
+    [bookSource]="bookSource"
+    [language]="language"
+    [currentBook]="currentBook"></app-lexical-dictionary-dialog>
+}
+
+@if (activeTab === 'translationVariations') {
+  @if (translationBook) {
+    <app-translation-variation-config-dialog [book]="translationBook"></app-translation-variation-config-dialog>
+  } @else {
+    <p>No translation variations are configured for this codex.</p>
+  }
+}

@@ -1,0 +1,32 @@
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #999;
+  margin-bottom: 1rem;
+}
+
+.tabs button {
+  position: relative;
+  margin-bottom: -1px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #999;
+  background: #e9e9e9;
+  color: #666;
+}
+
+.tabs button + button {
+  margin-left: -1px;
+}
+
+.tabs [aria-pressed="true"] {
+  z-index: 1;
+  border-bottom-color: white;
+  background: white;
+  color: #222;
+  font-weight: bold;
+}
+
+.tabs button:focus-visible {
+  z-index: 2;
+  outline: 2px solid #333;
+  outline-offset: 2px;
+}
