@@ -438,6 +438,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
+          title: 'Import from Book',
           targetMetadataDetails,
           project: project,
           projectData: this.projectData,
@@ -512,6 +513,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .setBindToRoute(this.router)
         .setOutletName('main')
         .setData({
+          title: 'Codex Configuration',
           bookMetadata,
           bookSource: bookSource ?? null,
           language: getProjectLanguageFn(this.project, detail.languageSource),

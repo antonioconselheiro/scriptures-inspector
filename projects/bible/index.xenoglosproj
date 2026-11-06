@@ -4,7 +4,9 @@
     "bible": "https://raw.githubusercontent.com/antonioconselheiro/bible/master/src/repository.json"
   },
   "normalization": {
-    "hebrew": [ "demassoretify" ]
+    "hebrew": [
+      "demassoretify"
+    ]
   },
   "translationViewer": [
     {

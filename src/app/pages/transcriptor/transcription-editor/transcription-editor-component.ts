@@ -202,6 +202,10 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
     this.modalService
       .createModal(DefineTranscriptionDialog)
       .setBindToRoute(this.router)
+      .setData({
+        title: 'Edit Transcription',
+        transcription: artifact.transcription
+      })
       .setOutletName('main')
       .build()
       .subscribe({
@@ -218,6 +222,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
       .createModal(DefineVectorDialog)
       .setBindToRoute(this.router)
       .setData({
+        title: 'Define Vector',
         fragmentImage: this.getImage()
       })
       .setOutletName('main')

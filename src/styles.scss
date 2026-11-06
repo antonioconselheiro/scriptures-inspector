@@ -85,6 +85,12 @@ button {
   cursor: pointer;
 }
 
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
 table {
   contain: layout style paint;
   th {

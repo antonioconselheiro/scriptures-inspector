@@ -11,13 +11,16 @@ import { Subject } from 'rxjs';
   templateUrl: './define-transcription-dialog.html',
   styleUrl: './define-transcription-dialog.scss',
 })
-export class DefineTranscriptionDialog extends ModalableDirective<string, { transcription: string }> {
+export class DefineTranscriptionDialog extends ModalableDirective<{
+  title: string;
+  transcription: string;
+}, { transcription: string }> {
 
   transcription = '';
   override response = new Subject<{ transcription: string } | void>();
 
-  override onInjectData(data: string): void {
-    this.transcription = data;
+  override onInjectData(data: { title: string; transcription: string }): void {
+    this.transcription = data.transcription;
   }
 
   save(): void {

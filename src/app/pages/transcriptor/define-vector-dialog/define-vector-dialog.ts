@@ -17,6 +17,7 @@ import { ArtifactTextEditorComponent } from '../artifact-text-editor';
   styleUrl: './define-vector-dialog.scss',
 })
 export class DefineVectorDialog extends ModalableDirective<{
+  title: string;
   fragmentImage: string
 }, {
   vector: string
@@ -77,7 +78,7 @@ export class DefineVectorDialog extends ModalableDirective<{
     });
   }
 
-  override onInjectData(data: { fragmentImage: string }): void {
+  override onInjectData(data: { title: string; fragmentImage: string }): void {
     readImageBase64(data.fragmentImage)
       .then(base64 => {
         this.fragmentBase64 = base64 || '';

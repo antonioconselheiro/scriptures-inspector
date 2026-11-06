@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   templateUrl: './create-project-dialog.html',
   styleUrl: './create-project-dialog.scss',
 })
-export class CreateProjectDialog extends ModalableDirective<object, void> {
+export class CreateProjectDialog extends ModalableDirective<{ title: string }, void> {
   override response = new Subject<void>();
 
 }

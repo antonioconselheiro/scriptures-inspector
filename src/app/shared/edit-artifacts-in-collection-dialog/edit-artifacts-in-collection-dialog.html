@@ -98,9 +98,13 @@
   </fieldset>
 
   @if (fromFiles.length) {
-    <button type="button" (click)="importArtifacts(collectionFolderEl.value)">Import and Save</button>
+    <div class="dialogActions">
+      <button type="button" (click)="importArtifacts(collectionFolderEl.value)">Import and Save</button>
+    </div>
   } @else if (collectionFolder) {
-    <button type="button" (click)="saveMetadata(collectionFolder)">Save</button>
+    <div class="dialogActions">
+      <button type="button" (click)="saveMetadata(collectionFolder)">Save</button>
+    </div>
   }
 
 </form>

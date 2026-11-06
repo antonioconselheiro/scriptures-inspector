@@ -391,12 +391,12 @@ function updateApplicationMenu(codices = []) {
       {
         label: 'Viewing Translation',
         click: () => sendProjectMenuAction('viewing-translation')
-      },
-      {
-        label: 'Codex Configs',
-        submenu: codexConfigMenuItems
       }
     ]
+  },
+  {
+    label: 'Codex',
+    submenu: codexConfigMenuItems
   },
   {
     label: 'View',

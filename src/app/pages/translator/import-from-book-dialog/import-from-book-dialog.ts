@@ -22,6 +22,7 @@ import { Subject } from 'rxjs';
   styleUrl: './import-from-book-dialog.scss',
 })
 export class ImportFromBookDialog extends ModalableDirective<{
+  title: string,
   targetMetadataDetails: TargetMetadataDetail[],
   project: Project,
   projectData: ProjectData,
@@ -52,6 +53,7 @@ export class ImportFromBookDialog extends ModalableDirective<{
   }
 
   override onInjectData(data: {
+    title: string,
     targetMetadataDetails: TargetMetadataDetail[],
     project: Project,
     projectData: ProjectData,

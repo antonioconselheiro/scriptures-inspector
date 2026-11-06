@@ -5,6 +5,7 @@ import { Language } from '@domain/language-model';
 import { SourceBook } from '@domain/source-book-model';
 
 export interface CodexConfigDialogData {
+  title: string;
   bookMetadata: BookMetadataTarget;
   bookSource: SourceBook | null;
   language: Language | null;

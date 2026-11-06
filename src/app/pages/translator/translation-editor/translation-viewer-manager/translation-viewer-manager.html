@@ -29,6 +29,8 @@
     </select>
   </div>
 
-  <button class="associateButton" type="submit"
-    [disabled]="!associatedToEl.value || !translationEl.value">Associate</button>
+  <div class="dialogActions">
+    <button class="associateButton" type="submit"
+      [disabled]="!associatedToEl.value || !translationEl.value">Associate</button>
+  </div>
 </form>

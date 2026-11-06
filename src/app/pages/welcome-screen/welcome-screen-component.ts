@@ -51,6 +51,7 @@ export class WelcomeScreenComponent implements OnInit {
   createProject(): void {
       this.modalService
         .createModal(CreateProjectDialog)
+        .setData({ title: 'Create Project' })
         .setBindToRoute(this.router)
         .setOutletName('main')
         .build();
