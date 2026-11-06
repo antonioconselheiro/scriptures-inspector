@@ -1,15 +1,31 @@
 import { Directive, Input } from '@angular/core';
 import { BookVerse } from '@domain/book-verse-model';
+import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { ParsedPatterns } from '@domain/parsed-patterns-model';
 import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
+import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { AbstractInspectorDiretive } from './abstract-inspector-directive';
 import { ProjectDataService } from './project/project-data-service';
 
 @Directive()
 export abstract class AbstractTranslatableDirective extends AbstractInspectorDiretive {
+
+  private wordListCache?: {
+    language: Language;
+    text: string;
+    words: Array<{ word: string; separator?: string; }>;
+  };
+
+  private readonly wordMatrixCache: Array<{
+    language: Language;
+    patterns: ParsedPatterns;
+    text: string;
+    words: Array<Word>;
+  }> = [];
 
   protected readonly indexNotFound = -1;
 
@@ -33,7 +49,42 @@ export abstract class AbstractTranslatableDirective extends AbstractInspectorDir
     separator?: string;
   }> {
     const language = this.languageMetadataRecord[languageName];
-    return this.dataService.splitByLanguageWordSeparator(language, text);
+    if (this.wordListCache?.language !== language || this.wordListCache.text !== text) {
+      this.wordListCache = {
+        language,
+        text,
+        words: this.dataService.splitByLanguageWordSeparator(language, text)
+      };
+    }
+
+    return this.wordListCache.words;
+  }
+
+  protected getWordMatrix(
+    languageName: LanguageUnionType,
+    patterns: ParsedPatterns,
+    text: string
+  ): Array<Word> {
+    const language = this.getLanguageAttributes(languageName);
+    const cachedIndex = this.wordMatrixCache.findIndex(cached =>
+      cached.language === language
+      && cached.patterns === patterns
+      && cached.text === text
+    );
+    const cached = this.wordMatrixCache[cachedIndex];
+    if (cachedIndex >= 0 && cached) {
+      this.wordMatrixCache.splice(cachedIndex, 1);
+      this.wordMatrixCache.push(cached);
+      return cached.words;
+    }
+
+    const words = this.dataService.splitIntoMatrix(language, patterns, text);
+    this.wordMatrixCache.push({ language, patterns, text, words });
+    if (this.wordMatrixCache.length > 8) {
+      this.wordMatrixCache.shift();
+    }
+
+    return words;
   }
 
   getViewingTranslations(): Array<{

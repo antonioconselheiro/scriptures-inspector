@@ -20,9 +20,10 @@
         <th rowspan="5">interlinear <span class="interlinearSource">{{origin.structure.source}}</span></th>
         <td [colSpan]="wordList.length" [attr.lang]="languageMetadataRecord[sourceLanguage].label">
           @for (word of wordMatrix; track $index) {
+            @let wordOfGod = isWordOfGod(word);
             @for (segment of word.segments; track segment.index) {
               @if (segment.word.length) {
-                <span [class]="isWordOfGod(word) || isWordOfGodFromOrigin(origin, originWordMatrix, segment.index) ? 'godsaid' : ''">{{segment.word}}</span>
+                <span [class]="wordOfGod || isWordOfGodFromOrigin(origin, originWordMatrix, segment.index) ? 'godsaid' : ''">{{segment.word}}</span>
               }
             }
 

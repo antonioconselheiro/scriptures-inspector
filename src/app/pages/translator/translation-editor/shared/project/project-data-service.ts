@@ -11,6 +11,8 @@ import { PatternSegment } from './pattern-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
 
+const graphemeSegmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+
 @Injectable({
   providedIn: 'root'
 })
@@ -88,16 +90,11 @@ export class ProjectDataService {
     const normalizeWord = (
       original: string
     ): NormalizedWord => {
-      const segmenter = new Intl.Segmenter(
-        undefined,
-        { granularity: 'grapheme' }
-      );
-
       let normalized = '';
 
       const boundaries: number[] = [0];
 
-      for (const grapheme of segmenter.segment(original)) {
+      for (const grapheme of graphemeSegmenter.segment(original)) {
         const originalStart = grapheme.index;
         const originalEnd =
           grapheme.index + grapheme.segment.length;

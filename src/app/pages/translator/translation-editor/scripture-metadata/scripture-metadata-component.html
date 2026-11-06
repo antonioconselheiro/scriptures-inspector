@@ -34,9 +34,10 @@
             <th rowSpan="3">scriptures</th>
             <td [colSpan]="wordListValue.length">
               @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
+                @let wordOfGod = getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex);
                 @for (segment of word.segments; track segment.index) {
                   @if (segment.word.length) {
-                    <span [class]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex) ? 'godsaid' : ''">{{segment.word}}</span>
+                    <span [class]="wordOfGod ? 'godsaid' : ''">{{segment.word}}</span>
                   }
                 }
 

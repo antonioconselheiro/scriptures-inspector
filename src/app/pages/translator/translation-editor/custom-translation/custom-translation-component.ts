@@ -11,6 +11,7 @@ import { BookVerseTranslationTargetVariations } from '@domain/book-verse-transla
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
+import { Language } from '@domain/language-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
@@ -21,7 +22,6 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/translation-word-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
@@ -89,6 +89,13 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   pipeUpdaterController = 0;
 
+  private readonly relatedWordMatrixCache: Array<{
+    language: Language;
+    patterns: ParsedBookMetadata['patterns'];
+    text: string;
+    words: Array<Word>;
+  }> = [];
+
   constructor(
     private cdr: ChangeDetectorRef,
     private dataService: ProjectDataService,
@@ -129,8 +136,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       this.customTranslationService.derivateAllToCustom(
         this.sourceBook,
         this.sourceVerse,
-        getProjectLanguageFn(this.project, this.translationLanguage),
-        getProjectLanguageFn(this.project, this.translationLanguage),
+        this.getLanguageAttributes(this.translationLanguage),
+        this.getLanguageAttributes(this.translationLanguage),
         this.parsedBook,
         this.customTranslation,
         this.current,
@@ -191,7 +198,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
     const isWordOfGodOverriding = this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
-      getProjectLanguageFn(this.project, this.translationLanguage),
+      this.getLanguageAttributes(this.translationLanguage),
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -215,7 +222,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
     if (currentWord && this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
-      getProjectLanguageFn(this.project, this.translationLanguage),
+      this.getLanguageAttributes(this.translationLanguage),
       this.current,
       this.sourceVerse.verse,
       currentWord
@@ -259,9 +266,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       }
 
       const originMetadata = this.projectData[origin.structure.metadataTarget];
-      const originLanguage = getProjectLanguageFn(this.project, origin.language);
-      const originPatterns = this.metadataService.parsePattern(originMetadata.patterns, originLanguage);
-      const originWordMatrix = this.dataService.splitIntoMatrix(originLanguage, originPatterns, originVerse.text);
+      const originLanguage = this.getLanguageAttributes(origin.language);
+      const originBook = this.parseBook(originMetadata, origin.language);
+      const originWordMatrix = this.getRelatedWordMatrix(origin.language, originBook.patterns, originVerse.text);
       const originWord = originWordMatrix.find(word =>
         word.segments.some(segment => segment.index === originWordIndex)
       );
@@ -279,6 +286,31 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     return false;
   }
 
+  private getRelatedWordMatrix(
+    languageName: LanguageUnionType,
+    patterns: ParsedBookMetadata['patterns'],
+    text: string
+  ): Array<Word> {
+    const language = this.getLanguageAttributes(languageName);
+    const cachedIndex = this.relatedWordMatrixCache.findIndex(cached =>
+      cached.language === language && cached.patterns === patterns && cached.text === text
+    );
+    const cached = this.relatedWordMatrixCache[cachedIndex];
+    if (cachedIndex >= 0 && cached) {
+      this.relatedWordMatrixCache.splice(cachedIndex, 1);
+      this.relatedWordMatrixCache.push(cached);
+      return cached.words;
+    }
+
+    const words = this.dataService.splitIntoMatrix(language, patterns, text);
+    this.relatedWordMatrixCache.push({ language, patterns, text, words });
+    if (this.relatedWordMatrixCache.length > 8) {
+      this.relatedWordMatrixCache.shift();
+    }
+
+    return words;
+  }
+
   getScriptureMetadataWordOfGodOverriding(
     wordSpanIndex: number
   ): { checked: boolean, readonly: boolean } {
@@ -289,7 +321,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
     return this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
-      getProjectLanguageFn(this.project, this.translationLanguage),
+      this.getLanguageAttributes(this.translationLanguage),
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -411,7 +443,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
     return this.dataService.castSegmentIntoMetadataIndexSerialized(
-      getProjectLanguageFn(this.project, this.translationLanguage),
+      this.getLanguageAttributes(this.translationLanguage),
       segment
     );
   }
