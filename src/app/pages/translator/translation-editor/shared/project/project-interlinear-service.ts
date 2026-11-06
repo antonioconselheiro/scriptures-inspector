@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { Language } from '@domain/language-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
@@ -117,7 +117,7 @@ export class ProjectInterlinearService {
   }
 
   moveOneWordToAllAssociationsToTheRight(
-    sourceLanguage: LanguageUnionType,
+    sourceLanguage: Language,
     interlinearTarget: InterlinearTarget,
     originSource: string,
     current: CurrentChapter,
@@ -179,7 +179,7 @@ export class ProjectInterlinearService {
   }
 
   returnOneWordToAllAssociationsToTheRight(
-    sourceLanguage: LanguageUnionType,
+    sourceLanguage: Language,
     interlinearTarget: InterlinearTarget,
     originSource: string,
     current: CurrentChapter,
@@ -214,7 +214,7 @@ export class ProjectInterlinearService {
   }
 
   fillSequentiallyAllAssociationsToTheRight(
-    sourceLanguage: LanguageUnionType,
+    sourceLanguage: Language,
     interlinearTarget: InterlinearTarget,
     originSource: string,
     current: CurrentChapter,
@@ -369,7 +369,7 @@ export class ProjectInterlinearService {
   }
 
   getInterlinearWordSegmentSerialized(
-    language: LanguageUnionType,
+    language: Language,
     interlinearTarget: InterlinearTarget,
     originStructureSource: string,
     current: CurrentChapter,

@@ -8,7 +8,7 @@ import { AddPatternContextMenu } from './add-pattern-context-menu';
 })
 export class AddPatternContextMenuTrigger {
 
-  @Input('appAddPatternContextMenuTrigger')
+  @Input({ alias: 'appAddPatternContextMenuTrigger', required: true })
   contextMenu!: AddPatternContextMenu;
 
   @Input({ required: true })

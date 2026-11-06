@@ -63,7 +63,7 @@
         <td [colSpan]="wordList.length">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
-              @let lexical = segment.word | lexical : parsedBook : origin.language : segment.morpheme : pipeUpdaterController;
+              @let lexical = segment.word | lexical : parsedBook : origin.language : segment.morpheme : pipeUpdaterController : project;
               @if (lexical.value.length) {<span [class]="'prisma'+getTranslationColor(origin.structure, segment.index)">{{lexical.value}}</span>&nbsp;}
             }
           }
@@ -75,7 +75,7 @@
             @for (translationSegment of word.segments; track $index) {
               <select
                 #interlinear
-                [appInterlinearToolsContextMenuTrigger]="interlinearToolsRef"
+                [appInterlinearToolsContextMenuTrigger]="interlinearToolsRef" [project]="project"
                 (change)="onChangeInterlinearToBaseScripture(origin.structure, translationSegment.index, translationSegment.word, interlinear.value)"
                 [ngModel]="getInterlinearWordSegmentSerialized(origin.structure, translationSegment.index)"
                 [name]="'translationToSourceInterlinear' + $index"

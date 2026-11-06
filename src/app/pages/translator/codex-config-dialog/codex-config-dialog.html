@@ -8,7 +8,7 @@
 </div>
 
 @if (activeTab === 'patterns') {
-  <app-patterns-dialog [patterns]="bookMetadata.patterns" [language]="languageSource"></app-patterns-dialog>
+  <app-patterns-dialog [patterns]="bookMetadata.patterns" [language]="languageSource" [languageMetadata]="language!"></app-patterns-dialog>
 }
 
 @if (activeTab === 'lexical') {

@@ -2,7 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { DefineFieldMorphemeRuleContextMenu } from './define-field-morpheme-rule-context-menu';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { Project } from '@domain/project-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { MorphemeType } from '@domain/morpheme-type';
 
 @Directive({
@@ -10,7 +11,7 @@ import { MorphemeType } from '@domain/morpheme-type';
 })
 export class DefineFieldMorphemeRuleContextMenuTrigger {
 
-  @Input('appDefineFieldMorphemeRuleContextMenuTrigger')
+  @Input({ alias: 'appDefineFieldMorphemeRuleContextMenuTrigger', required: true })
   contextMenu!: DefineFieldMorphemeRuleContextMenu;
 
   @Input()
@@ -23,6 +24,9 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
   sourceLanguage!: LanguageUnionType;
 
   @Input({ required: true })
+  project!: Project;
+
+  @Input({ required: true })
   word!: string;
 
   @Input({ required: true })
@@ -33,7 +37,7 @@ export class DefineFieldMorphemeRuleContextMenuTrigger {
     event.preventDefault();
 
     if (this.morphemePosition !== 'root') {
-      const normalizeFn = languageMetadataRecord[this.sourceLanguage].normalizeFn || (w => w);
+      const normalizeFn = getProjectLanguageFn(this.project, this.sourceLanguage).normalizeFn || (w => w);
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;
       this.contextMenu.visible = true;

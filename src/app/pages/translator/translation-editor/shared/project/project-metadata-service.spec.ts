@@ -1,5 +1,6 @@
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
+import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
@@ -51,7 +52,7 @@ describe('ProjectMetadataService', () => {
 
     expect(metadataService.getScriptureMetadataWordOfGod(
       bookMetadata,
-      'geez',
+      languageMetadataRecord.geez,
       current,
       1,
       word
@@ -75,7 +76,7 @@ describe('ProjectMetadataService', () => {
     metadataService.setAsWordOfGod(
       true,
       bookMetadata,
-      'geez',
+      languageMetadataRecord.geez,
       current,
       sourceVerse,
       0,
@@ -85,7 +86,7 @@ describe('ProjectMetadataService', () => {
     expect(verses.length).toBe(5);
     expect(metadataService.getScriptureMetadataWordOfGod(
       bookMetadata,
-      'geez',
+      languageMetadataRecord.geez,
       current,
       sourceVerse.verse,
       word

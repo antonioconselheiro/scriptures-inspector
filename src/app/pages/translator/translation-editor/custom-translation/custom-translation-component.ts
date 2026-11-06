@@ -15,11 +15,13 @@ import { LanguageUnionType } from '@domain/language-union-type';
 import { OriginToInterlinear } from '@domain/origin-to-interlinear-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { ProjectData } from '@domain/project-data-model';
+import { Project } from '@domain/project-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/translation-word-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { AbstractInspectorDiretive } from '../shared/abstract-inspector-directive';
 import { ProjectCustomTranslationService } from '../shared/project/project-custom-translation-service';
 import { ProjectDataService } from '../shared/project/project-data-service';
@@ -38,6 +40,9 @@ import { PinRowDirective } from '../pin-row.directive';
   styleUrl: './custom-translation-component.scss'
 })
 export class CustomTranslationComponent extends AbstractInspectorDiretive {
+
+  @Input({ required: true })
+  project!: Project;
 
   @Input({ required: true })
   bookTarget!: Book<BookMetadataAttributes, any>;
@@ -124,8 +129,8 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       this.customTranslationService.derivateAllToCustom(
         this.sourceBook,
         this.sourceVerse,
-        this.languageMetadataRecord[this.translationLanguage],
-        this.translationLanguage,
+        getProjectLanguageFn(this.project, this.translationLanguage),
+        getProjectLanguageFn(this.project, this.translationLanguage),
         this.parsedBook,
         this.customTranslation,
         this.current,
@@ -186,7 +191,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   isCustomTranslationWordOfGod(wordIndex: number): boolean {
     const isWordOfGodOverriding = this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
-      this.translationLanguage,
+      getProjectLanguageFn(this.project, this.translationLanguage),
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -210,7 +215,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     );
     if (currentWord && this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
-      this.translationLanguage,
+      getProjectLanguageFn(this.project, this.translationLanguage),
       this.current,
       this.sourceVerse.verse,
       currentWord
@@ -254,7 +259,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       }
 
       const originMetadata = this.projectData[origin.structure.metadataTarget];
-      const originLanguage = this.languageMetadataRecord[origin.language];
+      const originLanguage = getProjectLanguageFn(this.project, origin.language);
       const originPatterns = this.metadataService.parsePattern(originMetadata.patterns, originLanguage);
       const originWordMatrix = this.dataService.splitIntoMatrix(originLanguage, originPatterns, originVerse.text);
       const originWord = originWordMatrix.find(word =>
@@ -262,7 +267,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
       );
       if (originWord && this.metadataService.getScriptureMetadataWordOfGod(
         originMetadata,
-        origin.language,
+        originLanguage,
         { ...this.current, chapter: originVerseReference.chapter },
         originVerse.verse,
         originWord
@@ -284,7 +289,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
     return this.customTranslationService.getScriptureMetadataWordOfGodOverriding(
       this.sourceBook,
-      this.translationLanguage,
+      getProjectLanguageFn(this.project, this.translationLanguage),
       this.bookTarget,
       this.customTranslation,
       this.interlinear,
@@ -405,7 +410,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment): string {
-    return this.dataService.castSegmentIntoMetadataIndexSerialized(this.translationLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndexSerialized(
+      getProjectLanguageFn(this.project, this.translationLanguage),
+      segment
+    );
   }
 
   cleanInterlinear(): void {

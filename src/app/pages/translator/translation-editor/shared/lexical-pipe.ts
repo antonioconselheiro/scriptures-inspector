@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { Project } from '@domain/project-model';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { ProjectDataService } from './project/project-data-service';
 import { MorphemeType } from '@domain/morpheme-type';
 
@@ -20,11 +21,12 @@ export class LexicalPipe implements PipeTransform {
     book: BookMetadataAttributes | ParsedBookMetadata,
     languageName: LanguageUnionType,
     morpheme: MorphemeType,
-    listenUpdate?: number
+    listenUpdate: number,
+    project: Project
   ): { config: MorphemeType, value: string } {
     listenUpdate;
 
-    return this.dataService.getLexical(book, languageMetadataRecord[languageName], value, morpheme);
+    return this.dataService.getLexical(book, getProjectLanguageFn(project, languageName), value, morpheme);
   }
 
 }

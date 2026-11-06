@@ -23,7 +23,6 @@ TODO
 [ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas
 [ ] - Quando se confirma a deletação de uma coluna de tradução depois de definir o size como 0, o campo que ocupa o novo lugar do deletado fica com size 0
 demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecionar multiplos arrastando e então sincronizar o valor atualizado do que for clicado para todos os outros
-[ ] - Remover ou não a denotação massorética precisa ser algo configurável no projeto
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
 [ ] - Criar página de vizualização, que já observa a estrutura em desenvolvimento como componente final (holy reader), configurável, para validar o aspecto geral do capítulo

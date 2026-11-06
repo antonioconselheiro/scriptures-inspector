@@ -10,7 +10,6 @@ import { BookVerseTranslationTargetVariations } from '@domain/book-verse-transla
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearBookTarget } from '@domain/interlinear-book-target-model';
 import { Language } from '@domain/language-model';
-import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
@@ -108,7 +107,7 @@ export class ProjectCustomTranslationService {
     sourceBook: SourceBook,
     sourceVerse: SourceVerse,
     sourceLanguage: Language,
-    translationLanguage: LanguageUnionType,
+    translationLanguage: Language,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter
@@ -227,7 +226,7 @@ export class ProjectCustomTranslationService {
     sourceBook: SourceBook,
     sourceVerse: SourceVerse,
     sourceLanguage: Language,
-    translationLanguage: LanguageUnionType,
+    translationLanguage: Language,
     parsedBookMetadata: ParsedBookMetadata,
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
@@ -367,7 +366,7 @@ export class ProjectCustomTranslationService {
 
   isWordOfGod(
     sourceBook: SourceBook,
-    translationLanguage: LanguageUnionType,
+    translationLanguage: Language,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
     interlinear: InterlinearBookTarget | undefined,
@@ -462,7 +461,7 @@ export class ProjectCustomTranslationService {
 
   getScriptureMetadataWordOfGodOverriding(
     sourceBook: SourceBook,
-    translationLanguage: LanguageUnionType,
+    translationLanguage: Language,
     bookMetadata: BookMetadataTarget,
     customTranslation: BookTranslationTarget,
     interlinear: InterlinearBookTarget | undefined,

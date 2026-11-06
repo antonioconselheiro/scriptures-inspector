@@ -2,6 +2,8 @@ import { Directive, HostListener, Input } from '@angular/core';
 import { InterlinearToolsContextMenu } from './interlinear-tools-context-menu';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
+import { Project } from '@domain/project-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 
@@ -10,11 +12,14 @@ import { Word } from '@domain/word-model';
 })
 export class InterlinearToolsContextMenuTrigger {
 
-  @Input('appInterlinearToolsContextMenuTrigger')
+  @Input({ alias: 'appInterlinearToolsContextMenuTrigger', required: true })
   contextMenu!: InterlinearToolsContextMenu;
   
   @Input({ required: true })
   sourceLanguage!: LanguageUnionType;
+
+  @Input({ required: true })
+  project!: Project;
   
   @Input({ required: true })
   interlinearTarget!: InterlinearTarget;
@@ -49,7 +54,7 @@ export class InterlinearToolsContextMenuTrigger {
     this.contextMenu.visible = true;
 
     this.contextMenu.contextMenu = this.contextMenu;
-    this.contextMenu.sourceLanguage = this.sourceLanguage;
+    this.contextMenu.sourceLanguage = getProjectLanguageFn(this.project, this.sourceLanguage);
     this.contextMenu.interlinearTarget = this.interlinearTarget;
     this.contextMenu.originSource = this.originSource;
     this.contextMenu.sourceVerse = this.sourceVerse;

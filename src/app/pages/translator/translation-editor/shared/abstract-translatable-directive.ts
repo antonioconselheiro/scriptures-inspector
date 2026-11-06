@@ -1,7 +1,6 @@
 import { Directive, Input } from '@angular/core';
 import { BookVerse } from '@domain/book-verse-model';
 import { LanguageUnionType } from '@domain/language-union-type';
-import { Project } from '@domain/project-model';
 import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
@@ -13,9 +12,6 @@ import { ProjectDataService } from './project/project-data-service';
 export abstract class AbstractTranslatableDirective extends AbstractInspectorDiretive {
 
   protected readonly indexNotFound = -1;
-
-  @Input()
-  abstract project: Project;
 
   @Input()
   abstract structure: ProjectStructureMetadata;

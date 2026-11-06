@@ -33,8 +33,9 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
 
   readonly indexNotFound = -1;
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
-  @Input() patterns!: PatternsSerialized;
-  @Input() language!: string;
+  @Input({ required: true }) patterns!: PatternsSerialized;
+  @Input({ required: true }) language!: string;
+  @Input({ required: true }) languageMetadata!: Language;
   sortedPatterns: Array<{ type: 'prefix' | 'suffix' | 'lexeme'; pattern: string; index: number }> = [];
   sortBy: PatternSortField = 'insertion';
   sortOrder: PatternSortOrder = 'insertion-asc';
@@ -139,7 +140,7 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
     if (this.form.valid) {
       const { type, word } = this.form.value;
 
-      this.patternsService.addPattern(this.patterns, type, this.languageMetadataRecord[this.language], word);
+      this.patternsService.addPattern(this.patterns, type, this.languageMetadata, word);
       this.sortPatterns();
       this.form.reset({ word: '', type: 'prefix' });
     } else {

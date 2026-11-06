@@ -4,8 +4,10 @@ import { Book } from '@domain/book-model';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
+import { Project } from '@domain/project-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
 
@@ -20,6 +22,9 @@ export abstract class AbstractInspectorDiretive {
 
   @Input()
   abstract bookTarget: Book<BookMetadataAttributes, any>;
+
+  @Input({ required: true })
+  abstract project: Project;
 
   readonly languageMetadataRecord = languageMetadataRecord;
 
@@ -41,7 +46,7 @@ export abstract class AbstractInspectorDiretive {
 
     //  lexical
   updateLexical(sourceLanguage: LanguageUnionType, input: HTMLInputElement, segment: WordSegment, morphemeConfigured: 'root' | 'prefix' | 'suffix'): void {
-    const language = this.languageMetadataRecord[sourceLanguage];
+      const language = getProjectLanguageFn(this.project, sourceLanguage);
     this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value, morphemeConfigured);
     input.style.width = `${this.calcFieldSize(segment.word, input.value)}px`;
     this.pipeUpdaterController++;
@@ -57,7 +62,7 @@ export abstract class AbstractInspectorDiretive {
   }
 
   parseBook(book: BookMetadataAttributes, languageName: LanguageUnionType): ParsedBookMetadata {
-    const languageAttributes = this.languageMetadataRecord[languageName];
+    const languageAttributes = getProjectLanguageFn(this.project, languageName);
     const parsedPatterns = this.metadataService.parsePattern(book.patterns, languageAttributes);
 
     return {

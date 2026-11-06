@@ -1,10 +1,8 @@
 import { transliterate as hebrewTransliterateFn } from "hebrew-transliteration";
 import { Language } from "../../domain/language-model";
 import { LanguageUnionType } from "../../domain/language-union-type";
-import { demassoretifierFn } from "./demassoretifier-fn";
 import { transliterate } from 'transliteration';
 import { hebrewGematriaFn } from "./hebrew-gematria-fn";
-import { massoretifierFn } from "./massoretifier-fn";
 import { paleoHebrewSpellingFn } from "./paleo-hebrew-spelling-fn";
 import { samaritanSpellingFn } from './samaritan-spelling-fn';
 import { squareHebrewSpellingFn } from './square-hebrew-spelling-fn';
@@ -40,8 +38,6 @@ export const languageMetadataRecord: {
         parse: (text: string) => paleoHebrewSpellingFn(text)
       }
     ],
-    normalizeFn: (text: string) => demassoretifierFn(text),
-    prefetchMatcherFn: (text: string) => massoretifierFn(text),
     externalDictionaryLink: 'https://hebraico.pro.br/r/bibliainterlinear/texto.asp?g=1%2C2&gb=1e2%2C2&s=GENESIS&p=1&sa=s'
   },
   'samaritan': {

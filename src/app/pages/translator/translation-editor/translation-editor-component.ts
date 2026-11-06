@@ -18,6 +18,7 @@ import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { TargetTranslationMetadataDetail } from '@domain/target-translation-metadata-detail-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
 import { PendingLexiconNavigationToolbox } from '@shared/pending-lexicon-navigation-toolbox/pending-lexicon-navigation-toolbox';
 import { getProjectSourcesFn } from '@shared/project/get-project-sources-fn';
@@ -488,7 +489,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     const book = this.current?.book;
     const bookSource = this.sourceBookRecord[detail.source];
 
-    if (book && this.languageMetadataRecord[detail.languageSource]) {
+    if (book && this.project && this.languageMetadataRecord[detail.languageSource]) {
       const bookMetadata = this.projectData[detail.target];
       const translationDetail = customTranslationsDetails.find(candidate => candidate.source === detail.source);
       const translationBook = translationDetail ? this.projectData[translationDetail.target] : null;
@@ -513,7 +514,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         .setData({
           bookMetadata,
           bookSource: bookSource ?? null,
-          language: this.languageMetadataRecord[detail.languageSource] ?? null,
+          language: getProjectLanguageFn(this.project, detail.languageSource),
           languageSource: detail.languageSource,
           currentBook: { book },
           translationBook

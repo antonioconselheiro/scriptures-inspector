@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
-import { LanguageUnionType } from '@domain/language-union-type';
+import { Language } from '@domain/language-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 import { ProjectInterlinearService } from '../translation-editor/shared/project/project-interlinear-service';
@@ -24,7 +24,7 @@ export class InterlinearToolsContextMenu {
   @Input({ required: true })
   current!: CurrentChapter;
   contextMenu!: InterlinearToolsContextMenu;
-  sourceLanguage!: LanguageUnionType;
+  sourceLanguage!: Language;
   interlinearTarget!: InterlinearTarget;
   originSource!: string;
   sourceVerse!: SourceVerse;

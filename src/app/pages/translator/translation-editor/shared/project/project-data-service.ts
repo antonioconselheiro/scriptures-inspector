@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BookMetadataAttributesLexicalModel } from '@domain/book-metadata-attributes-lexical-model';
 import { InterlinearBookChapterVerseWordTarget } from '@domain/interlinear-book-chapter-verse-word-target-model';
 import { Language } from '@domain/language-model';
-import { LanguageUnionType } from '@domain/language-union-type';
 import { MorphemeType } from '@domain/morpheme-type';
 import { NormalizedWord } from './normalized-word-model';
 import { ParsedPatterns } from '@domain/parsed-patterns-model';
@@ -11,7 +10,6 @@ import { PatternMatch } from './pattern-match-model';
 import { PatternSegment } from './pattern-segment-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
-import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 
 @Injectable({
   providedIn: 'root'
@@ -19,18 +17,18 @@ import { languageMetadataRecord } from '@shared/language-metadata/language-metad
 export class ProjectDataService {
 
   castSegmentIntoMetadataIndexSerialized(
-    language: LanguageUnionType,
+    language: Language,
     segment: WordSegment
   ): string {
-    const word = languageMetadataRecord[language].normalizeFn && languageMetadataRecord[language].normalizeFn(segment.word) || segment.word;
+    const word = language.normalizeFn ? language.normalizeFn(segment.word) : segment.word;
     return `${segment.index}-${word}`;
   }
 
   castInterlinearWordTargetIntoMetadataIndexSerialized(
-    language: LanguageUnionType,
+    language: Language,
     interlinearMetadata: InterlinearBookChapterVerseWordTarget
   ): string {
-    const word = languageMetadataRecord[language].normalizeFn && languageMetadataRecord[language].normalizeFn(interlinearMetadata.originWord) || interlinearMetadata.originWord;
+    const word = language.normalizeFn ? language.normalizeFn(interlinearMetadata.originWord) : interlinearMetadata.originWord;
     return `${interlinearMetadata.originIndex}-${word}`;
   }
 

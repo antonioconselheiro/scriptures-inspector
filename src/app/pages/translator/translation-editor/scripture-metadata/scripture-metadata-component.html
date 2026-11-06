@@ -138,10 +138,10 @@
           @for (word of wordMatrixValue; track $index) {
           <td class="fieldsLexical">
             @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController : project;
               <input type="text" [name]="'fieldLexical' + segment.index" [attr.aria-label]="'Lexical for ' + segment.word"
                 [placeholder]="segment.word" #fieldLexical
-                [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook"
+                [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook" [project]="project"
                 [morphemePosition]="segment.morpheme" [morphemeConfigured]="lexical.config" [sourceLanguage]="sourceLanguage"
                 [value]="lexical.value" [class]="lexical.config" [style.width.px]="calcFieldSize(segment.word, lexical.value)"
                 (input)="updateLexical(sourceLanguage, fieldLexical, segment, lexical.config)"
@@ -157,7 +157,7 @@
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController;
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController : project;
                 @if (lexical.value.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical.value}}</span>&nbsp;}
               }
             }
@@ -239,7 +239,7 @@
   </div>
 
   @if (customTranslation) {
-    <app-custom-translation-component [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
+    <app-custom-translation-component [project]="project" [bookTarget]="bookTarget" [translationLanguage]="sourceLanguage"
       [current]="current" [sourceBook]="sourceBook" [parsedBook]="parsedBook" [sourceVerse]="sourceVerse"
       [wordMatrix]="wordMatrixValue" [customTranslation]="customTranslation"
       [projectData]="projectData" [sourceBookRecord]="sourceBookRecord"

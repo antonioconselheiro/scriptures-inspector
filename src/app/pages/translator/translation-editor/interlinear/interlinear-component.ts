@@ -19,6 +19,7 @@ import { TargetTranslationMetadataDetail } from '@domain/target-translation-meta
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
 import { WordSegment } from '@domain/word-segment-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { DefineFieldMorphemeRuleContextMenu } from '../../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
@@ -131,7 +132,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   isWordOfGod(word: Word): boolean {
     return this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
-      this.sourceLanguage,
+      getProjectLanguageFn(this.project, this.sourceLanguage),
       this.current,
       this.sourceVerse.verse,
       word
@@ -188,7 +189,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
     return this.metadataService.getScriptureMetadataWordOfGod(
       this.projectData[origin.structure.metadataTarget],
-      origin.language,
+      getProjectLanguageFn(this.project, origin.language),
       { ...this.current, chapter: originVerseReference.chapter },
       originVerse.verse,
       { segments: [originSegment] }
@@ -196,7 +197,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   }
 
   splitIntoMatrix(language: LanguageUnionType, patterns: ParsedPatterns, sourceVerse: SourceVerse): Array<Word> {
-    return this.dataService.splitIntoMatrix(this.languageMetadataRecord[language], patterns, sourceVerse.text);
+    return this.dataService.splitIntoMatrix(getProjectLanguageFn(this.project, language), patterns, sourceVerse.text);
   }
 
   onChangeInterlinearToBaseScripture(
@@ -218,7 +219,7 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
 
   getInterlinearWordSegmentSerialized(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear, wordIndex: number): string {
     return this.interlinearService.getInterlinearWordSegmentSerialized(
-      this.sourceLanguage,
+      getProjectLanguageFn(this.project, this.sourceLanguage),
       this.interlinearTarget,
       originStructure.source,
       this.current,
@@ -228,7 +229,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
   }
 
   castSegmentIntoMetadataIndex(segment: WordSegment) {
-    return this.dataService.castSegmentIntoMetadataIndexSerialized(this.sourceLanguage, segment);
+    return this.dataService.castSegmentIntoMetadataIndexSerialized(
+      getProjectLanguageFn(this.project, this.sourceLanguage),
+      segment
+    );
   }
 
   cleanTranslationInterlinear(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear): void {

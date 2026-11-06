@@ -16,6 +16,7 @@ import { ProjectStructureMetadata } from '@domain/project-structure-metadata-mod
 import { SourceBook } from '@domain/source-book-model';
 import { TranslationViewing } from '@domain/translation-viewing-model';
 import { Word } from '@domain/word-model';
+import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { SystemService } from '@shared/system/system-service';
 import { AddPatternContextMenu } from '../../add-pattern-context-menu/add-pattern-context-menu';
 import { AddPatternContextMenuTrigger } from '../../add-pattern-context-menu/add-pattern-context-menu-trigger';
@@ -172,7 +173,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   }
 
   splitIntoMatrix(patterns: ParsedPatterns, text: string): Array<Word> {
-    const language = this.languageMetadataRecord[this.sourceLanguage];
+    const language = getProjectLanguageFn(this.project, this.sourceLanguage);
     return this.dataService.splitIntoMatrix(language, patterns, text);
   }
 
@@ -196,7 +197,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
 
     this.metadataService.removeUnusedMetadata(
       this.bookTarget,
-      this.sourceLanguage,
+      getProjectLanguageFn(this.project, this.sourceLanguage),
       this.current,
       this.sourceVerse,
       this.verseIndex,
@@ -209,7 +210,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
       this.metadataService.setAsWordOfGod(
         input.checked,
         this.bookTarget,
-        this.sourceLanguage,
+        getProjectLanguageFn(this.project, this.sourceLanguage),
         this.current,
         this.sourceVerse,
         this.verseIndex,
@@ -276,7 +277,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
     const word: Word = wordMatrix[wordIndex];
     return this.metadataService.getScriptureMetadataWordOfGod(
       this.bookTarget,
-      this.sourceLanguage,
+      getProjectLanguageFn(this.project, this.sourceLanguage),
       this.current,
       this.sourceVerse.verse,
       word
