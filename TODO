@@ -17,12 +17,10 @@ TODO
 [ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença para situações que envolvem nomes, como Jarede
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
 [ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
-[ ] - Ter certeza que está salvando após uma alteração seguida da troca de uma página e outra
 [ ] - Incluir configuração que permita o software de baixar os repositórios relacionados ao projeto para trabalhar offline, ou então incluir endereços locais alternativos para casos de 404
-[ ] - Criar command line que permita observar os lexicos derivados de uma frase de um projeto para apoiar a validação do projeto por agent via linha de comando
+[ ] - (CLI) Criar command line que permita observar os lexicos derivados de uma frase de um projeto para apoiar a validação do projeto por agent via linha de comando
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas
-[ ] - Iniciar sempre com word of god e depois somente a versão prismada
 [ ] - Quando se confirma a deletação de uma coluna de tradução depois de definir o size como 0, o campo que ocupa o novo lugar do deletado fica com size 0
 demorado, poderia haver uma forma de selecionar rapidamente muitos, como selecionar multiplos arrastando e então sincronizar o valor atualizado do que for clicado para todos os outros
 [ ] - Remover ou não a denotação massorética precisa ser algo configurável no projeto

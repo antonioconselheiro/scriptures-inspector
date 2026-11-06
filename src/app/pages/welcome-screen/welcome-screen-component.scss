@@ -2,10 +2,24 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 h1 {
   text-align: center;
+}
+
+.welcome-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.welcome-branding img {
+  width: 72px;
+  height: 92px;
+  object-fit: contain;
 }
 
 button {
