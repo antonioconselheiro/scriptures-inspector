@@ -4,6 +4,7 @@ declare global {
       initializeProjectOpening(): Promise<string | null>;
       onProjectFileOpened(callback: (filePath: string) => void): void;
       updateCodexConfigMenu(codices: Array<{ source: string; label: string }>): Promise<void>;
+      maximizeWindow(): void;
       onOpenCodexConfig(callback: (source: string) => void): () => void;
       onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project') => void): () => void;
       onToggleToolbox(callback: (
@@ -17,8 +18,6 @@ declare global {
         textSizeController: boolean;
       }>;
       applicationStartupReady(maximizeWindow?: boolean): void;
-      onStartupWindowMaximized(callback: () => void): () => void;
-      startupRenderComplete(): void;
       readImageBase64(filePath: string): Promise<string | null>;
       readJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;

@@ -17,7 +17,6 @@ let projectFileListenerReady = false;
 let mainWindowReady = false;
 let applicationStartupReady = false;
 let maximizeMainWindowOnStartup = false;
-let startupMaximizeInProgress = false;
 let startupMaximizeListener = null;
 
 function getProjectPath(args) {
@@ -37,7 +36,6 @@ function openProjectPath(filePath) {
   pendingProjectPath = filePath;
   applicationStartupReady = false;
   maximizeMainWindowOnStartup = false;
-  startupMaximizeInProgress = false;
   if (startupMaximizeListener && mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.removeListener('maximize', startupMaximizeListener);
   }
@@ -61,16 +59,14 @@ function showMainWindow() {
 
   if (maximizeMainWindowOnStartup) {
     maximizeMainWindowOnStartup = false;
-    startupMaximizeInProgress = true;
 
     if (mainWindow.isMaximized()) {
-      mainWindow.showInactive();
-      mainWindow.webContents.send('startup-window-maximized');
+      revealMainWindow();
     } else {
       startupMaximizeListener = () => {
         startupMaximizeListener = null;
-        if (startupMaximizeInProgress && mainWindow && !mainWindow.isDestroyed()) {
-          mainWindow.webContents.send('startup-window-maximized');
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          revealMainWindow();
         }
       };
       mainWindow.once('maximize', startupMaximizeListener);
@@ -89,13 +85,13 @@ function showMainWindow() {
 }
 
 function revealMainWindow() {
-  if (splashWindow && !splashWindow.isDestroyed()) {
-    splashWindow.close();
-    splashWindow = null;
-  }
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.show();
     mainWindow.focus();
+  }
+  if (splashWindow && !splashWindow.isDestroyed()) {
+    splashWindow.close();
+    splashWindow = null;
   }
 }
 
@@ -167,6 +163,20 @@ function sendToolboxVisibility(toolbox, visible) {
   }
 }
 
+ipcMain.on('maximize-window', event => {
+  if (!mainWindow || event.sender !== mainWindow.webContents || mainWindow.isDestroyed()) {
+    return;
+  }
+
+  if (mainWindow.isMinimized()) {
+    mainWindow.restore();
+  }
+
+  if (!mainWindow.isMaximized()) {
+    mainWindow.maximize();
+  }
+});
+
 ipcMain.on('application-startup-ready', (event, maximizeWindow) => {
   if (!mainWindow || event.sender !== mainWindow.webContents) {
     return;
@@ -175,15 +185,6 @@ ipcMain.on('application-startup-ready', (event, maximizeWindow) => {
   maximizeMainWindowOnStartup = maximizeWindow === true;
   applicationStartupReady = true;
   showMainWindow();
-});
-
-ipcMain.on('startup-render-complete', event => {
-  if (!mainWindow || event.sender !== mainWindow.webContents || !startupMaximizeInProgress) {
-    return;
-  }
-
-  startupMaximizeInProgress = false;
-  revealMainWindow();
 });
 
 ipcMain.handle('read-json-file', async (_, fileName) => {
@@ -322,6 +323,7 @@ function showSplash() {
     frame: false,
     resizable: false,
     center: true,
+    alwaysOnTop: true,
     skipTaskbar: true,
     backgroundColor: '#f7f5f0',
     icon: iconPath,

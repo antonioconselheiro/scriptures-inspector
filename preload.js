@@ -20,13 +20,8 @@ contextBridge.exposeInMainWorld('api', {
     return () => ipcRenderer.removeListener('toggle-toolbox', listener);
   },
   getToolboxVisibility: () => ipcRenderer.invoke('get-toolbox-visibility'),
+  maximizeWindow: () => ipcRenderer.send('maximize-window'),
   applicationStartupReady: (maximizeWindow) => ipcRenderer.send('application-startup-ready', maximizeWindow),
-  onStartupWindowMaximized: (callback) => {
-    const listener = () => callback();
-    ipcRenderer.on('startup-window-maximized', listener);
-    return () => ipcRenderer.removeListener('startup-window-maximized', listener);
-  },
-  startupRenderComplete: () => ipcRenderer.send('startup-render-complete'),
   readImageBase64: (filePath) => ipcRenderer.invoke('read-image-base64', filePath),
   readJsonFile: (path) => ipcRenderer.invoke('read-json-file', path),
   writeJsonFile: (path, data) => ipcRenderer.invoke('write-json-file', path, data),

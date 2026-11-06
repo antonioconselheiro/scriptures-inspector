@@ -27,7 +27,9 @@ export class WelcomeScreenComponent implements OnInit {
   ngOnInit(): void {
     const project = getProjectFn();
     if (project) {
-      this.redirect(project);
+      void this.redirect(project).catch(error => {
+        console.error('Unable to redirect to project:', error);
+      });
     }
   }
 
@@ -35,8 +37,11 @@ export class WelcomeScreenComponent implements OnInit {
     try {
       const project = await this.systemService.loadProject();
       if (project) {
+        window.api.maximizeWindow();
         setProjectFn(project);
-        this.redirect(project);
+        void this.redirect(project).catch(error => {
+          console.error('Unable to redirect to project:', error);
+        });
       }
     } catch (error) {
       console.error('Unable to open project:', error);
@@ -52,16 +57,17 @@ export class WelcomeScreenComponent implements OnInit {
         //  TODO: redirecionar para o editor?
   }
 
-  redirect(project: Project): void {
+  redirect(project: Project): Promise<boolean> {
     const [book] = Object.keys(project.target.books || {});
     if (book) {
       const path = [ 'translator', 'book', book, 'chapter', 1 ];
       console.log(`[navigate]`, path.join('/'));
 
       LoadingObservable.startLoading();
-      this.router.navigate(path)
-        .catch(e => console.error(e))
+      return this.router.navigate(path)
         .finally(() => LoadingObservable.stopLoading());
     }
+
+    return Promise.resolve(false);
   }
 }

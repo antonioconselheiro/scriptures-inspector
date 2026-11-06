@@ -28,7 +28,6 @@ export class App implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private removeToolboxListener: (() => void) | null = null;
   private removeProjectMenuListener: (() => void) | null = null;
-  private removeStartupWindowMaximizedListener: (() => void) | null = null;
   loading: LoadingState = false;
 
   constructor(
@@ -56,9 +55,6 @@ export class App implements OnInit, OnDestroy {
         });
       }
     });
-    this.removeStartupWindowMaximizedListener = window.api.onStartupWindowMaximized(() => {
-      void this.notifyStartupRenderCompleteAfterFrames();
-    });
     window.api.onProjectFileOpened(filePath => {
       void this.openProjectFile(filePath);
     });
@@ -68,7 +64,6 @@ export class App implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.removeToolboxListener?.();
     this.removeProjectMenuListener?.();
-    this.removeStartupWindowMaximizedListener?.();
     this.subscriptions.unsubscribe();
   }
 
@@ -87,7 +82,8 @@ export class App implements OnInit, OnDestroy {
     try {
       const filePath = await window.api.initializeProjectOpening();
       if (filePath) {
-        maximizeWindow = await this.loadProjectAndNavigate(filePath);
+        maximizeWindow = true;
+        await this.loadProjectAndNavigate(filePath);
       } else {
         await this.navigateToWelcome();
       }
@@ -104,9 +100,9 @@ export class App implements OnInit, OnDestroy {
   }
 
   private async openProjectFile(filePath: string): Promise<void> {
-    let maximizeWindow = false;
+    const maximizeWindow = true;
     try {
-      maximizeWindow = await this.loadProjectAndNavigate(filePath);
+      await this.loadProjectAndNavigate(filePath);
     } catch (error) {
       console.error('Unable to open project passed to the running application:', error);
       try {
@@ -126,14 +122,7 @@ export class App implements OnInit, OnDestroy {
     window.api.applicationStartupReady(maximizeWindow);
   }
 
-  private async notifyStartupRenderCompleteAfterFrames(): Promise<void> {
-    await new Promise<void>(resolve => {
-      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-    });
-    window.api.startupRenderComplete();
-  }
-
-  private async loadProjectAndNavigate(filePath: string): Promise<boolean> {
+  private async loadProjectAndNavigate(filePath: string): Promise<void> {
     const project: Project | null = await this.systemService.loadProjectFromPath(filePath);
     if (!project) {
       throw new Error(`No project data found in "${filePath}"`);
@@ -148,7 +137,6 @@ export class App implements OnInit, OnDestroy {
     if (!navigated) {
       throw new Error(`Unable to navigate to "${route}"`);
     }
-    return Boolean(book);
   }
 
   private async navigateToWelcome(): Promise<void> {
