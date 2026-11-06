@@ -1,5 +1,5 @@
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Language } from '@domain/language-model';
@@ -29,7 +29,7 @@ type PatternSortOrder =
   templateUrl: './patterns-dialog.html',
   styleUrl: './patterns-dialog.scss'
 })
-export class PatternsDialog extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> {
+export class PatternsDialog extends ModalableDirective<{ language: string, patterns: PatternsSerialized }, PatternsSerialized> implements OnChanges {
 
   readonly indexNotFound = -1;
   languageMetadataRecord: Record<string, Language> = languageMetadataRecord;
@@ -80,6 +80,12 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
     this.patterns = data.patterns;
     this.language = data.language;
     this.sortPatterns();
+  }
+
+  ngOnChanges(): void {
+    if (this.patterns) {
+      this.sortPatterns();
+    }
   }
 
   onSortByChange(sortBy: PatternSortField): void {
