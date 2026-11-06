@@ -8,8 +8,10 @@
   right: 1rem;
   bottom: 1rem;
   left: 1rem;
+  display: flex;
+  flex-direction: column;
   max-height: 40vh;
-  overflow: auto;
+  overflow: hidden;
   border: 1px solid rgb(160 140 100 / 45%);
   border-radius: 0.5rem;
   background: rgb(255 250 235 / 96%);
@@ -20,13 +22,50 @@
   display: none !important;
 }
 
+.pinnedRowsHeader {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  padding: 0.25rem 0.4rem;
+}
+
+.pinnedRowsClearButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0.1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: #5e5546;
+  cursor: pointer;
+
+  &:hover {
+    background: rgb(160 140 100 / 18%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 1px;
+  }
+
+  svg {
+    display: block;
+  }
+}
+
 .pinnedRowsViewport {
-  width: max-content;
-  min-width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 
 table {
-  width: 100%;
+  width: max-content;
+  min-width: 100%;
   border-collapse: collapse;
 }
 
