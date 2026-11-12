@@ -1,0 +1,115 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "verses": [
+        {
+          "verse": 1,
+          "text": "",
+          "variations": {},
+          "metadata": []
+        }
+      ]
+    },
+    {
+      "chapter": 2,
+      "verses": [
+        null,
+        null,
+        null,
+        {
+          "verse": 4,
+          "text": "Este é o livro gênese, quando houve céu e terra; dia no qual criou o Deus o Céu e a terra",
+          "variations": {},
+          "metadata": [
+            {
+              "size": 6,
+              "value": "0-αὕτη"
+            },
+            {
+              "size": 1,
+              "value": "1-ἡ"
+            },
+            {
+              "size": 5,
+              "value": "2-βίβλος"
+            },
+            {
+              "size": 6,
+              "value": "3-γενέσεως"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 6,
+              "value": "7-ὅτε"
+            },
+            {
+              "size": 5,
+              "value": "8-ἐγένετο"
+            },
+            {
+              "size": 3,
+              "value": "4-οὐρανοῦ"
+            },
+            {
+              "size": 1,
+              "value": "5-καὶ"
+            },
+            {
+              "size": 5,
+              "value": "6-γῆς"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 3,
+              "value": "10-ἡμέρᾳ"
+            },
+            {
+              "size": 7,
+              "value": "9-ᾗ"
+            },
+            {
+              "size": 5,
+              "value": "11-ἐποίησεν"
+            },
+            {
+              "size": 1,
+              "value": "12-ὁ"
+            },
+            {
+              "size": 4,
+              "value": "13-θεὸς"
+            },
+            {
+              "size": 1,
+              "value": "14-τὸν"
+            },
+            {
+              "size": 3,
+              "value": "15-οὐρανὸν"
+            },
+            {
+              "size": 1,
+              "value": "16-καὶ"
+            },
+            {
+              "size": 1,
+              "value": "17-τὴν"
+            },
+            {
+              "size": 5,
+              "value": "18-γῆν"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variations": {}
+}

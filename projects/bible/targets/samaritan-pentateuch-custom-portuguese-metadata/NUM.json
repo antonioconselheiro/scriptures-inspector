@@ -1,0 +1,15 @@
+{
+  "chapters": [],
+  "patterns": {
+    "prefix": [
+      "H"
+    ],
+    "suffix": [],
+    "lexeme": []
+  },
+  "lexical": {
+    "BDLX": {
+      "value": "bdélio"
+    }
+  }
+}

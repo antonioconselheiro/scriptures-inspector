@@ -1,0 +1,332 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "verses": [
+        {
+          "verse": 1,
+          "text": "",
+          "variations": {},
+          "metadata": []
+        }
+      ]
+    },
+    {
+      "chapter": 2,
+      "verses": [
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 5,
+          "text": "E cada verdejante [silvestre antes de existir na terra e cada verdejante da] terra antes de brotar, porque não choveu Senhor do Domínio sobre terra antes de haver criado descendente do que vive.",
+          "variations": {},
+          "metadata": [
+            {
+              "size": 1,
+              "value": "0-ወ"
+            },
+            {
+              "size": 4,
+              "value": "1-ኵሉ"
+            },
+            {
+              "size": 10,
+              "value": "2-ኀመልማለ"
+            },
+            {
+              "size": 1,
+              "value": "3-["
+            },
+            {
+              "size": 9,
+              "value": "4-ሐቅል"
+            },
+            {
+              "size": 5,
+              "value": "6-ቅድመ"
+            },
+            {
+              "size": 2,
+              "value": "5-እም"
+            },
+            {
+              "size": 7,
+              "value": "7-ይኩን"
+            },
+            {
+              "size": 2,
+              "value": "8-በ"
+            },
+            {
+              "size": 5,
+              "value": "9-ምድር"
+            },
+            {
+              "size": 1,
+              "value": "10-ወ"
+            },
+            {
+              "size": 4,
+              "value": "11-ኵሉ"
+            },
+            {
+              "size": 10,
+              "value": "12-ኀመልማለ"
+            },
+            {
+              "size": 2,
+              "value": ""
+            },
+            {
+              "size": 1,
+              "value": "13-]"
+            },
+            {
+              "size": 5,
+              "value": "14-ምድር"
+            },
+            {
+              "size": 5,
+              "value": "16-ቅድመ"
+            },
+            {
+              "size": 2,
+              "value": "15-እም"
+            },
+            {
+              "size": 6,
+              "value": "17-ይብቈል"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 6,
+              "value": "18-እስመ"
+            },
+            {
+              "size": 3,
+              "value": "19-ኢ"
+            },
+            {
+              "size": 6,
+              "value": "20-ያዝነመ"
+            },
+            {
+              "size": 17,
+              "value": "21-እግዚአብሔር"
+            },
+            {
+              "size": 5,
+              "value": "22-ዲበ"
+            },
+            {
+              "size": 5,
+              "value": "23-ምድር"
+            },
+            {
+              "size": 5,
+              "value": "25-ቅድመ"
+            },
+            {
+              "size": 2,
+              "value": "24-እም"
+            },
+            {
+              "size": 5,
+              "value": "27-ት"
+            },
+            {
+              "size": 4,
+              "value": "28-ፈጠር"
+            },
+            {
+              "size": 2,
+              "value": "26-ይ"
+            },
+            {
+              "size": 11,
+              "value": "29-እጓለ"
+            },
+            {
+              "size": 6,
+              "value": "30-እመ"
+            },
+            {
+              "size": 4,
+              "value": "31-ሕያው"
+            },
+            {
+              "size": 1,
+              "value": "32-።"
+            }
+          ]
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 23,
+          "text": "E disse Adão: \"Esta é osso do meu osso e carne da minha carne; desta qual será ela também minha varoa porque dentre [varão] saiu ela\".",
+          "variations": {},
+          "metadata": [
+            {
+              "size": 1,
+              "value": "0-ወ"
+            },
+            {
+              "size": 3,
+              "value": "2-ቤ"
+            },
+            {
+              "size": 2,
+              "value": "1-ይ"
+            },
+            {
+              "size": 4,
+              "value": "3-አዳም"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 4,
+              "value": "4-ዝንቱ"
+            },
+            {
+              "size": 1,
+              "value": "5-ውእቱ"
+            },
+            {
+              "size": 4,
+              "value": "6-ዐጽም"
+            },
+            {
+              "size": 2,
+              "value": "7-እም"
+            },
+            {
+              "size": 3,
+              "value": "9-የ"
+            },
+            {
+              "size": 4,
+              "value": "8-ዐጽም"
+            },
+            {
+              "size": 1,
+              "value": "10-ወ"
+            },
+            {
+              "size": 5,
+              "value": "11-ሥጋ"
+            },
+            {
+              "size": 2,
+              "value": "12-እም"
+            },
+            {
+              "size": 5,
+              "value": "14-የ"
+            },
+            {
+              "size": 5,
+              "value": "13-ሥጋ"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 5,
+              "value": "15-ዛቲ"
+            },
+            {
+              "size": 5,
+              "value": "16-ለ"
+            },
+            {
+              "size": 4,
+              "value": "17-ትኩ"
+            },
+            {
+              "size": 3,
+              "value": "18-ነ"
+            },
+            {
+              "size": 6,
+              "value": "19-ኒ"
+            },
+            {
+              "size": 5,
+              "value": "21-የ"
+            },
+            {
+              "size": 5,
+              "value": "20-ብእሲት"
+            },
+            {
+              "size": 6,
+              "value": "22-እስመ"
+            },
+            {
+              "size": 6,
+              "value": "23-እምታ"
+            },
+            {
+              "size": 1,
+              "value": "24-["
+            },
+            {
+              "size": 5,
+              "value": "25-ብእሲ"
+            },
+            {
+              "size": 1,
+              "value": "26-]"
+            },
+            {
+              "size": 4,
+              "value": "27-ወጽአት"
+            },
+            {
+              "size": 3,
+              "value": "28-ይእቲ"
+            },
+            {
+              "size": 1,
+              "value": ""
+            },
+            {
+              "size": 1,
+              "value": "29-።"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variations": {}
+}

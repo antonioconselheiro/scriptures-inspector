@@ -1,0 +1,61 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "verses": [
+        {
+          "verse": 1,
+          "text": "em princípio criou Divos AZ (d)o(a)(s) céus e AZ (d)o(a)(s) terra",
+          "variations": {},
+          "metadata": [
+            {
+              "size": 2,
+              "value": "0-B"
+            },
+            {
+              "size": 9,
+              "value": "1-R>CJT"
+            },
+            {
+              "size": 5,
+              "value": "2-BR>"
+            },
+            {
+              "size": 5,
+              "value": "3->LHJM"
+            },
+            {
+              "size": 2,
+              "value": "4->T"
+            },
+            {
+              "size": 10,
+              "value": "5-H"
+            },
+            {
+              "size": 4,
+              "value": "6-CMJM"
+            },
+            {
+              "size": 1,
+              "value": "7-W"
+            },
+            {
+              "size": 2,
+              "value": "8->T"
+            },
+            {
+              "size": 10,
+              "value": "9-H"
+            },
+            {
+              "size": 5,
+              "value": "10->RY"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variations": {}
+}

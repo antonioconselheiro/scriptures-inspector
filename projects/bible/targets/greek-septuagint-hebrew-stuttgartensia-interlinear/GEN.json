@@ -1,0 +1,949 @@
+{
+  "hebrew-stuttgartensia": {
+    "chapters": [
+      {
+        "origin": 1,
+        "chapter": 1,
+        "verses": [
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 1,
+            "originVerse": 1,
+            "words": []
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 2,
+            "originVerse": 2,
+            "words": [
+              {
+                "originIndex": 1,
+                "originWord": "הָ",
+                "translationIndex": 0,
+                "translationWord": "ἡ"
+              },
+              {
+                "originIndex": 0,
+                "originWord": "וְ",
+                "translationIndex": 1,
+                "translationWord": "δὲ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "אָ֗רֶץ",
+                "translationIndex": 2,
+                "translationWord": "γῆ"
+              },
+              {
+                "originIndex": 3,
+                "originWord": "הָיְתָ֥ה",
+                "translationIndex": 3,
+                "translationWord": "ἦν"
+              },
+              {
+                "originIndex": 4,
+                "originWord": "תֹ֙הוּ֙",
+                "translationIndex": 4,
+                "translationWord": "ἀόρατος"
+              },
+              {
+                "originIndex": 5,
+                "originWord": "וָ",
+                "translationIndex": 5,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "בֹ֔הוּ",
+                "translationIndex": 6,
+                "translationWord": "ἀκατασκεύαστος"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "וְ",
+                "translationIndex": 7,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "חֹ֖שֶׁךְ",
+                "translationIndex": 8,
+                "translationWord": "σκότος"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "פְּנֵ֣י",
+                "translationIndex": 9,
+                "translationWord": "ἐπάνω"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "פְּנֵ֣י",
+                "translationIndex": 10,
+                "translationWord": "τῆς"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "תְה֑וֹם",
+                "translationIndex": 11,
+                "translationWord": "ἀβύσσου"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "וְ",
+                "translationIndex": 12,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "ר֣וּחַ",
+                "translationIndex": 13,
+                "translationWord": "πνεῦμα"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "אֱלֹהִ֔",
+                "translationIndex": 14,
+                "translationWord": "θεοῦ"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "מְרַחֶ֖פֶת",
+                "translationIndex": 15,
+                "translationWord": "ἐπεφέρετο"
+              },
+              {
+                "originIndex": 18,
+                "originWord": "פְּנֵ֥י",
+                "translationIndex": 16,
+                "translationWord": "ἐπάνω"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "הַ",
+                "translationIndex": 17,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 20,
+                "originWord": "מָּֽיִם",
+                "translationIndex": 18,
+                "translationWord": "ὕδατος"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 3,
+            "originVerse": 3,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "אמֶר",
+                "translationIndex": 1,
+                "translationWord": "εἶπεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֖",
+                "translationIndex": 3,
+                "translationWord": "θεός"
+              },
+              {
+                "originIndex": 5,
+                "originWord": "יְהִ֣י",
+                "translationIndex": 4,
+                "translationWord": "γενηθήτω"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "א֑וֹר",
+                "translationIndex": 5,
+                "translationWord": "φῶς"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "וַֽ",
+                "translationIndex": 6,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "יְהִי",
+                "translationIndex": 7,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 9,
+                "originWord": "אֽוֹר",
+                "translationIndex": 8,
+                "translationWord": "φῶς"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 4,
+            "originVerse": 4,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "רְא",
+                "translationIndex": 1,
+                "translationWord": "εἶδεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֛",
+                "translationIndex": 3,
+                "translationWord": "θεὸς"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "הָ",
+                "translationIndex": 4,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "א֖וֹר",
+                "translationIndex": 5,
+                "translationWord": "φῶς"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "כִּי",
+                "translationIndex": 6,
+                "translationWord": "ὅτι"
+              },
+              {
+                "originIndex": 9,
+                "originWord": "ט֑וֹב",
+                "translationIndex": 7,
+                "translationWord": "καλόν"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "וַ",
+                "translationIndex": 8,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "בְדֵּ֣ל",
+                "translationIndex": 9,
+                "translationWord": "διεχώρισεν"
+              },
+              null,
+              {
+                "originIndex": 13,
+                "originWord": "אֱלֹהִ֔",
+                "translationIndex": 11,
+                "translationWord": "θεὸς"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "בֵּ֥ין",
+                "translationIndex": 12,
+                "translationWord": "ἀνὰ"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "בֵּ֥ין",
+                "translationIndex": 13,
+                "translationWord": "μέσον"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "הָ",
+                "translationIndex": 14,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 17,
+                "originWord": "א֖וֹר",
+                "translationIndex": 15,
+                "translationWord": "φωτὸς"
+              },
+              {
+                "originIndex": 18,
+                "originWord": "וּ",
+                "translationIndex": 16,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "בֵ֥ין",
+                "translationIndex": 17,
+                "translationWord": "ἀνὰ"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "בֵ֥ין",
+                "translationIndex": 18,
+                "translationWord": "μέσον"
+              },
+              {
+                "originIndex": 20,
+                "originWord": "הַ",
+                "translationIndex": 19,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 21,
+                "originWord": "חֹֽשֶׁךְ",
+                "translationIndex": 20,
+                "translationWord": "σκότους"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 5,
+            "originVerse": 5,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "קְרָ֨א",
+                "translationIndex": 1,
+                "translationWord": "ἐκάλεσεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֤",
+                "translationIndex": 3,
+                "translationWord": "θεὸς"
+              },
+              {
+                "originIndex": 5,
+                "originWord": "לָ",
+                "translationIndex": 4,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "אוֹר֙",
+                "translationIndex": 5,
+                "translationWord": "φῶς"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "י֔וֹם",
+                "translationIndex": 6,
+                "translationWord": "ἡμέραν"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "וְ",
+                "translationIndex": 7,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 9,
+                "originWord": "לַ",
+                "translationIndex": 8,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "חֹ֖שֶׁךְ",
+                "translationIndex": 9,
+                "translationWord": "σκότος"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "קָ֣רָא",
+                "translationIndex": 10,
+                "translationWord": "ἐκάλεσεν"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "לָ֑יְלָה",
+                "translationIndex": 11,
+                "translationWord": "νύκτα"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "וַֽ",
+                "translationIndex": 12,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "יְהִי",
+                "translationIndex": 13,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "עֶ֥רֶב",
+                "translationIndex": 14,
+                "translationWord": "ἑσπέρα"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "וַֽ",
+                "translationIndex": 15,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 17,
+                "originWord": "יְהִי",
+                "translationIndex": 16,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 18,
+                "originWord": "בֹ֖קֶר",
+                "translationIndex": 17,
+                "translationWord": "πρωί"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "י֥וֹם",
+                "translationIndex": 18,
+                "translationWord": "ἡμέρα"
+              },
+              {
+                "originIndex": 20,
+                "originWord": "אֶחָֽד",
+                "translationIndex": 19,
+                "translationWord": "μία"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 6,
+            "originVerse": 6,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "אמֶר",
+                "translationIndex": 1,
+                "translationWord": "εἶπεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֔",
+                "translationIndex": 3,
+                "translationWord": "θεός"
+              },
+              {
+                "originIndex": 5,
+                "originWord": "יְהִ֥י",
+                "translationIndex": 4,
+                "translationWord": "γενηθήτω"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "רָקִ֖יעַ",
+                "translationIndex": 5,
+                "translationWord": "στερέωμα"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "בְּ",
+                "translationIndex": 6,
+                "translationWord": "ἐν"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "ת֣וֹךְ",
+                "translationIndex": 7,
+                "translationWord": "μέσῳ"
+              },
+              {
+                "originIndex": 9,
+                "originWord": "הַ",
+                "translationIndex": 8,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "מָּ֑יִם",
+                "translationIndex": 9,
+                "translationWord": "ὕδατος"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "וִ",
+                "translationIndex": 10,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "יהִ֣י",
+                "translationIndex": 11,
+                "translationWord": "ἔστω"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "מַבְדִּ֔יל",
+                "translationIndex": 12,
+                "translationWord": "διαχωρίζον"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "בֵּ֥ין",
+                "translationIndex": 13,
+                "translationWord": "ἀνὰ"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "בֵּ֥ין",
+                "translationIndex": 14,
+                "translationWord": "μέσον"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "מַ֖יִם",
+                "translationIndex": 15,
+                "translationWord": "ὕδατος"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "לָ",
+                "translationIndex": 16,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 17,
+                "originWord": "מָֽיִם",
+                "translationIndex": 17,
+                "translationWord": "ὕδατος"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 7,
+            "originVerse": 7,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "עַשׂ",
+                "translationIndex": 1,
+                "translationWord": "ἐποίησεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ",
+                "translationIndex": 3,
+                "translationWord": "θεὸς"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "הָ",
+                "translationIndex": 4,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "רָקִיעַ֒",
+                "translationIndex": 5,
+                "translationWord": "στερέωμα"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "וַ",
+                "translationIndex": 6,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "בְדֵּ֗ל",
+                "translationIndex": 7,
+                "translationWord": "διεχώρισεν"
+              },
+              null,
+              null,
+              {
+                "originIndex": 11,
+                "originWord": "בֵּ֤ין",
+                "translationIndex": 10,
+                "translationWord": "ἀνὰ"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "בֵּ֤ין",
+                "translationIndex": 11,
+                "translationWord": "μέσον"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "הַ",
+                "translationIndex": 12,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "מַּ֙יִם֙",
+                "translationIndex": 13,
+                "translationWord": "ὕδατος"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "אֲשֶׁר֙",
+                "translationIndex": 14,
+                "translationWord": "ὃ"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "אֲשֶׁר֙",
+                "translationIndex": 15,
+                "translationWord": "ἦν"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "מִתַּ֣חַת",
+                "translationIndex": 16,
+                "translationWord": "ὑποκάτω"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "לָ",
+                "translationIndex": 17,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 17,
+                "originWord": "רָקִ֔יעַ",
+                "translationIndex": 18,
+                "translationWord": "στερεώματος"
+              },
+              {
+                "originIndex": 18,
+                "originWord": "וּ",
+                "translationIndex": 19,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "בֵ֣ין",
+                "translationIndex": 20,
+                "translationWord": "ἀνὰ"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "בֵ֣ין",
+                "translationIndex": 21,
+                "translationWord": "μέσον"
+              },
+              {
+                "originIndex": 20,
+                "originWord": "הַ",
+                "translationIndex": 22,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 21,
+                "originWord": "מַּ֔יִם",
+                "translationIndex": 23,
+                "translationWord": "ὕδατος"
+              },
+              {
+                "originIndex": 22,
+                "originWord": "אֲשֶׁ֖ר",
+                "translationIndex": 24,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 23,
+                "originWord": "מֵעַ֣ל",
+                "translationIndex": 25,
+                "translationWord": "ἐπάνω"
+              },
+              {
+                "originIndex": 24,
+                "originWord": "לָ",
+                "translationIndex": 26,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 25,
+                "originWord": "רָקִ֑יעַ",
+                "translationIndex": 27,
+                "translationWord": "στερεώματος"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 8,
+            "originVerse": 8,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "קְרָ֧א",
+                "translationIndex": 1,
+                "translationWord": "ἐκάλεσεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֛",
+                "translationIndex": 3,
+                "translationWord": "θεὸς"
+              },
+              {
+                "originIndex": 5,
+                "originWord": "לָֽ",
+                "translationIndex": 4,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "רָקִ֖יעַ",
+                "translationIndex": 5,
+                "translationWord": "στερέωμα"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "שָׁמָ֑יִם",
+                "translationIndex": 6,
+                "translationWord": "οὐρανόν"
+              },
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              {
+                "originIndex": 8,
+                "originWord": "וַֽ",
+                "translationIndex": 13,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 9,
+                "originWord": "יְהִי",
+                "translationIndex": 14,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "עֶ֥רֶב",
+                "translationIndex": 15,
+                "translationWord": "ἑσπέρα"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "וַֽ",
+                "translationIndex": 16,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "יְהִי",
+                "translationIndex": 17,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "בֹ֖קֶר",
+                "translationIndex": 18,
+                "translationWord": "πρωί"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "י֥וֹם",
+                "translationIndex": 19,
+                "translationWord": "ἡμέρα"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "שֵׁנִֽי",
+                "translationIndex": 20,
+                "translationWord": "δευτέρα"
+              }
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 9,
+            "originVerse": 9,
+            "words": [
+              {
+                "originIndex": 0,
+                "originWord": "וַ",
+                "translationIndex": 0,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 2,
+                "originWord": "אמֶר",
+                "translationIndex": 1,
+                "translationWord": "εἶπεν"
+              },
+              null,
+              {
+                "originIndex": 3,
+                "originWord": "אֱלֹהִ֗",
+                "translationIndex": 3,
+                "translationWord": "θεός"
+              },
+              {
+                "originIndex": 6,
+                "originWord": "קָּו֨וּ",
+                "translationIndex": 4,
+                "translationWord": "συναχθήτω"
+              },
+              {
+                "originIndex": 7,
+                "originWord": "הַ",
+                "translationIndex": 5,
+                "translationWord": "τὸ"
+              },
+              {
+                "originIndex": 8,
+                "originWord": "מַּ֜יִם",
+                "translationIndex": 6,
+                "translationWord": "ὕδωρ"
+              },
+              null,
+              {
+                "originIndex": 9,
+                "originWord": "מִתַּ֤חַת",
+                "translationIndex": 8,
+                "translationWord": "ὑποκάτω"
+              },
+              {
+                "originIndex": 10,
+                "originWord": "הַ",
+                "translationIndex": 9,
+                "translationWord": "τοῦ"
+              },
+              {
+                "originIndex": 11,
+                "originWord": "שָּׁמַ֙יִם֙",
+                "translationIndex": 10,
+                "translationWord": "οὐρανοῦ"
+              },
+              {
+                "originIndex": 12,
+                "originWord": "אֶל",
+                "translationIndex": 11,
+                "translationWord": "εἰς"
+              },
+              {
+                "originIndex": 13,
+                "originWord": "מָק֣וֹם",
+                "translationIndex": 12,
+                "translationWord": "συναγωγὴν"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "אֶחָ֔ד",
+                "translationIndex": 13,
+                "translationWord": "μίαν"
+              },
+              {
+                "originIndex": 15,
+                "originWord": "וְ",
+                "translationIndex": 14,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 16,
+                "originWord": "תֵרָאֶ֖ה",
+                "translationIndex": 15,
+                "translationWord": "ὀφθήτω"
+              },
+              {
+                "originIndex": 17,
+                "originWord": "הַ",
+                "translationIndex": 16,
+                "translationWord": "ἡ"
+              },
+              {
+                "originIndex": 18,
+                "originWord": "יַּבָּשָׁ֑ה",
+                "translationIndex": 17,
+                "translationWord": "ξηρά"
+              },
+              {
+                "originIndex": 19,
+                "originWord": "וַֽ",
+                "translationIndex": 18,
+                "translationWord": "καὶ"
+              },
+              {
+                "originIndex": 20,
+                "originWord": "יְהִי",
+                "translationIndex": 19,
+                "translationWord": "ἐγένετο"
+              },
+              {
+                "originIndex": 21,
+                "originWord": "כֵֽן",
+                "translationIndex": 20,
+                "translationWord": "οὕτως"
+              },
+              null,
+              null
+            ]
+          },
+          {
+            "originChapter": 1,
+            "chapter": 1,
+            "verse": 13,
+            "originVerse": 13,
+            "words": []
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1162 @@
+{
+  "chapters": [],
+  "patterns": {
+    "prefix": [
+      "በ",
+      "ወ",
+      "ኢ",
+      "ታ",
+      "ለ",
+      "ዘ",
+      "ይ",
+      "እም",
+      "[",
+      "የ",
+      "እመ",
+      "ኩን",
+      "ት",
+      "(",
+      "ን",
+      "ያ"
+    ],
+    "suffix": [
+      "ሁ",
+      "ኡ",
+      "ዱ",
+      "ቱ",
+      "ኒ",
+      "ነ",
+      "ሂ",
+      "ሙ",
+      "ዋ",
+      "ዎሙ",
+      "ኩክ",
+      "ዓመተ",
+      "ሆሙ",
+      "ሰ",
+      "የ",
+      "ኒሆሙ",
+      "ላ",
+      "ለ",
+      "ክሙ",
+      "የት",
+      "ት",
+      "ሃ"
+    ],
+    "lexeme": [
+      "ለይኩን",
+      "ታሕተ",
+      "ዘራእ",
+      "ዘር",
+      "ዘመ",
+      "ወጽእ",
+      "ለውእቱ",
+      "ዘርእ",
+      "ይምልክ",
+      "የብስ",
+      "አሐዱ",
+      "ዘመደ",
+      "ዘመዱ",
+      "ይኰንን",
+      "ኮነ",
+      "ናሁ",
+      "በቍል",
+      "ዘሪኦ",
+      "ክሙ",
+      "ውእቱ",
+      "ይኩን",
+      "ይብቈል",
+      "የዐርግ",
+      "ባሕቱ",
+      "በሊዕ",
+      "መኣዝነ",
+      "ወርቃ",
+      "ይእቲ",
+      "የኀቱ",
+      "ኢትዮጵያ",
+      "ወለዶ",
+      "የሐውር",
+      "እምኔሁ",
+      "በልዑ",
+      "መውቱ",
+      "ባሕቲቱ",
+      "ድቃሰ",
+      "ትኩ",
+      "ወጽአት",
+      "እምታ",
+      "ዝንቱ",
+      "ብእሲቱ",
+      "ትል",
+      "ሰማየ",
+      "ነፍሰ",
+      "ትሐወስ",
+      "ማእከለ",
+      "በልዕ",
+      "አላ",
+      "ሠናየ",
+      "እኩየ",
+      "በልዐ",
+      "ወሀበ",
+      "ቈጽለ",
+      "በለስ"
+    ]
+  },
+  "lexical": {
+    "ቀዳሚ": {
+      "value": "primeiro"
+    },
+    "ገብረ": {
+      "value": "criou"
+    },
+    "ሰማየ": {
+      "value": "céu"
+    },
+    "ምድረ": {
+      "value": "terra"
+    },
+    "።": {
+      "value": "."
+    },
+    "ወ": {
+      "prefix": "e"
+    },
+    "በ": {
+      "prefix": "em|cada|qual",
+      "value": "em|cada"
+    },
+    "እግዚአ": {},
+    "ብሔር": {},
+    "እግዚአብሔር": {
+      "value": "Senhor do Domínio"
+    },
+    "ሰ": {
+      "suffix": "porém"
+    },
+    "ምድርሰ": {
+      "value": "terra"
+    },
+    "ኢ": {
+      "value": "não"
+    },
+    "ስተርኢ": {
+      "value": "vista"
+    },
+    "ኮነት": {
+      "value": "acontecia"
+    },
+    "ድሉተ": {
+      "value": "ordem"
+    },
+    "ጽልመት": {
+      "value": "trevas"
+    },
+    "መልዕልተ": {
+      "value": "acima"
+    },
+    "ቀላይ": {
+      "value": "abismo"
+    },
+    "መንፈሰ": {
+      "value": "fôlego"
+    },
+    "ይጼልል": {
+      "value": "pairava"
+    },
+    "ማይ": {
+      "value": "águas"
+    },
+    "ለይኩን": {
+      "value": "haja"
+    },
+    "ብርሃን": {
+      "value": "luz"
+    },
+    "ኮነ": {
+      "value": "houve|aconteceu|foi"
+    },
+    "ርእዮ": {
+      "value": "viu"
+    },
+    "ከመ": {
+      "value": "para que|que"
+    },
+    "ሠናይ": {
+      "value": "agradável"
+    },
+    "ማእከለ": {
+      "value": "meio de"
+    },
+    "ፈለጠ": {
+      "value": "separou"
+    },
+    "ሰመዮ": {
+      "value": "chamou"
+    },
+    "ዕለተ": {
+      "value": "dia"
+    },
+    "ሌሊተ": {
+      "value": "noite"
+    },
+    "ጸብሐ": {
+      "value": "amanheceu"
+    },
+    "መዓልተ": {
+      "value": "dia"
+    },
+    "፩": {
+      "value": "1"
+    },
+    "ጠፈር": {
+      "value": "firmamento"
+    },
+    "ጠፈረ": {
+      "value": "firmamento"
+    },
+    "ዘ": {
+      "prefix": "que|qual"
+    },
+    "ታሕተ": {
+      "value": "abaixo"
+    },
+    "ውእቱ": {
+      "value": "é"
+    },
+    "ርእየ": {
+      "value": "viu"
+    },
+    "ካልእተ": {
+      "value": "segundo"
+    },
+    "መትሕተ": {
+      "value": "abaixo de"
+    },
+    "ለ": {
+      "prefix": "à|ao|para|que",
+      "suffix": "para"
+    },
+    "ይ": {
+      "prefix": "ele(s)|é|se"
+    },
+    "ትጋባእ": {
+      "value": "reunam"
+    },
+    "ቤ": {
+      "value": "dizer"
+    },
+    "ሰማይ": {
+      "value": "céu"
+    },
+    "ውስተ": {
+      "value": "para|em|dentro de"
+    },
+    "አሐዱ": {
+      "value": "um|único|primeiro"
+    },
+    "መካን": {
+      "value": "lugar"
+    },
+    "ያስተርኢ": {
+      "value": "apareça"
+    },
+    "የብስ": {
+      "value": "terra seca"
+    },
+    "ተጋብአ": {
+      "value": "reuniram-se"
+    },
+    "ምእላዲ": {
+      "value": "local"
+    },
+    "ከማ": {
+      "value": "conforme"
+    },
+    "አስተርአየ": {
+      "value": "apareceu"
+    },
+    "ፍልጥ": {
+      "value": "separe"
+    },
+    "ጼልል": {
+      "value": "pairar"
+    },
+    "ሁ": {
+      "suffix": "dele|-se"
+    },
+    "ባሕረ": {
+      "value": "Mar"
+    },
+    "ሐመልማለ": {
+      "value": "verdejante"
+    },
+    "ምድር": {
+      "value": "terra|solo|campo"
+    },
+    "ሣዕር": {
+      "value": "erva"
+    },
+    "ታ": {
+      "prefix": "sua|dela|ela"
+    },
+    "ብቍል": {
+      "value": "semeie"
+    },
+    "ዘራእ": {
+      "value": "semeia"
+    },
+    "ኡ": {
+      "suffix": "-se"
+    },
+    "ዘር": {
+      "value": "semeia"
+    },
+    "ዱ": {
+      "suffix": "dele"
+    },
+    "አምሳሊ": {
+      "value": "semelhança"
+    },
+    "ዕፀወ": {
+      "value": "árvores"
+    },
+    "ፈሪ": {
+      "value": "frutifica"
+    },
+    "ገብር": {
+      "value": "produz"
+    },
+    "ፍሬ": {
+      "value": "fruto"
+    },
+    "እም": {
+      "prefix": "desde"
+    },
+    "ቱ": {
+      "suffix": "ele|dele"
+    },
+    "ውስቴ": {
+      "value": " interior de"
+    },
+    "ወጽእ": {
+      "value": "sai"
+    },
+    "ከውን": {
+      "value": "torna"
+    },
+    "ዲበ": {
+      "value": "sobre"
+    },
+    "ለውእቱ": {
+      "value": "àquele"
+    },
+    "ት": {
+      "prefix": "ela haver|havia",
+      "suffix": "ela",
+      "value": "e"
+    },
+    "[": {
+      "value": "["
+    },
+    "]": {
+      "value": "]"
+    },
+    "አርአያ": {
+      "value": "forma|modelo"
+    },
+    "ዘርእ": {
+      "value": "semente"
+    },
+    "ሣልስተ": {
+      "value": "terceiro"
+    },
+    "ዕለት": {
+      "value": "dia"
+    },
+    "አውጽአት": {
+      "value": "produzir|fez sair"
+    },
+    "ኩኑ": {
+      "value": "sejam"
+    },
+    "ብርሃናት": {
+      "value": "luminares"
+    },
+    "ያብር": {
+      "value": "iluminem"
+    },
+    "ፍልጡ": {
+      "value": "separar"
+    },
+    "ሌሊት": {
+      "value": "noite"
+    },
+    "ተአምር": {
+      "value": "sinais"
+    },
+    "መን": {
+      "value": "tempos"
+    },
+    "መዋዕል": {
+      "value": "épocas"
+    },
+    "ዓመታት": {
+      "value": "anos"
+    },
+    "አብርሆ": {
+      "value": "iluminação"
+    },
+    "ብርሃናተ": {
+      "value": "luminares"
+    },
+    "ክልኤተ": {
+      "value": "dois"
+    },
+    "ዐበይተ": {
+      "value": "grandes"
+    },
+    "ይምልክ": {
+      "value": "governe|domine"
+    },
+    "መዐልተ": {
+      "value": "dia"
+    },
+    "የ": {
+      "prefix": "ele(s)|é|se",
+      "suffix": "meu|minha"
+    },
+    "ዐቢ": {
+      "value": "grande|maior"
+    },
+    "ንእስ": {
+      "value": "pequeno|menor"
+    },
+    "ምስለ": {
+      "value": "com"
+    },
+    "ከዋክብቲ": {
+      "value": "estrelas|astros"
+    },
+    "ሤሞሙ": {
+      "value": "os colocou"
+    },
+    "ኰንንዋ": {
+      "value": "seja"
+    },
+    "ኒ": {
+      "suffix": "também"
+    },
+    "ራብዕተ": {
+      "value": "quarto"
+    },
+    "ውጽእ": {
+      "value": "produza"
+    },
+    "ትሐወስ": {
+      "value": "move|agita"
+    },
+    "ቦ": {
+      "value": "possui"
+    },
+    "ሕይወት": {
+      "value": "vida"
+    },
+    "አዕዋፈ": {
+      "value": "aves"
+    },
+    "ሠርር": {
+      "value": "voar"
+    },
+    "መትሕት": {
+      "value": "abaixo"
+    },
+    "ዐናብርተ": {
+      "value": "monstros"
+    },
+    "ኵሎ": {
+      "value": "todo"
+    },
+    "ነፍሰ": {
+      "value": "garganta"
+    },
+    "አውጽአ": {
+      "value": "produziu"
+    },
+    "ዖፈ": {
+      "value": "ave"
+    },
+    "ባረኮሙ": {
+      "value": "abençoou-os"
+    },
+    "ብዝኁ": {
+      "value": "numerosos"
+    },
+    "ተባዝኁ": {
+      "value": "multiplicai"
+    },
+    "ምልእዋ": {
+      "value": "enchei"
+    },
+    "አዕዋፍ": {
+      "value": "aves"
+    },
+    "ኃምስተ": {
+      "value": "quinto"
+    },
+    "ዘመዱ": {
+      "value": "espécie"
+    },
+    "ዘመደ": {
+      "value": "espécie"
+    },
+    "እንስሳ": {
+      "value": "animal"
+    },
+    "አራዊተ": {
+      "value": "feras"
+    },
+    "ንግበር": {
+      "value": "façamos"
+    },
+    "ሰብአ": {
+      "value": "homem"
+    },
+    "ነ": {
+      "suffix": "meu|minha|nosso|seu(s)"
+    },
+    "ይኰንን": {
+      "value": "dominem"
+    },
+    "ዐሣተ": {
+      "value": "peixe"
+    },
+    "ባሕር": {
+      "value": "mar"
+    },
+    "ሂ": {
+      "suffix": "também"
+    },
+    "ገብሮ": {
+      "value": "criou"
+    },
+    "እመ": {
+      "prefix": "desde|do que"
+    },
+    "ሕያው": {
+      "value": "vivente"
+    },
+    "እጓለ": {
+      "value": "descendente"
+    },
+    "አምሳለ": {
+      "value": "imagem"
+    },
+    "ተባዕተ": {
+      "value": "macho"
+    },
+    "አንስተ": {
+      "value": "fêmea"
+    },
+    "ሙ": {
+      "suffix": "dele|seu|-o(a)|-lhe(s)"
+    },
+    "ባረኮ": {
+      "value": "abençoou"
+    },
+    "ቤሎ": {
+      "value": "disse"
+    },
+    "ዋ": {
+      "suffix": "-a|ela"
+    },
+    "ቅንይ": {
+      "value": "sujeitai"
+    },
+    "ምልእ": {
+      "value": "enchei"
+    },
+    "ኰንን": {
+      "value": "governar"
+    },
+    "ዎሙ": {
+      "value": "-os|sobre eles"
+    },
+    "ዓሣተ": {
+      "value": "peixe"
+    },
+    "ኵሉ": {
+      "value": "cada|inteiro|todo"
+    },
+    "ናሁ": {
+      "value": "eis"
+    },
+    "ኩክ": {
+      "suffix": "eu"
+    },
+    "ሀብ": {
+      "value": "dar"
+    },
+    "ሣዕረ": {
+      "value": "erva"
+    },
+    "በቍል": {
+      "value": "brotar"
+    },
+    "ተዘሪኦ": {
+      "value": "semeado"
+    },
+    "ዕፀው": {
+      "value": "árvores"
+    },
+    "ሀሎ": {
+      "value": "é|existe|está"
+    },
+    "ክሙ": {
+      "value": "vocês|vós|vossos"
+    },
+    "መብልዕ": {
+      "value": "alimento"
+    },
+    "፤": {
+      "value": ";"
+    },
+    "መብልዐ": {
+      "value": "alimento"
+    },
+    "ኩን": {
+      "prefix": "para"
+    },
+    "ጥቀ": {
+      "value": "muito"
+    },
+    "ሳድስተ": {
+      "value": "sexto"
+    },
+    "ተፈጸመ": {
+      "value": "foi completado"
+    },
+    "ዓለመ": {
+      "value": "mundo"
+    },
+    "ፈጸመ": {
+      "value": "completou"
+    },
+    "ገቢረ": {
+      "value": "obra|trabalho"
+    },
+    "ግብሮ": {
+      "value": "sua obra|seu trabalho"
+    },
+    "አዕረፈ": {
+      "value": "repousou"
+    },
+    "ሳብዕት": {
+      "value": "sétimo"
+    },
+    "ግብሩ": {
+      "value": "sua obra|seu trabalho"
+    },
+    "ባረካ": {
+      "value": "abençoou"
+    },
+    "ቀደሳ": {
+      "value": "consagrou"
+    },
+    "እስመ": {
+      "value": "porque"
+    },
+    "ባቲ": {
+      "value": "nele"
+    },
+    "አኀዘ": {
+      "value": "começou"
+    },
+    "ግበር": {
+      "value": "fazer"
+    },
+    "ዛቲ": {
+      "value": "esta"
+    },
+    "መጽሐፍ": {
+      "value": "escritos"
+    },
+    "እንተ": {
+      "value": "causa de|o qual|quando"
+    },
+    "ፍጥረተ": {
+      "value": "criação de"
+    },
+    "አመ": {
+      "value": "quando"
+    },
+    "ኀመልማለ": {
+      "value": "verdejante"
+    },
+    "ቅድመ": {
+      "value": "antes|diante de|em frente a"
+    },
+    "ሐቅል": {
+      "value": "campo"
+    },
+    "ይኩን": {
+      "value": "exista"
+    },
+    "ይብቈል": {
+      "value": "brote"
+    },
+    "ያዝነመ": {
+      "value": "choveu"
+    },
+    "ፈጠር": {
+      "value": "criar"
+    },
+    "አላ": {
+      "value": "mas|porém"
+    },
+    "ነቀዐ": {
+      "value": "jorrou"
+    },
+    "የዐርግ": {
+      "value": "sobe"
+    },
+    "ባሕቱ": {
+      "value": "somente|apenas"
+    },
+    "ሰቅያ": {
+      "value": "irrigar"
+    },
+    "ሰብእ": {
+      "value": "ser humano"
+    },
+    "መሬተ": {
+      "value": "terra|terreno"
+    },
+    "ነፍኀ": {
+      "value": "soprou"
+    },
+    "ገጹ": {
+      "value": "rosto"
+    },
+    "ተከለ": {
+      "value": "plantou"
+    },
+    "ኤድም": {
+      "value": "Éden"
+    },
+    "ገነተ": {
+      "value": "jardim"
+    },
+    "ህየ": {
+      "value": "ali"
+    },
+    "መንገለ": {
+      "value": "em direção a|para o lado de"
+    },
+    "ጽባሕ": {
+      "value": "manhã"
+    },
+    "ሤሞ": {
+      "value": "colocou-o"
+    },
+    "ዓዲ": {
+      "value": "ainda"
+    },
+    "አብቈለ": {
+      "value": "brotou"
+    },
+    "በሊዕ": {
+      "value": "alimento"
+    },
+    "ርእይ": {
+      "value": "vista"
+    },
+    "ዕፀ": {
+      "value": "árvore"
+    },
+    "ገነት": {
+      "value": "jardim"
+    },
+    "ያርኢ": {
+      "value": "mostra"
+    },
+    "ያሌቡ": {
+      "value": "conhecer"
+    },
+    "ሠናየ": {
+      "value": "bem"
+    },
+    "እኩየ": {
+      "value": "mal"
+    },
+    "ፈለግ": {
+      "value": "rio"
+    },
+    "ቅድሜ": {
+      "value": "diante"
+    },
+    "ስቅያ": {
+      "value": "regar"
+    },
+    "ፈለጥ": {
+      "value": "dividir"
+    },
+    "አርባዕ": {
+      "value": "quatro"
+    },
+    "መኣዝነ": {
+      "value": "quadrantes|cantos"
+    },
+    "ዓለም": {
+      "value": "mundo"
+    },
+    "ስ": {
+      "value": "nome"
+    },
+    "ፊሶን": {
+      "value": "Fisom"
+    },
+    "ዐውድ": {
+      "value": "rodear"
+    },
+    "ኤውላጦን": {
+      "value": "Havilá"
+    },
+    "ርቅ": {
+      "value": "ouro"
+    },
+    "ኀበ": {
+      "value": "onde|junto de"
+    },
+    "ወርቃ": {
+      "value": "ouro"
+    },
+    "ይእቲ": {
+      "value": "aquela|essa|ela"
+    },
+    "ዕንቍ": {
+      "value": "pedra preciosa"
+    },
+    "የኀቱ": {
+      "value": "flameja"
+    },
+    "ኀመልሚል": {
+      "value": "esverdeado"
+    },
+    "ኢትዮጵያ": {
+      "value": "Etiópia"
+    },
+    "ጌዮን": {
+      "value": "Giom"
+    },
+    "ሐይወ": {
+      "value": "viveu"
+    },
+    "ያሬድ": {
+      "value": "Jarede"
+    },
+    "፻፷ወ፪": {
+      "value": "162"
+    },
+    "ዓመተ": {
+      "value": "anos"
+    },
+    "ወለዶ": {
+      "value": "gerou"
+    },
+    "ሄኖክ": {
+      "value": "Enoque"
+    },
+    "ካልእ": {
+      "value": "outro|segundo"
+    },
+    "ጤግርስ": {
+      "value": "Tigre"
+    },
+    "ሣልስ": {
+      "value": "terceiro"
+    },
+    "የሐውር": {
+      "value": "corre"
+    },
+    "ላዕለ": {
+      "value": "sobre|em direção a"
+    },
+    "ፋርስ": {
+      "value": "Pérsia"
+    },
+    "አፍራጥስ": {
+      "value": "Eufrates"
+    },
+    "ራብዕ": {
+      "value": "quarto"
+    },
+    "ነሥኦ": {
+      "value": "tomou-o"
+    },
+    "ገበራ": {
+      "value": "trabalho"
+    },
+    "ዕቀባ": {
+      "value": "guardar"
+    },
+    "አዘዞ": {
+      "value": "ordenou-lhe"
+    },
+    "አዳም": {
+      "value": "Adão"
+    },
+    "ዕፅ": {
+      "value": "árvore"
+    },
+    "ብላዕ": {
+      "value": "comer"
+    },
+    "ዕፅ[ሰ]": {
+      "value": "árvore"
+    },
+    "እምኔሁ": {
+      "value": "a partir dele"
+    },
+    "ሞተ": {
+      "value": "morte"
+    },
+    "መውቱ": {
+      "value": "morrido"
+    },
+    "ንበር": {
+      "value": "esteja"
+    },
+    "ባሕቲቱ": {
+      "value": "sozinho"
+    },
+    "ሎ": {
+      "value": "para|a"
+    },
+    "ቢጸ": {
+      "value": "semelhante"
+    },
+    "ረድኦ": {
+      "value": "ajudar"
+    },
+    "ሆሙ": {
+      "suffix": "deles|seus|-o(a)s|-lhes"
+    },
+    "አስማቲ": {
+      "value": "nomes"
+    },
+    "ገዳም": {
+      "value": "campo"
+    },
+    "ተረክበ": {
+      "value": "encontrado"
+    },
+    "ረድኤ": {
+      "value": "ajuda"
+    },
+    "ፈነወ": {
+      "value": "derramou"
+    },
+    "ድቃሰ": {
+      "value": "sono"
+    },
+    "ኖመ": {
+      "value": "dormiu"
+    },
+    "ነሥአ": {
+      "value": "tomou"
+    },
+    "አሐደ": {
+      "value": "uma"
+    },
+    "ዐጽመ": {
+      "value": "osso(s)"
+    },
+    "ገቦ": {
+      "value": "costela"
+    },
+    "መልአ": {
+      "value": "preencheu"
+    },
+    "ሥጋ": {
+      "value": "carne"
+    },
+    "መካና": {
+      "value": "o lugar"
+    },
+    "ነደቃ": {
+      "value": "formou"
+    },
+    "ብእሲቶ": {
+      "value": "esposa"
+    },
+    "አምጽአ": {
+      "value": "levou"
+    },
+    "ረሰያ": {
+      "value": "fez"
+    },
+    "ዐጽም": {
+      "value": "osso"
+    },
+    "(": {
+      "value": "("
+    },
+    ")": {
+      "value": ")"
+    },
+    "ትኩ": {
+      "value": "ser"
+    },
+    "ወጽአት": {
+      "value": "saiu"
+    },
+    "እምታ": {
+      "value": "dentre"
+    },
+    "ብእሲ": {
+      "value": "varão"
+    },
+    "ዝንቱ": {
+      "value": "este"
+    },
+    "ብእሲት": {
+      "value": "varoa"
+    },
+    "ብእሲቱ": {
+      "value": "sua varoa"
+    },
+    "ኅድግ": {
+      "value": "deixar"
+    },
+    "አባ": {
+      "value": "papai"
+    },
+    "እሞ": {
+      "value": "mamãe"
+    },
+    "ትል": {
+      "value": "perseguir"
+    },
+    "ከውኑ": {
+      "value": "ser"
+    },
+    "ክልኤ": {
+      "value": "dois"
+    },
+    "ሀለዉ": {
+      "value": "estavam"
+    },
+    "ዕራቃ": {
+      "value": "descoberto(s)"
+    },
+    "ኒሆሙ": {
+      "suffix": "ambos"
+    },
+    "ኀፍሩ": {
+      "value": "envergonhados"
+    },
+    "አርዌ": {
+      "value": "fera"
+    },
+    "ጠብብ": {
+      "value": "perspicácia"
+    },
+    "ምንትኑ": {
+      "value": "o que?"
+    },
+    "ላ": {
+      "suffix": "a ela"
+    },
+    "ቤለክ": {
+      "value": "disse"
+    },
+    "ብልዑ": {
+      "value": "comais"
+    },
+    "ንበልዕ": {
+      "value": "comeremos"
+    },
+    "ን": {
+      "prefix": "nós"
+    },
+    "ግስሶ": {
+      "value": "tocar"
+    },
+    "ሙት": {
+      "value": "morrer"
+    },
+    "አኮ": {
+      "value": "de modo nenhum"
+    },
+    "በልዕ": {
+      "value": "comer"
+    },
+    "ያአምር": {
+      "value": "sabe"
+    },
+    "ፈታሕ": {
+      "value": "abrir"
+    },
+    "አዕይንቲ": {
+      "value": "olhos"
+    },
+    "አማልክት": {
+      "value": "deuses"
+    },
+    "አምሩ": {
+      "value": "conhecer"
+    },
+    "ሶበ": {
+      "value": "quando"
+    },
+    "የት": {
+      "suffix": "ela"
+    },
+    "ርእ": {
+      "value": "ver"
+    },
+    "ያ": {
+      "prefix": "tornar-se",
+      "value": "a"
+    },
+    "ጤይቅ": {
+      "value": "sábio"
+    },
+    "አዕይን": {
+      "value": "olhos"
+    },
+    "በልዐ": {
+      "value": "comer"
+    },
+    "ሃ": {
+      "suffix": "seu|dela",
+      "value": "s"
+    },
+    "ምስሌ": {
+      "value": "junto de"
+    },
+    "በልዑ": {
+      "value": "comeram"
+    },
+    "ተፈትሐ": {
+      "value": "foram abertos"
+    },
+    "አእመሩ": {
+      "value": "conheceram"
+    },
+    "ሰፈዩ": {
+      "value": "costuraram"
+    },
+    "ቈጽለ": {
+      "value": "folhas"
+    },
+    "በለስ": {
+      "value": "figueira"
+    },
+    "ገብሩ": {
+      "value": "fizeram"
+    },
+    "መዋርእተ": {
+      "value": "tangas"
+    }
+  }
+}

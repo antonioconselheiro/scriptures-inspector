@@ -1,0 +1,17 @@
+{
+  "chapters": [],
+  "patterns": {
+    "prefix": [
+      "ה"
+    ],
+    "suffix": [
+      "׃"
+    ],
+    "lexeme": []
+  },
+  "lexical": {
+    "בדלח": {
+      "value": "bdélio"
+    }
+  }
+}

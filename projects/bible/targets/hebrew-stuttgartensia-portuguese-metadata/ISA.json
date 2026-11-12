@@ -1,0 +1,27 @@
+{
+  "chapters": [],
+  "patterns": {
+    "prefix": [
+      "ו"
+    ],
+    "suffix": [],
+    "lexeme": []
+  },
+  "lexical": {
+    "לביא": {
+      "value": "leoa"
+    },
+    "ו": {
+      "value": "e"
+    },
+    "ליש": {
+      "value": "leão"
+    },
+    "מהם": {
+      "value": "víbora"
+    },
+    "מעופף": {
+      "value": "voadora"
+    }
+  }
+}

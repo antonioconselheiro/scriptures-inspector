@@ -1,0 +1,1791 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "verses": [
+        {
+          "verse": {
+            "start": "1",
+            "end": "1",
+            "index": 0
+          },
+          "metadata": {
+            "3-אלהים": {
+              "segment": "אֱלֹהִ֑ים",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": {
+            "start": "2",
+            "end": "2",
+            "index": 1
+          },
+          "metadata": {}
+        },
+        {
+          "verse": {
+            "start": "3",
+            "end": "3",
+            "index": 2
+          },
+          "metadata": {
+            "5-יהי": {
+              "segment": "יְהִ֣י",
+              "isWordOfGod": true
+            },
+            "6-אור": {
+              "segment": "א֑וֹר",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": {
+            "start": "4",
+            "end": "4",
+            "index": 3
+          },
+          "metadata": {}
+        },
+        {
+          "verse": {
+            "start": "5",
+            "end": "5",
+            "index": 4
+          },
+          "metadata": {
+            "7-יום": {
+              "segment": "י֔וֹם",
+              "isWordOfGod": true
+            },
+            "12-לילה": {
+              "segment": "לָ֑יְלָה",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": {
+            "start": "6",
+            "end": "6",
+            "index": 5
+          },
+          "metadata": {
+            "5-יהי": {
+              "segment": "יְהִ֥י",
+              "isWordOfGod": true
+            },
+            "6-רקיע": {
+              "segment": "רָקִ֖יעַ",
+              "isWordOfGod": true
+            },
+            "7-ב": {
+              "segment": "בְּ",
+              "isWordOfGod": true
+            },
+            "8-תוך": {
+              "segment": "ת֣וֹךְ",
+              "isWordOfGod": true
+            },
+            "9-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "10-מים": {
+              "segment": "מָּ֑יִם",
+              "isWordOfGod": true
+            },
+            "11-ו": {
+              "segment": "וִ",
+              "isWordOfGod": true
+            },
+            "12-יהי": {
+              "segment": "יהִ֣י",
+              "isWordOfGod": true
+            },
+            "13-מבדיל": {
+              "segment": "מַבְדִּ֔יל",
+              "isWordOfGod": true
+            },
+            "14-בין": {
+              "segment": "בֵּ֥ין",
+              "isWordOfGod": true
+            },
+            "15-מים": {
+              "segment": "מַ֖יִם",
+              "isWordOfGod": true
+            },
+            "16-ל": {
+              "segment": "לָ",
+              "isWordOfGod": true
+            },
+            "17-מים": {
+              "segment": "מָֽיִם",
+              "isWordOfGod": true
+            },
+            "18-׃": {
+              "segment": "׃",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        {
+          "verse": 9,
+          "metadata": {
+            "5-י": {
+              "segment": "יִ",
+              "isWordOfGod": true
+            },
+            "6-קוו": {
+              "segment": "קָּו֨וּ",
+              "isWordOfGod": true
+            },
+            "7-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "8-מים": {
+              "segment": "מַּ֜יִם",
+              "isWordOfGod": true
+            },
+            "9-מתחת": {
+              "segment": "מִתַּ֤חַת",
+              "isWordOfGod": true
+            },
+            "13-אל": {
+              "segment": "אֶל",
+              "isWordOfGod": true
+            },
+            "14-מקום": {
+              "segment": "מָק֣וֹם",
+              "isWordOfGod": true
+            },
+            "15-אחד": {
+              "segment": "אֶחָ֔ד",
+              "isWordOfGod": true
+            },
+            "16-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "17-תראה": {
+              "segment": "תֵרָאֶ֖ה",
+              "isWordOfGod": true
+            },
+            "18-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "19-יבשה": {
+              "segment": "יַּבָּשָׁ֑ה",
+              "isWordOfGod": true
+            },
+            "10-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "11-שמ": {
+              "segment": "שָּׁמַ֙",
+              "isWordOfGod": true
+            },
+            "12-ים": {
+              "segment": "יִם֙",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 10,
+          "metadata": {
+            "7-ארץ": {
+              "segment": "אֶ֔רֶץ",
+              "isWordOfGod": true
+            },
+            "14-ימים": {
+              "segment": "יַמִּ֑ים",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 16,
+          "metadata": {}
+        },
+        null,
+        null,
+        null,
+        {
+          "verse": 20,
+          "metadata": {
+            "5-י": {
+              "segment": "יִ",
+              "isWordOfGod": true
+            },
+            "6-שרצו": {
+              "segment": "שְׁרְצ֣וּ",
+              "isWordOfGod": true
+            },
+            "7-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "8-מים": {
+              "segment": "מַּ֔יִם",
+              "isWordOfGod": true
+            },
+            "9-שרץ": {
+              "segment": "שֶׁ֖רֶץ",
+              "isWordOfGod": true
+            },
+            "10-נפש": {
+              "segment": "נֶ֣פֶשׁ",
+              "isWordOfGod": true
+            },
+            "11-חי": {
+              "segment": "חַיָּ֑",
+              "isWordOfGod": true
+            },
+            "12-ה": {
+              "segment": "ה",
+              "isWordOfGod": true
+            },
+            "13-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "14-עוף": {
+              "segment": "עוֹף֙",
+              "isWordOfGod": true
+            },
+            "15-י": {
+              "segment": "יְ",
+              "isWordOfGod": true
+            },
+            "16-עופף": {
+              "segment": "עוֹפֵ֣ף",
+              "isWordOfGod": true
+            },
+            "17-על": {
+              "segment": "עַל",
+              "isWordOfGod": true
+            },
+            "18-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "19-ארץ": {
+              "segment": "אָ֔רֶץ",
+              "isWordOfGod": true
+            },
+            "20-על": {
+              "segment": "עַל",
+              "isWordOfGod": true
+            },
+            "21-פני": {
+              "segment": "פְּנֵ֖י",
+              "isWordOfGod": true
+            },
+            "22-רקיע": {
+              "segment": "רְקִ֥יעַ",
+              "isWordOfGod": true
+            },
+            "23-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "24-שמ": {
+              "segment": "שָּׁמָֽ",
+              "isWordOfGod": true
+            },
+            "25-ים": {
+              "segment": "יִם",
+              "isWordOfGod": true
+            },
+            "26-׃": {
+              "segment": "׃",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 22,
+          "metadata": {
+            "10-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "13-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "16-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "17-את": {
+              "segment": "אֶת",
+              "isWordOfGod": true
+            },
+            "18-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "19-מים": {
+              "segment": "מַּ֙יִם֙",
+              "isWordOfGod": true
+            },
+            "20-ב": {
+              "segment": "בַּ",
+              "isWordOfGod": true
+            },
+            "21-ימים": {
+              "segment": "יַּמִּ֔ים",
+              "isWordOfGod": true
+            },
+            "22-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "23-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "24-עוף": {
+              "segment": "ע֖וֹף",
+              "isWordOfGod": true
+            },
+            "25-י": {
+              "segment": "יִ֥",
+              "isWordOfGod": true
+            },
+            "26-רב": {
+              "segment": "רֶב",
+              "isWordOfGod": true
+            },
+            "27-ב": {
+              "segment": "בָּ",
+              "isWordOfGod": true
+            },
+            "28-ארץ": {
+              "segment": "אָֽרֶץ",
+              "isWordOfGod": true
+            },
+            "29-׃": {
+              "segment": "׃",
+              "isWordOfGod": true
+            },
+            "8-פר": {
+              "segment": "פְּר֣",
+              "isWordOfGod": true
+            },
+            "9-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 24,
+          "metadata": {
+            "4-תוצא": {
+              "segment": "תּוֹצֵ֨א",
+              "isWordOfGod": true
+            },
+            "5-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "6-ארץ": {
+              "segment": "אָ֜רֶץ",
+              "isWordOfGod": true
+            },
+            "7-נפש": {
+              "segment": "נֶ֤פֶשׁ",
+              "isWordOfGod": true
+            },
+            "8-חי": {
+              "segment": "חַיָּ",
+              "isWordOfGod": true
+            },
+            "9-ה": {
+              "segment": "ה֙",
+              "isWordOfGod": true
+            },
+            "10-ל": {
+              "segment": "לְ",
+              "isWordOfGod": true
+            },
+            "11-מינ": {
+              "segment": "מִינָ֔",
+              "isWordOfGod": true
+            },
+            "12-ה": {
+              "segment": "הּ",
+              "isWordOfGod": true
+            },
+            "13-בהמה": {
+              "segment": "בְּהֵמָ֥ה",
+              "isWordOfGod": true
+            },
+            "14-ו": {
+              "segment": "וָ",
+              "isWordOfGod": true
+            },
+            "15-רמש": {
+              "segment": "רֶ֛מֶשׂ",
+              "isWordOfGod": true
+            },
+            "16-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "17-חיתו": {
+              "segment": "חַֽיְתוֹ",
+              "isWordOfGod": true
+            },
+            "18-ארץ": {
+              "segment": "אֶ֖רֶץ",
+              "isWordOfGod": true
+            },
+            "19-ל": {
+              "segment": "לְ",
+              "isWordOfGod": true
+            },
+            "20-מינ": {
+              "segment": "מִינָ֑",
+              "isWordOfGod": true
+            },
+            "21-ה": {
+              "segment": "הּ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        {
+          "verse": 28,
+          "metadata": {
+            "17-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "31-ב": {
+              "segment": "בִּ",
+              "isWordOfGod": true
+            },
+            "32-דג": {
+              "segment": "דְגַ֤",
+              "isWordOfGod": true
+            },
+            "33-ת": {
+              "segment": "ת",
+              "isWordOfGod": true
+            },
+            "34-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "35-ים": {
+              "segment": "יָּם֙",
+              "isWordOfGod": true
+            },
+            "36-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "37-ב": {
+              "segment": "בְ",
+              "isWordOfGod": true
+            },
+            "38-עוף": {
+              "segment": "ע֣וֹף",
+              "isWordOfGod": true
+            },
+            "39-ה": {
+              "segment": "הַ",
+              "isWordOfGod": true
+            },
+            "46-ה": {
+              "segment": "ה",
+              "isWordOfGod": true
+            },
+            "13-פר": {
+              "segment": "פְּר֥",
+              "isWordOfGod": true
+            },
+            "14-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "15-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "16-רב": {
+              "segment": "רְב֛",
+              "isWordOfGod": true
+            },
+            "18-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "19-מ": {
+              "segment": "מִ",
+              "isWordOfGod": true
+            },
+            "20-לא": {
+              "segment": "לְא֥",
+              "isWordOfGod": true
+            },
+            "21-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "22-את": {
+              "segment": "אֶת",
+              "isWordOfGod": true
+            },
+            "23-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "24-ארץ": {
+              "segment": "אָ֖רֶץ",
+              "isWordOfGod": true
+            },
+            "25-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "26-כבש": {
+              "segment": "כִבְשֻׁ֑",
+              "isWordOfGod": true
+            },
+            "27-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "28-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            },
+            "29-רד": {
+              "segment": "רְד֞",
+              "isWordOfGod": true
+            },
+            "30-ו": {
+              "segment": "וּ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 29,
+          "metadata": {
+            "5-הנה": {
+              "segment": "הִנֵּה֩",
+              "isWordOfGod": true
+            },
+            "6-נתתי": {
+              "segment": "נָתַ֨תִּי",
+              "isWordOfGod": true
+            },
+            "7-ל": {
+              "segment": "לָ",
+              "isWordOfGod": true
+            },
+            "8-כם": {
+              "segment": "כֶ֜ם",
+              "isWordOfGod": true
+            },
+            "9-את": {
+              "segment": "אֶת",
+              "isWordOfGod": true
+            },
+            "10-כל": {
+              "segment": "כָּל",
+              "isWordOfGod": true
+            },
+            "11-עשב": {
+              "segment": "עֵ֣שֶׂב",
+              "isWordOfGod": true
+            },
+            "12-זרע": {
+              "segment": "זֹרֵ֣עַ",
+              "isWordOfGod": true
+            },
+            "13-זרע": {
+              "segment": "זֶ֗רַע",
+              "isWordOfGod": true
+            },
+            "14-אשר": {
+              "segment": "אֲשֶׁר֙",
+              "isWordOfGod": true
+            },
+            "15-על": {
+              "segment": "עַל",
+              "isWordOfGod": true
+            },
+            "16-פני": {
+              "segment": "פְּנֵ֣י",
+              "isWordOfGod": true
+            },
+            "17-כל": {
+              "segment": "כָל",
+              "isWordOfGod": true
+            },
+            "18-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "19-ארץ": {
+              "segment": "אָ֔רֶץ",
+              "isWordOfGod": true
+            },
+            "20-ו": {
+              "segment": "וְ",
+              "isWordOfGod": true
+            },
+            "21-את": {
+              "segment": "אֶת",
+              "isWordOfGod": true
+            },
+            "22-כל": {
+              "segment": "כָּל",
+              "isWordOfGod": true
+            },
+            "23-ה": {
+              "segment": "הָ",
+              "isWordOfGod": true
+            },
+            "24-עץ": {
+              "segment": "עֵ֛ץ",
+              "isWordOfGod": true
+            },
+            "25-אשר": {
+              "segment": "אֲשֶׁר",
+              "isWordOfGod": true
+            },
+            "26-ב": {
+              "segment": "בּ֥",
+              "isWordOfGod": true
+            },
+            "27-ו": {
+              "segment": "וֹ",
+              "isWordOfGod": true
+            },
+            "28-פרי": {
+              "segment": "פְרִי",
+              "isWordOfGod": true
+            },
+            "29-עץ": {
+              "segment": "עֵ֖ץ",
+              "isWordOfGod": true
+            },
+            "30-זרע": {
+              "segment": "זֹרֵ֣עַ",
+              "isWordOfGod": true
+            },
+            "31-זרע": {
+              "segment": "זָ֑רַע",
+              "isWordOfGod": true
+            },
+            "32-ל": {
+              "segment": "לָ",
+              "isWordOfGod": true
+            },
+            "33-כם": {
+              "segment": "כֶ֥ם",
+              "isWordOfGod": true
+            },
+            "34-יהי": {
+              "segment": "יִֽהְיֶ֖",
+              "isWordOfGod": true
+            },
+            "35-ה": {
+              "segment": "ה",
+              "isWordOfGod": true
+            },
+            "36-ל": {
+              "segment": "לְ",
+              "isWordOfGod": true
+            },
+            "37-אכלה": {
+              "segment": "אָכְלָֽה",
+              "isWordOfGod": true
+            },
+            "38-׃": {
+              "segment": "׃",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 1,
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "patterns": {
+    "prefix": [
+      "ו",
+      "ה",
+      "על",
+      "־",
+      "יהי",
+      "את",
+      "כי",
+      "ל",
+      "י",
+      "ב",
+      "כ",
+      "נ",
+      "מ",
+      "ת",
+      "ממ"
+    ],
+    "suffix": [
+      "׃",
+      "ים",
+      "ו",
+      "הם",
+      "הו",
+      "ה",
+      "ת",
+      "ם",
+      "ך",
+      "יו",
+      "נה",
+      "י",
+      "כם"
+    ],
+    "lexeme": [
+      "היתה",
+      "תהו",
+      "בהו",
+      "תהום",
+      "מים",
+      "בדל",
+      "בין",
+      "יום",
+      "לילה",
+      "בקר",
+      "קוו",
+      "יבשה",
+      "הבדיל",
+      "ימים",
+      "האיר",
+      "יתן",
+      "שרצו",
+      "ברא",
+      "ברך",
+      "אלה",
+      "חיתו",
+      "מרחפת",
+      "מתחת",
+      "כן",
+      "תראה",
+      "מקוה",
+      "ראשית",
+      "את",
+      "יהי",
+      "כי",
+      "ממשלת",
+      "כוכב",
+      "נפש",
+      "כל",
+      "בהמה",
+      "נקבה",
+      "ים",
+      "כבש",
+      "אכלה",
+      "הששי",
+      "אדם",
+      "צלם",
+      "מקום",
+      "אתת",
+      "והיו",
+      "כנף",
+      "תנינם",
+      "הנה",
+      "כם",
+      "נתתי",
+      "ירק",
+      "כלו",
+      "מלאכת",
+      "שבת",
+      "עשות",
+      "אלהים",
+      "שמים",
+      "תולדות",
+      "יהוה",
+      "שדה",
+      "טרם",
+      "לא",
+      "יעלה",
+      "השקה",
+      "יצר",
+      "נשמת",
+      "שם",
+      "קדם",
+      "מן",
+      "נחמד",
+      "מראה",
+      "מאכל",
+      "דעת",
+      "נהר",
+      "השקות",
+      "היה",
+      "ארבעה",
+      "הוא",
+      "חוילה",
+      "בדלח",
+      "שהם",
+      "ההוא",
+      "כוש",
+      "הולידו",
+      "שמנה",
+      "מאו",
+      "שנה",
+      "ולד",
+      "בנים",
+      "בנות",
+      "איננו",
+      "מתושלח",
+      "שתים",
+      "ששים",
+      "מאת",
+      "הלך",
+      "פרת",
+      "קדמת",
+      "נחה",
+      "צו",
+      "מות",
+      "היות",
+      "בדו",
+      "כנגד",
+      "בא",
+      "מה",
+      "אשה",
+      "שלם",
+      "מלכי",
+      "מלך",
+      "תרדמה",
+      "ישן",
+      "אחת",
+      "בשר",
+      "תמות",
+      "תחת",
+      "בן",
+      "חשך",
+      "זאת",
+      "פעם",
+      "עצם",
+      "אשת",
+      "פני",
+      "שני",
+      "תבששו",
+      "נחש",
+      "ערום",
+      "חית",
+      "חי",
+      "מינ",
+      "נפל",
+      "היו",
+      "ההם",
+      "גם",
+      "אחרי",
+      "בנ",
+      "לד",
+      "המה",
+      "עולם",
+      "תוך",
+      "תמתון",
+      "הייתם",
+      "תאוה",
+      "תן",
+      "עירמם",
+      "תפר",
+      "תאנה",
+      "חגרת",
+      "עלה"
+    ]
+  },
+  "lexical": {
+    "ברא": {
+      "value": "criar"
+    },
+    "ים": {
+      "value": "mar",
+      "suffix": "s"
+    },
+    "את": {
+      "value": "AZ"
+    },
+    "ו": {
+      "suffix": "-vos|seu|dele|nosso",
+      "prefix": "e"
+    },
+    "ארץ": {
+      "value": "terra"
+    },
+    "היתה": {
+      "value": "era"
+    },
+    "תהו": {
+      "value": "disforme"
+    },
+    "בהו": {
+      "value": "vazia"
+    },
+    "חשך": {
+      "value": "trevas"
+    },
+    "על": {
+      "value": "a|sobre"
+    },
+    "תהום": {
+      "value": "abismo"
+    },
+    "רוח": {
+      "value": "fôlego"
+    },
+    "מרחפת": {
+      "value": "pairava"
+    },
+    "מים": {
+      "value": "águas"
+    },
+    "פ": {
+      "value": "¶"
+    },
+    "אור": {
+      "value": "luz"
+    },
+    "טוב": {
+      "value": "bom"
+    },
+    "פני": {
+      "value": "face de"
+    },
+    "אמר": {
+      "value": "dizer"
+    },
+    "יהי": {
+      "value": "há|haja|houve"
+    },
+    "כי": {
+      "value": "que"
+    },
+    "יקרא": {
+      "value": "chamou"
+    },
+    "יום": {
+      "value": "dia"
+    },
+    "קרא": {
+      "value": "chamar"
+    },
+    "לילה": {
+      "value": "Noite"
+    },
+    "ערב": {
+      "value": "tarde"
+    },
+    "בקר": {
+      "value": "manhã"
+    },
+    "אחד": {
+      "value": "um|primeiro"
+    },
+    "רא": {
+      "value": "viu"
+    },
+    "בדל": {
+      "value": "separou"
+    },
+    "בין": {
+      "value": "parte"
+    },
+    "רקיע": {
+      "value": "firmamento"
+    },
+    "מבדיל": {
+      "value": "separação"
+    },
+    "תוך": {
+      "value": "meio"
+    },
+    "עש": {
+      "value": "fez"
+    },
+    "אשר": {
+      "value": "qual(is)"
+    },
+    "מתחת": {
+      "value": "abaixo"
+    },
+    "מעל": {
+      "value": "acima"
+    },
+    "כן": {
+      "value": "foi|assim"
+    },
+    "שני": {
+      "value": "dois"
+    },
+    "ראשית": {
+      "value": "princípio"
+    },
+    "קוו": {
+      "value": "reunam"
+    },
+    "אל": {
+      "value": "para|em"
+    },
+    "מקום": {
+      "value": "lugar"
+    },
+    "תראה": {
+      "value": "seja vista"
+    },
+    "יבשה": {
+      "value": "solo seco"
+    },
+    "מקוה": {
+      "value": "reunião"
+    },
+    "תדשא": {
+      "value": "brote"
+    },
+    "דשא": {
+      "value": "vegetação"
+    },
+    "עשב": {
+      "value": "planta|herbácea"
+    },
+    "מזריע": {
+      "value": "sementeira"
+    },
+    "זרע": {
+      "value": "semente|que semeia"
+    },
+    "עץ": {
+      "value": "árvore"
+    },
+    "פרי": {
+      "value": "fruta"
+    },
+    "עשה": {
+      "value": "produza"
+    },
+    "מינ": {
+      "value": "espécie"
+    },
+    "תוצא": {
+      "value": "brote|brotou"
+    },
+    "שלישי": {
+      "value": "terceiro"
+    },
+    "הבדיל": {
+      "value": "separar"
+    },
+    "היו": {
+      "value": "sejam|eram"
+    },
+    "אתת": {
+      "value": "sinais"
+    },
+    "מועד": {
+      "value": "estação"
+    },
+    "שנים": {
+      "value": "anos"
+    },
+    "ימים": {
+      "value": "dias|mares"
+    },
+    "האיר": {
+      "value": "iluminar"
+    },
+    "מאורת": {
+      "value": "luzeiros"
+    },
+    "גדל": {
+      "value": "grande"
+    },
+    "מאור": {
+      "value": "luminoso(a)"
+    },
+    "ממשלת": {
+      "value": "governar"
+    },
+    "קטן": {
+      "value": "pequeno"
+    },
+    "כוכב": {
+      "value": "estrela"
+    },
+    "יתן": {
+      "value": "deu"
+    },
+    "משל": {
+      "value": "governo"
+    },
+    "רביעי": {
+      "value": "quarto"
+    },
+    "שרץ": {
+      "value": "criaturas"
+    },
+    "נפש": {
+      "value": "garganta"
+    },
+    "עוף": {
+      "value": "voadores"
+    },
+    "עופף": {
+      "value": "voe"
+    },
+    "תנינם": {
+      "value": "dragões"
+    },
+    "כל": {
+      "value": "cada|todo|completo"
+    },
+    "רמשת": {
+      "value": "réptil"
+    },
+    "כנף": {
+      "value": "asa"
+    },
+    "רב": {
+      "value": "multiplicai"
+    },
+    "פר": {
+      "value": "fruta|frutificai"
+    },
+    "בו": {
+      "value": "nele"
+    },
+    "חמישי": {
+      "value": "quinto"
+    },
+    "ב": {
+      "prefix": "em"
+    },
+    "ה": {
+      "prefix": "(d)o(a)(s)",
+      "suffix": "seu|dele|-o(a)"
+    },
+    "י": {
+      "prefix": "então ele",
+      "suffix": "de|meu|minha(s)"
+    },
+    "ל": {
+      "prefix": "para|à|ao(s)"
+    },
+    "רמש": {
+      "value": "rastejante|rastejador"
+    },
+    "חיתו": {
+      "value": "seres"
+    },
+    "הו": {
+      "suffix": "seu|dele(a)"
+    },
+    "שרצו": {
+      "value": "populem"
+    },
+    "ברך": {
+      "value": "abençoar"
+    },
+    "חי": {
+      "value": "viva|vida"
+    },
+    "אדמ": {
+      "value": "terreno"
+    },
+    "ת": {
+      "suffix": "(a)s",
+      "prefix": "então ela"
+    },
+    "נ": {
+      "prefix": "nós"
+    },
+    "אדם": {
+      "value": "terrestre"
+    },
+    "צלמנ": {
+      "value": "imagem"
+    },
+    "כ": {
+      "prefix": "como|conforme"
+    },
+    "דמותנ": {
+      "value": "semelhança"
+    },
+    "דג": {
+      "value": "peixe"
+    },
+    "מאר": {
+      "value": "luzeiro(a)"
+    },
+    "׃": {
+      "suffix": "."
+    },
+    "בהמה": {
+      "value": "besta"
+    },
+    "נקבה": {
+      "value": "fêmea"
+    },
+    "זכר": {
+      "value": "macho"
+    },
+    "ם": {
+      "suffix": "seus|deles|eles"
+    },
+    "כבש": {
+      "value": "sujeitai"
+    },
+    "אכלה": {
+      "value": "alimento"
+    },
+    "הששי": {
+      "value": "sexto"
+    },
+    "והיו": {
+      "value": "e sejam"
+    },
+    "שנ": {
+      "value": "ano"
+    },
+    "הם": {
+      "suffix": "deles"
+    },
+    "מלא": {
+      "value": "enchei"
+    },
+    "צלמ": {
+      "value": "imagem"
+    },
+    "צלם": {
+      "value": "semelhança"
+    },
+    "הנה": {
+      "value": "eis"
+    },
+    "נתתי": {
+      "value": "dei"
+    },
+    "תי": {},
+    "רומש": {
+      "value": "rastejante|rastejador"
+    },
+    "ירק": {
+      "value": "verde"
+    },
+    "מאד": {
+      "value": "muito"
+    },
+    "כלו": {
+      "value": "concluiu"
+    },
+    "צבא": {
+      "value": "exércitos"
+    },
+    "שביעי": {
+      "value": "sétimo"
+    },
+    "מלאכת": {
+      "value": "obras"
+    },
+    "שבת": {
+      "value": "repousou"
+    },
+    "מכל": {
+      "value": "de toda|desde toda"
+    },
+    "קדש": {
+      "value": "consagrar"
+    },
+    "עשות": {
+      "value": "fazer"
+    },
+    "אלהים": {
+      "value": "Divos"
+    },
+    "שמים": {
+      "value": "céus"
+    },
+    "אלה": {
+      "value": "estes|estas"
+    },
+    "תולדות": {
+      "value": "suas gerações|suas origens"
+    },
+    "יהוה": {
+      "value": "Jeová"
+    },
+    "שיח": {
+      "value": "arbusto"
+    },
+    "שדה": {
+      "value": "campo"
+    },
+    "טרם": {
+      "value": "antes que|ainda não"
+    },
+    "צמח": {
+      "value": "brotar"
+    },
+    "לא": {
+      "value": "não"
+    },
+    "מטיר": {
+      "value": "chover"
+    },
+    "אין": {
+      "value": "não havia|não existia"
+    },
+    "עבד": {
+      "value": "trabalhar"
+    },
+    "אד": {
+      "value": "vapor"
+    },
+    "יעלה": {
+      "value": "subia"
+    },
+    "מן": {
+      "value": "desde|de"
+    },
+    "השקה": {
+      "value": "regava"
+    },
+    "יצר": {
+      "value": "formou"
+    },
+    "עפר": {
+      "value": "pó"
+    },
+    "פח": {
+      "value": "assoprar"
+    },
+    "נשמת": {
+      "value": "sopro de"
+    },
+    "אפי": {
+      "value": "nariz|narina"
+    },
+    "טע": {
+      "value": "plantar"
+    },
+    "גן": {
+      "value": "jardim"
+    },
+    "עדן": {
+      "value": "Éden"
+    },
+    "שם": {
+      "value": "ali|nome"
+    },
+    "מ": {
+      "prefix": "de|desde"
+    },
+    "קדם": {
+      "value": "oriente"
+    },
+    "נחמד": {
+      "value": "desejável"
+    },
+    "מראה": {
+      "value": "a vista|aparência"
+    },
+    "מאכל": {
+      "value": "alimento"
+    },
+    "דעת": {
+      "value": "conhecimento"
+    },
+    "רע": {
+      "value": "mal"
+    },
+    "נהר": {
+      "value": "rio"
+    },
+    "צא": {
+      "value": "sai"
+    },
+    "השקות": {
+      "value": "regar"
+    },
+    "פרד": {
+      "value": "separa"
+    },
+    "היה": {
+      "value": "torna-se|era"
+    },
+    "ארבעה": {
+      "value": "quatro"
+    },
+    "ראש": {
+      "value": "cabeça"
+    },
+    "פישון": {
+      "value": "Pisom"
+    },
+    "הוא": {
+      "value": "ele|este"
+    },
+    "סבב": {
+      "value": "que rodeia"
+    },
+    "חוילה": {
+      "value": "Havilá"
+    },
+    "זהב": {
+      "value": "ouro"
+    },
+    "בדלח": {
+      "value": "bdélio"
+    },
+    "אבן": {
+      "value": "pedra"
+    },
+    "שהם": {
+      "value": "ônix"
+    },
+    "ההוא": {
+      "value": "desse|daquele"
+    },
+    "גיחון": {
+      "value": "Giom"
+    },
+    "כוש": {
+      "value": "Cuxe"
+    },
+    "סובב": {
+      "value": "que rodeia"
+    },
+    "ירד": {
+      "value": "Jarede"
+    },
+    "אחרי": {
+      "value": "depois de"
+    },
+    "הולידו": {
+      "value": "gerar"
+    },
+    "חנוך": {
+      "value": "Enoque"
+    },
+    "שמנה": {
+      "value": "oito"
+    },
+    "מאו": {
+      "value": "cem|centena"
+    },
+    "שנה": {
+      "value": "anos"
+    },
+    "ולד": {
+      "value": "gerar"
+    },
+    "בנים": {
+      "value": "filhos"
+    },
+    "בנות": {
+      "value": "filhas"
+    },
+    "איננו": {
+      "value": "não se encontra"
+    },
+    "תהלך": {
+      "value": "andar"
+    },
+    "מתושלח": {
+      "value": "Matusalém"
+    },
+    "שתים": {
+      "value": "dois"
+    },
+    "ששים": {
+      "value": "sessenta"
+    },
+    "מאת": {
+      "value": "cem"
+    },
+    "חדקל": {
+      "value": "Tigre"
+    },
+    "אשור": {
+      "value": "Assíria"
+    },
+    "קדמ": {
+      "value": "oriente"
+    },
+    "הלך": {
+      "value": "que vai"
+    },
+    "פרת": {
+      "value": "Eufrates"
+    },
+    "קדמת": {
+      "value": "oriente"
+    },
+    "קח": {
+      "value": "tomar"
+    },
+    "נחה": {
+      "value": "colocar"
+    },
+    "שמר": {
+      "value": "guardar"
+    },
+    "צו": {
+      "value": "ordenar"
+    },
+    "אכל": {
+      "value": "comer"
+    },
+    "ך": {
+      "suffix": "tu"
+    },
+    "מות": {
+      "value": "morrer"
+    },
+    "היות": {
+      "value": "ser"
+    },
+    "בדו": {
+      "value": "só|sozinho"
+    },
+    "אעש": {
+      "value": "farei"
+    },
+    "עזר": {
+      "value": "ajudante"
+    },
+    "כנגד": {
+      "value": "correspondente"
+    },
+    "בא": {
+      "value": "trazer|vir"
+    },
+    "מה": {
+      "value": "como"
+    },
+    "שמ": {
+      "value": "nome"
+    },
+    "רד": {
+      "value": "dominem"
+    },
+    "צלע": {
+      "value": "costela"
+    },
+    "איש": {
+      "value": "varão"
+    },
+    "אשה": {
+      "value": "varoa"
+    },
+    "מלכי": {
+      "value": "rei de mim"
+    },
+    "צדק": {
+      "value": "justiça"
+    },
+    "מלך": {
+      "value": "rei"
+    },
+    "שלם": {
+      "value": "paz"
+    },
+    "תרדמה": {
+      "value": "sono profundo"
+    },
+    "פל": {
+      "value": "cair"
+    },
+    "אחת": {
+      "value": "uma"
+    },
+    "יו": {
+      "suffix": "-vos|seu|dele|nosso"
+    },
+    "סגר": {
+      "value": "fechar"
+    },
+    "בשר": {
+      "value": "carne"
+    },
+    "נה": {
+      "suffix": "seu|dele|-o(a)"
+    },
+    "תחת": {
+      "value": "debaixo"
+    },
+    "ישן": {
+      "value": "dormir"
+    },
+    "תמות": {
+      "value": "morrereis"
+    },
+    "תאכל": {
+      "value": "comereis"
+    },
+    "בן": {
+      "value": "formar"
+    },
+    "זאת": {
+      "value": "esta"
+    },
+    "פעם": {
+      "value": "momento"
+    },
+    "עצם": {
+      "value": "osso"
+    },
+    "עצמ": {
+      "value": "ossos"
+    },
+    "עזב": {
+      "value": "deixar"
+    },
+    "אב": {
+      "value": "papai"
+    },
+    "אמ": {
+      "value": "mamãe"
+    },
+    "דבק": {
+      "value": "aderir"
+    },
+    "אשת": {
+      "value": "varoa"
+    },
+    "ערומ": {
+      "value": "nu"
+    },
+    "תבששו": {
+      "value": "envergonhavam"
+    },
+    "נחש": {
+      "value": "serpente"
+    },
+    "ערום": {
+      "value": "astuto"
+    },
+    "חית": {
+      "value": "ser"
+    },
+    "אף": {
+      "value": "porventura"
+    },
+    "נפל": {
+      "value": "caído"
+    },
+    "ההם": {
+      "value": "aqueles"
+    },
+    "גם": {
+      "value": "também"
+    },
+    "בני": {
+      "value": "filhos de"
+    },
+    "בנ": {
+      "value": "filhos"
+    },
+    "לד": {
+      "value": "gerar"
+    },
+    "המה": {
+      "value": "eles mesmos"
+    },
+    "גבר": {
+      "value": "poderoso"
+    },
+    "עולם": {
+      "value": "antiguidade"
+    },
+    "אנש": {
+      "value": "varão"
+    },
+    "גע": {
+      "value": "tocar"
+    },
+    "פן": {
+      "value": "para que não"
+    },
+    "תמתון": {
+      "value": "morrais"
+    },
+    "דע": {
+      "value": "saber"
+    },
+    "כם": {
+      "suffix": "vós"
+    },
+    "ממ": {
+      "prefix": "a partir de"
+    },
+    "פקח": {
+      "value": "abrir"
+    },
+    "עינ": {
+      "value": "olho"
+    },
+    "הייתם": {
+      "value": "sereis"
+    },
+    "תאוה": {
+      "value": "era-lhe atraente"
+    },
+    "שכיל": {
+      "value": "discernir"
+    },
+    "תן": {
+      "value": "dar"
+    },
+    "עמ": {
+      "value": "com"
+    },
+    "עירמם": {
+      "value": "desnudos"
+    },
+    "תפר": {
+      "value": "costurar"
+    },
+    "תאנה": {
+      "value": "figueira"
+    },
+    "חגרת": {
+      "value": "tangas"
+    },
+    "עלה": {
+      "value": "folhas de"
+    },
+    "שמע": {
+      "value": "ouvir"
+    }
+  }
+}

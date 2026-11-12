@@ -1,0 +1,961 @@
+{
+  "chapters": [
+    {
+      "chapter": 1,
+      "verses": [
+        {
+          "verse": 1,
+          "metadata": {}
+        }
+      ]
+    }
+  ],
+  "patterns": {
+    "prefix": [
+      "B",
+      "W",
+      "H",
+      "J",
+      "L",
+      "K",
+      "M",
+      "N",
+      "T"
+    ],
+    "suffix": [
+      "H",
+      "W",
+      "T",
+      "HM",
+      "HW",
+      "K",
+      "JW",
+      "JH",
+      "J",
+      "M",
+      "JM",
+      "KM"
+    ],
+    "lexeme": [
+      "BR>",
+      "HJTH",
+      "BHW",
+      "MJM",
+      "JHJ",
+      "BDL",
+      "BJN",
+      "LJLH",
+      "JWM",
+      "BQR",
+      "JBCH",
+      "JMJM",
+      ">LH",
+      "QWW",
+      "MQWH",
+      "M>WRW",
+      "H>JR",
+      "HBDJL",
+      "WHJW",
+      ">TWT",
+      ">T",
+      "MMCLT",
+      "JTN",
+      "CM",
+      "R>CJT",
+      "THW",
+      "THWM",
+      "MRXPT",
+      "MTXT",
+      "TR>H",
+      "MQWM",
+      "CRYW",
+      "BRK",
+      "BHMH",
+      ">DM",
+      "NPC",
+      "YLM",
+      "NQBH",
+      "KBCW",
+      "JM",
+      "KL",
+      "HNH",
+      "KM",
+      ">KLH",
+      "KN",
+      "JRQ",
+      "HCCJ",
+      "KLW",
+      "ML>KT",
+      "CBT",
+      "KJ",
+      "<FWT",
+      "CMJM",
+      ">LHJM",
+      "TWLDT",
+      "JHWH",
+      "FDH",
+      "VRM",
+      "L>",
+      "J<LH",
+      "HCQH",
+      "NCMT",
+      "QDM",
+      "FM",
+      "MN",
+      "MR>H",
+      "M>KL",
+      "D<T",
+      "HCQWT",
+      "HJH",
+      ">RB<H",
+      "HW>",
+      "XWJLH",
+      "CHM",
+      "HHJ>",
+      "BDLX",
+      "M>D",
+      "KWC",
+      "JRD",
+      "CNH",
+      "CMNJM",
+      "M>W",
+      "WLJD",
+      "BNWT",
+      "BNJM",
+      "CTJM",
+      "CCJM",
+      "PRT",
+      "HLK",
+      "YW",
+      "MWT",
+      "MMNW",
+      "KNGD",
+      "HJWT",
+      "BDW",
+      "B>",
+      "TRDMH",
+      "JCN",
+      ">XT",
+      "BFR",
+      "TMWT",
+      "TXT",
+      "BN",
+      "BJ>",
+      "Z>T",
+      "P<M",
+      "<YM",
+      ">M",
+      ">CT",
+      "CNJ",
+      "PNJ",
+      "TBCCW",
+      "<RM",
+      "NXC",
+      "<RWM",
+      "XJT",
+      "MJN",
+      "XJ",
+      "NPL",
+      "HJW",
+      "HHM",
+      "GM",
+      ">XRJ",
+      "<WLM",
+      "TWK",
+      "ZH",
+      "TMWTWN",
+      "HJJTM",
+      "T>WH",
+      "NXMD",
+      "TN",
+      "XCK",
+      "TP>R",
+      "T>NH",
+      "XGRWT",
+      "<LJ"
+    ]
+  },
+  "lexical": {
+    "R>CJT": {
+      "value": "princípio"
+    },
+    "BR>": {
+      "value": "criou"
+    },
+    "JM": {
+      "suffix": "s",
+      "value": "mar"
+    },
+    "B": {
+      "prefix": "em"
+    },
+    ">T": {
+      "value": "AZ"
+    },
+    "W": {
+      "prefix": "e",
+      "suffix": "-vos|seu|dele|nosso"
+    },
+    "H": {
+      "prefix": "(d)o(a)(s)",
+      "suffix": "seu|dele|-o(a)"
+    },
+    ">RY": {
+      "value": "terra"
+    },
+    "HJTH": {
+      "value": "era"
+    },
+    "THW": {
+      "value": "disforme"
+    },
+    "BHW": {
+      "value": "vazia"
+    },
+    "XCK": {
+      "value": "trevas"
+    },
+    "<L": {
+      "value": "a|sobre"
+    },
+    "PNJ": {
+      "value": "superfície de"
+    },
+    "THWM": {
+      "value": "abismo"
+    },
+    "RWX": {
+      "value": "fôlego"
+    },
+    "MRXPT": {
+      "value": "pairava"
+    },
+    "MJM": {
+      "value": "águas"
+    },
+    "J>MR": {
+      "value": "disse"
+    },
+    "JHJ": {
+      "value": "há|haja|houve"
+    },
+    ">WR": {
+      "value": "luz"
+    },
+    ">MR": {
+      "value": "dizer"
+    },
+    "R>": {
+      "value": "viu"
+    },
+    "KJ": {
+      "value": "que"
+    },
+    "VWB": {
+      "value": "bom"
+    },
+    "J": {
+      "prefix": "então ele",
+      "suffix": "de|meu|minha(s)"
+    },
+    "BDL": {
+      "value": "separou"
+    },
+    "BJN": {
+      "value": "parte"
+    },
+    "QR>": {
+      "value": "chamar"
+    },
+    "LJLH": {
+      "value": "Noite"
+    },
+    "JWM": {
+      "value": "dia"
+    },
+    "<RB": {
+      "value": "tarde"
+    },
+    "BQR": {
+      "value": "manhã"
+    },
+    ">XD": {
+      "value": "um|primeiro"
+    },
+    "RQJ<": {
+      "value": "firmamento"
+    },
+    "TWK": {
+      "value": "meio"
+    },
+    "MBDJL": {
+      "value": "separação"
+    },
+    "<F": {
+      "value": "fez"
+    },
+    ">CR": {
+      "value": "qual(is)"
+    },
+    "MTXT": {
+      "value": "acima"
+    },
+    "M<L": {
+      "value": "abaixo"
+    },
+    "KN": {
+      "value": "foi|assim"
+    },
+    "CNJ": {
+      "value": "dois"
+    },
+    "QWW": {
+      "value": "reunam"
+    },
+    ">L": {
+      "value": "para|em"
+    },
+    "MQWM": {
+      "value": "lugar"
+    },
+    "TR>H": {
+      "value": "seja vista"
+    },
+    "JBCH": {
+      "value": "solo seco"
+    },
+    "MQWH": {
+      "value": "reunião"
+    },
+    "JMJM": {
+      "value": "dias|mares"
+    },
+    "TDC>": {
+      "value": "brote"
+    },
+    "MZRJ<": {
+      "value": "sementeira"
+    },
+    "DC>": {
+      "value": "vegetação"
+    },
+    "<FB": {
+      "value": "planta"
+    },
+    "ZR<": {
+      "value": "semente|que semeia"
+    },
+    "PRJ": {
+      "value": "fruta"
+    },
+    "L": {
+      "prefix": "para|à|ao(s)"
+    },
+    "MJN": {
+      "value": "espécie"
+    },
+    "TWY>": {
+      "value": "brote|brotou"
+    },
+    "CLJCJ": {
+      "value": "terceiro"
+    },
+    "T": {
+      "suffix": "(a)s",
+      "prefix": "então ela"
+    },
+    "M>WRW": {
+      "value": "luzeiro(a)"
+    },
+    "H>JR": {
+      "value": "separar|iluminar"
+    },
+    "HBDJL": {
+      "value": "separar"
+    },
+    "WHJW": {
+      "value": "e sejam"
+    },
+    ">TWT": {
+      "value": "sinais"
+    },
+    "MW<D": {
+      "value": "estaçãoo"
+    },
+    "CN": {
+      "value": "ano"
+    },
+    "GDL": {
+      "value": "grande"
+    },
+    "M>WR": {
+      "value": "luminoso(a)"
+    },
+    "GDWL": {
+      "value": "grande"
+    },
+    "QVN": {
+      "value": "pequeno"
+    },
+    "MMCLT": {
+      "value": "governar"
+    },
+    "KWKB": {
+      "value": "estrela"
+    },
+    "M": {
+      "suffix": "seus|deles|eles",
+      "value": "de|desde"
+    },
+    "JTN": {
+      "value": "deu"
+    },
+    "MCL": {
+      "value": "governo"
+    },
+    "RBJ<J": {
+      "value": "quarto"
+    },
+    "CRYW": {
+      "value": "populem"
+    },
+    "CRY": {
+      "value": "criaturas"
+    },
+    "NPC": {
+      "value": "garganta"
+    },
+    "XJ": {
+      "value": "viva|vida"
+    },
+    "<WP": {
+      "value": "voadores"
+    },
+    "<PP": {
+      "value": "voe"
+    },
+    "KL": {
+      "value": "cada|todo|completo"
+    },
+    "RMF": {
+      "value": "rastejante|rastejador"
+    },
+    "KNP": {
+      "value": "asa"
+    },
+    "HM": {
+      "suffix": "deles"
+    },
+    "MJNJ": {
+      "value": "espécies"
+    },
+    "BRK": {
+      "value": "abençoar"
+    },
+    "PR": {
+      "value": "fruta|frutificai"
+    },
+    "RB": {
+      "value": "multiplicai"
+    },
+    "ML>": {
+      "value": "enchei"
+    },
+    "XMJCJ": {
+      "value": "quinto"
+    },
+    "BHMH": {
+      "value": "besta"
+    },
+    ">DM": {
+      "value": "terreno|terrestre"
+    },
+    "HW": {
+      "value": "seu|dele(a)"
+    },
+    "N": {
+      "prefix": "nós"
+    },
+    "YLMN": {
+      "value": "imagem"
+    },
+    "K": {
+      "value": "como|conforme",
+      "suffix": "tu"
+    },
+    "DMWTN": {
+      "value": "semelhança"
+    },
+    "DG": {
+      "value": "peixe"
+    },
+    "YLM": {
+      "value": "imagem|semelhança"
+    },
+    "ZKR": {
+      "value": "macho"
+    },
+    "NQBH": {
+      "value": "fêmea"
+    },
+    "KBCW": {
+      "value": "sujeitai"
+    },
+    "HNH": {
+      "value": "eis"
+    },
+    "NTTJ": {
+      "value": "dei"
+    },
+    "<Y": {
+      "value": "árvore"
+    },
+    ">KLH": {
+      "value": "alimento"
+    },
+    "JRQ": {
+      "value": "verde"
+    },
+    "M>D": {
+      "value": "muito"
+    },
+    "HCCJ": {
+      "value": "sexto"
+    },
+    "YB>": {
+      "value": "exércitos"
+    },
+    "KLW": {
+      "value": "concluiu"
+    },
+    "ML>KT": {
+      "value": "obras"
+    },
+    "CBT": {
+      "value": "repouso"
+    },
+    "CBJ<J": {
+      "value": "sétimo"
+    },
+    "MKL": {
+      "value": "de toda|desde toda"
+    },
+    "QDC": {
+      "value": "consagrar"
+    },
+    "<FWT": {
+      "value": "fazer"
+    },
+    "CMJM": {
+      "value": "céus"
+    },
+    ">LHJM": {
+      "value": "Divos"
+    },
+    "TWLDT": {
+      "value": "suas gerações|suas origens"
+    },
+    ">LH": {
+      "value": "estes|estas"
+    },
+    "JHWH": {
+      "value": "Jeová"
+    },
+    "FJX": {
+      "value": "arbusto"
+    },
+    "FDH": {
+      "value": "campo"
+    },
+    "VRM": {
+      "value": "antes que|ainda não"
+    },
+    "YMX": {
+      "value": "brotar"
+    },
+    "L>": {
+      "value": "não"
+    },
+    "MVJR": {
+      "value": "chover"
+    },
+    ">JN": {
+      "value": "não havia|não existia"
+    },
+    "<BD": {
+      "value": "trabalhar"
+    },
+    ">D": {
+      "value": "vapor"
+    },
+    "J<LH": {
+      "value": "subia"
+    },
+    "MN": {
+      "value": "desde|de"
+    },
+    "HCQH": {
+      "value": "regava"
+    },
+    "YR": {
+      "value": "formar"
+    },
+    "<PR": {
+      "value": "pó"
+    },
+    "PX": {
+      "value": "assoprar"
+    },
+    ">PJ": {
+      "value": "nariz|narina"
+    },
+    "NCMT": {
+      "value": "sopro de"
+    },
+    "V<": {
+      "value": "plantar"
+    },
+    "GN": {
+      "value": "jardim"
+    },
+    "<DN": {
+      "value": "Éden"
+    },
+    "QDM": {
+      "value": "oriente"
+    },
+    "FM": {
+      "value": "colocar"
+    },
+    "CM": {
+      "value": "ali|nome"
+    },
+    "NXMD": {
+      "value": "desejável"
+    },
+    "MR>H": {
+      "value": "a vista|aparência"
+    },
+    "M>KL": {
+      "value": "alimento"
+    },
+    "D<T": {
+      "value": "conhecimento"
+    },
+    "R<": {
+      "value": "mal"
+    },
+    "NHR": {
+      "value": "rio"
+    },
+    "Y>": {
+      "value": "sai"
+    },
+    "HCQWT": {
+      "value": "regar"
+    },
+    "PRD": {
+      "value": "separa"
+    },
+    "HJH": {
+      "value": "torna-se|era"
+    },
+    ">RB<H": {
+      "value": "quatro"
+    },
+    "R>C": {
+      "value": "cabeça"
+    },
+    "PJCWN": {
+      "value": "Pisom"
+    },
+    "HW>": {
+      "value": "ele|este"
+    },
+    "SWBB": {
+      "value": "que rodeia"
+    },
+    "XWJLH": {
+      "value": "Havilá"
+    },
+    "ZHB": {
+      "value": "ouro"
+    },
+    "CHM": {
+      "value": "ônix"
+    },
+    "HHJ>": {
+      "value": "desse|daquele"
+    },
+    "BDLX": {
+      "value": "bdélio"
+    },
+    ">BN": {
+      "value": "pedra"
+    },
+    "GJXWN": {
+      "value": "Giom"
+    },
+    "KWC": {
+      "value": "Cuxe"
+    },
+    ">XRJ": {
+      "value": "depois de"
+    },
+    "XNWK": {
+      "value": "Enoque"
+    },
+    "XMC": {
+      "value": "cinco"
+    },
+    "CNH": {
+      "value": "anos"
+    },
+    "CMNJM": {
+      "value": "oitenta"
+    },
+    "CB<": {
+      "value": "sete"
+    },
+    "M>W": {
+      "value": "cem|centena"
+    },
+    "WLJD": {
+      "value": "gerar"
+    },
+    "BN": {
+      "value": "filho|formar"
+    },
+    "BNWT": {
+      "value": "filhas"
+    },
+    "BNJM": {
+      "value": "filhos"
+    },
+    "CTJM": {
+      "value": "dois"
+    },
+    "CCJM": {
+      "value": "sessenta"
+    },
+    "DQL": {
+      "value": "Tigre"
+    },
+    ">CWR": {
+      "value": "Assíria"
+    },
+    "PRT": {
+      "value": "Eufrates"
+    },
+    "HLK": {
+      "value": "que vai"
+    },
+    "QX": {
+      "value": "tomar"
+    },
+    "CMR": {
+      "value": "guardar"
+    },
+    "NJX": {
+      "value": "colocar"
+    },
+    "YW": {
+      "value": "ordenar"
+    },
+    ">KL": {
+      "value": "comer"
+    },
+    "MWT": {
+      "value": "morrer"
+    },
+    "MMNW": {
+      "value": "a partir dele"
+    },
+    "KNGD": {
+      "value": "corresponda"
+    },
+    "<ZR": {
+      "value": "ajudante"
+    },
+    "HJWT": {
+      "value": "ser"
+    },
+    "BDW": {
+      "value": "só|sozinho"
+    },
+    "><F": {
+      "value": "farei"
+    },
+    "B>": {
+      "value": "trazer|vir"
+    },
+    "RD": {
+      "value": "dominem"
+    },
+    "<WD": {
+      "value": "ainda"
+    },
+    "PL": {
+      "value": "cair"
+    },
+    "TRDMH": {
+      "value": "sono profundo"
+    },
+    "JCN": {
+      "value": "dormir"
+    },
+    ">XT": {
+      "value": "uma"
+    },
+    "JW": {
+      "suffix": "-vos|seus|nosso"
+    },
+    "YL<": {
+      "value": "costela"
+    },
+    "SGR": {
+      "value": "fechar"
+    },
+    "BFR": {
+      "value": "carne"
+    },
+    "T>KL": {
+      "value": "comereis"
+    },
+    "TMWT": {
+      "value": "morrereis"
+    },
+    "TXT": {
+      "value": "debaixo"
+    },
+    "JH": {
+      "suffix": "seu|dele|-o(a)"
+    },
+    "BJ>": {
+      "value": "trazer"
+    },
+    "Z>T": {
+      "value": "esta"
+    },
+    "P<M": {
+      "value": "momento"
+    },
+    "<YM": {
+      "value": "ossos"
+    },
+    "<ZB": {
+      "value": "deixar"
+    },
+    ">C": {
+      "value": "varoa"
+    },
+    ">JC": {
+      "value": "varão"
+    },
+    ">B": {
+      "value": "papai"
+    },
+    ">M": {
+      "value": "mamãe"
+    },
+    "DBQ": {
+      "value": "aderir"
+    },
+    ">CT": {
+      "value": "varoa"
+    },
+    "TBCCW": {
+      "value": "envergonhavam"
+    },
+    "<RM": {
+      "value": "nu"
+    },
+    "NXC": {
+      "value": "serpente"
+    },
+    "<RWM": {
+      "value": "astuto"
+    },
+    "XJT": {
+      "value": "seres"
+    },
+    ">P": {
+      "value": "porventura"
+    },
+    "TNJN": {
+      "value": "dragão"
+    },
+    "NPL": {
+      "value": "caído"
+    },
+    "HJW": {
+      "value": "sejam|eram"
+    },
+    "HHM": {
+      "value": "aqueles"
+    },
+    "GM": {
+      "value": "também"
+    },
+    "GBWR": {
+      "value": "poderoso"
+    },
+    "<WLM": {
+      "value": "antiguidade"
+    },
+    "ZH": {
+      "value": "este"
+    },
+    "G<": {
+      "value": "tocar"
+    },
+    "PN": {
+      "value": "para que não"
+    },
+    "TMWTWN": {
+      "value": "morrais"
+    },
+    "KM": {
+      "suffix": "vós"
+    },
+    "D<": {
+      "value": "saber"
+    },
+    "PQX": {
+      "value": "abrir"
+    },
+    "<JN": {
+      "value": "olho"
+    },
+    "HJJTM": {
+      "value": "sereis"
+    },
+    "T>WH": {
+      "value": "era-lhe atraente"
+    },
+    "FKJL": {
+      "value": "discernir"
+    },
+    "TN": {
+      "value": "dar"
+    },
+    "<": {
+      "value": "com"
+    },
+    "PQXN": {
+      "value": "abrir"
+    },
+    "TP>R": {
+      "value": "costurar"
+    },
+    "T>NH": {
+      "value": "figueira"
+    },
+    "XGRWT": {
+      "value": "coberturas"
+    },
+    "<LJ": {
+      "value": "folhas de"
+    }
+  }
+}

@@ -1,0 +1,1268 @@
+{
+  "chapters": [],
+  "patterns": {
+    "prefix": [],
+    "suffix": [],
+    "lexeme": []
+  },
+  "lexical": {
+    "ἐν": {
+      "value": "em"
+    },
+    "ἀρχῇ": {
+      "value": "primeiro"
+    },
+    "ἐποίησεν": {
+      "value": "criou"
+    },
+    "ὁ": {
+      "value": "o|a"
+    },
+    "θεὸς": {
+      "value": "Deus"
+    },
+    "τὸν": {
+      "value": "o"
+    },
+    "οὐρανὸν": {
+      "value": "céu"
+    },
+    "καὶ": {
+      "value": "e"
+    },
+    "τὴν": {
+      "value": "a"
+    },
+    "γῆν": {
+      "value": "terra"
+    },
+    "ἡ": {
+      "value": "a"
+    },
+    "δὲ": {
+      "value": "porém|então|e"
+    },
+    "γῆ": {
+      "value": "terra"
+    },
+    "ἦν": {
+      "value": "era|existia"
+    },
+    "ἀόρατος": {
+      "value": "invisível"
+    },
+    "ἀκατασκεύαστος": {
+      "value": "despreparada"
+    },
+    "σκότος": {
+      "value": "trevas"
+    },
+    "ἐπάνω": {
+      "value": "acima"
+    },
+    "τῆς": {
+      "value": "da|a"
+    },
+    "ἀβύσσου": {
+      "value": "profundeza"
+    },
+    "πνεῦμα": {
+      "value": "fôlego"
+    },
+    "θεοῦ": {
+      "value": "Deus"
+    },
+    "ἐπεφέρετο": {
+      "value": "pairava"
+    },
+    "τοῦ": {
+      "value": "para|do(a)"
+    },
+    "ὕδατος": {
+      "value": "água"
+    },
+    "εἶπεν": {
+      "value": "disse"
+    },
+    "θεός": {
+      "value": "Deus"
+    },
+    "γενηθήτω": {
+      "value": "haja"
+    },
+    "φῶς": {
+      "value": "luz"
+    },
+    "ἐγένετο": {
+      "value": "houve|aconteceu"
+    },
+    "εἶδεν": {
+      "value": "viu"
+    },
+    "τὸ": {
+      "value": "a|o"
+    },
+    "ὅτι": {
+      "value": "que"
+    },
+    "καλόν": {
+      "value": "bela"
+    },
+    "διεχώρισεν": {
+      "value": "separou"
+    },
+    "ἀνὰ": {
+      "value": "em cada"
+    },
+    "μέσον": {
+      "value": "meio"
+    },
+    "φωτὸς": {
+      "value": "luz"
+    },
+    "σκότους": {
+      "value": "trevas"
+    },
+    "ἐκάλεσεν": {
+      "value": "chamou"
+    },
+    "ἡμέραν": {
+      "value": "dia"
+    },
+    "νύκτα": {
+      "value": "noite"
+    },
+    "ἑσπέρα": {
+      "value": "tarde"
+    },
+    "πρωί": {
+      "value": "manhã"
+    },
+    "ἡμέρα": {
+      "value": "dia"
+    },
+    "μία": {
+      "value": "um"
+    },
+    "στερέωμα": {
+      "value": "firmamento"
+    },
+    "μέσῳ": {
+      "value": "meio"
+    },
+    "ἔστω": {
+      "value": "seja"
+    },
+    "διαχωρίζον": {
+      "value": "separando"
+    },
+    "οὕτως": {
+      "value": "assim"
+    },
+    "ὃ": {
+      "value": "qual|que"
+    },
+    "ὑποκάτω": {
+      "value": "abaixo"
+    },
+    "στερεώματος": {
+      "value": "firmamento"
+    },
+    "οὐρανόν": {
+      "value": "Céu"
+    },
+    "δευτέρα": {
+      "value": "segundo"
+    },
+    "συν": {},
+    "συναχθήτω": {
+      "value": "reuna-se"
+    },
+    "συναγωγὴν": {
+      "value": "reunião"
+    },
+    "ὕδωρ": {
+      "value": "água"
+    },
+    "οὐρανοῦ": {
+      "value": "céu"
+    },
+    "εἰς": {
+      "value": "para|em"
+    },
+    "μίαν": {
+      "value": "uma"
+    },
+    "ὀφθήτω": {
+      "value": "apareça"
+    },
+    "ξηρά": {
+      "value": "terra seca"
+    },
+    "συνήχθη": {
+      "value": "reuniu-se"
+    },
+    "τὰς": {
+      "value": "as"
+    },
+    "συναγωγὰς": {
+      "value": "reunião"
+    },
+    "αὐτῶν": {
+      "value": "dela"
+    },
+    "ὤφθη": {
+      "value": "apareceu"
+    },
+    "ξηρὰν": {
+      "value": "seca"
+    },
+    "τὰ": {
+      "value": "as|os"
+    },
+    "συστήματα": {
+      "value": "agrupamentos"
+    },
+    "τῶν": {
+      "value": "do(a)s"
+    },
+    "ὑδάτων": {
+      "value": "águas"
+    },
+    "θαλάσσας": {
+      "value": "mares"
+    },
+    "βλαστησάτω": {
+      "value": "brote"
+    },
+    "βοτάνην": {
+      "value": "vegetação"
+    },
+    "χόρτου": {
+      "value": "de erva"
+    },
+    "σπεῖρον": {
+      "value": "semeando|que semeia"
+    },
+    "σπέρμα": {
+      "value": "semente"
+    },
+    "κατὰ": {
+      "value": "conforme|segundo"
+    },
+    "γένος": {
+      "value": "gênero"
+    },
+    "καθ᾽": {
+      "value": "conforme|segundo"
+    },
+    "ὁμοιότητα": {
+      "value": "semelhança"
+    },
+    "ξύλον": {
+      "value": "árvore"
+    },
+    "κάρπιμον": {
+      "value": "frutífera"
+    },
+    "ποιοῦν": {
+      "value": "fazendo|produzindo"
+    },
+    "καρπόν": {
+      "value": "fruto"
+    },
+    "οὗ": {
+      "value": "cujo"
+    },
+    "αὐτοῦ": {
+      "value": "dele(a)|seu|sua"
+    },
+    "αὐτῷ": {
+      "value": "ele|si"
+    },
+    "ἐπὶ": {
+      "value": "sobre"
+    },
+    "γῆς": {
+      "value": "terra"
+    },
+    "ἐξήνεγκεν": {
+      "value": "produziu"
+    },
+    "τρίτη": {
+      "value": "terceiro"
+    },
+    "γενηθήτωσαν": {
+      "value": "surja"
+    },
+    "φωστῆρες": {
+      "value": "luminares"
+    },
+    "στερεώματι": {
+      "value": "do firmamento"
+    },
+    "τῷ": {
+      "value": "o"
+    },
+    "φαῦσιν": {
+      "value": "iluminar"
+    },
+    "διαχωρίζειν": {
+      "value": "separar"
+    },
+    "ἡμέρας": {
+      "value": "dia"
+    },
+    "νυκτὸς": {
+      "value": "noite"
+    },
+    "ἔστωσαν": {
+      "value": "sejam"
+    },
+    "σημεῖα": {
+      "value": "sinais"
+    },
+    "καιροὺς": {
+      "value": "estações"
+    },
+    "ἐνιαυτοὺς": {
+      "value": "anos"
+    },
+    "ὥστε": {
+      "value": "de modo que"
+    },
+    "φαίνειν": {
+      "value": "ilumine"
+    },
+    "τοὺς": {
+      "value": "os"
+    },
+    "δύο": {
+      "value": "dois"
+    },
+    "φωστῆρας": {
+      "value": "luminares"
+    },
+    "μεγάλους": {
+      "value": "grande"
+    },
+    "φωστῆρα": {
+      "value": "luminar"
+    },
+    "μέγαν": {
+      "value": "grande"
+    },
+    "ἀρχὰς": {
+      "value": "começar|governar"
+    },
+    "ἐλάσσω": {
+      "value": "menor"
+    },
+    "νυκτός": {
+      "value": "noite"
+    },
+    "ἀστέρας": {
+      "value": "astros|estrelas"
+    },
+    "ἔθετο": {
+      "value": "colocou"
+    },
+    "αὐτοὺς": {
+      "value": "eles"
+    },
+    "ἄρχειν": {
+      "value": "começar|governar"
+    },
+    "τετάρτη": {
+      "value": "quarto"
+    },
+    "ἐξαγαγέτω": {
+      "value": "produza"
+    },
+    "ὕδατα": {
+      "value": "águas"
+    },
+    "ἑρπετὰ": {
+      "value": "répteis"
+    },
+    "ψυχῶν": {
+      "value": "alma"
+    },
+    "ζωσῶν": {
+      "value": "vivente"
+    },
+    "πετεινὰ": {
+      "value": "voadores"
+    },
+    "πετόμενα": {
+      "value": "voando"
+    },
+    "κήτη": {
+      "value": "monstros marinhos"
+    },
+    "μεγάλα": {
+      "value": "grande"
+    },
+    "πᾶσαν": {
+      "value": "cada|toda"
+    },
+    "ψυχὴν": {
+      "value": "alma"
+    },
+    "ζῴων": {
+      "value": "animal"
+    },
+    "ἑρπετῶν": {
+      "value": "rastejante"
+    },
+    "ἃ": {
+      "value": "os quais|que"
+    },
+    "ἐξήγαγεν": {
+      "value": "trouxe"
+    },
+    "γένη": {
+      "value": "gênero"
+    },
+    "πᾶν": {
+      "value": "todo(a)"
+    },
+    "πετεινὸν": {
+      "value": "voador"
+    },
+    "πτερωτὸν": {
+      "value": "alado"
+    },
+    "καλά": {
+      "value": "bons|boas"
+    },
+    "ηὐλόγησεν": {
+      "value": "abençoou"
+    },
+    "αὐτὰ": {
+      "value": "eles|elas"
+    },
+    "λέγων": {
+      "value": "dizendo"
+    },
+    "αὐξάνεσθε": {
+      "value": "crescei"
+    },
+    "πληθύνεσθε": {
+      "value": "multiplicai"
+    },
+    "πληρώσατε": {
+      "value": "enchei"
+    },
+    "ταῖς": {
+      "value": "os|as"
+    },
+    "θαλάσσαις": {
+      "value": "mares"
+    },
+    "πληθυνέσθωσαν": {
+      "value": "multipliquem-se"
+    },
+    "πέμπτη": {
+      "value": "quinto"
+    },
+    "ζῶσαν": {
+      "value": "vivente"
+    },
+    "τετράποδα": {
+      "value": "quadrúpedes"
+    },
+    "θηρία": {
+      "value": "fera"
+    },
+    "κτήνη": {
+      "value": "animais"
+    },
+    "πάντα": {
+      "value": "tudo|todo(a)"
+    },
+    "ποιήσωμεν": {
+      "value": "façamos"
+    },
+    "ἄνθρωπον": {
+      "value": "homem"
+    },
+    "κατ᾽": {
+      "value": "conforme|segundo"
+    },
+    "εἰκόνα": {
+      "value": "imagem"
+    },
+    "ἡμετέραν": {
+      "value": "nossa"
+    },
+    "ὁμοίωσιν": {
+      "value": "semelhança"
+    },
+    "ἀρχέτωσαν": {
+      "value": "governem"
+    },
+    "ἰχθύων": {
+      "value": "peixes"
+    },
+    "θαλάσσης": {
+      "value": "mar"
+    },
+    "πετεινῶν": {
+      "value": "aves"
+    },
+    "κτηνῶν": {
+      "value": "gado"
+    },
+    "πάσης": {
+      "value": "de toda"
+    },
+    "πάντων": {
+      "value": "tudo|todo(a)"
+    },
+    "ἑρπόντων": {
+      "value": "rastejador"
+    },
+    "αὐτόν": {
+      "value": "ele|o"
+    },
+    "ἄρσεν": {
+      "value": "macho"
+    },
+    "θῆλυ": {
+      "value": "fêmea"
+    },
+    "αὐτούς": {
+      "value": "eles|os"
+    },
+    "ἄρχετε": {
+      "value": "governai|começai"
+    },
+    "κατακυριεύσατε": {
+      "value": "dominai"
+    },
+    "αὐτῆς": {
+      "value": "ele(a)(s)"
+    },
+    "ἰδοὺ": {
+      "value": "eis"
+    },
+    "δέδωκα": {
+      "value": "dei|tenho dado"
+    },
+    "ὑμῖν": {
+      "value": "a vós|a vocês"
+    },
+    "χόρτον": {
+      "value": "erva|herbáceo"
+    },
+    "σπόριμον": {
+      "value": "sementeira"
+    },
+    "ὅ": {
+      "value": "que|o qual|tanto"
+    },
+    "ἐστιν": {
+      "value": "é|está"
+    },
+    "ἔχει": {
+      "value": "tem"
+    },
+    "ἑαυτῷ": {
+      "value": "si mesmo"
+    },
+    "καρπὸν": {
+      "value": "fruto"
+    },
+    "σπέρματος": {
+      "value": "de semente"
+    },
+    "σπορίμου": {
+      "value": "sementeira"
+    },
+    "ἔσται": {
+      "value": "será"
+    },
+    "βρῶσιν": {
+      "value": "alimento"
+    },
+    "θηρίοις": {
+      "value": "feras"
+    },
+    "πᾶσι": {
+      "value": "a todos"
+    },
+    "τοῖς": {
+      "value": "os"
+    },
+    "πετεινοῖς": {
+      "value": "pássaros"
+    },
+    "παντὶ": {
+      "value": "a todo"
+    },
+    "ἑρπετῷ": {
+      "value": "rastejante"
+    },
+    "ἕρποντι": {
+      "value": "que rasteja"
+    },
+    "ζωῆς": {
+      "value": "viva|vida"
+    },
+    "χλωρὸν": {
+      "value": "verde"
+    },
+    "ὅσα": {
+      "value": "tudo quanto"
+    },
+    "καλὰ": {
+      "value": "belas"
+    },
+    "λίαν": {
+      "value": "muito"
+    },
+    "ἕκτη": {
+      "value": "sexto"
+    },
+    "συνετελέσθησαν": {
+      "value": "foram concluídos"
+    },
+    "οὐρανὸς": {
+      "value": "céu"
+    },
+    "πᾶς": {
+      "value": "todo"
+    },
+    "κόσμος": {
+      "value": "cosmos"
+    },
+    "συνετέλεσεν": {
+      "value": "concluiu"
+    },
+    "τῇ": {
+      "value": "na|à"
+    },
+    "ἡμέρᾳ": {
+      "value": "dia"
+    },
+    "ἕκτῃ": {
+      "value": "sexto(a)"
+    },
+    "ἔργα": {
+      "value": "obras"
+    },
+    "κατέπαυσεν": {
+      "value": "descansou"
+    },
+    "ἑβδόμῃ": {
+      "value": "sétimo(a)"
+    },
+    "ἀπὸ": {
+      "value": "de|a partir de"
+    },
+    "ἔργων": {
+      "value": "obras"
+    },
+    "ὧν": {
+      "value": "que|dos quais"
+    },
+    "ἑβδόμην": {
+      "value": "sétimo"
+    },
+    "ἡγίασεν": {
+      "value": "consagrou"
+    },
+    "αὐτήν": {
+      "value": "ela|a"
+    },
+    "αὐτῇ": {
+      "value": "ela"
+    },
+    "ἤρξατο": {
+      "value": "começou"
+    },
+    "ποιῆσαι": {
+      "value": "fazer"
+    },
+    "γενέσεως": {
+      "value": "gênese"
+    },
+    "αὕτη": {
+      "value": "esta|esta é"
+    },
+    "βίβλος": {
+      "value": "livro"
+    },
+    "ὅτε": {
+      "value": "quando"
+    },
+    "ᾗ": {
+      "value": "na qual"
+    },
+    "ἀγροῦ": {
+      "value": "do campo"
+    },
+    "πρὸ": {
+      "value": "antes de"
+    },
+    "γενέσθαι": {
+      "value": "vir a existir"
+    },
+    "ἀνατεῖλαι": {
+      "value": "nascer"
+    },
+    "οὐ": {
+      "value": "não"
+    },
+    "γὰρ": {
+      "value": "pois|porque"
+    },
+    "ἔβρεξεν": {
+      "value": "choveu|regou"
+    },
+    "ἄνθρωπος": {
+      "value": "ser humano"
+    },
+    "οὐκ": {
+      "value": "não"
+    },
+    "ἐργάζεσθαι": {
+      "value": "trabalhar"
+    },
+    "πηγὴ": {
+      "value": "fonte|nascente"
+    },
+    "ἀνέβαινεν": {
+      "value": "subia"
+    },
+    "ἐκ": {
+      "value": "a partir de"
+    },
+    "ἐπότιζεν": {
+      "value": "regava"
+    },
+    "πρόσωπον": {
+      "value": "superfície"
+    },
+    "ἔπλασεν": {
+      "value": "formou"
+    },
+    "χοῦν": {
+      "value": "pó"
+    },
+    "ἐνεφύσησεν": {
+      "value": "soprou"
+    },
+    "πνοὴν": {
+      "value": "rosto"
+    },
+    "Εδεμ": {
+      "value": "Éden"
+    },
+    "ἐφύτευσεν": {
+      "value": "plantou"
+    },
+    "κύριος": {
+      "value": "senhor"
+    },
+    "παράδεισον": {
+      "value": "jardim"
+    },
+    "ἀνατολὰς": {
+      "value": "orientes"
+    },
+    "ἐκεῖ": {
+      "value": "ali"
+    },
+    "ὃν": {
+      "value": "que|o qual"
+    },
+    "ἐξανέτειλεν": {
+      "value": "fez brotar"
+    },
+    "ἔτι": {
+      "value": "ainda"
+    },
+    "ὡραῖον": {
+      "value": "agradável"
+    },
+    "ὅρασιν": {
+      "value": "aparência"
+    },
+    "καλὸν": {
+      "value": "bom"
+    },
+    "παραδείσῳ": {
+      "value": "jardim"
+    },
+    "εἰδέναι": {
+      "value": "saber|conhecer"
+    },
+    "γνωστὸν": {
+      "value": "conhecimento"
+    },
+    "καλοῦ": {
+      "value": "bem"
+    },
+    "πονηροῦ": {
+      "value": "mal"
+    },
+    "ποταμὸς": {
+      "value": "rio"
+    },
+    "ἐκπορεύεται": {
+      "value": "para fora"
+    },
+    "ἐξ": {
+      "value": "do"
+    },
+    "ποτίζειν": {
+      "value": "para regar|regar"
+    },
+    "ἐκεῖθεν": {
+      "value": "dali"
+    },
+    "ἀφορίζεται": {
+      "value": "separa-se"
+    },
+    "τέσσαρας": {
+      "value": "quatro"
+    },
+    "ἀρχάς": {
+      "value": "princípios"
+    },
+    "ὄνομα": {
+      "value": "nome"
+    },
+    "ἑνὶ": {
+      "value": "a um|ao primeiro"
+    },
+    "Φισων": {
+      "value": "Fisom"
+    },
+    "οὗτος": {
+      "value": "ele|este"
+    },
+    "Ευιλατ": {
+      "value": "Havilá"
+    },
+    "κυκλῶν": {
+      "value": "que rodeia"
+    },
+    "χρυσίον": {
+      "value": "ouro"
+    },
+    "ἐκείνης": {
+      "value": "daquela"
+    },
+    "ἄνθραξ": {
+      "value": "brasante"
+    },
+    "πράσινος": {
+      "value": "verde"
+    },
+    "λίθος": {
+      "value": "pedra"
+    },
+    "ποταμῷ": {
+      "value": "rio"
+    },
+    "Γηων": {
+      "value": "Giom"
+    },
+    "Αἰθιοπίας": {
+      "value": "Etiópia"
+    },
+    "ἔζησεν": {
+      "value": "viveu"
+    },
+    "Ιαρεδ": {
+      "value": "Jarede"
+    },
+    "ἑκατὸν": {
+      "value": "cem"
+    },
+    "ἑξήκοντα": {
+      "value": "sessenta"
+    },
+    "ἔτη": {
+      "value": "anos"
+    },
+    "ἐγέννησεν": {
+      "value": "gerou"
+    },
+    "Ενωχ": {
+      "value": "Enoque"
+    },
+    "μετὰ": {
+      "value": "depois de"
+    },
+    "γεννῆσαι": {
+      "value": "gerar"
+    },
+    "αὐτὸν": {
+      "value": "ele"
+    },
+    "ὀκτακόσια": {
+      "value": "oitocentos"
+    },
+    "υἱοὺς": {
+      "value": "filhos"
+    },
+    "θυγατέρας": {
+      "value": "filhas"
+    },
+    "δευτέρῳ": {
+      "value": "segundo"
+    },
+    "Τίγρις": {
+      "value": "Tigre"
+    },
+    "Ἀσσυρίων": {
+      "value": "Assíria"
+    },
+    "τρίτος": {
+      "value": "terceiro"
+    },
+    "πορευόμενος": {
+      "value": "que vai"
+    },
+    "κατέναντι": {
+      "value": "diante de"
+    },
+    "τέταρτος": {
+      "value": "quarto"
+    },
+    "Εὐφράτης": {
+      "value": "Eufrates"
+    },
+    "ἔλαβεν": {
+      "value": "tomou"
+    },
+    "φυλάσσειν": {
+      "value": "guardar"
+    },
+    "ἐνετείλατο": {
+      "value": "ordenou"
+    },
+    "Αδαμ": {
+      "value": "Adão"
+    },
+    "ξύλου": {
+      "value": "árvore|mandeira"
+    },
+    "παντὸς": {
+      "value": "toda"
+    },
+    "βρώσει": {
+      "value": "para alimento"
+    },
+    "φάγῃ": {
+      "value": "comerás"
+    },
+    "πονηρόν": {
+      "value": "mal"
+    },
+    "γινώσκειν": {
+      "value": "conhecimento"
+    },
+    "φάγεσθε": {
+      "value": "comereis"
+    },
+    "ἀπ᾽": {
+      "value": "de"
+    },
+    "δ᾽": {
+      "value": "mas|e"
+    },
+    "ἂν": {
+      "value": "havendo"
+    },
+    "φάγητε": {
+      "value": "comeres"
+    },
+    "θανάτῳ": {
+      "value": "morte"
+    },
+    "ἀποθανεῖσθε": {
+      "value": "morrereis"
+    },
+    "εἶναι": {
+      "value": "ser"
+    },
+    "μόνον": {
+      "value": "sozinho"
+    },
+    "βοηθὸν": {
+      "value": "ajudante"
+    },
+    "ὀνόματα": {
+      "value": "nomes"
+    },
+    "κτήνεσιν": {
+      "value": "rebanhos"
+    },
+    "πᾶσιν": {
+      "value": "a todos"
+    },
+    "οὐχ": {
+      "value": "não"
+    },
+    "εὑρέθη": {
+      "value": "se encontrou"
+    },
+    "βοηθὸς": {
+      "value": "auxiliar"
+    },
+    "ὅμοιος": {
+      "value": "semelhante"
+    },
+    "ἐπέβαλεν": {
+      "value": "derramou"
+    },
+    "ἔκστασιν": {
+      "value": "êxtase"
+    },
+    "ὕπνωσεν": {
+      "value": "adormeceu"
+    },
+    "πλευρῶν": {
+      "value": "costelas"
+    },
+    "ἀνεπλήρωσεν": {
+      "value": "completou"
+    },
+    "σάρκα": {
+      "value": "carne"
+    },
+    "ἀντ᾽": {
+      "value": "substituindo|opondo"
+    },
+    "ᾠκοδόμησεν": {
+      "value": "edificou"
+    },
+    "πλευράν": {
+      "value": "costela"
+    },
+    "ἣν": {
+      "value": "que"
+    },
+    "γυναῖκα": {
+      "value": "mulher"
+    },
+    "ἤγαγεν": {
+      "value": "levou"
+    },
+    "αὐτὴν": {
+      "value": "ela"
+    },
+    "πρὸς": {
+      "value": "para"
+    },
+    "τοῦτο": {
+      "value": "isto|este(a)"
+    },
+    "νῦν": {
+      "value": "agora"
+    },
+    "ὀστοῦν": {
+      "value": "osso"
+    },
+    "ὀστέων": {
+      "value": "ossos"
+    },
+    "μου": {
+      "value": "de mim"
+    },
+    "σὰρξ": {
+      "value": "carne"
+    },
+    "σαρκός": {
+      "value": "carne"
+    },
+    "γυνή": {
+      "value": "mulher"
+    },
+    "ἀνδρὸς": {
+      "value": "homem"
+    },
+    "κληθήσεται": {
+      "value": "será chamada"
+    },
+    "ἐλήμφθη": {
+      "value": "foi tomada"
+    },
+    "ἕνεκεν": {
+      "value": "por causa de"
+    },
+    "τούτου": {
+      "value": "disso"
+    },
+    "καταλείψει": {
+      "value": "deixará"
+    },
+    "πατέρα": {
+      "value": "pai"
+    },
+    "μητέρα": {
+      "value": "mãe"
+    },
+    "προσκολληθήσεται": {
+      "value": "será unido"
+    },
+    "ἔσονται": {
+      "value": "serão"
+    },
+    "οἱ": {
+      "value": "os"
+    },
+    "ἦσαν": {
+      "value": "estavam|eram"
+    },
+    "γυμνοί": {
+      "value": "nus"
+    },
+    "τε": {
+      "value": "como"
+    },
+    "γυνὴ": {
+      "value": "mulher"
+    },
+    "ᾐσχύνοντο": {
+      "value": "envergonhavam-se"
+    },
+    "ὄφις": {
+      "value": "serpente"
+    },
+    "φρονιμώτατος": {
+      "value": "muito sensato"
+    },
+    "θηρίων": {
+      "value": "feras"
+    },
+    "γυναικί": {
+      "value": "mulher"
+    },
+    "τί": {
+      "value": "o quê"
+    },
+    "μὴ": {
+      "value": "não"
+    },
+    "ὄφει": {
+      "value": "serpente"
+    },
+    "παραδείσου": {
+      "value": "jardim"
+    },
+    "καρποῦ": {
+      "value": "fruto"
+    },
+    "φαγόμεθα": {
+      "value": "comeremos"
+    },
+    "οὐδὲ": {
+      "value": "nem seque"
+    },
+    "ἅψησθε": {
+      "value": "toqueis"
+    },
+    "ἵνα": {
+      "value": "a fim de que"
+    },
+    "ἀποθάνητε": {
+      "value": "morrais"
+    },
+    "ᾔδει": {
+      "value": "sabia"
+    },
+    "διανοιχθήσονται": {
+      "value": "serão abertos"
+    },
+    "ὑμῶν": {
+      "value": "de vós"
+    },
+    "ὀφθαλμοί": {
+      "value": "olhos"
+    },
+    "ἔσεσθε": {
+      "value": "sereis"
+    },
+    "ὡς": {
+      "value": "como"
+    },
+    "θεοὶ": {
+      "value": "deuses"
+    },
+    "γινώσκοντες": {
+      "value": "conhecendo"
+    },
+    "ἀρεστὸν": {
+      "value": "agradável"
+    },
+    "ὀφθαλμοῖς": {
+      "value": "olhos"
+    },
+    "ἰδεῖν": {
+      "value": "ver"
+    },
+    "ὡραῖόν": {
+      "value": "atraente"
+    },
+    "κατανοῆσαι": {
+      "value": "discernir"
+    },
+    "λαβοῦσα": {
+      "value": "tomou"
+    },
+    "ἔφαγεν": {
+      "value": "comeu"
+    },
+    "ἔδωκεν": {
+      "value": "deu"
+    },
+    "ἀνδρὶ": {
+      "value": "homem"
+    },
+    "μετ᾽": {
+      "value": "com"
+    },
+    "ἔφαγον": {
+      "value": "comeram"
+    },
+    "πέντε": {
+      "value": "cinco"
+    },
+    "διηνοίχθησαν": {
+      "value": "foram abertos"
+    },
+    "ὀφθαλμοὶ": {
+      "value": "olhos"
+    },
+    "ἔγνωσαν": {
+      "value": "reconheceram"
+    },
+    "γυμνοὶ": {
+      "value": "nus"
+    },
+    "ἔρραψαν": {
+      "value": "costuraram"
+    },
+    "φύλλα": {
+      "value": "folhas"
+    },
+    "συκῆς": {
+      "value": "de figueira"
+    },
+    "ἐποίησαν": {
+      "value": "fizeram"
+    },
+    "ἑαυτοῖς": {
+      "value": "para si"
+    },
+    "περιζώματα": {
+      "value": "tangas"
+    }
+  }
+}
