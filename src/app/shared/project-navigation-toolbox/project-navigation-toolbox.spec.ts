@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { SystemService } from '@shared/system/system-service';
 import { ToolboxVisibilityService } from '@shared/toolbox/toolbox-visibility-service';
-import { of } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { ProjectNavigationToolbox } from './project-navigation-toolbox';
 
 describe('ProjectNavigationToolbox', () => {
@@ -13,6 +13,7 @@ describe('ProjectNavigationToolbox', () => {
   let scrollTo: jasmine.Spy;
   let router: jasmine.SpyObj<Router>;
   let systemService: jasmine.SpyObj<SystemService>;
+  let routeParams: BehaviorSubject<Record<string, string | number>>;
 
   beforeEach(async () => {
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
@@ -26,11 +27,12 @@ describe('ProjectNavigationToolbox', () => {
     spyOn(sessionStorage, 'getItem').and.returnValue(JSON.stringify({
       name: 'Test', path: '', target: { language: 'en' }, structures: []
     }));
+    routeParams = new BehaviorSubject<Record<string, string | number>>({ book: 'GEN', chapter: 1 });
 
     TestBed.configureTestingModule({
       imports: [ProjectNavigationToolbox],
       providers: [
-        { provide: ActivatedRoute, useValue: { params: of({ book: 'GEN', chapter: 1 }), queryParams: of({}) } },
+        { provide: ActivatedRoute, useValue: { params: routeParams, queryParams: of({}) } },
         { provide: Router, useValue: router },
         { provide: SystemService, useValue: systemService },
         { provide: CollectionsStatefull, useValue: { currentValue: [], data$: of([]), update: () => {} } }
@@ -139,5 +141,32 @@ describe('ProjectNavigationToolbox', () => {
 
     expect(router.navigate).not.toHaveBeenCalled();
     expect(console.error).toHaveBeenCalled();
+  });
+
+  it('starts a selected collection at artifact zero and accepts zero in route parameters', async () => {
+    component.collections = [{ name: 'Col1', folder: 'col1', order: ['first.png'] }];
+    component.selectNavigationItem('collection-col1');
+    expect(component.formSelectedArtifactOrChapter).toBe(0);
+    await component.open();
+    expect(router.navigate).toHaveBeenCalledOnceWith(
+      ['/transcriptor/collection', 'col1', 'artifact', '0'], { queryParams: { verse: null } }
+    );
+
+    const emit = spyOn(component.onCurrentArtifact, 'emit');
+    routeParams.next({ collection: 'col1', artifact: '0' });
+    expect(emit).toHaveBeenCalledOnceWith({ collection: 'col1', artifact: 0 });
+    expect(component.context).toBe('transcriptor');
+    component.next();
+    expect(component.formSelectedArtifactOrChapter).toBe(0);
+  });
+
+  it('rejects invalid collection indices before navigating', async () => {
+    component.collections = [{ name: 'Col1', folder: 'col1', order: ['first.png'] }];
+    component.selectNavigationItem('collection-col1');
+    component.formSelectedArtifactOrChapter = 1;
+    spyOn(window, 'alert');
+    await component.open();
+    expect(router.navigate).not.toHaveBeenCalled();
+    expect(window.alert).toHaveBeenCalled();
   });
 });

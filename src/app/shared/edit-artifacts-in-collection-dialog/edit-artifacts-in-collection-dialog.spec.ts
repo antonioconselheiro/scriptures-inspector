@@ -32,6 +32,7 @@ describe('EditArtifactsInCollectionDialog', () => {
     component = fixture.componentInstance;
     component.onInjectData({ project, fromFiles: ['/incoming/new.png'] });
     fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     await fixture.whenStable();
     fixture.detectChanges();
   });
@@ -57,6 +58,7 @@ describe('EditArtifactsInCollectionDialog', () => {
     component.selectedCollectionFiles.reverse();
     const close = spyOn(component, 'close');
     component.importArtifacts('second');
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     await fixture.whenStable();
 
     expect(api.importImages).toHaveBeenCalledOnceWith(['/incoming/new.png'], '/project/artifacts/second');
@@ -74,6 +76,7 @@ describe('EditArtifactsInCollectionDialog', () => {
     const close = spyOn(component, 'close');
 
     component.importArtifacts('first');
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
     await fixture.whenStable();
 
     expect(api.writeJsonFile).not.toHaveBeenCalled();
@@ -85,6 +88,7 @@ describe('EditArtifactsInCollectionDialog', () => {
   it('prevents importing without a valid collection', () => {
     component.collections = [];
     component.onCollectionChoose('');
+    fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
 
     expect((fixture.nativeElement.querySelector('.dialogActions button') as HTMLButtonElement).disabled).toBeTrue();

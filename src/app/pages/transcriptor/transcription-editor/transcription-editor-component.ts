@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { ArtifactFragment } from '@domain/artifact-fragment-model';
@@ -10,7 +10,7 @@ import { Project } from '@domain/project-model';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
 import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
-import { readJsonFileFn } from '@shared/project/read-file-json-fn';
+import { localImageUrlFn } from '@shared/project/local-image-url-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { Subscription } from 'rxjs';
 import { DefineTranscriptionDialog } from '../define-transcription-dialog/define-transcription-dialog';
@@ -43,6 +43,8 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
 
   folder = '';
   currentCollectionDetail: FragmentCollection | null = null;
+  metadataReady = false;
+  imageFailed = false;
 
   readonly languageMetadata = languageMetadataRecord;
 
@@ -62,11 +64,14 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   });
 
   private subscriptions = new Subscription();
+  private loadGeneration = 0;
+  private metadataFilePath: string | null = null;
 
   constructor(
     private router: Router,
     private modalService: ModalService,
-    private collectionsStatefull: CollectionsStatefull
+    private collectionsStatefull: CollectionsStatefull,
+    private cdr: ChangeDetectorRef
   ) {
     this.subscriptions.add(this
       .artifactForm
@@ -78,11 +83,19 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions.add(this.collectionsStatefull.data$.subscribe({
-      next: () => this.updateCurrentCollectionDetails()
+      next: () => {
+        const previousImage = this.getImage();
+        this.updateCurrentCollectionDetails();
+        if (this.getImage() !== previousImage) {
+          this.loadArtifactData();
+        }
+        this.cdr.markForCheck();
+      }
     }));
   }
 
   ngOnDestroy(): void {
+    this.loadGeneration++;
     this.subscriptions.unsubscribe();
   }
 
@@ -132,24 +145,51 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   }
 
   loadArtifactData(): void {
-    const currentCollectionDetail = this.currentCollectionDetail;
-    const current = this.current;
-
-    if (currentCollectionDetail && current) {
-      const fileName = `${this.folder}/${currentCollectionDetail.order[current.artifact]}.json`;
-      readJsonFileFn<ArtifactFragment | null>(fileName)
-        .then(data => {
-          if (data) {
-            this.artifact = data;
-          }
-        });
+    const generation = ++this.loadGeneration;
+    const imageName = this.currentImageName;
+    this.artifact = null;
+    this.metadataFilePath = null;
+    this.metadataReady = false;
+    this.imageFailed = false;
+    this.artifactForm.reset();
+    if (!imageName || !this.folder) {
+      return;
     }
+
+    const basePath = `${this.folder}/${imageName.replace(/\.[^.]+$/, '')}.json`;
+    const legacyPath = `${this.folder}/${imageName}.json`;
+    void (async () => {
+      try {
+        let data = await window.api.readOptionalJsonFile<ArtifactFragment>(basePath);
+        let metadataPath = basePath;
+        if (!data && legacyPath !== basePath) {
+          data = await window.api.readOptionalJsonFile<ArtifactFragment>(legacyPath);
+          if (data) {
+            metadataPath = legacyPath;
+          }
+        }
+        if (generation !== this.loadGeneration) {
+          return;
+        }
+        this.metadataFilePath = metadataPath;
+        this.artifact = data;
+        this.metadataReady = true;
+        if (data) {
+          this.artifactForm.patchValue({ language: data.language, spelling: data.spelling });
+        }
+        this.cdr.markForCheck();
+      } catch (error) {
+        if (generation === this.loadGeneration) {
+          console.error('Unable to load artifact metadata:', error);
+          alert('Unable to load artifact metadata. Check the console for details.');
+        }
+      }
+    })();
   }
 
   saveArtifactData(): void {
-    if (this.artifact && this.currentCollectionDetail && this.current) {
-      const fileName = `${this.folder}/${this.currentCollectionDetail.order[this.current.artifact]}.json`;
-      writeJsonFileFn(fileName, this.artifact).then(() => {
+    if (this.artifact && this.metadataFilePath) {
+      writeJsonFileFn(this.metadataFilePath, this.artifact).then(() => {
         alert('Artifact data saved');
       }).catch(error => {
         alert('Error saving artifact data');
@@ -159,17 +199,27 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   }
 
   getImage(): string {
-    const currentCollectionDetail = this.currentCollectionDetail;
-    const current = this.current;
+    const imageName = this.currentImageName;
+    return imageName && this.folder ? localImageUrlFn(`${this.folder}/${imageName}`) : '';
+  }
 
-    if (currentCollectionDetail && current) {
-      return 'local://' + encodeURIComponent(`${this.folder}/${currentCollectionDetail.order[current.artifact] || ''}`);
-    } else {
-      return '';
+  onImageError(): void {
+    this.imageFailed = true;
+    console.error('Unable to load artifact image:', this.getImage());
+  }
+
+  private get currentImageName(): string | undefined {
+    if (!this.current || !this.currentCollectionDetail || !Number.isInteger(this.current.artifact)
+      || this.current.artifact < 0) {
+      return undefined;
     }
+    return this.currentCollectionDetail.order[this.current.artifact];
   }
 
   onArtifactSubmit(): void {
+    if (!this.metadataReady) {
+      return;
+    }
     if (this.artifactForm.invalid) {
       this.artifactForm.markAllAsTouched();
       return;

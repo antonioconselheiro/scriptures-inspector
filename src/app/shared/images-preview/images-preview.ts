@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { localImageUrlFn } from '@shared/project/local-image-url-fn';
 
 @Component({
   selector: 'app-images-preview',
@@ -25,7 +26,7 @@ export class ImagesPreview {
       return '';
     }
 
-    return 'local://'+encodeURIComponent(this.files[+index]);
+    return localImageUrlFn(this.files[+index]);
   }
 
   previous(): void {

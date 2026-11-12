@@ -196,6 +196,19 @@ ipcMain.handle('read-json-file', async (_, fileName) => {
   }
 });
 
+ipcMain.handle('read-optional-json-file', async (_, fileName) => {
+  try {
+    const data = await fs.readFile(fileName, 'utf-8');
+    return JSON.parse(data);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return null;
+    }
+    console.error('Error reading optional JSON file:', error);
+    throw error;
+  }
+});
+
 ipcMain.handle('write-json-file', async (_, fileName, data) => {
   try {
     //  FIXME: remover formatação do JSON
@@ -275,10 +288,13 @@ ipcMain.handle("delete-directory", async (_, folderPath) => {
   }
 });
 
+function localUrlToPath(url) {
+  const prefix = url.startsWith('local:///') ? 'local:///' : 'local://';
+  return decodeURIComponent(url.slice(prefix.length));
+}
+
 ipcMain.handle('read-image-base64', async (_, filePath) => {
-  filePath = decodeURIComponent(
-    filePath.replace("local://", "")
-  );
+  filePath = localUrlToPath(filePath);
 
   const buffer = await fs.readFile(filePath);
   const ext = filePath.toLowerCase().split('.').pop();
@@ -530,9 +546,7 @@ app.whenReady().then(() => {
   }
 
   protocol.handle("local", (request) => {
-    const filePath = decodeURIComponent(
-      request.url.replace("local://", "")
-    );
+    const filePath = localUrlToPath(request.url);
 
     return net.fetch(pathToFileURL(filePath).toString());
   });

@@ -42,6 +42,8 @@
           aria-label="Chapter or artifact"
           [(ngModel)]="formSelectedArtifactOrChapter"
           type="number"
+          [min]="formSelectedCollectionOrBook.startsWith('collection-') ? 0 : 1"
+          step="1"
         />
         @if (context === 'translator') {
           <input
@@ -60,7 +62,7 @@
 
       <div class="navigationActions">
         <button type="button" (click)="open()">Go</button>
-        <button type="button" [disabled]="formSelectedArtifactOrChapter === 0" (click)="back()">Back</button>
+        <button type="button" [disabled]="formSelectedArtifactOrChapter === null || formSelectedArtifactOrChapter <= (formSelectedCollectionOrBook.startsWith('collection-') ? 0 : 1)" (click)="back()">Back</button>
         <button type="button" (click)="next()">Next</button>
       </div>
     </form>

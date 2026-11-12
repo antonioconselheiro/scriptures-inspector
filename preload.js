@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld('api', {
   applicationStartupReady: (maximizeWindow) => ipcRenderer.send('application-startup-ready', maximizeWindow),
   readImageBase64: (filePath) => ipcRenderer.invoke('read-image-base64', filePath),
   readJsonFile: (path) => ipcRenderer.invoke('read-json-file', path),
+  readOptionalJsonFile: (path) => ipcRenderer.invoke('read-optional-json-file', path),
   writeJsonFile: (path, data) => ipcRenderer.invoke('write-json-file', path, data),
   listDirectories: (folderPath) => ipcRenderer.invoke('list-directories', folderPath),
   openProject: () => ipcRenderer.invoke('open-project'),

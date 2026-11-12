@@ -18,6 +18,7 @@ também será usado no destino.
 Com um projeto aberto, use **File > Artifact Collections** para criar uma coleção.
 Depois, em **File > Import Artifact Images**, selecione imagens PNG, escolha a
 coleção e organize as imagens antes de importá-las e salvar a ordem.
+Na navegação de coleções, os índices de artefatos começam em **0**.
 
 ## Arquivos de projeto
 

@@ -7,7 +7,7 @@
   <fieldset>
     <legend>Define Artifact Properties</legend>
 
-    <div>
+    <div class="displayToggles">
       <label for="language">Language</label>
 
       <select id="language" formControlName="language">
@@ -24,7 +24,7 @@
         artifactForm.controls.language.invalid &&
         artifactForm.controls.language.touched
       ) {
-        <small>Language is mandatory.</small>
+        <small class="error">Language is mandatory.</small>
       }
     </div>
 
@@ -46,7 +46,7 @@
     }
   </fieldset>
 
-  <button type="submit">Define Metadata</button>
+  <button type="submit" [disabled]="!metadataReady">Define Metadata</button>
 </form>
 
 @if (artifact) {
@@ -100,12 +100,20 @@
     }
 
     <div class="graphicsWrapper">
-      <img
-        #imgPreview
-        [src]="getImage()"
-        alt="Fragment Image"
-        [style.visibility]="showImage ? 'visible' : 'hidden'"
-      />
+      @if (getImage(); as image) {
+        <img
+          #imgPreview
+          [src]="image"
+          alt="Fragment Image"
+          (error)="onImageError()"
+          [style.visibility]="showImage ? 'visible' : 'hidden'"
+        />
+        @if (imageFailed) {
+          <p>Unable to load the artifact image. Check that the file exists and is accessible.</p>
+        }
+      } @else if (currentCollectionDetail) {
+        <p>No image exists at this artifact index.</p>
+      }
 
       @if (artifact) {
         <div
@@ -124,7 +132,7 @@
 </form>
 
 <div>
-  <button type="button" (click)="saveArtifactData()">
+  <button type="button" [disabled]="!metadataReady || !artifact" (click)="saveArtifactData()">
     Save
   </button>
 </div>

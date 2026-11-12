@@ -175,7 +175,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
           this.current = { book: bookUpperCase, chapter };
           this.onCurrentChapter.emit({ book: bookUpperCase, chapter });
           this.context = 'translator';
-        } else if (collection && artifact) {
+        } else if (collection && Number.isInteger(artifact) && artifact >= 0) {
           this.formSelectedCollectionOrBook = `collection-${collection}`;
           this.formSelectedArtifactOrChapter = artifact;
           this.current = { collection, artifact };
@@ -250,6 +250,13 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
   }
 
   selectNavigationItem(value: string): void {
+    if (value !== this.formSelectedCollectionOrBook) {
+      if (value.startsWith('collection-')) {
+        this.formSelectedArtifactOrChapter = 0;
+      } else if (this.formSelectedCollectionOrBook.startsWith('collection-')) {
+        this.formSelectedArtifactOrChapter = 1;
+      }
+    }
     this.formSelectedCollectionOrBook = value;
     this.navigationSearch = '';
     this.navigationOptionsVisible = false;
@@ -290,11 +297,21 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
     let verseToScroll: number | null = null;
 
     if (type === 'book') {
+      if (!Number.isInteger(this.formSelectedArtifactOrChapter) || this.formSelectedArtifactOrChapter < 1) {
+        alert('Choose a valid chapter number.');
+        return;
+      }
       path = ['/translator/book', key, 'chapter', chapterOrArtifact];
       verseToScroll = this.formSelectedVerse !== null && Number.isInteger(this.formSelectedVerse) && this.formSelectedVerse > 0
         ? this.formSelectedVerse
         : null;
     } else if (type === 'collection') {
+      const collection = this.collections.find(item => item.folder === key);
+      if (!collection || !Number.isInteger(this.formSelectedArtifactOrChapter)
+        || this.formSelectedArtifactOrChapter < 0 || this.formSelectedArtifactOrChapter >= collection.order.length) {
+        alert('Choose an existing artifact in the collection.');
+        return;
+      }
       path = ['/transcriptor/collection', key, 'artifact', chapterOrArtifact];
     }
     if (!path.length) {
@@ -336,13 +353,20 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
 
   back(): void {
     if (this.formSelectedArtifactOrChapter !== null) {
-      this.formSelectedArtifactOrChapter = Math.max(0, this.formSelectedArtifactOrChapter - 1);
+      const min = this.formSelectedCollectionOrBook.startsWith('collection-') ? 0 : 1;
+      this.formSelectedArtifactOrChapter = Math.max(min, this.formSelectedArtifactOrChapter - 1);
       this.open();
     }
   }
 
   next(): void {
     if (this.formSelectedArtifactOrChapter !== null) {
+      if (this.formSelectedCollectionOrBook.startsWith('collection-')) {
+        const collection = this.collections.find(item => `collection-${item.folder}` === this.formSelectedCollectionOrBook);
+        if (!collection || this.formSelectedArtifactOrChapter >= collection.order.length - 1) {
+          return;
+        }
+      }
       this.formSelectedArtifactOrChapter++;
       this.open();
     }

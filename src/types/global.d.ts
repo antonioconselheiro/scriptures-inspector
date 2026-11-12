@@ -19,6 +19,7 @@ declare global {
       applicationStartupReady(maximizeWindow?: boolean): void;
       readImageBase64(filePath: string): Promise<string | null>;
       readJsonFile<T>(path: string): Promise<T | null>;
+      readOptionalJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;
       openProject(): Promise<string | null>;
       selectPngFiles(): Promise<Array<string> | null>;
