@@ -6,6 +6,7 @@ import { targetsLoaderResolveFn } from '@shared/project/targets-loader-resolve-f
 import { TranslationEditorComponent } from './pages/translator/translation-editor/translation-editor-component';
 import { WelcomeScreenComponent } from './pages/welcome-screen/welcome-screen-component';
 import { TranscriptionEditorComponent } from './pages/transcriptor/transcription-editor/transcription-editor-component';
+import { HolyViewerPageComponent } from './pages/translator/holy-viewer/holy-viewer-page-component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,15 @@ export const routes: Routes = [
           targets: targetsLoaderResolveFn()
         },
         component: TranslationEditorComponent
+      },
+      {
+        path: 'preview/book/:book/chapter/:chapter',
+        runGuardsAndResolvers: 'pathParamsChange',
+        resolve: {
+          sources: sourcesLoaderResolveFn(),
+          targets: targetsLoaderResolveFn()
+        },
+        component: HolyViewerPageComponent
       },
     ]
   },

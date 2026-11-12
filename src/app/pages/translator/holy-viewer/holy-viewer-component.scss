@@ -1,0 +1,109 @@
+:host {
+  display: block;
+}
+
+.holyViewer {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-size: 1.25rem;
+  line-height: 1.9;
+}
+
+.holyViewerToolbar {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  opacity: 0;
+  transition: opacity 120ms ease-in-out;
+}
+
+.holyViewer:hover .holyViewerToolbar {
+  opacity: 0.5;
+}
+
+.holyViewer .holyViewerToolbar:hover,
+.holyViewer .holyViewerToolbar:focus-within {
+  opacity: 1;
+}
+
+.holyViewerToolbar button {
+  display: flex;
+  padding: 0.4rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: Canvas;
+  color: CanvasText;
+}
+
+.holyVerse {
+  margin: 0 0 2.5rem;
+  break-inside: avoid;
+}
+
+.holyVerse h2 {
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+.holyLine {
+  margin: 0.5rem 0;
+}
+
+.holyLineLabel {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.65;
+}
+
+
+
+.holyViewerDialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  background: #0008;
+}
+
+.holyViewerDialog {
+  width: min(28rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  padding: 1.25rem;
+  background: Canvas;
+  color: CanvasText;
+  box-shadow: 0 0.5rem 2rem #0005;
+}
+
+.holyViewerDialog label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.holyViewerDialog label:has(select) {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+@media print {
+  .holyViewer {
+    max-width: none;
+    padding: 0;
+  }
+
+  .holyViewerToolbar,
+  .holyViewerDialogBackdrop {
+    display: none;
+  }
+}

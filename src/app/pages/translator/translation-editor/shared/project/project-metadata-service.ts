@@ -14,6 +14,7 @@ import { Word } from '@domain/word-model';
 import { regexEscapeFn } from '@shared/system/regex-espace-fn';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { isWordOfGod } from '../scripture-presentation-core';
 
 @Injectable({
   providedIn: 'root'
@@ -135,14 +136,11 @@ export class ProjectMetadataService {
     const metadata = bookMetadata.chapters
       ?.find(chapter => chapter?.chapter === current.chapter)?.verses
       ?.find(verse => verse?.verse === verseNumber)?.metadata;
-    if (!metadata || !word.segments.length) {
-      return false;
-    }
-
-    return word.segments.some(segment => {
-      const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
-      return metadata[key]?.isWordOfGod ?? false;
-    });
+    return isWordOfGod(
+      metadata,
+      word,
+      segment => this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment)
+    );
   }
 
   //

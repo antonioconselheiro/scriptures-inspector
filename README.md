@@ -12,6 +12,18 @@ pode ser movido ou ocultado pelo menu **View**. No editor de tradução, o campo
 verso acompanha a rolagem e permite ir diretamente a um verso do capítulo aberto.
 Para abrir outro livro ou capítulo, selecione-o e use **Go**; o verso informado
 também será usado no destino.
+Para abrir uma apresentação sem os controles de edição, use **View > Preview Current**.
+O Holy Viewer inicia com o capítulo inteiro, cores **Prismatic** e léxicos visíveis;
+o ícone de configuração permite escolher um
+verso, intervalo ou capítulo e quais dados interlineares, traduções personalizadas,
+ortografia, transliteração e numerologia serão exibidos, além de escolher entre
+o modo **Word of God**, que destaca as marcações correspondentes, e o modo
+**Prismatic**, que exibe as cores de associação interlinear.
+O diálogo também permite ativar o tooltip nativo (atributo HTML `title`) com o
+léxico ao passar o mouse sobre segmentos do texto original.
+As variações selecionadas são aplicadas à tradução personalizada; se várias
+alterarem o mesmo trecho, prevalece a última selecionada. Traduções de referência
+do editor não são exibidas na prévia.
 
 ## Coleções de artefatos
 

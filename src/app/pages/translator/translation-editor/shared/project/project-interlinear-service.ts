@@ -6,6 +6,7 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import { getInterlinearOriginIndex, getInterlinearPresentationColor } from '../scripture-presentation-core';
 
 @Injectable({
   providedIn: 'root'
@@ -309,27 +310,9 @@ export class ProjectInterlinearService {
     sourceVerse: SourceVerse,
     wordIndex: number
   ) {
-    const indexes = this.getInterlinearToBaseScripture(
-      interlinearTarget,
-      originStructureSource,
-      current,
-      sourceVerse
+    return getInterlinearPresentationColor(
+      interlinearTarget, originStructureSource, current, sourceVerse, wordIndex
     );
-
-    if (indexes.interlinearChapterIndex === this.indexNotFound || indexes.interlinearVerseIndex === this.indexNotFound) {
-      return '';
-    }
-
-    const interlinearWord = interlinearTarget[originStructureSource]
-      .chapters[indexes.interlinearChapterIndex]
-      .verses[indexes.interlinearVerseIndex]
-      .words[wordIndex] || null;
-
-    if (!interlinearWord) {
-      return '';
-    }
-
-    return String(interlinearWord.originIndex % 7 + 1);
   }
 
   getOriginWordIndex(
@@ -339,13 +322,9 @@ export class ProjectInterlinearService {
     sourceVerse: SourceVerse,
     translationWordIndex: number
   ): number | null {
-    const interlinearChapter = interlinearTarget[originStructureSource]?.chapters
-      .find(chapter => chapter?.chapter === current.chapter);
-    const interlinearVerse = interlinearChapter?.verses
-      .find(verse => verse?.verse === sourceVerse.verse);
-    const interlinearWord = interlinearVerse?.words?.[translationWordIndex];
-
-    return interlinearWord?.originIndex ?? null;
+    return getInterlinearOriginIndex(
+      interlinearTarget, originStructureSource, current, sourceVerse, translationWordIndex
+    );
   }
 
   getOriginVerseReference(

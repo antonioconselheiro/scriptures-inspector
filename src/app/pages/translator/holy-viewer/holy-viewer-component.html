@@ -1,0 +1,116 @@
+<div class="holyViewer">
+  @if (configurable) {
+    <div class="holyViewerToolbar">
+      <button type="button" aria-label="Configure Holy Viewer" title="Configure preview" (click)="openSettings()">
+        <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path>
+          <circle cx="12" cy="12" r="7"></circle>
+        </svg>
+      </button>
+    </div>
+  }
+
+  @for (verse of visibleVerses; track verse.id) {
+    <article class="holyVerse">
+      <h2>{{verse.bookName}} {{verse.chapter}}:{{verse.verse}}</h2>
+      @for (line of verse.lines; track $index) {
+        @if (showLine(line.type)) {
+          <div class="holyLine">
+            @if (line.type !== 'original') {
+              <span class="holyLineLabel">{{line.label}}</span>
+            }
+            <span [attr.lang]="line.language">
+              @for (piece of line.pieces; track $index) {
+                <span
+                  [attr.title]="line.type === 'original' && config.showOriginalLexicalTooltip ? piece.title || null : null"
+                  [class]="config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : ''"
+                  [attr.data-punctuation]="config.displayMode === 'prismatic' && piece.color === '' && isPunctuation(pieceText(line, piece)) ? '' : null"
+                  [class.godsaid]="config.displayMode === 'wordOfGod' && piece.wordOfGod"
+                >{{pieceText(line, piece)}}</span>
+              }
+            </span>
+          </div>
+        }
+      }
+    </article>
+  } @empty {
+    <p>No verses are available for this preview configuration.</p>
+  }
+</div>
+
+@if (settingsOpen && draftConfig) {
+  <div class="holyViewerDialogBackdrop" (click)="closeSettings()">
+    <section
+      class="holyViewerDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="holyViewerSettingsTitle"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="holyViewerSettingsTitle">Holy Viewer settings</h2>
+
+      <label>
+        Passage
+        <select [(ngModel)]="draftConfig.scope" name="scope">
+          <option value="verse">One verse</option>
+          <option value="range">Verse range</option>
+          <option value="chapter">Whole chapter</option>
+        </select>
+      </label>
+
+      @if (draftConfig.scope === 'verse') {
+        <label>Verse <input type="number" min="1" [(ngModel)]="draftConfig.verse" name="verse"></label>
+      }
+      @if (draftConfig.scope === 'range') {
+        <label>First verse <input type="number" min="1" [(ngModel)]="draftConfig.startVerse" name="startVerse"></label>
+        <label>Last verse <input type="number" min="1" [(ngModel)]="draftConfig.endVerse" name="endVerse"></label>
+      }
+
+      <label>
+        Display mode
+        <select [(ngModel)]="draftConfig.displayMode" name="displayMode">
+          <option value="wordOfGod">Word of God</option>
+          <option value="prismatic">Prismatic</option>
+        </select>
+      </label>
+      <label><input type="checkbox" [(ngModel)]="draftConfig.showOriginal" name="showOriginal"> Original text</label>
+      <label>
+        <input
+          type="checkbox"
+          [(ngModel)]="draftConfig.showOriginalLexicalTooltip"
+          name="showOriginalLexicalTooltip"
+        >
+        Show original lexical value on hover
+      </label>
+      @for (section of sectionNames; track section.key) {
+        <label>
+          <input type="checkbox" [(ngModel)]="draftConfig.sections[section.key]" [name]="section.key">
+          {{section.label}}
+        </label>
+      }
+
+      @if (variationOptions.length) {
+        <fieldset>
+          <legend>Custom translation variations</legend>
+          <p>When variations overlap, the last selected variation takes precedence.</p>
+          @for (option of variationOptions; track option.target + ':' + option.id) {
+            <label>
+              <input type="checkbox" #variationCheckbox
+                [checked]="(draftConfig.selectedVariations[option.target] || []).includes(option.id)"
+                (change)="setVariation(option, variationCheckbox.checked)">
+              {{option.source}} · {{option.name}}
+            </label>
+          }
+        </fieldset>
+      }
+
+      <div class="dialogActions">
+        <button type="button" (click)="closeSettings()">Cancel</button>
+        <button type="button" (click)="saveSettings()">Apply</button>
+      </div>
+    </section>
+  </div>
+}

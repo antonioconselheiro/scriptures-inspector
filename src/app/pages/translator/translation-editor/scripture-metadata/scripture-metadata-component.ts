@@ -30,6 +30,7 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { PinRowDirective } from '../pin-row.directive';
+import { getPresentationColor } from '../shared/scripture-presentation-core';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -129,7 +130,7 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   }
 
   getColor(segmentIndex: number): string {
-    return String(segmentIndex % 7 + 1);
+    return getPresentationColor(segmentIndex);
   }
 
   getInterlinearCorrespondingCurrentChapter(interlinear: ProjectStructureInterlinear): CurrentChapter {

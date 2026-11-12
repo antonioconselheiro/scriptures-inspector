@@ -6,7 +6,7 @@ declare global {
       updateCodexConfigMenu(codices: Array<{ source: string; label: string }>): Promise<void>;
       maximizeWindow(): void;
       onOpenCodexConfig(callback: (source: string) => void): () => void;
-      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project' | 'artifact-collections' | 'import-artifact-images') => void): () => void;
+      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project' | 'artifact-collections' | 'import-artifact-images' | 'preview-current') => void): () => void;
       onToggleToolbox(callback: (
         toolbox: 'page-navigation' | 'codex-navigation' | 'text-size-controller',
         visible: boolean

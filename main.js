@@ -425,6 +425,11 @@ function updateApplicationMenu(codices = []) {
   {
     label: 'View',
     submenu: [
+      {
+        label: 'Preview Current',
+        click: () => sendProjectMenuAction('preview-current')
+      },
+      { type: 'separator' },
       { role: 'reload' },
       { role: 'forceReload' },
       { role: 'toggleDevTools' },

@@ -5,9 +5,85 @@
       "verses": [
         {
           "verse": 1,
-          "text": "",
-          "variations": {},
-          "metadata": []
+          "text": "No princípio criou Divos AZ os céus e AZ a terra.",
+          "variations": {
+            "46dd6cb6-96ba-4ed1-a965-c37880f4bb4d": {
+              "4": {
+                "value": "ⱯƵ"
+              },
+              "8": {
+                "value": "ⱯƵ"
+              }
+            },
+            "4e5f9b02-385c-4192-bde4-1b5739dc797c": {
+              "4": {
+                "value": "➜"
+              },
+              "8": {
+                "value": "➜"
+              }
+            },
+            "1389d4a7-688a-473d-89bb-372656f9a73b": {
+              "3": {
+                "value": "Deus"
+              }
+            },
+            "fc5ca031-196a-4f7e-aca5-808369ed3b93": {
+              "3": {
+                "value": "Elohim"
+              }
+            }
+          },
+          "metadata": [
+            {
+              "size": 2,
+              "value": "0-ב"
+            },
+            {
+              "size": 9,
+              "value": "1-ראשית"
+            },
+            {
+              "size": 5,
+              "value": "2-ברא"
+            },
+            {
+              "size": 5,
+              "value": "3-אלהים"
+            },
+            {
+              "size": 2,
+              "value": "4-את"
+            },
+            {
+              "size": 2,
+              "value": "5-ה"
+            },
+            {
+              "size": 4,
+              "value": "6-שמים"
+            },
+            {
+              "size": 1,
+              "value": "7-ו"
+            },
+            {
+              "size": 2,
+              "value": "8-את"
+            },
+            {
+              "size": 1,
+              "value": "9-ה"
+            },
+            {
+              "size": 5,
+              "value": "10-ארץ"
+            },
+            {
+              "size": 1,
+              "value": "11-׃"
+            }
+          ]
         },
         {
           "verse": {

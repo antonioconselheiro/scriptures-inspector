@@ -16,6 +16,10 @@ import { SourceVerse } from '@domain/source-verse-model';
 import { TranslationWordSegment } from '@domain/translation-word-segment-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
+import {
+  getCustomTranslationPresentationColor,
+  getSerializedSegmentIndex
+} from '../scripture-presentation-core';
 
 @Injectable({
   providedIn: 'root'
@@ -340,8 +344,8 @@ export class ProjectCustomTranslationService {
 
     if (interlinear) {
       const translationMetadataValue = translationMetadata[wordIndex]?.value || '';
-      const [translationWordIndex] = Array.from(translationMetadataValue.match(/^\d+/) || ['']);
-      if (!translationWordIndex) {
+      const translationWordIndex = getSerializedSegmentIndex(translationMetadataValue);
+      if (translationWordIndex === null) {
         return '';
       }
 
@@ -352,13 +356,10 @@ export class ProjectCustomTranslationService {
       if (!interlinearSegmentOrigin) {
         return '';
       } else {
-        return String(interlinearSegmentOrigin.originIndex % 7 + 1);
+        return getCustomTranslationPresentationColor('', interlinearSegmentOrigin.originIndex);
       }
     } else {
-      const matches = translationMetadata[wordIndex]?.value.match(/^\d+/);
-      if (matches) {
-        return String(Number(Array.from(matches)[0]) % 7 + 1);
-      }
+      return getCustomTranslationPresentationColor(translationMetadata[wordIndex]?.value ?? '');
     }
 
     return '';

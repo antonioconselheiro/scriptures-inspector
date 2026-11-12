@@ -114,12 +114,45 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
         this.openViewingTranslationDialog();
       } else if (action === 'import-from-book') {
         this.openImportFromBookDialog();
+      } else if (action === 'preview-current') {
+        void this.openCurrentPreview();
       }
     }));
     this.subscribeData();
     this.subscribeSaveBookMetadata();
     this.subscribeSaveBookInterlinear();
     this.subscribeSaveBookCustomTranslation();
+  }
+
+  private async openCurrentPreview(): Promise<void> {
+    if (!this.current) {
+      return;
+    }
+
+    try {
+      await this.saveCurrentPageImmediately();
+      const currentVerse = this.getCurrentVisibleVerse();
+      const navigated = await this.router.navigateByUrl(
+        `/translator/preview/book/${encodeURIComponent(this.current.book)}/chapter/${this.current.chapter}`
+        + (currentVerse ? `?verse=${currentVerse}` : '')
+      );
+      if (!navigated) {
+        throw new Error('The Holy Viewer preview route was not activated.');
+      }
+    } catch (error) {
+      console.error('Unable to open the Holy Viewer preview:', error);
+      alert('Unable to open the preview. Check the console for details.');
+    }
+  }
+
+  private getCurrentVisibleVerse(): number | null {
+    const titles = Array.from(
+      this.elementRef.nativeElement.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse]')
+    );
+    const visibleTitles = titles.filter(title => title.getBoundingClientRect().top <= 1);
+    const title = visibleTitles.at(-1) ?? titles[0];
+    const verse = Number(title?.dataset['verse']);
+    return Number.isInteger(verse) && verse > 0 ? verse : null;
   }
 
   ngOnDestroy(): void {
