@@ -1,6 +1,6 @@
 <app-toolbox
   title="Codex Navigation"
-  corner="top-right"
+  corner="bottom-left"
   [visible]="(toolboxVisibility.codexNavigationVisible$ | async) ?? false"
 >
   @if (project) {
@@ -47,11 +47,13 @@
           <input
             name="selectedVerse"
             class="selectedVerse"
-            aria-label="Verse to scroll to after navigation"
-            title="Verse to scroll to after navigation"
+            aria-label="Verse"
+            title="Go to verse"
             [(ngModel)]="formSelectedVerse"
+            (change)="scrollToVerse(verseInput.valueAsNumber)"
             type="number"
             min="1"
+            #verseInput
           />
         }
       </div>

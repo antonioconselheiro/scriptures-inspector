@@ -8,8 +8,7 @@ let splashWindow;
 let applicationMenu;
 const toolboxVisibility = {
   pageNavigation: true,
-  codexNavigation: false,
-  verseNavigation: true,
+  codexNavigation: true,
   textSizeController: false
 };
 let pendingProjectPath = getProjectPath(process.argv);
@@ -425,15 +424,6 @@ function updateApplicationMenu(codices = []) {
         click: menuItem => {
           toolboxVisibility.pageNavigation = menuItem.checked;
           sendToolboxVisibility('page-navigation', menuItem.checked);
-        }
-      },
-      {
-        type: 'checkbox',
-        label: 'Verse Navigation',
-        checked: toolboxVisibility.verseNavigation,
-        click: menuItem => {
-          toolboxVisibility.verseNavigation = menuItem.checked;
-          sendToolboxVisibility('verse-navigation', menuItem.checked);
         }
       },
       {

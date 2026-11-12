@@ -4,5 +4,9 @@
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.quoteStyle": "single",
   "editor.formatOnSave": false,
-  "remote.forwardOnOpen": false
+  "remote.forwardOnOpen": false,
+  "chat.tools.terminal.autoApprove": {
+    "command": true,
+    "./node_modules/.bin/ng": true
+  }
 }

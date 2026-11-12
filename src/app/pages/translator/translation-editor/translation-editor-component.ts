@@ -41,7 +41,6 @@ import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rul
 import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { PinnedRowsFooter } from './pinned-rows-footer/pinned-rows-footer';
 import { PinnedRowsService } from './pinned-rows-service';
-import { VerseNavigationToolbox } from '@shared/verse-navigation-toolbox/verse-navigation-toolbox';
 
 @Component({
   selector: 'app-translation-editor-component',
@@ -55,8 +54,7 @@ import { VerseNavigationToolbox } from '@shared/verse-navigation-toolbox/verse-n
     DefineFieldMorphemeRuleContextMenu,
     InterlinearToolsContextMenu,
     PinnedRowsFooter,
-    PendingLexiconNavigationToolbox,
-    VerseNavigationToolbox
+    PendingLexiconNavigationToolbox
 ],
   providers: [PinnedRowsService],
   templateUrl: './translation-editor-component.html',

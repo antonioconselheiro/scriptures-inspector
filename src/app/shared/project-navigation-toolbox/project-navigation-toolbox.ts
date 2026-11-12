@@ -30,7 +30,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
 
   formSelectedCollectionOrBook = '';
   formSelectedArtifactOrChapter: number | null = null;
-  formSelectedVerse = 1;
+  formSelectedVerse: number | null = 1;
   navigationSearch = '';
   navigationOptionsVisible = false;
   activeNavigationIndex = -1;
@@ -102,6 +102,39 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
       this.navigationOptionsVisible = false;
       this.activeNavigationIndex = -1;
     }
+  }
+
+  @HostListener('window:scroll')
+  onScroll(): void {
+    if (this.context !== 'translator') {
+      return;
+    }
+
+    let current: HTMLElement | null = null;
+    for (const title of this.getVerseTitles()) {
+      if (title.getBoundingClientRect().top <= 1) {
+        current = title;
+      } else {
+        break;
+      }
+    }
+    this.formSelectedVerse = current ? Number(current.dataset['verse']) : null;
+  }
+
+  scrollToVerse(verse: number): void {
+    if (!Number.isInteger(verse) || verse < 1) {
+      return;
+    }
+
+    const title = this.getVerseTitles().find(element => Number(element.dataset['verse']) === verse);
+    if (title) {
+      const top = title.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+  }
+
+  private getVerseTitles(): HTMLElement[] {
+    return Array.from(document.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse]'));
   }
 
   private readProjectFromSession(): void {
@@ -258,7 +291,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
 
     if (type === 'book') {
       path = ['/translator/book', key, 'chapter', chapterOrArtifact];
-      verseToScroll = Number.isInteger(this.formSelectedVerse) && this.formSelectedVerse > 0
+      verseToScroll = this.formSelectedVerse !== null && Number.isInteger(this.formSelectedVerse) && this.formSelectedVerse > 0
         ? this.formSelectedVerse
         : null;
     } else if (type === 'collection') {
@@ -317,12 +350,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
 
   private scrollToVerseAfterNavigation(verse: number): void {
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      const title = Array.from(document.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse]'))
-        .find(element => Number(element.dataset['verse']) === verse);
-      if (title) {
-        const top = title.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
+      this.scrollToVerse(verse);
     }));
   }
 

@@ -1,1 +1,1 @@
-export type ToolboxId = 'page-navigation' | 'codex-navigation' | 'verse-navigation' | 'text-size-controller';
+export type ToolboxId = 'page-navigation' | 'codex-navigation' | 'text-size-controller';

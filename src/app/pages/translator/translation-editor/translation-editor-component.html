@@ -8,7 +8,6 @@
   <app-add-pattern-context-menu #addPatternMenuRef [current]="current" [project]="project!"></app-add-pattern-context-menu>
   <app-define-field-morpheme-rule-context-menu #defineMorphemeRef [current]="current"></app-define-field-morpheme-rule-context-menu>
   <app-interlinear-tools-context-menu #interlinearToolsRef [current]="current"></app-interlinear-tools-context-menu>
-  <app-verse-navigation-toolbox></app-verse-navigation-toolbox>
   <app-pending-lexicon-navigation-toolbox
     [visible]="(toolboxVisibility.pageNavigationVisible$ | async) ?? false"
     [pendingCount]="pendingLexicalFieldCount"

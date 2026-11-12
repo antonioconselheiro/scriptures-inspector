@@ -8,13 +8,12 @@ declare global {
       onOpenCodexConfig(callback: (source: string) => void): () => void;
       onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project') => void): () => void;
       onToggleToolbox(callback: (
-        toolbox: 'page-navigation' | 'codex-navigation' | 'verse-navigation' | 'text-size-controller',
+        toolbox: 'page-navigation' | 'codex-navigation' | 'text-size-controller',
         visible: boolean
       ) => void): () => void;
       getToolboxVisibility(): Promise<{
         pageNavigation: boolean;
         codexNavigation: boolean;
-        verseNavigation: boolean;
         textSizeController: boolean;
       }>;
       applicationStartupReady(maximizeWindow?: boolean): void;

@@ -8,8 +8,7 @@ import { ToolboxId } from './toolbox-id-type';
 export class ToolboxVisibilityService {
 
   readonly pageNavigationVisible$ = new BehaviorSubject(true);
-  readonly codexNavigationVisible$ = new BehaviorSubject(false);
-  readonly verseNavigationVisible$ = new BehaviorSubject(true);
+  readonly codexNavigationVisible$ = new BehaviorSubject(true);
   readonly textSizeControllerVisible$ = new BehaviorSubject(false);
 
   setVisible(toolbox: ToolboxId, visible: boolean): void {
@@ -17,8 +16,6 @@ export class ToolboxVisibilityService {
       this.pageNavigationVisible$.next(visible);
     } else if (toolbox === 'codex-navigation') {
       this.codexNavigationVisible$.next(visible);
-    } else if (toolbox === 'verse-navigation') {
-      this.verseNavigationVisible$.next(visible);
     } else {
       this.textSizeControllerVisible$.next(visible);
     }
@@ -27,12 +24,10 @@ export class ToolboxVisibilityService {
   setAll(visibility: {
     pageNavigation: boolean;
     codexNavigation: boolean;
-    verseNavigation: boolean;
     textSizeController: boolean;
   }): void {
     this.pageNavigationVisible$.next(visibility.pageNavigation);
     this.codexNavigationVisible$.next(visibility.codexNavigation);
-    this.verseNavigationVisible$.next(visibility.verseNavigation);
     this.textSizeControllerVisible$.next(visibility.textSizeController);
   }
 }

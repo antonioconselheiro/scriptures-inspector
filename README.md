@@ -5,6 +5,14 @@ Zacarias 4:6
 
 https://antonioconselheiro.github.io/scriptures-inspector/
 
+## Navegação
+
+O painel **Codex Navigation** fica visível por padrão no canto inferior esquerdo e
+pode ser movido ou ocultado pelo menu **View**. No editor de tradução, o campo de
+verso acompanha a rolagem e permite ir diretamente a um verso do capítulo aberto.
+Para abrir outro livro ou capítulo, selecione-o e use **Go**; o verso informado
+também será usado no destino.
+
 ## Arquivos de projeto
 
 Os arquivos `.xenoglosproj` são documentos JSON. O pacote Debian registra a extensão
