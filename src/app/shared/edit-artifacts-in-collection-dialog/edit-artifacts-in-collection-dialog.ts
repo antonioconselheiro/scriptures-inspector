@@ -9,6 +9,7 @@ import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-coll
 import { importImagesFn } from '@shared/project/import-images-fn';
 import { loadProjectCollectionsFn } from '@shared/project/load-project-collections-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
+import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { Subject } from 'rxjs';
 import { FileNamePipe } from '../file-name/file-name-pipe';
 
@@ -23,6 +24,7 @@ import { FileNamePipe } from '../file-name/file-name-pipe';
   styleUrl: './edit-artifacts-in-collection-dialog.scss',
 })
 export class EditArtifactsInCollectionDialog extends ModalableDirective<{
+  title?: string;
   fromFiles?: Array<string>;
   collectionFolder?: string;
   project: Project;
@@ -34,17 +36,20 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   collections: Array<FragmentCollection> = [];
   collectionFolder?: string;
   selectedCollectionFiles: Array<string> = [];
+  importing = false;
 
   @ViewChild(ImagesPreview)
   imagesPreview!: ImagesPreview;
 
   constructor(
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private collectionsStatefull: CollectionsStatefull
   ) {
     super();
   }
 
   override onInjectData(data: {
+    title?: string;
     fromFiles?: Array<string>;
     collectionFolder?: string;
     project: Project;
@@ -59,10 +64,14 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
     loadProjectCollectionsFn(project)
       .then(collections => {
         this.collections = collections;
-        this.onCollectionChoose(collections[0]?.folder || '');
+        this.collectionFolder = this.collectionFolder || collections[0]?.folder;
+        this.onCollectionChoose(this.collectionFolder || '');
         this.cdr.detectChanges();
       })
-      .catch(e => console.error(e));
+      .catch(e => {
+        console.error(e);
+        alert('Unable to load artifact collections. Check the console for details.');
+      });
   }
 
   viewFile(file: string): void {
@@ -70,9 +79,11 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   }
 
   onCollectionChoose(collectionFolder: string): void {
+    this.collectionFolder = collectionFolder;
     const collection = this.collections.find(c => c.folder === collectionFolder);
-    if (collection && collection.order) {
-      this.selectedCollectionFiles = [...collection.order, ...this.fromFiles];
+    if (collection && this.project) {
+      const folder = getArtifactCollectionFolderFn(this.project, collectionFolder);
+      this.selectedCollectionFiles = [...(collection.order || []).map(file => `${folder}/${file}`), ...this.fromFiles];
     } else {
       this.selectedCollectionFiles = [...this.fromFiles];
     }
@@ -93,32 +104,39 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
   saveCollectionMetadata(collectionFiles: Array<string>, collectionFolder: string): Promise<void> {
     const collection = this.collections.find(c => c.folder === collectionFolder);
     if (collection && this.project) {
-      collection.order = collectionFiles.map(file => file.split('/').pop() || file);
+      collection.order = collectionFiles.map(file => file.split(/[\\/]/).pop() || file);
       const { folder, ...metadata } = { ...collection };
       return writeJsonFileFn(`${getArtifactCollectionFolderFn(this.project, collectionFolder)}/metadata.json`, metadata);
     }
     
-    return Promise.resolve();
+    return Promise.reject(new Error('No artifact collection selected'));
   }
 
   importArtifacts(collectionFolder: string): void {
-    if (this.project) {
+    if (!this.collections.some(collection => collection.folder === collectionFolder)) {
+      alert('Select an artifact collection before importing images.');
+      return;
+    }
+    if (this.project && !this.importing) {
+      this.importing = true;
       LoadingObservable.startLoading();
   
-      Promise.all([
-        this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder),
-        importImagesFn(this.selectedCollectionFiles, getArtifactCollectionFolderFn(this.project, collectionFolder))
-      ])
+      const project = this.project;
+      importImagesFn(this.fromFiles, getArtifactCollectionFolderFn(project, collectionFolder))
+        .then(() => this.saveCollectionMetadata(this.selectedCollectionFiles, collectionFolder))
         .then(() => {
+          this.collectionsStatefull.update(project);
           alert('Files imported successfully!');
+          this.close();
         })
         .catch(e => {
           alert('An error occurred while importing the files.');
           console.error(e);
         })
         .finally(() => {
+          this.importing = false;
           LoadingObservable.stopLoading();
-          this.close();
+          this.cdr.markForCheck();
         });
     }
   }

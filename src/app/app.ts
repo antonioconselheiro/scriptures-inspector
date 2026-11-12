@@ -1,15 +1,20 @@
 import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AsyncModalModule } from '@belomonte/async-modal-ngx';
+import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { Project } from '@domain/project-model';
 import { LoadingObservable, LoadingState } from '@shared/loading/loading-observable';
 import { setProjectFn } from '@shared/project/set-project-fn';
+import { getProjectFn } from '@shared/project/get-project-fn';
+import { selectPngFilesFn } from '@shared/project/select-png-files-fn';
+import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { SystemService } from '@shared/system/system-service';
 import { Subscription } from 'rxjs';
 import { MainDialogComponent } from './shared/main-dialog/main-dialog';
 import { FindInPage } from './shared/find-in-page/find-in-page';
 import { ToolboxVisibilityService } from './shared/toolbox/toolbox-visibility-service';
 import { TextSizeControllerToolbox } from './shared/text-size-controller-toolbox/text-size-controller-toolbox';
+import { AddArtifactCollectionDialog } from './shared/add-artifact-collection-dialog/add-artifact-collection-dialog';
+import { EditArtifactsInCollectionDialog } from './shared/edit-artifacts-in-collection-dialog/edit-artifacts-in-collection-dialog';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +38,9 @@ export class App implements OnInit, OnDestroy {
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router,
+    private modalService: ModalService,
     private systemService: SystemService,
+    private collectionsStatefull: CollectionsStatefull,
     private toolboxVisibility: ToolboxVisibilityService,
     private ngZone: NgZone
   ) { }
@@ -53,12 +60,53 @@ export class App implements OnInit, OnDestroy {
             console.error('Unable to save the project:', error);
           });
         });
+      } else if (action === 'artifact-collections' || action === 'import-artifact-images') {
+        this.ngZone.run(() => {
+          void this.openArtifactMenuAction(action);
+        });
       }
     });
     window.api.onProjectFileOpened(filePath => {
       void this.openProjectFile(filePath);
     });
     void this.initializeStartup();
+  }
+
+  private async openArtifactMenuAction(action: 'artifact-collections' | 'import-artifact-images'): Promise<void> {
+    const project = getProjectFn();
+    if (!project || !/^\/(translator|transcriptor)\//.test(this.router.url)) {
+      alert('Open a project before managing artifact collections.');
+      return;
+    }
+
+    if (action === 'artifact-collections') {
+      this.collectionsStatefull.update(project);
+      this.modalService.createModal(AddArtifactCollectionDialog)
+        .setBindToRoute(this.router)
+        .setOutletName('main')
+        .setData({ title: 'Artifact Collections', project })
+        .build();
+      return;
+    }
+
+    try {
+      const fromFiles = await selectPngFilesFn();
+      if (!fromFiles?.length) {
+        return;
+      }
+      if (getProjectFn()?.path !== project.path || !/^\/(translator|transcriptor)\//.test(this.router.url)) {
+        alert('The project changed while selecting images. Please try again.');
+        return;
+      }
+      this.modalService.createModal(EditArtifactsInCollectionDialog)
+        .setBindToRoute(this.router)
+        .setOutletName('main')
+        .setData({ title: 'Import Artifact Images', fromFiles, project })
+        .build();
+    } catch (error) {
+      console.error('Unable to select artifact images:', error);
+      alert('Unable to select artifact images. Check the console for details.');
+    }
   }
 
   ngOnDestroy(): void {

@@ -17,6 +17,7 @@ import { Subject, Subscription } from 'rxjs';
   styleUrl: './add-artifact-collection-dialog.scss',
 })
 export class AddArtifactCollectionDialog extends ModalableDirective<{
+  title?: string;
   project: Project;
 }, void> {
 
@@ -25,6 +26,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
   form: FormGroup<any>;
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
+  creating = false;
 
   private subscriptions = new Subscription();
 
@@ -40,6 +42,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
   }
 
   override onInjectData(data: {
+    title?: string;
     project: Project;
   }): void {
     this.project = data.project;
@@ -97,25 +100,39 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
     collectionNameEl: HTMLInputElement,
     collectionDescriptionEl: HTMLTextAreaElement
   ): void {
-    if (!collectionNameEl.value) {
+    if (!collectionNameEl.value || this.creating) {
       return;
     }
 
     const collectionName = collectionNameEl.value;
     const collectionDescription = collectionDescriptionEl.value;
-
-    collectionNameEl.value = '';
-    collectionDescriptionEl.value = '';
+    const folder = this.derivateFolderName(collectionName);
+    if (!folder || this.collections.some(collection => collection.folder === folder)) {
+      alert('Choose a name that produces a unique, non-empty folder name.');
+      return;
+    }
 
     const project = this.project;
     if (project) {
-      writeJsonFileFn(`${project.path}/artifacts/${this.derivateFolderName(collectionName)}/metadata.json`, {
+      this.creating = true;
+      writeJsonFileFn(`${project.path}/artifacts/${folder}/metadata.json`, {
         name: collectionName,
         description: collectionDescription || '',
         order: []
       })
-        .then(() => this.collectionsStatefull.update(project))
-        .catch(e => console.error(e));
+        .then(() => {
+          collectionNameEl.value = '';
+          collectionDescriptionEl.value = '';
+          this.collectionsStatefull.update(project);
+        })
+        .catch(e => {
+          console.error(e);
+          alert('Unable to create the collection. Check the console for details.');
+        })
+        .finally(() => {
+          this.creating = false;
+          this.cdr.detectChanges();
+        });
     }
   }
 }

@@ -13,14 +13,16 @@
         required
         id="relatesArtifactToCollection"
         [value]="collectionFolder"
-        [attr.readonly]="collectionFolder ? true : null"
-        (click)="onCollectionChoose(collectionFolderEl.value)"
+        (change)="onCollectionChoose(collectionFolderEl.value)"
       >
         @for (collection of collections; track $index) {
           <option [value]="collection.folder">{{collection.name}} ({{collection.folder}})</option>
         }
       </select>
     </div>
+    @if (!collections.length) {
+      <p>Create a collection using File &gt; Artifact Collections before importing images.</p>
+    }
 
     <div class="orderAndPreviewWrapper">
       <app-images-preview [files]="selectedCollectionFiles"></app-images-preview>
@@ -99,7 +101,7 @@
 
   @if (fromFiles.length) {
     <div class="dialogActions">
-      <button type="button" (click)="importArtifacts(collectionFolderEl.value)">Import and Save</button>
+      <button type="button" [disabled]="!collectionFolder || importing" (click)="importArtifacts(collectionFolderEl.value)">Import and Save</button>
     </div>
   } @else if (collectionFolder) {
     <div class="dialogActions">

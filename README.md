@@ -13,6 +13,12 @@ verso acompanha a rolagem e permite ir diretamente a um verso do capítulo abert
 Para abrir outro livro ou capítulo, selecione-o e use **Go**; o verso informado
 também será usado no destino.
 
+## Coleções de artefatos
+
+Com um projeto aberto, use **File > Artifact Collections** para criar uma coleção.
+Depois, em **File > Import Artifact Images**, selecione imagens PNG, escolha a
+coleção e organize as imagens antes de importá-las e salvar a ordem.
+
 ## Arquivos de projeto
 
 Os arquivos `.xenoglosproj` são documentos JSON. O pacote Debian registra a extensão

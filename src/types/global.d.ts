@@ -6,7 +6,7 @@ declare global {
       updateCodexConfigMenu(codices: Array<{ source: string; label: string }>): Promise<void>;
       maximizeWindow(): void;
       onOpenCodexConfig(callback: (source: string) => void): () => void;
-      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project') => void): () => void;
+      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project' | 'artifact-collections' | 'import-artifact-images') => void): () => void;
       onToggleToolbox(callback: (
         toolbox: 'page-navigation' | 'codex-navigation' | 'text-size-controller',
         visible: boolean
@@ -21,7 +21,7 @@ declare global {
       readJsonFile<T>(path: string): Promise<T | null>;
       writeJsonFile(path: string, data: object): Promise<void>;
       openProject(): Promise<string | null>;
-      selectPngFiles(): Promise<Array<string>>;
+      selectPngFiles(): Promise<Array<string> | null>;
       listDirectories(folderPath: string): Promise<Array<string>>;
       deleteDirectory(folder: string): Promise<boolean>;
       importImages(filePaths: Array<string>, destiny: string): Promise<void>;

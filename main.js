@@ -366,6 +366,15 @@ function updateApplicationMenu(codices = []) {
         click: () => sendProjectMenuAction('save-project')
       },
       { type: 'separator' },
+      {
+        label: 'Artifact Collections',
+        click: () => sendProjectMenuAction('artifact-collections')
+      },
+      {
+        label: 'Import Artifact Images',
+        click: () => sendProjectMenuAction('import-artifact-images')
+      },
+      { type: 'separator' },
       { role: 'close' },
       { type: 'separator' },
       { role: 'quit' }

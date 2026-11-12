@@ -55,7 +55,7 @@
     </div>
 
     <div class="dialogActions">
-      <button type="button" (click)="createCollection(artifactCollectionName, collectionDescription)">Create</button>
+      <button type="button" [disabled]="creating" (click)="createCollection(artifactCollectionName, collectionDescription)">Create</button>
     </div>
   </fieldset>
 </form>

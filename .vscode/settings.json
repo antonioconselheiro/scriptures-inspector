@@ -7,6 +7,15 @@
   "remote.forwardOnOpen": false,
   "chat.tools.terminal.autoApprove": {
     "command": true,
-    "./node_modules/.bin/ng": true
+    "./node_modules/.bin/ng": true,
+    "/^node --version; which chromium \\|\\| which chromium-browser \\|\\| which google-chrome \\|\\| true; ls \\.vscode$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "/^git --no-pager diff --stat; node --check main\\.js; \\./node_modules/\\.bin/tsc --noEmit -p tsconfig\\.spec\\.json$/": {
+      "approve": true,
+      "matchCommandLine": true
+    },
+    "./node_modules/.bin/tsc": true
   }
 }

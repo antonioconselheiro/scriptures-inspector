@@ -1,3 +1,3 @@
-export function selectPngFilesFn(): Promise<string[]> {
+export function selectPngFilesFn(): Promise<string[] | null> {
   return window.api.selectPngFiles();
 }
