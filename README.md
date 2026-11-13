@@ -24,6 +24,8 @@ ou **View > Return to Editor**.
 O alinhamento também é configurável; o componente usa alinhamento à esquerda por
 padrão, enquanto a prévia inicia centralizada. Use **Export config to clipboard
 as JSON** na prévia para copiar as configurações aplicadas.
+Para imprimir a prévia, use **File > Print...** ou **Ctrl+P** (Command+P no macOS);
+os controles da prévia são ocultados na impressão.
 Os rótulos das linhas podem ser ocultados nas configurações gerais.
 O diálogo apresenta abas para os códices disponíveis na passagem selecionada.
 Em cada aba é possível configurar a exibição e o tooltip nativo, ativado por padrão,

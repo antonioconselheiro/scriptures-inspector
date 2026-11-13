@@ -193,6 +193,15 @@ describe('HolyViewerPageComponent', () => {
     const fixture = TestBed.createComponent(HolyViewerPageComponent);
     fixture.detectChanges();
 
+    const printRules = Array.from(document.querySelectorAll('style'))
+      .flatMap(style => Array.from(style.sheet?.cssRules ?? []))
+      .filter((rule): rule is CSSMediaRule => rule instanceof CSSMediaRule && rule.conditionText === 'print')
+      .flatMap(rule => Array.from(rule.cssRules))
+      .filter((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule && rule.style.display === 'none');
+    for (const selector of ['.returnToEditor', '.exportConfig', '.holyViewerToolbar', '.holyViewerDialogBackdrop']) {
+      expect(printRules.some(rule => rule.selectorText.includes(selector))).withContext(selector).toBeTrue();
+    }
+
     expect(fixture.componentInstance.config.scope).toBe('chapter');
     expect(fixture.componentInstance.config.verse).toBe(2);
     expect(fixture.componentInstance.config.displayMode).toBe('prismatic');

@@ -171,6 +171,18 @@ function sendProjectMenuAction(action) {
   }
 }
 
+function printPreview() {
+  if (!previewActive || !mainWindow || mainWindow.isDestroyed()) {
+    return;
+  }
+  mainWindow.webContents.print({ silent: false, printBackground: true }, (success, reason) => {
+    if (!success && reason !== 'Print job canceled') {
+      console.error('Unable to print the preview:', reason);
+      dialog.showErrorBox('Unable to print', reason || 'The print job failed.');
+    }
+  });
+}
+
 function sendToolboxVisibility(toolbox, visible) {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send('toggle-toolbox', toolbox, visible);
@@ -396,6 +408,13 @@ function updateApplicationMenu(codices = []) {
       {
         label: 'Save Project',
         click: () => sendProjectMenuAction('save-project')
+      },
+      {
+        id: 'print-preview',
+        label: 'Print...',
+        accelerator: 'CommandOrControl+P',
+        enabled: previewActive,
+        click: printPreview
       },
       { type: 'separator' },
       {
