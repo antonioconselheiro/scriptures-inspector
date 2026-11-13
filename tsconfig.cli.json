@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "files": ["cli/index.ts", "src/types/global.d.ts", "src/types/potrace-plus.d.ts"],
+  "include": [],
+  "references": []
+}

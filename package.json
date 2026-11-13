@@ -6,6 +6,7 @@
   "files": [
     "main.js",
     "preload.js",
+    "cli/dist/**/*",
     "dist/**/*",
     "public/**/*"
   ],
@@ -17,10 +18,14 @@
     "dev:web": "ng serve --host 0.0.0.0",
     "build": "npm run build:lnx",
     "build:web": "rm -rf dist; ng build --base-href ./ --deploy-url ./; mv dist/browser/** dist; rm -rf dist/browser",
-    "build:lnx": "npm run build:web && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png && rm -rf dist && mkdir -p dist && cp -r out/make/deb/x64/* dist/ && rm -rf out",
+    "build:cli": "tsc -p tsconfig.cli.json && esbuild cli/index.ts --bundle --platform=node --format=esm --outfile=cli/dist/index.mjs",
+    "build:lnx": "npm run build:web && npm run build:cli && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png && rm -rf dist && mkdir -p dist && cp -r out/make/deb/x64/* dist/ && rm -rf out",
     "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
+    "prepackage": "npm run build:cli",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "premake": "npm run build:cli",
+    "make": "electron-forge make",
+    "test:cli": "npm run build:cli && node --test tests/cli.test.cjs"
   },
   "prettier": {
     "overrides": [
@@ -47,6 +52,7 @@
     "jsdom": "^27.4.0",
     "ngx-moveable": "^0.50.0",
     "rxjs": "~7.8.0",
+    "string-width": "^8.1.0",
     "transliteration": "^2.6.1",
     "tslib": "^2.3.0",
     "uuid": "^13.0.2",
@@ -63,8 +69,10 @@
     "@electron-forge/maker-zip": "^7.11.1",
     "@electron-forge/plugin-auto-unpack-natives": "^7.11.1",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^24.10.9",
     "concurrently": "^9.2.1",
     "electron": "^40.0.0",
+    "esbuild": "^0.27.2",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

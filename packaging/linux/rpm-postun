@@ -1,0 +1,3 @@
+if [ "$1" -eq 0 ] && [ "$(readlink /usr/bin/si || true)" = scriptures-inspector ]; then
+  rm /usr/bin/si
+fi

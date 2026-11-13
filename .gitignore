@@ -15,6 +15,7 @@ en-US-10-1.bdic
 /tmp
 /out
 /out-tsc
+/cli/dist
 /bazel-out
 
 # Node

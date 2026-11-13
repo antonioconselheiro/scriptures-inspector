@@ -37,6 +37,7 @@ import { CodexConfigDialog } from '../codex-config-dialog/codex-config-dialog';
 import { ViewingTranslationDialog } from '../viewing-translation-dialog/viewing-translation-dialog';
 import { ScriptureMetadataComponent } from './scripture-metadata/scripture-metadata-component';
 import { ProjectMetadataService } from './shared/project/project-metadata-service';
+import { isPendingLexical } from './shared/project/pending-lexical';
 import { DefineFieldMorphemeRuleContextMenu } from '../define-field-morpheme-rule-context-menu/define-field-morpheme-rule-context-menu';
 import { InterlinearToolsContextMenu } from '../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { PinnedRowsFooter } from './pinned-rows-footer/pinned-rows-footer';
@@ -400,7 +401,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   get pendingLexicalFieldCount(): number {
-    return this.getLexicalFields().filter(field => !field.value.trim()).length;
+    return this.getLexicalFields().filter(field => isPendingLexical(field.value)).length;
   }
 
   get focusedLexicalFieldNumber(): number {
@@ -426,7 +427,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
 
   focusPendingLexicalField(direction: -1 | 1): void {
     const lexicalFields = this.getLexicalFields();
-    const pendingFields = lexicalFields.filter(field => !field.value.trim());
+    const pendingFields = lexicalFields.filter(field => isPendingLexical(field.value));
     if (!pendingFields.length) {
       return;
     }
@@ -449,7 +450,7 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
   }
 
   private getPendingLexicalFields(): Array<HTMLInputElement> {
-    return this.getLexicalFields().filter(field => !field.value.trim());
+    return this.getLexicalFields().filter(field => isPendingLexical(field.value));
   }
 
   private isLexicalField(target: EventTarget | null): target is HTMLInputElement {

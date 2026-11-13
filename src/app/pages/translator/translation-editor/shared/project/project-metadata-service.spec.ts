@@ -115,4 +115,26 @@ describe('ProjectMetadataService', () => {
 
     expect(verses[4].metadata?.['0-word'].isWordOfGod).toBeUndefined();
   });
+
+  it('updates and clears a serialized verse without deleting other segment metadata', () => {
+    const bookMetadata: BookMetadataTarget = JSON.parse(JSON.stringify({
+      patterns: { prefix: [], suffix: [], lexeme: [] },
+      lexical: {},
+      chapters: [{ chapter: 1, verses: [{
+        verse: { start: '1', end: '1', index: 0 },
+        metadata: { '0-word': { segment: 'word', isWordOfGod: true, extra: 'preserved' } }
+      }] }]
+    }));
+    const current = { book: 'GEN', chapter: 1 };
+    const sourceVerse = { verse: 1, text: 'word' };
+    const word: Word = { segments: [{ index: 0, word: 'word', morpheme: 'root' }] };
+    metadataService.setAsWordOfGod(false, bookMetadata, languageMetadataRecord.geez, current, sourceVerse, 0, word);
+    expect(bookMetadata.chapters[0].verses.length).toBe(1);
+    expect(bookMetadata.chapters[0].verses[0].metadata?.['0-word']).toEqual(jasmine.objectContaining({ segment: 'word', extra: 'preserved' }));
+    expect(bookMetadata.chapters[0].verses[0].metadata?.['0-word'].isWordOfGod).toBeUndefined();
+    metadataService.setAsWordOfGod(true, bookMetadata, languageMetadataRecord.geez, current, sourceVerse, 0, word);
+    expect(metadataService.getScriptureMetadataWordOfGod(bookMetadata, languageMetadataRecord.geez, current, 1, word)).toBeTrue();
+    metadataService.cleanWordOfGodFromVerse(bookMetadata, current, 1);
+    expect(bookMetadata.chapters[0].verses[0].metadata?.['0-word'].isWordOfGod).toBeUndefined();
+  });
 });

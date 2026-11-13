@@ -1,0 +1,8 @@
+if [ -e /usr/bin/si ] || [ -L /usr/bin/si ]; then
+  if [ "$(readlink /usr/bin/si || true)" != scriptures-inspector ]; then
+    echo "Cannot install si: /usr/bin/si already exists" >&2
+    exit 1
+  fi
+else
+  ln -s scriptures-inspector /usr/bin/si
+fi

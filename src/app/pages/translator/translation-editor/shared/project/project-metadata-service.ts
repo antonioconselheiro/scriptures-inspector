@@ -15,6 +15,7 @@ import { regexEscapeFn } from '@shared/system/regex-espace-fn';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { isWordOfGod } from '../scripture-presentation-core';
+import { metadataVerseMatches } from './metadata-verse-matches';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class ProjectMetadataService {
     }
 
     const verses = bookMetadata.chapters[chapterIndex].verses;
-    let verseMetadata = verses.find(item => item?.verse === verse.verse);
+    let verseMetadata = verses.find(item => metadataVerseMatches(item?.verse, verse.verse));
     if (!verseMetadata) {
       const targetIndex = verseIndex >= 0 && !verses[verseIndex] ? verseIndex : verses.length;
       verseMetadata = {
@@ -113,13 +114,17 @@ export class ProjectMetadataService {
     verseIndex: number,
     word: Word
   ): void {
-    const wordMetadata = this.createWordMetadataIfNotExists(bookMetadata, sourceLanguage, current, verse, verseIndex, word);
+    const wordMetadata = checked
+      ? this.createWordMetadataIfNotExists(bookMetadata, sourceLanguage, current, verse, verseIndex, word)
+      : bookMetadata.chapters.find(chapter => chapter?.chapter === current.chapter)?.verses
+        .find(item => metadataVerseMatches(item?.verse, verse.verse))?.metadata;
+    if (!wordMetadata) return;
     word.segments.forEach(segment => {
       const key = this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment);
       if (checked) {
         wordMetadata[key].isWordOfGod = true;
-      } else {
-        delete wordMetadata[key];
+      } else if (wordMetadata[key]) {
+        delete wordMetadata[key].isWordOfGod;
       }
     });
 
@@ -135,7 +140,7 @@ export class ProjectMetadataService {
   ): boolean {
     const metadata = bookMetadata.chapters
       ?.find(chapter => chapter?.chapter === current.chapter)?.verses
-      ?.find(verse => verse?.verse === verseNumber)?.metadata;
+      ?.find(verse => metadataVerseMatches(verse?.verse, verseNumber))?.metadata;
     return isWordOfGod(
       metadata,
       word,
@@ -190,11 +195,12 @@ export class ProjectMetadataService {
   cleanLexical(
     current: CurrentBook,
     bookMetadata: Book<BookMetadataAttributes, any>,
-    wordMatrix: Array<Word>
+    wordMatrix: Array<Word>,
+    language: Language
   ): void {
     wordMatrix.forEach(word => {
       word.segments.forEach(segment => {
-        delete bookMetadata.lexical[segment.word];
+        delete bookMetadata.lexical[language.normalizeFn ? language.normalizeFn(segment.word) : segment.word];
       });
     });
 
@@ -219,7 +225,7 @@ export class ProjectMetadataService {
     }
 
     const verse = bookMetadata.chapters[chapterIndex].verses
-      .find(item => item?.verse === verseNumber);
+      .find(item => metadataVerseMatches(item?.verse, verseNumber));
     const metadata = verse?.metadata;
     if (!metadata) {
       return;

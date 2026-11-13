@@ -5,11 +5,12 @@ import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { Book } from '@domain/book-model';
 import { BookVerse } from '@domain/book-verse-model';
 import { CurrentBook } from '@domain/current-book-model';
-import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { Subject } from 'rxjs';
 import { ProjectDataService } from '../translation-editor/shared/project/project-data-service';
 import { SourceBook } from '@domain/source-book-model';
 import { ProjectMetadataService } from '../translation-editor/shared/project/project-metadata-service';
+import { cleanUnusedLexical } from '../translation-editor/shared/project/clean-unused-lexical';
+import { removeLexical } from '../translation-editor/shared/project/remove-lexical';
 import { Language } from '@domain/language-model';
 import { MorphemeType } from '@domain/morpheme-type';
 import { SortField } from './sort-field-type';
@@ -213,19 +214,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
 
   deleteLexical(key: string, rule: MorphemeType): void {
     if (this.bookMetadata) {
-      if (rule === 'root') {
-        if (this.bookMetadata.lexical[key].prefix) {
-          this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].prefix;
-        } else if (this.bookMetadata.lexical[key].suffix) {
-          this.bookMetadata.lexical[key].value = this.bookMetadata.lexical[key].suffix;
-        } else {
-          delete this.bookMetadata.lexical[key];
-        }
-      } else if (rule === 'prefix') {
-        delete this.bookMetadata.lexical[key].prefix;
-      } else if (rule === 'suffix') {
-        delete this.bookMetadata.lexical[key].suffix;
-      }
+      removeLexical(this.bookMetadata, key, rule);
     }
 
     this.sortLexicals();
@@ -234,41 +223,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   cleanUnusedLexical(): void {
     const clean = confirm('This operation will remove all unused lexicals in this book, confirm?');
     if (clean && this.bookMetadata && this.bookSource && this.language) {
-      const bookMetadata = this.bookMetadata;
-      const bookSource = this.bookSource;
-      const language = this.language;
-      const normalizeFn = language.normalizeFn ? language.normalizeFn : (t: string) => t;
-
-      const lexicalFoundInText: { [lexical: string]: number } = {};
-      Object.keys(bookMetadata.lexical).map(lexical => { lexicalFoundInText[lexical] = 0; });
-
-      bookSource.chapters.forEach(chapter => {
-        chapter.verses.forEach(verse => {
-          const parsedPatterns = this.metadataService.parsePattern(bookMetadata.patterns, language);
-          const parsedBook: ParsedBookMetadata = {
-            lexical: bookMetadata.lexical,
-            patterns: parsedPatterns
-          };
-
-          const wordMatrix = this.dataService.splitIntoMatrix(language, parsedBook.patterns, verse.text);
-          wordMatrix.forEach(word => {
-            word.segments.forEach(segment => {
-              const wordSegment = normalizeFn(segment.word);
-
-              if (wordSegment in lexicalFoundInText) {
-                lexicalFoundInText[wordSegment]++;
-              }
-            })
-          });
-        });
-      });
-
-      Object.keys(lexicalFoundInText).forEach(lexical => {
-        if (!lexicalFoundInText[lexical]) {
-          delete bookMetadata.lexical[lexical];
-        }
-      });
-
+      cleanUnusedLexical(this.bookMetadata, this.bookSource, this.language, this.dataService, this.metadataService);
       this.sortLexicals();
     }
   }

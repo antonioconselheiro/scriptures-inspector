@@ -288,7 +288,7 @@ export class ProjectCustomTranslationService {
 
   cleanCustomTranslation(
     sourceBook: SourceBook,
-    input: HTMLInputElement,
+    input: { value: string },
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
     sourceVerse: SourceVerse

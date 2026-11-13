@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { removeTranslationVariation } from '../translation-editor/shared/project/translation-variations';
 import { v4 as uuidv4 } from 'uuid';
 import { Subject } from 'rxjs';
 
@@ -76,14 +77,7 @@ export class TranslationVariationConfigDialog extends ModalableDirective<BookTra
   deleteVariant(key: string): void {
     if (this.book) {
       if (confirm('Are you sure you want to remove this variation? This deletion is irreversible.')) {
-        delete this.book.variations[key];
-        this.book.chapters.forEach(chapter => {
-          chapter.verses.forEach(verse => {
-            if (verse.variations) {
-              delete verse.variations[key];
-            }
-          });
-        }); 
+        removeTranslationVariation(this.book, key);
       }
     }
   }

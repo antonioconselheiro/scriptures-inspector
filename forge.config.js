@@ -6,6 +6,7 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: iconPath,
+    extraResource: [path.resolve(__dirname, 'packaging/linux/scriptures-inspector')],
   },
   rebuildConfig: {},
   makers: [
@@ -22,6 +23,8 @@ module.exports = {
       config: {
         options: {
           icon: iconPath,
+          name: 'scriptures-inspector',
+          bin: 'resources/scriptures-inspector',
           maintainer: 'António Conselheiro',
           mimeType: ['application/vnd.scriptures-inspector.xenoglosproj+json'],
           depends: ['shared-mime-info'],
@@ -37,6 +40,12 @@ module.exports = {
       config: {
         options: {
           icon: iconPath,
+          name: 'scriptures-inspector',
+          bin: 'resources/scriptures-inspector',
+          scripts: {
+            post: path.resolve(__dirname, 'packaging/linux/rpm-post'),
+            postun: path.resolve(__dirname, 'packaging/linux/rpm-postun'),
+          },
         },
       },
     },

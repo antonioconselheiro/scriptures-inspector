@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+launcher=$(readlink -f "$0")
+resources=$(dirname "$launcher")
+gui="$resources/../Scriptures Inspector"
+
+if [ "$#" -eq 0 ]; then
+  exec "$gui"
+fi
+
+case "$1" in
+  *.xenoglosproj|file://*.xenoglosproj) exec "$gui" "$@" ;;
+esac
+
+export SCRIPTURES_INSPECTOR_GUI="$gui"
+export ELECTRON_RUN_AS_NODE=1
+exec "$gui" "$resources/app.asar/cli/dist/index.mjs" "$@"

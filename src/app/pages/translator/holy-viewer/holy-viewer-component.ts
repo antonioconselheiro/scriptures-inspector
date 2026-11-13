@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { selectVariationText } from '../translation-editor/shared/project/translation-variations';
 import {
   defaultHolyViewerCodexConfig,
   defaultHolyViewerConfig,
@@ -246,13 +247,7 @@ export class HolyViewerComponent {
       return piece.text;
     }
     const selected = this.getCodexConfig(line.source).selectedVariations[line.variationTarget] ?? [];
-    for (let index = selected.length - 1; index >= 0; index--) {
-      const value = piece.variations[selected[index]];
-      if (value) {
-        return value;
-      }
-    }
-    return piece.text;
+    return selectVariationText(piece.text, piece.variations, selected);
   }
 
   isPunctuation(text: string): boolean {

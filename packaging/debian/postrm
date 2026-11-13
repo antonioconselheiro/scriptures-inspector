@@ -2,6 +2,9 @@
 set -e
 
 if [ "$1" = remove ] || [ "$1" = purge ]; then
+  if [ "$(readlink /usr/bin/si || true)" = scriptures-inspector ]; then
+    rm /usr/bin/si
+  fi
   rm -f /usr/share/mime/packages/xenoglosproj.xml
   rm -f /usr/share/pixmaps/application-x-xenoglosproj.png
   update-mime-database /usr/share/mime
