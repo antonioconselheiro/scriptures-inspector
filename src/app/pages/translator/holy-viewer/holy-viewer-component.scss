@@ -53,11 +53,20 @@
 
 .verseNumber {
   align-self: start;
+  font-size: 13px;
   line-height: 1;
 }
 
 .holyLine {
   margin: 0.5rem 0;
+}
+
+.holyLine [class^="prisma"] {
+  font-size: 1em;
+}
+
+.holyLine .prisma {
+  font-size: 0.8em;
 }
 
 .holyLineLabel {
@@ -78,8 +87,11 @@
 }
 
 .holyViewerDialog {
+  box-sizing: border-box;
   width: min(28rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  min-height: 0;
   overflow: auto;
   padding: 1.25rem;
   background: Canvas;
@@ -94,9 +106,23 @@
   margin: 0.75rem 0;
 }
 
-.holyViewerDialog label:has(select) {
-  align-items: flex-start;
-  flex-direction: column;
+.alignmentSettings {
+  margin: 0.75rem 0;
+}
+
+.alignmentButtons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.alignmentButtons button {
+  display: inline-flex;
+  padding: 0.35rem;
+}
+
+.alignmentButtons button[aria-pressed="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
 }
 
 .codexTabs {

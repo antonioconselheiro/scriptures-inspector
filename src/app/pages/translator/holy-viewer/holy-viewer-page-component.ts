@@ -54,12 +54,17 @@ function isSupportedLanguage(language: string): language is LanguageUnionType {
     </button>
     <app-holy-viewer [verses]="verses" [config]="config" [variationOptions]="variationOptions" [configurable]="true"
       (configChange)="config = $event"></app-holy-viewer>
+    <button type="button" class="exportConfig" (click)="exportConfig()">Export config to clipboard as JSON</button>
+    @if (clipboardMessage) {
+      <p class="clipboardMessage" role="status">{{clipboardMessage}}</p>
+    }
   `,
   styleUrl: './holy-viewer-page-component.scss'
 })
 export class HolyViewerPageComponent implements OnInit, OnDestroy {
   project: Project | null = null;
-  config: HolyViewerConfig = { ...structuredClone(defaultHolyViewerConfig), scope: 'chapter', fontSize: 28 };
+  config: HolyViewerConfig = { ...structuredClone(defaultHolyViewerConfig), scope: 'chapter', fontSize: 28, textAlignment: 'center' };
+  clipboardMessage = '';
   verses: HolyViewerVerse[] = [];
   variationOptions: HolyViewerVariationOption[] = [];
   private current: CurrentChapter | null = null;
@@ -96,6 +101,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       ...structuredClone(defaultHolyViewerConfig),
       scope: 'chapter',
       fontSize: 28,
+      textAlignment: 'center',
       verse: 1,
       startVerse: 1,
       endVerse: 1
@@ -130,6 +136,17 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     void this.router.navigateByUrl(
       `/translator/book/${encodeURIComponent(this.current.book)}/chapter/${this.current.chapter}`
     );
+  }
+
+  async exportConfig(): Promise<void> {
+    this.clipboardMessage = '';
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(this.config, null, 2));
+      this.clipboardMessage = 'Configuration copied to clipboard.';
+    } catch (error) {
+      console.error('Unable to copy the Holy Viewer configuration:', error);
+      this.clipboardMessage = 'Unable to copy the configuration to the clipboard.';
+    }
   }
 
   private buildVerses(): void {
@@ -204,7 +221,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       this.addInterlinearLines(
         lines, structure.interlinear ?? [], structure.source, current, verse, matrix, metadata, language
       );
-      this.addSpellingLines(lines, matrix, languageName, structure.source);
+      this.addSpellingLines(lines, matrix, languageName, structure.source, metadata, language);
       this.addTransliterationLine(lines, matrix, languageName, structure.source);
       this.addNumerologyLines(lines, matrix, languageName, structure.source);
 
@@ -330,7 +347,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         matrix, interlinearMetadata, language, interlinear.source, `Custom translation · ${codex.name}`,
         relatedWordOfGod, relatedColor
       );
-      this.addSpellingLines(lines, matrix, codex.language, interlinear.source, relatedColor);
+      this.addSpellingLines(lines, matrix, codex.language, interlinear.source, interlinearMetadata, language, relatedColor);
       this.addTransliterationLine(lines, matrix, codex.language, interlinear.source, relatedColor);
       this.addNumerologyLines(lines, matrix, codex.language, interlinear.source, relatedColor);
       this.addInterlinearLines(
@@ -371,6 +388,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       const metadata = customVerse.metadata[index];
       const linkedIndex = getSerializedSegmentIndex(metadata?.value ?? '');
       const sourceWord = matrix.find(word => word.segments.some(segment => segment.index === linkedIndex));
+      const sourceSegment = sourceWord?.segments.find(segment => segment.index === linkedIndex);
       const variations: Record<string, string> = {};
       for (const [variationId, changes] of Object.entries(customVerse.variations ?? {})) {
         const value = changes[String(index)]?.value;
@@ -380,6 +398,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       }
       return {
         text,
+        title: sourceSegment?.word,
         variations,
         color: relatedColor && linkedIndex !== null
           ? relatedColor(linkedIndex)
@@ -403,6 +422,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
 
   private addSpellingLines(
     lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
+    metadata: BookMetadataTarget, languageAttributes: ReturnType<typeof getProjectLanguageFn>,
     color: (index: number) => string = getPresentationColor
   ): void {
     for (const spelling of languageMetadataRecord[language].alternativeSpelling ?? []) {
@@ -412,7 +432,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         label: spelling.name,
         optionId: spelling.label,
         pieces: this.matrixPieces(matrix, segment => ({
-          color: color(segment.index)
+          color: color(segment.index),
+          title: this.dataService.getLexical(metadata, languageAttributes, segment.word, segment.morpheme).value
         })).map(piece => ({
           ...piece,
           text: !piece.separator && spelling.parse ? spelling.parse(piece.text) : piece.text
@@ -436,7 +457,10 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
             text: String(algorithm.calc(segment.word)),
             color: color(segment.index)
           })),
-          ...(word.separator ? [{ text: word.separator, separator: true }] : [])
+          ...(word.separator ? [{
+            text: language === 'hebrew' && algorithm.label === 'gematria' ? ' ' : word.separator,
+            separator: true
+          }] : [])
         ])
       });
     }

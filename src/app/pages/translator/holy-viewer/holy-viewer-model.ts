@@ -4,6 +4,8 @@ export type HolyViewerSection =
   | 'transliteration'
   | 'numerology';
 
+export type HolyViewerAlignment = 'left' | 'center' | 'right' | 'justify';
+
 export interface HolyViewerConfig {
   scope: 'verse' | 'range' | 'chapter';
   verse: number;
@@ -11,6 +13,8 @@ export interface HolyViewerConfig {
   endVerse: number;
   displayMode: 'wordOfGod' | 'prismatic';
   fontSize?: number;
+  showLineLabels?: boolean;
+  textAlignment?: HolyViewerAlignment;
   codices: Record<string, HolyViewerCodexConfig>;
 }
 
@@ -64,6 +68,8 @@ export const defaultHolyViewerConfig: HolyViewerConfig & { fontSize: number } = 
   endVerse: 1,
   displayMode: 'prismatic',
   fontSize: 20,
+  showLineLabels: true,
+  textAlignment: 'left',
   codices: {}
 };
 

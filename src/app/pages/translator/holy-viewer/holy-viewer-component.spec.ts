@@ -171,6 +171,47 @@ describe('HolyViewerComponent', () => {
     expect(viewer.config.codices['a'].selectedNumerology).toEqual(['num2']);
   });
 
+  it('renders spellings and numerology from all codices before any custom translation', () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = structuredClone(defaultHolyViewerConfig);
+    viewer.config.codices['main'] = {
+      ...structuredClone(defaultHolyViewerCodexConfig),
+      selectedSpellings: ['spelling'],
+      selectedNumerology: ['number']
+    };
+    viewer.config.codices['related'] = structuredClone(viewer.config.codices['main']);
+    const line = (source: string, type: 'original' | 'interlinear' | 'customTranslation' | 'spelling' | 'numerology',
+      text: string, optionId?: string) => ({ source, type, label: text, optionId, pieces: [{ text }] });
+    const lines = [
+      line('main', 'original', 'original'),
+      line('main', 'customTranslation', 'translation A'),
+      line('related', 'interlinear', 'related'),
+      line('related', 'customTranslation', 'translation B'),
+      line('related', 'spelling', 'spelling B', 'spelling'),
+      line('related', 'numerology', 'number B', 'number'),
+      line('main', 'spelling', 'spelling A', 'spelling'),
+      line('main', 'numerology', 'number A', 'number')
+    ];
+    viewer.verses = [{ id: '1', bookName: 'Genesis', chapter: 1, verse: 1, lines }];
+    fixture.detectChanges();
+
+    const rendered = Array.from(fixture.nativeElement.querySelectorAll('.holyLine > span:last-child') as NodeListOf<HTMLElement>)
+      .map(element => element.textContent?.trim());
+    expect(rendered).toEqual([
+      'original', 'related', 'spelling B', 'number B', 'spelling A', 'number A', 'translation A', 'translation B'
+    ]);
+    expect(lines[1].pieces[0].text).toBe('translation A');
+    viewer.config.codices['related'].selectedNumerology = [];
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const filtered = Array.from(fixture.nativeElement.querySelectorAll('.holyLine > span:last-child') as NodeListOf<HTMLElement>)
+      .map(element => element.textContent?.trim());
+    expect(filtered).toEqual([
+      'original', 'related', 'spelling B', 'spelling A', 'number A', 'translation A', 'translation B'
+    ]);
+  });
+
   it('preserves legacy whole-category settings until individual choices are edited', () => {
     component.verses[0].lines = [
       { source: 'a', type: 'spelling', label: 'One', optionId: 'one', pieces: [] },
@@ -209,6 +250,117 @@ describe('HolyViewerComponent', () => {
     viewer.saveSettings();
     expect(viewer.settingsOpen).toBeTrue();
     expect(viewer.config.fontSize).toBeUndefined();
+  });
+
+  it('applies and edits all text alignments, defaulting to left for old configurations', () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = structuredClone(defaultHolyViewerConfig);
+    delete viewer.config.textAlignment;
+    viewer.configurable = true;
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    const content = root.querySelector<HTMLElement>('.holyViewer')!;
+    expect(content.style.textAlign).toBe('left');
+
+    viewer.openSettings();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    for (const name of ['scope', 'displayMode']) {
+      const select = root.querySelector<HTMLSelectElement>(`select[name="${name}"]`)!;
+      expect(getComputedStyle(select.parentElement!).flexDirection).toBe('row');
+    }
+    for (const [label, alignment] of [
+      ['Align left', 'left'], ['Align center', 'center'], ['Align right', 'right'], ['Justify', 'justify']
+    ] as const) {
+      const button = root.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)!;
+      button.click();
+      fixture.detectChanges();
+      expect(button.getAttribute('aria-pressed')).toBe('true');
+      expect(viewer.draftConfig?.textAlignment).toBe(alignment);
+    }
+    viewer.saveSettings();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(content.style.textAlign).toBe('justify');
+    viewer.config = { ...viewer.config, textAlignment: 'right' };
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(content.style.textAlign).toBe('right');
+  });
+
+  it('allows line labels to be hidden in settings and JSON without hiding passage titles', async () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = structuredClone(defaultHolyViewerConfig);
+    delete viewer.config.showLineLabels;
+    viewer.configurable = true;
+    viewer.verses = [{
+      id: '1', bookName: 'Genesis', chapter: 1, verse: 1,
+      lines: [{ source: 'a', type: 'customTranslation', label: 'Translation', pieces: [{ text: 'text' }] }]
+    }];
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    expect(root.querySelector('.holyLineLabel')?.textContent?.trim()).toBe('Translation');
+    viewer.openSettings();
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const checkbox = root.querySelector<HTMLInputElement>('input[name="showLineLabels"]')!;
+    expect(checkbox.checked).toBeTrue();
+    checkbox.click();
+    fixture.detectChanges();
+    Array.from(root.querySelectorAll('button')).find(button => button.textContent?.trim() === 'Apply')!.click();
+    fixture.detectChanges();
+    expect(viewer.config.showLineLabels).toBeFalse();
+    expect(root.querySelector('.holyLineLabel')).toBeNull();
+    expect(root.querySelector('.passageTitle')?.textContent).toContain('Genesis 1:1');
+    expect(root.querySelector('.holyLine')?.textContent).toContain('text');
+    viewer.config = { ...viewer.config, showLineLabels: true };
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(root.querySelector('.holyLineLabel')).not.toBeNull();
+  });
+
+  it('scales colored and unassociated text proportionally to the configured font size', () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = { ...structuredClone(defaultHolyViewerConfig), fontSize: 30 };
+    viewer.verses = [{
+      id: '1', bookName: 'Genesis', chapter: 1, verse: 1,
+      lines: [{ source: 'a', type: 'customTranslation', label: 'Translation', pieces: [
+        { text: 'colored', color: '1' }, { text: 'plain', color: '' }
+      ] }]
+    }];
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    const colored = root.querySelector<HTMLElement>('.prisma1')!;
+    const plain = root.querySelector<HTMLElement>('.prisma')!;
+    expect(getComputedStyle(colored).fontSize).toBe('30px');
+    expect(getComputedStyle(plain).fontSize).toBe('24px');
+    viewer.config = { ...viewer.config, fontSize: 40 };
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(getComputedStyle(colored).fontSize).toBe('40px');
+    expect(getComputedStyle(plain).fontSize).toBe('32px');
+  });
+
+  it('limits the settings dialog including padding and allows its content to scroll', () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = structuredClone(defaultHolyViewerConfig);
+    viewer.configurable = true;
+    viewer.openSettings();
+    fixture.detectChanges();
+    const dialog = fixture.nativeElement.querySelector('.holyViewerDialog') as HTMLElement;
+    const extraContent = document.createElement('div');
+    extraContent.style.height = `${window.innerHeight * 2}px`;
+    dialog.appendChild(extraContent);
+    const rect = dialog.getBoundingClientRect();
+    expect(rect.top).toBeGreaterThanOrEqual(0);
+    expect(rect.bottom).toBeLessThanOrEqual(window.innerHeight);
+    expect(dialog.scrollHeight).toBeGreaterThan(dialog.clientHeight);
+    expect(getComputedStyle(dialog).overflowY).toBe('auto');
   });
 
   it('updates available codices for the draft passage without losing individual settings', () => {

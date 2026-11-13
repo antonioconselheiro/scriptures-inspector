@@ -21,15 +21,24 @@ o modo **Word of God**, que destaca as marcações correspondentes, e o modo
 **Prismatic**, que exibe as cores de associação interlinear.
 O tamanho do texto é ajustável no diálogo; para voltar, use o botão da página
 ou **View > Return to Editor**.
+O alinhamento também é configurável; o componente usa alinhamento à esquerda por
+padrão, enquanto a prévia inicia centralizada. Use **Export config to clipboard
+as JSON** na prévia para copiar as configurações aplicadas.
+Os rótulos das linhas podem ser ocultados nas configurações gerais.
 O diálogo apresenta abas para os códices disponíveis na passagem selecionada.
 Em cada aba é possível configurar a exibição e o tooltip nativo, ativado por padrão,
 (atributo HTML `title`) com o léxico ao passar o mouse sobre segmentos do texto.
+Esse tooltip também se aplica à ortografia alternativa. Na tradução personalizada,
+o tooltip mostra o segmento original associado.
 As opções de ortografia e numerologia são selecionadas individualmente por códice.
+No Holy Viewer, elas aparecem antes das traduções personalizadas.
 As variações selecionadas são aplicadas à tradução personalizada; se várias
 alterarem o mesmo trecho, prevalece a última selecionada. Traduções de referência
 do editor não são exibidas na prévia.
 
 Na configuração JSON do componente, `fontSize` é o tamanho do texto em pixels.
+`textAlignment` aceita `left`, `center`, `right` ou `justify`.
+`showLineLabels` controla os rótulos das linhas e vem ativado por padrão.
 Em `codices`, `selectedSpellings` e `selectedNumerology` contêm os identificadores
 (`label`) dos algoritmos selecionados para cada fonte. Configurações anteriores
 que usam `sections.spelling` ou `sections.numerology` continuam exibindo todos

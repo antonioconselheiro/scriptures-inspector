@@ -74,9 +74,9 @@ describe('HolyViewerPageComponent', () => {
               data: {
                 sources: {
                   original: { chapters: [{ chapter: 1, verses: [
-                    { verse: 1, text: 'אב' }, { verse: 2, text: 'גד־אב' }
+                    { verse: 1, text: 'אב' }, { verse: 2, text: 'גד־אב׀ה ו' }
                   ] }] },
-                  related: { chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'גד' }] }] },
+                  related: { chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'גד־אב' }] }] },
                   geez: { chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'ቃል፡ ሰላም።' }] }] },
                   'another-chapter': { chapters: [{ chapter: 2, verses: [{ verse: 1, text: 'אב' }] }] },
                   portuguese: { chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'Texto de referência' }] }] },
@@ -197,6 +197,8 @@ describe('HolyViewerPageComponent', () => {
     expect(fixture.componentInstance.config.verse).toBe(2);
     expect(fixture.componentInstance.config.displayMode).toBe('prismatic');
     expect(fixture.componentInstance.config.fontSize).toBe(28);
+    expect(fixture.componentInstance.config.textAlignment).toBe('center');
+    expect(fixture.nativeElement.querySelector('.holyViewer').style.textAlign).toBe('center');
     expect(setPreviewActive).toHaveBeenCalledOnceWith(true);
     menuAction('return-to-editor');
     expect(router.navigateByUrl).toHaveBeenCalledWith('/translator/book/GEN/chapter/1');
@@ -214,6 +216,10 @@ describe('HolyViewerPageComponent', () => {
     expect(verse.lines.some(line => line.type === 'numerology' && line.source === 'related')).toBeTrue();
     expect(verse.lines.find(line => line.type === 'spelling' && line.source === 'original')?.optionId)
       .toBe('hypothetical-paleo');
+    expect(verse.lines.find(line => line.type === 'spelling' && line.source === 'original')?.pieces[0].title)
+      .toBe('Pai');
+    expect(verse.lines.find(line => line.type === 'spelling' && line.source === 'related')?.pieces[0].title)
+      .toBe('relacionado');
     expect(verse.lines.find(line => line.type === 'numerology' && line.source === 'related')?.optionId)
       .toBe('gematria');
     expect(fixture.nativeElement.textContent).toContain('No princípio criou Divos AZ os céus e AZ a terra.');
@@ -231,10 +237,16 @@ describe('HolyViewerPageComponent', () => {
     expect(geezLine.children[1].classList.contains('prisma')).toBeTrue();
     const hebrewLine = fixture.nativeElement.querySelectorAll('.holyVerse')[1]
       .querySelector('.holyLine [lang="hebrew"]') as HTMLElement;
-    expect(hebrewLine.textContent).toBe('גד־אב');
-    expect(Array.from(hebrewLine.children).map(child => child.textContent)).toEqual(['גד', 'אב']);
+    expect(hebrewLine.textContent).toBe('גד־אב׀ה ו');
+    expect(Array.from(hebrewLine.children).map(child => child.textContent)).toEqual(['גד', 'אב', 'ה', 'ו']);
     expect(Array.from(hebrewLine.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent === '־'))
       .toBeTrue();
+    const gematria = fixture.componentInstance.verses[1].lines.find(line => line.type === 'numerology');
+    expect(gematria?.pieces.map(piece => piece.text).join('')).toBe('7 3 5 6');
+    expect(gematria?.pieces.filter(piece => !piece.separator).map(piece => piece.color)).toEqual(['1', '2', '3', '4']);
+    const relatedGematria = verse.lines.find(line => line.type === 'numerology' && line.source === 'related');
+    expect(relatedGematria?.pieces.map(piece => piece.text).join('')).toBe('7 3');
+    expect(relatedGematria?.pieces.filter(piece => !piece.separator).map(piece => piece.color)).toEqual(['1', '']);
 
     const root: HTMLElement = fixture.nativeElement;
     root.querySelector<HTMLButtonElement>('[aria-label="Configure Holy Viewer"]')!.click();
@@ -251,6 +263,8 @@ describe('HolyViewerPageComponent', () => {
     };
     selectVariation('Elohim no singular');
     selectVariation('Aleph e Taw como ➜');
+    selectVariation('hypothetical paleo');
+    selectVariation('gematria');
     const relatedTab = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'))
       .find(tab => tab.textContent?.trim() === 'related')!;
     relatedTab.click();
@@ -259,6 +273,7 @@ describe('HolyViewerPageComponent', () => {
     const relatedTooltip = root.querySelector<HTMLInputElement>('input[name="showOriginalLexicalTooltip"]')!;
     expect(relatedTooltip.checked).toBeTrue();
     relatedTooltip.click();
+    selectVariation('hypothetical paleo');
     selectVariation('Related variation');
     const mode = root.querySelector<HTMLSelectElement>('select[name="displayMode"]')!;
     mode.value = 'prismatic';
@@ -268,13 +283,20 @@ describe('HolyViewerPageComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.textContent).toContain('No princípio criou Deus ➜ os céus e ➜ a terra.');
     expect(fixture.nativeElement.textContent).toContain('Unido');
+    const secondVerse = root.querySelectorAll('.holyVerse')[1];
+    const gematriaLine = Array.from(secondVerse.querySelectorAll('.holyLine'))
+      .find(line => line.querySelector('.holyLineLabel')?.textContent?.trim() === 'gematria')!;
+    expect(gematriaLine.querySelector('span:last-child')?.textContent).toBe('7 3 5 6');
+    expect(gematriaLine.querySelectorAll('.prisma1, .prisma2, .prisma3, .prisma4').length).toBe(4);
     const originalText = Array.from(root.querySelectorAll('.holyVerse'))[0].querySelectorAll('[title="Pai"]');
     const relatedText = Array.from(root.querySelectorAll('[title="relacionado"]'));
-    expect(originalText.length).toBe(1);
+    expect(originalText.length).toBe(2);
     expect(relatedText.length).toBe(0);
     const lines = Array.from(fixture.nativeElement.querySelectorAll('.holyLine')) as HTMLElement[];
     const translationLine = lines.find(line => line.textContent?.includes('No princípio'))!;
     const translatedSpans = Array.from(translationLine.querySelectorAll('span'));
+    expect(translatedSpans.find(span => span.textContent === 'No')?.getAttribute('title')).toBe('אב');
+    expect(translatedSpans.find(span => span.textContent === 'Deus')?.hasAttribute('title')).toBeFalse();
     expect(translatedSpans.find(span => span.textContent === 'Deus')?.classList.contains('prisma4')).toBeTrue();
     expect(translatedSpans.find(span => span.textContent === '➜')?.classList.contains('prisma5')).toBeTrue();
     expect(fixture.componentInstance.variationOptions.map(option => option.id))
@@ -282,12 +304,40 @@ describe('HolyViewerPageComponent', () => {
     const relatedLine = verse.lines.find(line => line.variationTarget === 'related-translation');
     expect(relatedLine?.pieces[0].wordOfGod).toBeTrue();
     expect(relatedLine?.pieces[0].color).toBe('1');
+    const relatedTranslation = lines.find(line => line.textContent?.includes('Unido'))!;
+    expect(Array.from(relatedTranslation.querySelectorAll(':scope > span:last-child > span'))
+      .find(span => span.textContent === 'Unido')?.getAttribute('title')).toBe('גד');
     fixture.componentInstance.config = { ...fixture.componentInstance.config, displayMode: 'wordOfGod' };
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
     expect(geezLine.children[0].classList.contains('godsaid')).toBeTrue();
     expect(Array.from(geezLine.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent === '፡ '))
       .toBeTrue();
+    const writeText = jasmine.createSpy('writeText').and.resolveTo();
+    const clipboardDescriptor = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } });
+    try {
+      const exportButton = root.querySelector<HTMLButtonElement>('.exportConfig')!;
+      expect(exportButton.textContent?.trim()).toBe('Export config to clipboard as JSON');
+      exportButton.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(JSON.parse(writeText.calls.mostRecent().args[0])).toEqual(fixture.componentInstance.config);
+      expect(root.querySelector('[role="status"]')?.textContent).toContain('Configuration copied');
+      writeText.and.rejectWith(new Error('Clipboard unavailable'));
+      spyOn(console, 'error');
+      exportButton.click();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      expect(root.querySelector('[role="status"]')?.textContent).toContain('Unable to copy');
+      expect(console.error).toHaveBeenCalled();
+    } finally {
+      if (clipboardDescriptor) {
+        Object.defineProperty(navigator, 'clipboard', clipboardDescriptor);
+      } else {
+        Reflect.deleteProperty(navigator, 'clipboard');
+      }
+    }
     fixture.destroy();
     expect(removeMenuListener).toHaveBeenCalledTimes(1);
     expect(setPreviewActive).toHaveBeenCalledWith(false);

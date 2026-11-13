@@ -1,4 +1,4 @@
-<div class="holyViewer" [style.font-size.px]="fontSize">
+<div class="holyViewer" [style.font-size.px]="fontSize" [style.text-align]="textAlignment">
   @if (configurable) {
     <div class="holyViewerToolbar">
       <button type="button" aria-label="Configure Holy Viewer" title="Configure preview" (click)="openSettings()">
@@ -24,17 +24,17 @@
     <article class="holyVerse">
       <sup class="verseNumber">{{verse.verse}}</sup>
       <div>
-        @for (line of verse.lines; track $index) {
+        @for (line of orderedLines(verse); track $index) {
           @if (showLine(line)) {
             <div class="holyLine">
-              @if (line.type !== 'original') {
+              @if (line.type !== 'original' && config.showLineLabels !== false) {
                 <span class="holyLineLabel">{{line.label}}</span>
               }
               <span [attr.lang]="line.language">
                 @for (piece of line.pieces; track $index) {
                   @if (piece.separator) {{{piece.text}}} @else if (pieceText(line, piece).length) {
                     <span
-                      [attr.title]="(line.type === 'original' || line.type === 'interlinear') && getCodexConfig(line.source).showOriginalLexicalTooltip ? piece.title || null : null"
+                      [attr.title]="line.type === 'customTranslation' || ((line.type === 'original' || line.type === 'interlinear' || line.type === 'spelling') && getCodexConfig(line.source).showOriginalLexicalTooltip) ? piece.title || null : null"
                       [class]="config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : ''"
                       [attr.data-punctuation]="config.displayMode === 'prismatic' && piece.color === '' && isPunctuation(pieceText(line, piece)) ? '' : null"
                       [class.godsaid]="config.displayMode === 'wordOfGod' && piece.wordOfGod"
@@ -93,6 +93,39 @@
       <label>
         Text size (px)
         <input type="number" min="1" step="1" [(ngModel)]="draftConfig.fontSize" name="fontSize">
+      </label>
+      <fieldset class="alignmentSettings">
+        <legend>Text alignment</legend>
+        <div class="alignmentButtons" role="group" aria-label="Text alignment">
+          <button type="button" aria-label="Align left" title="Align left"
+            [attr.aria-pressed]="draftConfig.textAlignment === 'left'" (click)="draftConfig.textAlignment = 'left'">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 5h16M4 10h10M4 15h16M4 20h10"></path>
+            </svg>
+          </button>
+          <button type="button" aria-label="Align center" title="Align center"
+            [attr.aria-pressed]="draftConfig.textAlignment === 'center'" (click)="draftConfig.textAlignment = 'center'">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 5h16M7 10h10M4 15h16M7 20h10"></path>
+            </svg>
+          </button>
+          <button type="button" aria-label="Align right" title="Align right"
+            [attr.aria-pressed]="draftConfig.textAlignment === 'right'" (click)="draftConfig.textAlignment = 'right'">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 5h16M10 10h10M4 15h16M10 20h10"></path>
+            </svg>
+          </button>
+          <button type="button" aria-label="Justify" title="Justify"
+            [attr.aria-pressed]="draftConfig.textAlignment === 'justify'" (click)="draftConfig.textAlignment = 'justify'">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 5h16M4 10h16M4 15h16M4 20h16"></path>
+            </svg>
+          </button>
+        </div>
+      </fieldset>
+      <label>
+        <input type="checkbox" [(ngModel)]="draftConfig.showLineLabels" name="showLineLabels">
+        Show line labels
       </label>
       @if (!validFontSize) {
         <p>Text size must be greater than zero.</p>

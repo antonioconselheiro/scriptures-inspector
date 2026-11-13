@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import {
   defaultHolyViewerCodexConfig,
   defaultHolyViewerConfig,
+  HolyViewerAlignment,
   HolyViewerCodexConfig,
   HolyViewerConfig,
   HolyViewerSection,
@@ -46,6 +47,10 @@ export class HolyViewerComponent {
     return this.config.fontSize ?? defaultHolyViewerConfig.fontSize;
   }
 
+  get textAlignment(): HolyViewerAlignment {
+    return this.config.textAlignment ?? 'left';
+  }
+
   passageTitle(verse: HolyViewerVerse): string {
     const chapter = `${verse.bookName} ${verse.chapter}`;
     if (this.config.scope === 'chapter') {
@@ -85,6 +90,13 @@ export class HolyViewerComponent {
 
   getCodexConfig(source: string): HolyViewerCodexConfig {
     return this.config.codices[source] ?? defaultHolyViewerCodexConfig;
+  }
+
+  orderedLines(verse: HolyViewerVerse): HolyViewerLine[] {
+    return [
+      ...verse.lines.filter(line => line.type !== 'customTranslation'),
+      ...verse.lines.filter(line => line.type === 'customTranslation')
+    ];
   }
 
   showLine(line: HolyViewerLine): boolean {
@@ -195,6 +207,8 @@ export class HolyViewerComponent {
     }
     this.draftConfig = structuredClone(this.config);
     this.draftConfig.fontSize ??= defaultHolyViewerConfig.fontSize;
+    this.draftConfig.showLineLabels ??= true;
+    this.draftConfig.textAlignment ??= 'left';
     this.activeCodex = null;
     for (const source of new Set(this.verses.flatMap(verse => verse.lines.map(line => line.source)))) {
       this.draftCodexConfig(source);

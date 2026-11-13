@@ -12,6 +12,12 @@
   color: inherit;
   font: inherit;
   cursor: pointer;
+  opacity: 0.6;
+}
+
+.returnToEditor:hover,
+.returnToEditor:focus-visible {
+  opacity: 1;
 }
 
 .returnToEditor:hover span,
@@ -19,8 +25,27 @@
   text-decoration: underline;
 }
 
+.exportConfig {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 1;
+}
+
+.clipboardMessage {
+  position: fixed;
+  bottom: 3rem;
+  left: 1rem;
+  z-index: 1;
+  padding: 0.5rem;
+  background: Canvas;
+  color: CanvasText;
+}
+
 @media print {
-  .returnToEditor {
+  .returnToEditor,
+  .exportConfig,
+  .clipboardMessage {
     display: none;
   }
 }
