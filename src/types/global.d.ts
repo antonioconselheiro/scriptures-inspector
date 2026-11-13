@@ -4,9 +4,10 @@ declare global {
       initializeProjectOpening(): Promise<string | null>;
       onProjectFileOpened(callback: (filePath: string) => void): void;
       updateCodexConfigMenu(codices: Array<{ source: string; label: string }>): Promise<void>;
+      setPreviewActive(active: boolean): Promise<void>;
       maximizeWindow(): void;
       onOpenCodexConfig(callback: (source: string) => void): () => void;
-      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project' | 'artifact-collections' | 'import-artifact-images' | 'preview-current') => void): () => void;
+      onOpenProjectMenuAction(callback: (action: 'viewing-translation' | 'import-from-book' | 'save-project' | 'artifact-collections' | 'import-artifact-images' | 'preview-current' | 'return-to-editor') => void): () => void;
       onToggleToolbox(callback: (
         toolbox: 'page-navigation' | 'codex-navigation' | 'text-size-controller',
         visible: boolean

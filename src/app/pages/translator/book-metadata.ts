@@ -3,7 +3,7 @@ export const bookMetadata: {
     chapters: number,
     normal: string,
     gringo: string,
-    testament: 'global' | 'old' | 'new',
+    alliance: 'antediluvian' | 'Israel' | 'global' | 'Greek' | 'Egypt' | 'Roman' | 'Persian' | 'Arabic' | 'India' | 'Tibetan' | 'Nepali' | 'Japonese' | 'Chinese' | 'Hawaii' | 'Maya Kʼicheʼ',
     type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher' | 'treasure'>,
     oldestLanguageFound?: 'aramaic' | 'hebrew' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'sogdiano' | 'english';
     language: {
@@ -13,6 +13,7 @@ export const bookMetadata: {
       syriac?: boolean,
       arabic?: boolean,
       latim?: boolean,
+      egyptHieratic?: boolean,
       greek?: boolean,
       copta?: boolean,
       sanskrit?: boolean,
@@ -47,7 +48,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Adão',
     gringo: 'Testament of Adam',
-    testament: 'old',
+    alliance: 'antediluvian',
     oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
@@ -67,7 +68,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Sete',
     gringo: 'Testament of Set',
-    testament: 'old',
+    alliance: 'antediluvian',
     oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
@@ -87,8 +88,25 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Livro dos Gigantes',
     gringo: 'Book of Giants',
+    oldestLanguageFound: 'hebrew',
+    alliance: 'Persian',
+    language: {
+      sogdiano: true,
+      uigur: true
+    },
+    codex: {
+      ocidental: false,
+      septuaginta: false,
+      tewahedo: false,
+      manicheist: true
+    }
+  },
+  'GIM': {
+    chapters: 0,
+    normal: 'Livro dos Gigantes de Mani',
+    gringo: 'Mani\'s Book of Giants',
     oldestLanguageFound: 'sogdiano',
-    testament: 'old',
+    alliance: 'Persian',
     language: {
       sogdiano: true,
       uigur: true
@@ -104,7 +122,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Enoque',
     gringo: 'Enoch',
-    testament: 'old',
+    alliance: 'antediluvian',
     oldestLanguageFound: 'geez',
     type: ['history', 'prophecy'],
     language: {
@@ -124,7 +142,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Noé',
     gringo: 'Testament of Noah',
-    testament: 'old',
+    alliance: 'antediluvian',
     oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
@@ -144,7 +162,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Mequisedeque',
     gringo: 'Mechizedek',
-    testament: 'old',
+    alliance: 'antediluvian',
     oldestLanguageFound: 'hebrew',
     language: {
       hebrew: true
@@ -160,7 +178,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Homilia de Abraão e Sara no Egito',
     gringo: 'Homily of Abraham and Sarah in Egypt',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     codex: {
       ocidental: false,
@@ -176,7 +194,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Gênesis de Abraão',
     gringo: 'Genesis of Abraham',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       hebrew: true
@@ -192,7 +210,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Apocalipse de Abraão',
     gringo: 'Apocalipse of Abraham',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       syriac: true
@@ -209,7 +227,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Abraão',
     gringo: 'Testament of Abraham',
-    testament: 'old',
+    alliance: 'Israel',
     oldestLanguageFound: 'greek',
     language: {
       copta: true,
@@ -230,7 +248,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Isaque',
     gringo: 'Testament of Isaac',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       copta: true,
@@ -251,7 +269,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Israel', // Testamento de Jacó
     gringo: 'Testament of Israel',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       copta: true,
@@ -272,7 +290,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Levi',
     gringo: 'Testament of Levi',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     oldestLanguageFound: 'aramaic',
     language: {
@@ -295,7 +313,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de José',
     gringo: 'Testament of Joseph',
-    testament: 'old',
+    alliance: 'Israel',
     oldestLanguageFound: 'greek',
     language: {
       greek: true
@@ -313,7 +331,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento dos Doze Patriarcas',
     gringo: 'Testament of Twelve Patriarchs',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       copta: true
@@ -332,7 +350,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Jubileus de Moisés',
     gringo: 'Jubilee of Moses',
-    testament: 'old',
+    alliance: 'Israel',
     type: ['history', 'prophecy'],
     language: {
       geez: true
@@ -349,7 +367,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Assunção de Moisés', // testamento de moisés, apocalipse de moisés
     gringo: 'Ascension of Moses',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true,
       syriac: true
@@ -365,7 +383,7 @@ export const bookMetadata: {
     chapters: 50,
     normal: 'Genesis',
     gringo: 'Genesis',
-    testament: 'old',
+    alliance: 'Israel',
     type: ['history', 'prophecy'],
     language: {
       geez: true,
@@ -383,7 +401,7 @@ export const bookMetadata: {
     chapters: 40,
     normal: 'Exodo',
     gringo: 'Exodus',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -400,7 +418,7 @@ export const bookMetadata: {
     chapters: 27,
     normal: 'Levitico',
     gringo: 'Leviticus',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -417,7 +435,7 @@ export const bookMetadata: {
     chapters: 36,
     normal: 'Numeros',
     gringo: 'Numbers',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -434,7 +452,7 @@ export const bookMetadata: {
     chapters: 34,
     normal: 'Deuteronomio',
     gringo: 'Deuteronomy',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -451,7 +469,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Miqsat Ma\'aseh ha-Torah',
     gringo: 'Miqsat Ma\'aseh ha-Torah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -466,7 +484,7 @@ export const bookMetadata: {
     chapters: 24,
     normal: 'Josue',
     gringo: 'Joshua',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -483,7 +501,7 @@ export const bookMetadata: {
     chapters: 21,
     normal: 'Juizes',
     gringo: 'Judges',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -500,7 +518,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: 'Rute',
     gringo: 'Ruth',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -517,7 +535,7 @@ export const bookMetadata: {
     chapters: 31,
     normal: '1 Samuel',
     gringo: '1 Samuel',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -535,7 +553,7 @@ export const bookMetadata: {
     chapters: 24,
     normal: '2 Samuel',
     gringo: '2 Samuel',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -552,7 +570,7 @@ export const bookMetadata: {
     chapters: 22,
     normal: '1 Reis',
     gringo: '1 Kings',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -569,7 +587,7 @@ export const bookMetadata: {
     chapters: 25,
     normal: '2 Reis',
     gringo: '2 Kings',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -586,7 +604,7 @@ export const bookMetadata: {
     chapters: 29,
     normal: '1 Cronicas',
     gringo: '1 Chronicles',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -603,7 +621,7 @@ export const bookMetadata: {
     chapters: 36,
     normal: '2 Cronicas',
     gringo: '2 Chronicles',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -620,7 +638,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Assunção de Elias',
     gringo: 'Ascension of Elijah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true,
       syriac: true
@@ -637,7 +655,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Apocalipse de Elias',
     gringo: 'Apocalipse of Elijah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -652,7 +670,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Elias',
     gringo: 'Testament of Elijah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true,
       hebrew: true
@@ -669,7 +687,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Esdras LXX',
     gringo: 'Ezra LXX',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true,
@@ -685,7 +703,7 @@ export const bookMetadata: {
     chapters: 10,
     normal: 'Esdras',
     gringo: 'Ezra',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -702,7 +720,7 @@ export const bookMetadata: {
     chapters: 13,
     normal: 'Neemias',
     gringo: 'Nehemiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -719,7 +737,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Apocalipse de Esdras',
     gringo: 'Apocalypse of Ezra',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true
@@ -735,7 +753,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Zorobabel",
     gringo: "Zorobabel",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -743,7 +761,7 @@ export const bookMetadata: {
     chapters: 10,
     normal: 'Ester',
     gringo: 'Esther',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -759,7 +777,7 @@ export const bookMetadata: {
     chapters: 6,
     normal: 'Ester LXX',
     gringo: 'Esther LXX',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true
@@ -776,7 +794,7 @@ export const bookMetadata: {
     chapters: 42,
     normal: 'Jó',
     gringo: 'Job',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -794,7 +812,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Davi',
     gringo: 'Testament of David',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       greek: true
@@ -813,7 +831,7 @@ export const bookMetadata: {
     chapters: 150,
     normal: '1 Salmos',
     gringo: '1 Psalms',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -832,7 +850,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: 'Salmos de Davi',
     gringo: 'Psalms of David',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true
     },
@@ -847,7 +865,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Salmos de Salomão',
     gringo: 'Psalms of Solomon',
-    testament: 'old',
+    alliance: 'Israel',
     oldestLanguageFound: 'greek',
     language: {
       greek: true
@@ -864,7 +882,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Salmos Essênios',
     gringo: 'Essenes Psalms',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -881,7 +899,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Salmos',
     gringo: 'Pesher of Salmos',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -896,7 +914,7 @@ export const bookMetadata: {
     chapters: 42,
     normal: 'Odes de Salomão',
     gringo: 'Odes of Solomon',
-    testament: 'old',
+    alliance: 'Israel',
     oldestLanguageFound: 'syriac',
     language: {
       syriac: true,
@@ -916,7 +934,7 @@ export const bookMetadata: {
     chapters: 31,
     normal: 'Proverbios',
     gringo: 'Proverbs',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -934,7 +952,7 @@ export const bookMetadata: {
     chapters: 42,
     normal: 'Sabedoria de Salomão',
     gringo: 'Wisdom of Solomon',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true,
@@ -952,7 +970,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Testamento de Salomão',
     gringo: 'Testament of Solomon',
-    testament: 'old',
+    alliance: 'Israel',
     type: [],
     language: {
       greek: true,
@@ -975,7 +993,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Sabedoria dos Essênios",
     gringo: "Wisdom of Essenes",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -983,7 +1001,7 @@ export const bookMetadata: {
     chapters: 12,
     normal: 'Eclesiastes',
     gringo: 'Ecclesiastes',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1001,7 +1019,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Eclesiástico - Sirácida',
     gringo: 'Ecclesiasticus - Sirach',
-    testament: 'old',
+    alliance: 'Israel',
     oldestLanguageFound: 'hebrew',
     language: {
       hebrew: true,
@@ -1021,7 +1039,7 @@ export const bookMetadata: {
     chapters: 8,
     normal: 'Canticos',
     gringo: 'Song of Solomon',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1039,7 +1057,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Oração de Nabonido',
     gringo: 'Prayer of Nabonidus',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       aramaic: true
     },
@@ -1055,7 +1073,7 @@ export const bookMetadata: {
     chapters: 66,
     normal: 'Isaias',
     gringo: 'Isaiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1074,7 +1092,7 @@ export const bookMetadata: {
     chapters: 11,
     normal: 'Assunção de Isaias',
     gringo: 'Ascension of Isaiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true
@@ -1090,7 +1108,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Pesher de Isaias',
     gringo: 'Pesher of Isaiah',
-    testament: 'old',
+    alliance: 'Israel',
     type: ['pesher'],
     language: {
       hebrew: true
@@ -1106,7 +1124,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Baruque',
     gringo: '1 Baruc',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1125,7 +1143,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Apocalipse Siríaco de Baruque',
     gringo: 'Syriac Apocalypse of Baruch',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       latim: true,
       syriac: true,
@@ -1144,7 +1162,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '4 Baruque',
     gringo: '4 Baruc',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true
     },
@@ -1161,7 +1179,7 @@ export const bookMetadata: {
     chapters: 52,
     normal: 'Jeremias',
     gringo: 'Jeremiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1181,7 +1199,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Lamentações de Jeremias',
     gringo: 'Lamentations of Jeremiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1199,7 +1217,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Carta de Jeremias',
     gringo: 'Letter of Jeremiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1217,7 +1235,7 @@ export const bookMetadata: {
     chapters: 48,
     normal: 'Ezequiel',
     gringo: 'Ezekiel',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1235,7 +1253,7 @@ export const bookMetadata: {
     chapters: 12,
     normal: 'Daniel',
     gringo: 'Daniel',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1255,7 +1273,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Daniel - Susana e os Anciãos',
     gringo: '2 Daniel - Susanna and the Elders',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true
@@ -1273,7 +1291,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '3 Daniel - Bel e o Dragão',
     gringo: '3 Daniel - Bel and the Dragon',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       greek: true
@@ -1291,7 +1309,7 @@ export const bookMetadata: {
     chapters: 14,
     normal: 'Oseias',
     gringo: 'Hosea',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1310,7 +1328,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Oseias',
     gringo: 'Pesher of Hosea',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1325,7 +1343,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: 'Joel',
     gringo: 'Joel',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1343,7 +1361,7 @@ export const bookMetadata: {
     chapters: 9,
     normal: 'Amos',
     gringo: 'Amos',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1361,7 +1379,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: 'Obadias',
     gringo: 'Obadiah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1379,7 +1397,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: 'Jonas',
     gringo: 'Jonah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1397,7 +1415,7 @@ export const bookMetadata: {
     chapters: 7,
     normal: 'Miqueias',
     gringo: 'Micah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1416,7 +1434,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Miqueias',
     gringo: 'Pesher of Micah',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1431,7 +1449,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: 'Naum',
     gringo: 'Nahum',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1450,7 +1468,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Naum',
     gringo: 'Pesher of Nahum',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1465,7 +1483,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: 'Habacuque',
     gringo: 'Habakkuk',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1484,7 +1502,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Habacuque',
     gringo: 'Pesher of Habakkuk',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1499,7 +1517,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: 'Sofonias',
     gringo: 'Zephaniah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1518,7 +1536,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Sofonias',
     gringo: 'Pesher of Zephaniah',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1533,7 +1551,7 @@ export const bookMetadata: {
     chapters: 2,
     normal: 'Ageu',
     gringo: 'Haggai',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1551,7 +1569,7 @@ export const bookMetadata: {
     chapters: 14,
     normal: 'Zacarias',
     gringo: 'Zechariah',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1569,7 +1587,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: 'Malaquias',
     gringo: 'Malachi',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1588,7 +1606,7 @@ export const bookMetadata: {
     normal: 'Pesher dos Malaquias',
     gringo: 'Pesher of Malachi',
     type: ['pesher'],
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       hebrew: true
     },
@@ -1603,7 +1621,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Tobias',
     gringo: 'Tobit',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       aramaic: true,
@@ -1623,7 +1641,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Judite',
     gringo: 'Judith',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true,
       hebrew: true,
@@ -1642,7 +1660,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Tao Te Ching',
     gringo: 'Tao Te Ching',
-    testament: 'global',
+    alliance: 'Chinese',
     type: ['sapiential'],
     language: {
       chinese: true
@@ -1661,7 +1679,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Bagava Gita - Canção Divina',
     gringo: 'Bhagavad Gita - Divine Song',
-    testament: 'global',
+    alliance: 'India',
     type: ['sapiential'],
     language: {
       sanskrit: true
@@ -1680,7 +1698,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Tripitaka - Vinaya Pitaka',
     gringo: '1 Tripitaka - Vinaya Pitaka',
-    testament: 'global',
+    alliance: 'Nepali',
     type: ['rule'],
     language: {
       sanskrit: true,
@@ -1701,7 +1719,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Tripitaka - Sutta Pitaka',
     gringo: '2 Tripitaka - Sutta Pitaka',
-    testament: 'global',
+    alliance: 'Nepali',
     type: ['sapiential'],
     language: {
       sanskrit: true,
@@ -1722,7 +1740,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '3 Tripitaka - Abhidhamma Pitaka',
     gringo: '3 Tripitaka - Abhidhamma Pitaka',
-    testament: 'global',
+    alliance: 'Nepali',
     type: ['sapiential'],
     language: {
       sanskrit: true,
@@ -1743,7 +1761,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Zostriano',
     gringo: 'Zostriano',
-    testament: 'global',
+    alliance: 'Egypt',
     type: ['sapiential'],
     language: {
       copta: true
@@ -1757,11 +1775,91 @@ export const bookMetadata: {
       sethian: true
     }
   },
-  'ZRT': {
+  '1ZR': {
     chapters: 0,
-    normal: 'Avesta de Zoroastro',
-    gringo: 'Avesta of Zarathustra',
-    testament: 'global',
+    normal: 'Yasna',
+    gringo: 'Yasna',
+    alliance: 'Persian',
+    type: ['sapiential'],
+    language: {
+      avestico: true,
+      pahlavi: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false,
+      persian: true
+    }
+  },
+  '2ZR': {
+    chapters: 0,
+    normal: 'Yashts',
+    gringo: 'Yashts',
+    alliance: 'Persian',
+    type: ['sapiential'],
+    language: {
+      avestico: true,
+      pahlavi: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false,
+      persian: true
+    }
+  },
+  '3ZR': {
+    chapters: 0,
+    normal: 'Visperad',
+    gringo: 'Visperad',
+    alliance: 'Persian',
+    type: ['sapiential'],
+    language: {
+      avestico: true,
+      pahlavi: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false,
+      persian: true
+    }
+  },
+  '4ZR': {
+    chapters: 0,
+    normal: 'Vidēvdād',
+    gringo: 'Vidēvdād',
+    alliance: 'Persian',
+    type: ['sapiential'],
+    language: {
+      avestico: true,
+      pahlavi: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false,
+      persian: true
+    }
+  },
+  '5ZR': {
+    chapters: 0,
+    normal: 'Khordeh Avesta',
+    gringo: 'Khordeh Avesta',
+    alliance: 'Persian',
     type: ['sapiential'],
     language: {
       avestico: true,
@@ -1781,7 +1879,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Tábua de Esmeralda',
     gringo: 'Emerald Tablet',
-    testament: 'global',
+    alliance: 'Egypt',
     language: {
       arabic: true
     },
@@ -1794,11 +1892,49 @@ export const bookMetadata: {
       sethian: false
     }
   },
-  '2HR': {
+  '2HR': { // https://neareast.jhu.edu/faculty-books/the-ancient-egyptian-book-of-thoth
+    chapters: 17,
+    normal: 'Livro de Thoth do Antigo Egito',
+    gringo: 'Book of Thoth of Ancient Egypt',
+    alliance: 'Egypt',
+    type: ['sapiential'],
+    oldestLanguageFound: 'greek',
+    language: {
+      egyptHieratic: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false
+    }
+  },
+  '3HR': {
     chapters: 17,
     normal: 'Corpus Hermeticum',
     gringo: 'Corpus Hermeticum',
-    testament: 'global',
+    alliance: 'Egypt',
+    type: ['sapiential'],
+    oldestLanguageFound: 'greek',
+    language: {
+      greek: true
+    },
+    codex: {
+      essenes: false,
+      tewahedo: false,
+      ocidental: false,
+      septuaginta: false,
+      copta: false,
+      sethian: false
+    }
+  },
+  '4HR': {
+    chapters: 17,
+    normal: 'Livro dos Mortos do Antigo Egito',
+    gringo: 'Book of Dead of Ancient Egypt',
+    alliance: 'Egypt',
     type: ['sapiential'],
     oldestLanguageFound: 'greek',
     language: {
@@ -1817,7 +1953,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Versos Dourados Pitagoras',
     gringo: 'Golden Verses of Pitagoras',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential', 'poesy'],
     language: {
       greek: true
@@ -1836,7 +1972,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Sobre a Natureza de Heráclito',
     gringo: 'On Nature of Heraclitus',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential', 'poesy'],
     language: {
       greek: true
@@ -1854,7 +1990,7 @@ export const bookMetadata: {
     chapters: 13,
     normal: 'Platão',
     gringo: 'Plato',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential'],
     language: {
       greek: true
@@ -1869,25 +2005,25 @@ export const bookMetadata: {
     }
   },
 
-// A República (Politeia)
-// Leis (Nomoi)
-// O Político (Politikos)
-// Sofista (Sophistes)
-// Timeu (Timaeus)
-// Parmênides (Parmenides)
-// Fédon (Phaedo)
-// Sofista (Sophistes) e Teeteto (Theaetetus)
-// Banquete (Symposium)
-// Fedro (Phaedrus)
-// Mênon (Meno)
-// Górgias (Gorgias)
-// Protágoras (Protagoras)
+  // A República (Politeia)
+  // Leis (Nomoi)
+  // O Político (Politikos)
+  // Sofista (Sophistes)
+  // Timeu (Timaeus)
+  // Parmênides (Parmenides)
+  // Fédon (Phaedo)
+  // Sofista (Sophistes) e Teeteto (Theaetetus)
+  // Banquete (Symposium)
+  // Fedro (Phaedrus)
+  // Mênon (Meno)
+  // Górgias (Gorgias)
+  // Protágoras (Protagoras)
 
   'CRI': {
     chapters: 0,
     normal: 'Sobre o Universo de Crisipo',
     gringo: 'On Universe of Crisipo',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential'],
     language: {
       greek: true
@@ -1906,7 +2042,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'De Natura Deorum de Cícero',
     gringo: 'De Natura Deorum of Cicero',
-    testament: 'global',
+    alliance: 'Roman',
     type: ['sapiential'],
     language: {
       latim: true,
@@ -1926,7 +2062,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Tusculanae Disputationes de Cícero',
     gringo: 'Tusculanae Disputationes of Cicero',
-    testament: 'global',
+    alliance: 'Roman',
     type: ['sapiential'],
     language: {
       latim: true,
@@ -1946,7 +2082,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Epistulae Morales ad Lucilium de Seneca',
     gringo: 'Epistulae Morales ad Lucilium of Seneca',
-    testament: 'global',
+    alliance: 'Roman',
     type: ['sapiential'],
     language: {
       latim: true
@@ -1965,7 +2101,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Naturales Quaestiones de Seneca',
     gringo: 'Naturales Quaestiones of Seneca',
-    testament: 'global',
+    alliance: 'Roman',
     type: ['sapiential'],
     language: {
       latim: true
@@ -1984,7 +2120,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Epicteto',
     gringo: '1 Epicteto',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential'],
     language: {
       greek: true
@@ -2003,7 +2139,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Epicteto',
     gringo: '2 Epicteto',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential'],
     language: {
       greek: true
@@ -2022,7 +2158,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Anthologium de Estobeu',
     gringo: 'Anthologium of Estobeu',
-    testament: 'global',
+    alliance: 'Greek',
     type: ['sapiential'],
     language: {
       greek: true
@@ -2041,7 +2177,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Regra da Comunidade",
     gringo: "Rule of the Community",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2049,7 +2185,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Regra da Congregação",
     gringo: "Rule of the Congregation",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2057,7 +2193,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Regra das Bênçãos",
     gringo: "Rule of Blessings",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2065,7 +2201,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Hinos de Ação de Graças",
     gringo: "Thanksgiving Hymns",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2073,7 +2209,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Documento de Damasco",
     gringo: "Damascus Document",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2081,7 +2217,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "A Guerra dos Filhos da Luz contra os Filhos das Trevas",
     gringo: "The War of the Sons of Light Against the Sons of Darkness",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2089,7 +2225,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Rolo do Templo",
     gringo: "Temple Scroll",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2097,7 +2233,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Cânticos do Sacrifício do Sábado",
     gringo: "Songs of the Sabbath Sacrifice",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2105,7 +2241,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Bênçãos",
     gringo: "Blessings",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2113,7 +2249,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Otot - Sinais e Calendários",
     gringo: "Otot - Signs and Calendars",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2121,7 +2257,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Orações Calendáricas",
     gringo: "Calendrical Prayers",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2129,7 +2265,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Páscoa",
     gringo: "Pesach",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2137,7 +2273,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Haláquico",
     gringo: "Halakhic",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2145,7 +2281,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Halacá",
     gringo: "Halakhah",
-    testament: "old",
+    alliance: 'Israel',
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2153,8 +2289,8 @@ export const bookMetadata: {
     chapters: 0,
     normal: "Pergaminho de Cobre",
     gringo: "Copper Scroll",
-    testament: "old",
-    type: [ "treasure" ],
+    alliance: 'Israel',
+    type: ["treasure"],
     language: { hebrew: true },
     codex: { essenes: true, ocidental: false, septuaginta: false, tewahedo: false }
   },
@@ -2162,7 +2298,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Macabeus Grego',
     gringo: '1 Maccabees Greek',
-    testament: 'old',
+    alliance: 'Israel',
     type: ['history'],
     language: {
       greek: true
@@ -2179,7 +2315,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Macabeus Grego',
     gringo: '2 Maccabees Greek',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true
     },
@@ -2195,7 +2331,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '3 Macabeus Grego',
     gringo: '3 Maccabees Greek',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true
     },
@@ -2211,7 +2347,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '4 Macabeus Grego',
     gringo: '4 Maccabees Greek',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       greek: true
     },
@@ -2227,7 +2363,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Macabeus Etíope',
     gringo: '1 Maccabees Ethiopian',
-    testament: 'old',
+    alliance: 'Israel',
     type: ['history'],
     language: {
       geez: true
@@ -2245,7 +2381,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Macabeus Etíope',
     gringo: '2 Maccabees Ethiopian',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true
     },
@@ -2262,7 +2398,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '3 Macabeus Etíope',
     gringo: '3 Maccabees Ethiopian',
-    testament: 'old',
+    alliance: 'Israel',
     language: {
       geez: true
     },
@@ -2279,7 +2415,7 @@ export const bookMetadata: {
     chapters: 28,
     normal: 'Mateus',
     gringo: 'Matthew',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true,
       greek: true
@@ -2296,7 +2432,7 @@ export const bookMetadata: {
     chapters: 16,
     normal: 'Marcos',
     gringo: 'Mark',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true,
       greek: true
@@ -2313,7 +2449,7 @@ export const bookMetadata: {
     chapters: 24,
     normal: 'Lucas',
     gringo: 'Luke',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true,
       greek: true
@@ -2330,7 +2466,7 @@ export const bookMetadata: {
     chapters: 21,
     normal: 'Joao',
     gringo: 'John',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true,
       greek: true
@@ -2347,7 +2483,7 @@ export const bookMetadata: {
     chapters: 28,
     normal: 'Atos',
     gringo: 'Acts',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true,
       greek: true
@@ -2364,7 +2500,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'O Pastor de Hermas',
     gringo: 'Shepherd of Hermas',
-    testament: 'new',
+    alliance: 'global',
     language: {
       greek: true,
       copta: true
@@ -2380,7 +2516,7 @@ export const bookMetadata: {
     chapters: 16,
     normal: 'Romanos',
     gringo: 'Romans',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2398,7 +2534,7 @@ export const bookMetadata: {
     chapters: 16,
     normal: '1 Corintios',
     gringo: '1 Corinthians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2416,7 +2552,7 @@ export const bookMetadata: {
     chapters: 13,
     normal: '2 Corintios',
     gringo: '2 Corinthians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2434,7 +2570,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '3 Corintios',
     gringo: '3 Corinthians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     oldestLanguageFound: 'greek',
     language: {
@@ -2454,7 +2590,7 @@ export const bookMetadata: {
     chapters: 6,
     normal: 'Galatas',
     gringo: 'Galatians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2472,7 +2608,7 @@ export const bookMetadata: {
     chapters: 6,
     normal: 'Efesios',
     gringo: 'Ephesians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2490,7 +2626,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: 'Filipenses',
     gringo: 'Philippians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2508,7 +2644,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: 'Colossenses',
     gringo: 'Colossians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2526,7 +2662,7 @@ export const bookMetadata: {
     chapters: 5,
     normal: '1 Tessalonicenses',
     gringo: '1 Thessalonians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2544,7 +2680,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: '2 Tessalonicenses',
     gringo: '2 Thessalonians',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2562,7 +2698,7 @@ export const bookMetadata: {
     chapters: 6,
     normal: '1 Timoteo',
     gringo: '1 Timothy',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2580,7 +2716,7 @@ export const bookMetadata: {
     chapters: 4,
     normal: '2 Timoteo',
     gringo: '2 Timothy',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2598,7 +2734,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: 'Tito',
     gringo: 'Titus',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2616,7 +2752,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: 'Filemom',
     gringo: 'Philemon',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2634,7 +2770,7 @@ export const bookMetadata: {
     chapters: 13,
     normal: 'Hebreus',
     gringo: 'Hebrews',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2652,7 +2788,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Laodicenses',
     gringo: 'Laodiceans',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2670,7 +2806,7 @@ export const bookMetadata: {
     chapters: 5,
     normal: '1 Tiago',
     gringo: '1 James',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2688,7 +2824,7 @@ export const bookMetadata: {
     chapters: 5,
     normal: '1 Pedro',
     gringo: '1 Peter',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2706,7 +2842,7 @@ export const bookMetadata: {
     chapters: 3,
     normal: '2 Pedro',
     gringo: '2 Peter',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2724,7 +2860,7 @@ export const bookMetadata: {
     chapters: 5,
     normal: '1 Joao',
     gringo: '1 John',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2742,7 +2878,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: '2 Joao',
     gringo: '2 John',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2760,7 +2896,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: '3 Joao',
     gringo: '3 John',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2778,7 +2914,7 @@ export const bookMetadata: {
     chapters: 1,
     normal: 'Judas',
     gringo: 'Jude',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2796,7 +2932,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'José filho de Bengorion',
     gringo: 'Josefas son of Bengorion',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2811,7 +2947,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Sirate de Sião',
     gringo: 'Sirate Tsion',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2826,7 +2962,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Tizaz',
     gringo: 'Tizaz',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2841,7 +2977,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Gitseu',
     gringo: 'Gitsew',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2856,7 +2992,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Abtilis',
     gringo: 'Abtilis',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2871,7 +3007,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '1 Dominos',
     gringo: '1 Dominos',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2886,7 +3022,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: '2 Dominos',
     gringo: '2 Dominos',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2901,7 +3037,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Corintios de Clemente',
     gringo: 'Corinthians of Clement',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       geez: true,
@@ -2922,7 +3058,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Homilia de Clemente',
     gringo: 'Homily of Clement',
-    testament: 'new',
+    alliance: 'global',
     type: ['letter'],
     language: {
       greek: true
@@ -2940,7 +3076,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Carta de Pedro a Clemente Árabe',
     gringo: 'Letter of Peter to Clement Arab',
-    testament: 'new',
+    alliance: 'global',
     language: {
       arabic: true
     },
@@ -2955,7 +3091,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Carta de Pedro a Clemente Etíope',
     gringo: 'Letter of Peter to Clement Ethiopian',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -2970,7 +3106,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Livro dos Rolos Árabe',
     gringo: 'Book of Rolls Arabic',
-    testament: 'new',
+    alliance: 'global',
     language: {
       arabic: true
     },
@@ -2985,7 +3121,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Livro dos Rolos Etíope',
     gringo: 'Book of Rolls Ethiopian',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -3000,7 +3136,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Didascália',
     gringo: 'Didascalia',
-    testament: 'new',
+    alliance: 'global',
     language: {
       geez: true
     },
@@ -3015,7 +3151,7 @@ export const bookMetadata: {
     chapters: 22,
     normal: 'Apocalipse de João',
     gringo: 'Apocalypse of John',
-    testament: 'new',
+    alliance: 'global',
     type: ['prophecy'],
     language: {
       geez: true,
@@ -3032,7 +3168,7 @@ export const bookMetadata: {
     chapters: 12,
     normal: 'Oráculos Sibilinos',
     gringo: 'Sibylline Oracles',
-    testament: 'new',
+    alliance: 'global',
     type: ['prophecy'],
     language: {
       greek: true
@@ -3049,7 +3185,7 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Apocalipse de Isaac Newton',
     gringo: 'Apocalipse of Isaac Newton',
-    testament: 'new',
+    alliance: 'global',
     type: ['pesher'],
     language: {
       english: true

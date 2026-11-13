@@ -13,17 +13,27 @@ verso acompanha a rolagem e permite ir diretamente a um verso do capítulo abert
 Para abrir outro livro ou capítulo, selecione-o e use **Go**; o verso informado
 também será usado no destino.
 Para abrir uma apresentação sem os controles de edição, use **View > Preview Current**.
-O Holy Viewer inicia com o capítulo inteiro, cores **Prismatic** e léxicos visíveis;
+O Holy Viewer inicia com o capítulo inteiro e cores **Prismatic**;
 o ícone de configuração permite escolher um
 verso, intervalo ou capítulo e quais dados interlineares, traduções personalizadas,
 ortografia, transliteração e numerologia serão exibidos, além de escolher entre
 o modo **Word of God**, que destaca as marcações correspondentes, e o modo
 **Prismatic**, que exibe as cores de associação interlinear.
-O diálogo também permite ativar o tooltip nativo (atributo HTML `title`) com o
-léxico ao passar o mouse sobre segmentos do texto original.
+O tamanho do texto é ajustável no diálogo; para voltar, use o botão da página
+ou **View > Return to Editor**.
+O diálogo apresenta abas para os códices disponíveis na passagem selecionada.
+Em cada aba é possível configurar a exibição e o tooltip nativo, ativado por padrão,
+(atributo HTML `title`) com o léxico ao passar o mouse sobre segmentos do texto.
+As opções de ortografia e numerologia são selecionadas individualmente por códice.
 As variações selecionadas são aplicadas à tradução personalizada; se várias
 alterarem o mesmo trecho, prevalece a última selecionada. Traduções de referência
 do editor não são exibidas na prévia.
+
+Na configuração JSON do componente, `fontSize` é o tamanho do texto em pixels.
+Em `codices`, `selectedSpellings` e `selectedNumerology` contêm os identificadores
+(`label`) dos algoritmos selecionados para cada fonte. Configurações anteriores
+que usam `sections.spelling` ou `sections.numerology` continuam exibindo todos
+os algoritmos da respectiva categoria quando não há uma seleção individual.
 
 ## Coleções de artefatos
 

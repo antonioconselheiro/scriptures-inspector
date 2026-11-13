@@ -6,8 +6,6 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
-  font-size: 1.25rem;
-  line-height: 1.9;
 }
 
 .holyViewerToolbar {
@@ -37,13 +35,25 @@
 }
 
 .holyVerse {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.4rem;
   margin: 0 0 2.5rem;
   break-inside: avoid;
 }
 
-.holyVerse h2 {
-  font-size: 1rem;
+.passageTitle {
+  font-size: 1.75rem;
   opacity: 0.7;
+}
+
+.passageOmission {
+  margin: 0 0 1rem;
+}
+
+.verseNumber {
+  align-self: start;
+  line-height: 1;
 }
 
 .holyLine {
@@ -87,6 +97,18 @@
 .holyViewerDialog label:has(select) {
   align-items: flex-start;
   flex-direction: column;
+}
+
+.codexTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.codexTabs button[aria-selected="true"] {
+  font-weight: bold;
+  border-bottom: 3px solid currentColor;
 }
 
 .dialogActions {

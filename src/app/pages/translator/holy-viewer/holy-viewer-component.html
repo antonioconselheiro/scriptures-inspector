@@ -1,4 +1,4 @@
-<div class="holyViewer">
+<div class="holyViewer" [style.font-size.px]="fontSize">
   @if (configurable) {
     <div class="holyViewerToolbar">
       <button type="button" aria-label="Configure Holy Viewer" title="Configure preview" (click)="openSettings()">
@@ -13,31 +13,45 @@
     </div>
   }
 
-  @for (verse of visibleVerses; track verse.id) {
+  @let displayedVerses = visibleVerses;
+  @if (displayedVerses[0]; as firstVerse) {
+    <h2 class="passageTitle">{{passageTitle(firstVerse)}}</h2>
+  }
+  @if (hasOmittedVersesBefore(displayedVerses)) {
+    <p class="passageOmission">[...]</p>
+  }
+  @for (verse of displayedVerses; track verse.id) {
     <article class="holyVerse">
-      <h2>{{verse.bookName}} {{verse.chapter}}:{{verse.verse}}</h2>
-      @for (line of verse.lines; track $index) {
-        @if (showLine(line.type)) {
-          <div class="holyLine">
-            @if (line.type !== 'original') {
-              <span class="holyLineLabel">{{line.label}}</span>
-            }
-            <span [attr.lang]="line.language">
-              @for (piece of line.pieces; track $index) {
-                <span
-                  [attr.title]="line.type === 'original' && config.showOriginalLexicalTooltip ? piece.title || null : null"
-                  [class]="config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : ''"
-                  [attr.data-punctuation]="config.displayMode === 'prismatic' && piece.color === '' && isPunctuation(pieceText(line, piece)) ? '' : null"
-                  [class.godsaid]="config.displayMode === 'wordOfGod' && piece.wordOfGod"
-                >{{pieceText(line, piece)}}</span>
+      <sup class="verseNumber">{{verse.verse}}</sup>
+      <div>
+        @for (line of verse.lines; track $index) {
+          @if (showLine(line)) {
+            <div class="holyLine">
+              @if (line.type !== 'original') {
+                <span class="holyLineLabel">{{line.label}}</span>
               }
-            </span>
-          </div>
+              <span [attr.lang]="line.language">
+                @for (piece of line.pieces; track $index) {
+                  @if (piece.separator) {{{piece.text}}} @else if (pieceText(line, piece).length) {
+                    <span
+                      [attr.title]="(line.type === 'original' || line.type === 'interlinear') && getCodexConfig(line.source).showOriginalLexicalTooltip ? piece.title || null : null"
+                      [class]="config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : ''"
+                      [attr.data-punctuation]="config.displayMode === 'prismatic' && piece.color === '' && isPunctuation(pieceText(line, piece)) ? '' : null"
+                      [class.godsaid]="config.displayMode === 'wordOfGod' && piece.wordOfGod"
+                    >{{pieceText(line, piece)}}</span>
+                  }
+                }
+              </span>
+            </div>
+          }
         }
-      }
+      </div>
     </article>
   } @empty {
     <p>No verses are available for this preview configuration.</p>
+  }
+  @if (hasOmittedVersesAfter(displayedVerses)) {
+    <p class="passageOmission">[...]</p>
   }
 </div>
 
@@ -76,40 +90,75 @@
           <option value="prismatic">Prismatic</option>
         </select>
       </label>
-      <label><input type="checkbox" [(ngModel)]="draftConfig.showOriginal" name="showOriginal"> Original text</label>
       <label>
-        <input
-          type="checkbox"
-          [(ngModel)]="draftConfig.showOriginalLexicalTooltip"
-          name="showOriginalLexicalTooltip"
-        >
-        Show original lexical value on hover
+        Text size (px)
+        <input type="number" min="1" step="1" [(ngModel)]="draftConfig.fontSize" name="fontSize">
       </label>
-      @for (section of sectionNames; track section.key) {
-        <label>
-          <input type="checkbox" [(ngModel)]="draftConfig.sections[section.key]" [name]="section.key">
-          {{section.label}}
-        </label>
+      @if (!validFontSize) {
+        <p>Text size must be greater than zero.</p>
       }
-
-      @if (variationOptions.length) {
-        <fieldset>
-          <legend>Custom translation variations</legend>
-          <p>When variations overlap, the last selected variation takes precedence.</p>
-          @for (option of variationOptions; track option.target + ':' + option.id) {
+      <div class="codexTabs" role="tablist" aria-label="Codex settings" (keydown)="navigateCodexTabs($event)">
+        @for (source of availableCodices; track source) {
+          <button type="button" role="tab" [attr.aria-selected]="selectedCodex === source"
+            [attr.tabindex]="selectedCodex === source ? 0 : -1"
+            (click)="activeCodex = source">{{source}}</button>
+        }
+      </div>
+      @if (selectedCodex; as source) {
+        @let codexConfig = draftCodexConfig(source);
+        <div role="tabpanel" [attr.aria-label]="source">
+          <label><input type="checkbox" [(ngModel)]="codexConfig.showOriginal" name="showOriginal"> Original text</label>
+          <label>
+            <input type="checkbox" [(ngModel)]="codexConfig.showOriginalLexicalTooltip" name="showOriginalLexicalTooltip">
+            Show original lexical value on hover
+          </label>
+          @for (section of sectionNames; track section.key) {
             <label>
-              <input type="checkbox" #variationCheckbox
-                [checked]="(draftConfig.selectedVariations[option.target] || []).includes(option.id)"
-                (change)="setVariation(option, variationCheckbox.checked)">
-              {{option.source}} · {{option.name}}
+              <input type="checkbox" [(ngModel)]="codexConfig.sections[section.key]" [name]="section.key">
+              {{section.label}}
             </label>
           }
-        </fieldset>
+
+          @for (type of ['spelling', 'numerology']; track type) {
+            @if (type === 'spelling' || type === 'numerology') {
+              @let options = codexOptions(source, type);
+              @if (options.length) {
+                <fieldset>
+                  <legend>{{type === 'spelling' ? 'Alternative spelling' : 'Numerology'}}</legend>
+                  @for (option of options; track option.id) {
+                    <label>
+                      <input type="checkbox" #optionCheckbox [checked]="optionSelected(source, type, option.id)"
+                        (change)="setOption(source, type, option.id, optionCheckbox.checked)">
+                      {{option.name}}
+                    </label>
+                  }
+                </fieldset>
+              }
+            }
+          }
+
+          @if (codexVariations(source).length) {
+            <fieldset>
+              <legend>Custom translation variations</legend>
+              <p>When variations overlap, the last selected variation takes precedence.</p>
+              @for (option of codexVariations(source); track option.target + ':' + option.id) {
+                <label>
+                  <input type="checkbox" #variationCheckbox
+                    [checked]="(codexConfig.selectedVariations[option.target] || []).includes(option.id)"
+                    (change)="setVariation(option, variationCheckbox.checked)">
+                  {{option.name}}
+                </label>
+              }
+            </fieldset>
+          }
+        </div>
+      } @else {
+        <p>No codices are available for this passage.</p>
       }
 
       <div class="dialogActions">
         <button type="button" (click)="closeSettings()">Cancel</button>
-        <button type="button" (click)="saveSettings()">Apply</button>
+        <button type="button" [disabled]="!validFontSize" (click)="saveSettings()">Apply</button>
       </div>
     </section>
   </div>

@@ -5,10 +5,8 @@ TODO
 [ ] - (gemini) Fazer com que associações interlineares sejam derivadas com a integração gemini
 [ ] - (gemini) (mvp fragmentator) tratar svg com integração gemini
 [ ] - (gemini) (mvp fragmentator) posicionar letras da transcrição no svg usando a imagem como referência com a integração gemini
-[ ] - (holy viewer) Ao clicar ou passar o mouse por cima das palavras do texto original, deve-se mostrar o léxico
 [ ] - (holy viewer) Precisa poder exibir pedaços de um versículo
-[ ] - (holy viewer) Mecânica de sublinhar trechos do texto para destacar um pedaço do que está se referindo no argumento
-[ ] - (holy viewer) Deve ter um meio de exibir diferentes configurações de variações de tradução lado a lado para comparação, comoparações com as variações de "palavras-chave transliteradas" ou "significado dos nomes" pode ser util para o usuário final
+[ ] - (holy viewer) Mecânica de sublinhar trechos do texto, para destacar um pedaço do que está se referindo no argumento
 [ ] - Está quebrando para derivar tradução personalizada, quebrou com genesis 1.1
 [ ] - Quando houver opções disponíveis de uma variação de tradução, um icone deve ser exibido sobre o select para identificar isso
 [ ] - Variação de tradução onde números transcritos são transformados em algarismos preserva espaços entre os números, ex: "E viveu Jarede 1  6  2 anos e gerou AZ Enoque.". Pensar em solução.

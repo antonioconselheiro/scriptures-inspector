@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('api', {
   initializeProjectOpening: () => ipcRenderer.invoke('initialize-project-opening'),
   onProjectFileOpened: (callback) => ipcRenderer.on('open-project-file', (_, filePath) => callback(filePath)),
   updateCodexConfigMenu: (codices) => ipcRenderer.invoke('update-codex-config-menu', codices),
+  setPreviewActive: (active) => ipcRenderer.invoke('set-preview-active', active),
   onOpenCodexConfig: (callback) => {
     const listener = (_, source) => callback(source);
     ipcRenderer.on('open-codex-config', listener);

@@ -1,7 +1,5 @@
 export type HolyViewerSection =
-  | 'interlinear'
   | 'customTranslation'
-  | 'lexical'
   | 'spelling'
   | 'transliteration'
   | 'numerology';
@@ -11,15 +9,23 @@ export interface HolyViewerConfig {
   verse: number;
   startVerse: number;
   endVerse: number;
+  displayMode: 'wordOfGod' | 'prismatic';
+  fontSize?: number;
+  codices: Record<string, HolyViewerCodexConfig>;
+}
+
+export interface HolyViewerCodexConfig {
   showOriginal: boolean;
   showOriginalLexicalTooltip: boolean;
-  displayMode: 'wordOfGod' | 'prismatic';
   selectedVariations: Record<string, string[]>;
+  selectedSpellings?: string[];
+  selectedNumerology?: string[];
   sections: Record<HolyViewerSection, boolean>;
 }
 
 export interface HolyViewerPiece {
   text: string;
+  separator?: boolean;
   title?: string;
   color?: string;
   wordOfGod?: boolean;
@@ -34,11 +40,13 @@ export interface HolyViewerVariationOption {
 }
 
 export interface HolyViewerLine {
-  type: 'original' | HolyViewerSection;
+  source: string;
+  type: 'original' | 'interlinear' | HolyViewerSection;
   label: string;
   language?: string;
   pieces: HolyViewerPiece[];
   variationTarget?: string;
+  optionId?: string;
 }
 
 export interface HolyViewerVerse {
@@ -49,19 +57,22 @@ export interface HolyViewerVerse {
   lines: HolyViewerLine[];
 }
 
-export const defaultHolyViewerConfig: HolyViewerConfig = {
+export const defaultHolyViewerConfig: HolyViewerConfig & { fontSize: number } = {
   scope: 'verse',
   verse: 1,
   startVerse: 1,
   endVerse: 1,
-  showOriginal: true,
-  showOriginalLexicalTooltip: false,
   displayMode: 'prismatic',
+  fontSize: 20,
+  codices: {}
+};
+
+export const defaultHolyViewerCodexConfig: HolyViewerCodexConfig = {
+  showOriginal: true,
+  showOriginalLexicalTooltip: true,
   selectedVariations: {},
   sections: {
-    interlinear: true,
     customTranslation: true,
-    lexical: true,
     spelling: false,
     transliteration: false,
     numerology: false

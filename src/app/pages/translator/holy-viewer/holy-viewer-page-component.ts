@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
@@ -45,20 +45,28 @@ function isSupportedLanguage(language: string): language is LanguageUnionType {
   selector: 'app-holy-viewer-page',
   imports: [HolyViewerComponent],
   template: `
-    <button type="button" class="returnToEditor" (click)="returnToEditor()">Return to editor</button>
+    <button type="button" class="returnToEditor" (click)="returnToEditor()">
+      <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M19 12H5m7-7-7 7 7 7"></path>
+      </svg>
+      <span>Return to editor</span>
+    </button>
     <app-holy-viewer [verses]="verses" [config]="config" [variationOptions]="variationOptions" [configurable]="true"
       (configChange)="config = $event"></app-holy-viewer>
-  `
+  `,
+  styleUrl: './holy-viewer-page-component.scss'
 })
-export class HolyViewerPageComponent implements OnInit {
+export class HolyViewerPageComponent implements OnInit, OnDestroy {
   project: Project | null = null;
-  config: HolyViewerConfig = { ...structuredClone(defaultHolyViewerConfig), scope: 'chapter' };
+  config: HolyViewerConfig = { ...structuredClone(defaultHolyViewerConfig), scope: 'chapter', fontSize: 28 };
   verses: HolyViewerVerse[] = [];
   variationOptions: HolyViewerVariationOption[] = [];
   private current: CurrentChapter | null = null;
   private sourceBooks: Record<string, SourceBook> = {};
   private codices: Record<string, Codex> = {};
   private projectData: ProjectData = {};
+  private removeMenuListener: (() => void) | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,7 +74,8 @@ export class HolyViewerPageComponent implements OnInit {
     private dataService: ProjectDataService,
     private metadataService: ProjectMetadataService,
     private interlinearService: ProjectInterlinearService,
-    private customTranslationService: ProjectCustomTranslationService
+    private customTranslationService: ProjectCustomTranslationService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
@@ -86,6 +95,7 @@ export class HolyViewerPageComponent implements OnInit {
     this.config = {
       ...structuredClone(defaultHolyViewerConfig),
       scope: 'chapter',
+      fontSize: 28,
       verse: 1,
       startVerse: 1,
       endVerse: 1
@@ -100,6 +110,17 @@ export class HolyViewerPageComponent implements OnInit {
         endVerse: requestedVerse
       };
     }
+    this.removeMenuListener = window.api.onOpenProjectMenuAction(action => {
+      if (action === 'return-to-editor') {
+        this.ngZone.run(() => this.returnToEditor());
+      }
+    });
+    void window.api.setPreviewActive(true).catch(error => console.error('Unable to update preview menu:', error));
+  }
+
+  ngOnDestroy(): void {
+    this.removeMenuListener?.();
+    void window.api.setPreviewActive(false).catch(error => console.error('Unable to update preview menu:', error));
   }
 
   returnToEditor(): void {
@@ -140,6 +161,10 @@ export class HolyViewerPageComponent implements OnInit {
     if (!sourceBook) {
       return [];
     }
+    const chapter = sourceBook.chapters.find(item => item?.chapter === current.chapter);
+    if (!chapter) {
+      return [];
+    }
     if (!metadata || !codex) {
       throw new Error(`Holy Viewer data is incomplete for source "${structure.source}".`);
     }
@@ -151,46 +176,37 @@ export class HolyViewerPageComponent implements OnInit {
     const language = getProjectLanguageFn(project, languageName);
     const parsedPatterns = this.metadataService.parsePattern(metadata.patterns, language);
     const bookName = codex.books?.[current.book]?.name ?? current.book;
-    const chapter = sourceBook.chapters.find(item => item?.chapter === current.chapter);
-    if (!chapter) {
-      throw new Error(`Chapter ${current.chapter} was not found in "${structure.source}".`);
-    }
-
     return chapter.verses.map(verse => {
       const matrix = this.dataService.splitIntoMatrix(language, parsedPatterns, verse.text);
       const lines: HolyViewerLine[] = [
         {
           type: 'original',
+          source: structure.source,
           label: 'Original',
           language: languageMetadataRecord[languageName].label,
-          pieces: matrix.flatMap(word => [
-            ...word.segments.map(segment => {
-              const lexical = this.dataService.getLexical(metadata, language, segment.word, segment.morpheme);
-              return {
-                text: segment.word,
-                title: lexical.value,
-                color: getPresentationColor(segment.index),
-                wordOfGod: this.metadataService.getScriptureMetadataWordOfGod(
-                  metadata, language, current, verse.verse, { segments: [segment] }
-                )
-              };
-            }),
-            ...(word.separator ? [{ text: word.separator }] : [])
-          ])
+          pieces: this.matrixPieces(matrix, segment => {
+            const lexical = this.dataService.getLexical(metadata, language, segment.word, segment.morpheme);
+            return {
+              title: lexical.value,
+              color: getPresentationColor(segment.index),
+              wordOfGod: this.metadataService.getScriptureMetadataWordOfGod(
+                metadata, language, current, verse.verse, { segments: [segment] }
+              )
+            };
+          })
         }
       ];
 
       this.addCustomTranslationLines(
         lines, structure.customTranslationTarget, sourceBook, current, verse, matrix, metadata, language,
-        'Custom translation'
+        structure.source, 'Custom translation'
       );
       this.addInterlinearLines(
         lines, structure.interlinear ?? [], structure.source, current, verse, matrix, metadata, language
       );
-      this.addLexicalLines(lines, matrix, metadata, language);
-      this.addSpellingLines(lines, matrix, languageName);
-      this.addTransliterationLine(lines, matrix, languageName);
-      this.addNumerologyLines(lines, matrix, languageName);
+      this.addSpellingLines(lines, matrix, languageName, structure.source);
+      this.addTransliterationLine(lines, matrix, languageName, structure.source);
+      this.addNumerologyLines(lines, matrix, languageName, structure.source);
 
       return {
         id: `${structure.source}-${verse.verse}`,
@@ -204,11 +220,11 @@ export class HolyViewerPageComponent implements OnInit {
 
   private matrixPieces(
     matrix: Word[],
-    getAttributes: (segment: Word['segments'][number]) => { color?: string; wordOfGod?: boolean } = () => ({})
+    getAttributes: (segment: Word['segments'][number]) => Omit<HolyViewerPiece, 'text'> = () => ({})
   ): HolyViewerPiece[] {
     return matrix.flatMap(word => [
       ...word.segments.map(segment => ({ text: segment.word, ...getAttributes(segment) })),
-      ...(word.separator ? [{ text: word.separator }] : [])
+      ...(word.separator ? [{ text: word.separator, separator: true }] : [])
     ]);
   }
 
@@ -217,14 +233,15 @@ export class HolyViewerPageComponent implements OnInit {
     const seen = new Set<string>();
     const visit = (structure: ProjectStructureMetadata): void => {
       const target = structure.customTranslationTarget;
-      if (target && !seen.has(target)) {
-        seen.add(target);
+      const optionKey = `${structure.source}\0${target}`;
+      if (target && !seen.has(optionKey)) {
+        seen.add(optionKey);
         const translation = this.projectData[target];
         if (translation) {
           for (const [id, variation] of Object.entries(translation.variations ?? {})) {
             options.push({
               target, id, name: variation.name,
-              source: this.codices[structure.source]?.name ?? structure.source
+              source: structure.source
             });
           }
         }
@@ -293,11 +310,15 @@ export class HolyViewerPageComponent implements OnInit {
       };
       lines.push({
         type: 'interlinear',
+        source: interlinear.source,
         label: `Interlinear · ${codex.name}`,
         language: languageMetadataRecord[codex.language].label,
         pieces: this.matrixPieces(matrix, segment => {
           return {
             color: relatedColor(segment.index),
+            title: this.dataService.getLexical(
+              interlinearMetadata, language, segment.word, segment.morpheme
+            ).value,
             wordOfGod: relatedWordOfGod(segment.index) || this.metadataService.getScriptureMetadataWordOfGod(
               interlinearMetadata, language, interlinearCurrent, interlinearVerse.verse, { segments: [segment] }
             )
@@ -306,8 +327,12 @@ export class HolyViewerPageComponent implements OnInit {
       });
       this.addCustomTranslationLines(
         lines, interlinear.customTranslationTarget, interlinearBook, interlinearCurrent, interlinearVerse,
-        matrix, interlinearMetadata, language, `Custom translation · ${codex.name}`, relatedWordOfGod, relatedColor
+        matrix, interlinearMetadata, language, interlinear.source, `Custom translation · ${codex.name}`,
+        relatedWordOfGod, relatedColor
       );
+      this.addSpellingLines(lines, matrix, codex.language, interlinear.source, relatedColor);
+      this.addTransliterationLine(lines, matrix, codex.language, interlinear.source, relatedColor);
+      this.addNumerologyLines(lines, matrix, codex.language, interlinear.source, relatedColor);
       this.addInterlinearLines(
         lines, interlinear.interlinear ?? [], interlinear.source, interlinearCurrent, interlinearVerse,
         matrix, interlinearMetadata, language, relatedWordOfGod, relatedColor
@@ -324,6 +349,7 @@ export class HolyViewerPageComponent implements OnInit {
     matrix: Word[],
     bookMetadata: BookMetadataTarget,
     language: ReturnType<typeof getProjectLanguageFn>,
+    source: string,
     label: string,
     relatedWordOfGod: (segmentIndex: number) => boolean = () => false,
     relatedColor?: (segmentIndex: number) => string
@@ -369,60 +395,57 @@ export class HolyViewerPageComponent implements OnInit {
     originalSegments.forEach((segment, index) => {
       pieces.push(makePiece(segment.segment, index));
       if (segment.hasTrailingSpace) {
-        pieces.push({ text: ' ' });
+        pieces.push({ text: ' ', separator: true });
       }
     });
-    lines.push({ type: 'customTranslation', label, variationTarget: targetKey, pieces });
+    lines.push({ type: 'customTranslation', source, label, variationTarget: targetKey, pieces });
   }
 
-  private addLexicalLines(
-    lines: HolyViewerLine[],
-    matrix: Word[],
-    metadata: BookMetadataTarget,
-    language: ReturnType<typeof getProjectLanguageFn>
+  private addSpellingLines(
+    lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
+    color: (index: number) => string = getPresentationColor
   ): void {
-    const pieces = matrix.flatMap(word => [
-      ...word.segments.map(segment => ({
-        text: this.dataService.getLexical(metadata, language, segment.word, segment.morpheme).value,
-        color: getPresentationColor(segment.index)
-      })),
-      ...(word.separator ? [{ text: word.separator }] : [])
-    ]).filter(piece => piece.text.length > 0);
-    lines.push({ type: 'lexical', label: 'Lexical values', pieces });
-  }
-
-  private addSpellingLines(lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType): void {
     for (const spelling of languageMetadataRecord[language].alternativeSpelling ?? []) {
       lines.push({
         type: 'spelling',
+        source,
         label: spelling.name,
+        optionId: spelling.label,
         pieces: this.matrixPieces(matrix, segment => ({
-          color: getPresentationColor(segment.index)
+          color: color(segment.index)
         })).map(piece => ({
           ...piece,
-          text: spelling.parse ? spelling.parse(piece.text) : piece.text
+          text: !piece.separator && spelling.parse ? spelling.parse(piece.text) : piece.text
         }))
       });
     }
   }
 
-  private addNumerologyLines(lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType): void {
+  private addNumerologyLines(
+    lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
+    color: (index: number) => string = getPresentationColor
+  ): void {
     for (const algorithm of languageMetadataRecord[language].numerology ?? []) {
       lines.push({
         type: 'numerology',
+        source,
         label: algorithm.name,
+        optionId: algorithm.label,
         pieces: matrix.flatMap(word => [
           ...word.segments.map(segment => ({
             text: String(algorithm.calc(segment.word)),
-            color: getPresentationColor(segment.index)
+            color: color(segment.index)
           })),
-          ...(word.separator ? [{ text: word.separator }] : [])
+          ...(word.separator ? [{ text: word.separator, separator: true }] : [])
         ])
       });
     }
   }
 
-  private addTransliterationLine(lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType): void {
+  private addTransliterationLine(
+    lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
+    color: (index: number) => string = getPresentationColor
+  ): void {
     const transliteration = languageMetadataRecord[language].transliteration;
     if (!transliteration) {
       return;
@@ -430,13 +453,14 @@ export class HolyViewerPageComponent implements OnInit {
 
     lines.push({
       type: 'transliteration',
+      source,
       label: 'Transliteration',
       pieces: matrix.flatMap(word => [
         ...word.segments.map(segment => ({
           text: transliteration(segment.word),
-          color: getPresentationColor(segment.index)
+          color: color(segment.index)
         })),
-        ...(word.separator ? [{ text: word.separator }] : [])
+        ...(word.separator ? [{ text: word.separator, separator: true }] : [])
       ])
     });
   }

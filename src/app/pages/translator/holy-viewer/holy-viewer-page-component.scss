@@ -3,6 +3,20 @@
   z-index: 1;
   top: 1rem;
   left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.returnToEditor:hover span,
+.returnToEditor:focus-visible span {
+  text-decoration: underline;
 }
 
 @media print {

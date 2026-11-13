@@ -6,6 +6,8 @@ const { fileURLToPath, pathToFileURL } = require('url');
 let mainWindow;
 let splashWindow;
 let applicationMenu;
+let previewActive = false;
+let menuCodices = [];
 const toolboxVisibility = {
   pageNavigation: true,
   codexNavigation: true,
@@ -141,6 +143,19 @@ ipcMain.handle('update-codex-config-menu', (event, codices) => {
   }
 
   updateApplicationMenu(codices);
+});
+
+ipcMain.handle('set-preview-active', (event, active) => {
+  if (!mainWindow || event.sender !== mainWindow.webContents) {
+    throw new Error('Preview menu can only be updated by the main window');
+  }
+  if (typeof active !== 'boolean') {
+    throw new TypeError('Preview state must be a boolean');
+  }
+  previewActive = active;
+  if (applicationMenu) {
+    updateApplicationMenu(menuCodices);
+  }
 });
 
 ipcMain.handle('get-toolbox-visibility', event => {
@@ -360,6 +375,7 @@ function showSplash() {
 }
 
 function updateApplicationMenu(codices = []) {
+  menuCodices = codices;
   const iconPath = isDev
     ? path.join(__dirname, 'public', 'script.png')
     : path.join(app.getAppPath(), 'public', 'script.png');
@@ -426,8 +442,9 @@ function updateApplicationMenu(codices = []) {
     label: 'View',
     submenu: [
       {
-        label: 'Preview Current',
-        click: () => sendProjectMenuAction('preview-current')
+        id: 'preview-current',
+        label: previewActive ? 'Return to Editor' : 'Preview Current',
+        click: () => sendProjectMenuAction(previewActive ? 'return-to-editor' : 'preview-current')
       },
       { type: 'separator' },
       { role: 'reload' },
