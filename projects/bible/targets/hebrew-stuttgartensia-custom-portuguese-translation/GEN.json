@@ -37,51 +37,63 @@
           "metadata": [
             {
               "size": 2,
-              "value": "0-ב"
+              "value": "0-ב",
+              "isWordOfGod": true
             },
             {
               "size": 9,
-              "value": "1-ראשית"
+              "value": "1-ראשית",
+              "isWordOfGod": true
             },
             {
               "size": 5,
-              "value": "2-ברא"
+              "value": "2-ברא",
+              "isWordOfGod": true
             },
             {
               "size": 5,
-              "value": "3-אלהים"
+              "value": "3-אלהים",
+              "isWordOfGod": true
             },
             {
               "size": 2,
-              "value": "4-את"
+              "value": "4-את",
+              "isWordOfGod": true
             },
             {
               "size": 2,
-              "value": "5-ה"
+              "value": "5-ה",
+              "isWordOfGod": true
             },
             {
               "size": 4,
-              "value": "6-שמים"
+              "value": "6-שמים",
+              "isWordOfGod": true
             },
             {
               "size": 1,
-              "value": "7-ו"
+              "value": "7-ו",
+              "isWordOfGod": true
             },
             {
               "size": 2,
-              "value": "8-את"
+              "value": "8-את",
+              "isWordOfGod": true
             },
             {
               "size": 1,
-              "value": "9-ה"
+              "value": "9-ה",
+              "isWordOfGod": true
             },
             {
               "size": 5,
-              "value": "10-ארץ"
+              "value": "10-ארץ",
+              "isWordOfGod": true
             },
             {
               "size": 1,
-              "value": "11-׃"
+              "value": "11-׃",
+              "isWordOfGod": true
             }
           ]
         },

@@ -97,6 +97,19 @@ Back up projects before bulk edits or cleanup.
 
 ### Open and discover
 
+Show the available commands, their arguments and options without opening a
+project:
+
+```sh
+si help
+```
+
+Show help for one command:
+
+```sh
+si help set-translation-size
+```
+
 Open the project in the graphical application:
 
 ```sh
@@ -274,6 +287,112 @@ si clean-translation-variation --project . --target hebrew-stuttgartensia \
 
 ### Custom translations and variations
 
+Translation commands accept a translation target or its source in `--target`.
+Spans and source segment indexes start at zero. Use the listing commands to
+discover indexes and IDs before editing. A span's `size` is measured in
+JavaScript UTF-16 code units, not bytes or visual characters; changing a size
+also changes where later spans start. Existing variation overrides refer to
+span indexes and are not automatically moved when text or sizes change.
+
+Derive a verse from lexical values using the editor's **All** operation. This
+overwrites the verse text and span metadata (including scripture links and
+Word of God overrides); existing verse variation overrides and book-level
+variation definitions remain and may need to be reviewed:
+
+```sh
+si derivate-translation-from-lexical --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1
+```
+
+Replace the verse text. Existing metadata and variation overrides remain for
+nonempty text; an empty string instead clears the verse including its metadata
+and verse-level variation overrides, like the editor:
+
+```sh
+si set-translation "No princípio criou Divos." --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1
+```
+
+List the current translation spans, their zero-based indexes, sizes, scripture
+values and explicit Word of God overrides. A final span without metadata has
+`size: null` in JSON:
+
+```sh
+si list-translation-spans --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1
+```
+
+List the selectable source segments and their normalized serialized scripture
+values for the verse:
+
+```sh
+si list-scriptures --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1
+```
+
+Set a span's positive size. A final unconfigured span can be configured this
+way before assigning its association or Word of God override:
+
+```sh
+si set-translation-size --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 0 --size 2
+```
+
+Remove a configured span, equivalent to setting its size to zero and
+confirming removal in the editor. The text is retained; later span indexes
+shift, but existing variation overrides are not reindexed:
+
+```sh
+si remove-translation-span --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 0
+```
+
+Associate a span with a value from `list-scriptures`. Use `--scripture none`
+to remove its association:
+
+```sh
+si set-translation-scripture --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 0 --scripture '0-ב'
+```
+
+Mark one configured translation span as Word of God:
+
+```sh
+si set-translation-word-of-god --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 0
+```
+
+Remove its explicit override:
+
+```sh
+si remove-translation-word-of-god --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 0
+```
+
+Removing an override does not remove Word of God status inherited from
+original or related source metadata. `list-translation-spans` reports the
+explicit override, not the effective inherited status.
+
+Display the source, saved custom translation and every individual variation
+with their associative Prismatic colors on a terminal. `NO_COLOR` disables
+ANSI colors. Redirected output is JSON: each line has `id`, `name` and
+`pieces`, each piece has `text` and `color` (0 means unassociated; 1–7 are
+the Prismatic colors). Variations without overrides display the base text:
+
+```sh
+si read-all-translations --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1
+```
+
+For a translation source used under multiple interlinear parents, select its
+immediate parent with `--origin`; links are followed through the structure to
+the original source. Unmapped segments are uncolored:
+
+```sh
+si read-all-translations --project . --target geez-mashafa-qeddus \
+  --origin greek-septuagint --book GEN --chapter 1 --verse 1
+```
+
 List available variations as `{id, name}` entries:
 
 ```sh
@@ -284,6 +403,36 @@ Create a variation and print its generated UUID:
 
 ```sh
 scriptures-inspector add-variations "My variation" --project . --target hebrew-stuttgartensia --book GEN
+```
+
+Rename an existing variation without removing its overrides:
+
+```sh
+si rename-variation "New name" --project . --target hebrew-stuttgartensia \
+  --book GEN --variation UUID
+```
+
+Set the value of one span in one variation. A single space is a valid override;
+an empty value removes the override:
+
+```sh
+si set-variation-value "Elohim" --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 3 --variation UUID
+```
+
+Remove one override, restoring the base span for that variation:
+
+```sh
+si remove-variation-value --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 3 --variation UUID
+```
+
+List the editor's previously used suggestions for a span's associated
+scripture and variation:
+
+```sh
+si list-variation-suggestions --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --span 3 --variation UUID
 ```
 
 Remove the specified variation definitions and their verse-level overrides.

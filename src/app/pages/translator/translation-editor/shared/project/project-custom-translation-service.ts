@@ -210,8 +210,7 @@ export class ProjectCustomTranslationService {
     if (sizeNumber === 0) {
       if (verse.metadata[index]) {
         if (confirm('remove?')) {
-          verse.metadata.splice(index, 1);
-          this.systemService.triggerSaveCurrentBookTranslations(current);
+          this.removeWordSpan(current, verse, index);
           return;
         }
       }
@@ -226,6 +225,15 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  removeWordSpan(
+    current: CurrentChapter,
+    verse: { metadata: Array<BookTranslationTargetMetadata> },
+    index: number
+  ): void {
+    verse.metadata.splice(index, 1);
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
   derivateAllToCustom(
     sourceBook: SourceBook,
     sourceVerse: SourceVerse,
@@ -235,19 +243,23 @@ export class ProjectCustomTranslationService {
     customTranslation: BookTranslationTarget,
     current: CurrentChapter,
   ): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.derivateTranslationToCustom(sourceBook, sourceVerse, sourceLanguage, parsedBookMetadata, customTranslation, current);
       setTimeout(() => {
-        this.derivateInterlinearToCustom(
-          sourceBook,
-          sourceVerse,
-          sourceLanguage,
-          translationLanguage,
-          parsedBookMetadata,
-          customTranslation,
-          current
-        );
-        resolve();
+        try {
+          this.derivateInterlinearToCustom(
+            sourceBook,
+            sourceVerse,
+            sourceLanguage,
+            translationLanguage,
+            parsedBookMetadata,
+            customTranslation,
+            current
+          );
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   }
@@ -265,7 +277,7 @@ export class ProjectCustomTranslationService {
   updateCustomTranslation(
     sourceBook: SourceBook,
     sourceVerse: SourceVerse,
-    input: HTMLInputElement,
+    input: { value: string },
     customTranslation: BookTranslationTarget,
     current: CurrentChapter
   ): void {

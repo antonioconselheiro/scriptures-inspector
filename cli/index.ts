@@ -26,6 +26,7 @@ import { metadataVerseMatches } from '../src/app/pages/translator/translation-ed
 import { isPendingLexical } from '../src/app/pages/translator/translation-editor/shared/project/pending-lexical';
 import { removeLexical } from '../src/app/pages/translator/translation-editor/shared/project/remove-lexical';
 import { removeTranslationVariation, selectVariationText } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
+import { getPresentationColor, getSerializedSegmentIndex } from '../src/app/pages/translator/translation-editor/shared/scripture-presentation-core';
 
 type Kind = 'metadata' | 'interlinear' | 'translation';
 type Structure = ProjectStructureMetadata & { interlinearTarget?: string };
@@ -42,7 +43,7 @@ function parseArgs(args: string[]): { command: string; options: Options; positio
   const command = args.shift() ?? 'help';
   const options: Options = {};
   const positional: string[] = [];
-  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin']);
+  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation']);
   while (args.length) {
     const arg = args.shift()!;
     if (!arg.startsWith('--')) {
@@ -74,6 +75,12 @@ function identifier(value: string, label: string): string {
 function numberOption(options: Options, name: string): number {
   const text = required(options, name);
   if (!/^[1-9]\d*$/.test(text) || !Number.isSafeInteger(Number(text))) throw new Error(`Invalid --${name}: ${text}`);
+  return Number(text);
+}
+
+function indexOption(options: Options, name: string): number {
+  const text = required(options, name);
+  if (!/^(0|[1-9]\d*)$/.test(text) || !Number.isSafeInteger(Number(text))) throw new Error(`Invalid --${name}: ${text}`);
   return Number(text);
 }
 
@@ -134,6 +141,20 @@ function structures(project: Project): Structure[] {
   };
   walk(project.structures);
   return result;
+}
+
+function structurePath(project: Project, target: string, origin?: string): Structure[] {
+  const paths: Structure[][] = [];
+  const walk = (items: Structure[], parents: Structure[]): void => {
+    for (const item of items) {
+      const current = [...parents, item];
+      if (item.customTranslationTarget === target && (!origin || parents.at(-1)?.source === origin)) paths.push(current);
+      if (item.interlinear) walk(item.interlinear, current);
+    }
+  };
+  walk(project.structures, []);
+  if (paths.length !== 1) throw new Error(`Cannot determine unique structure for translation target: ${target}; specify --origin when it has multiple parents`);
+  return paths[0];
 }
 
 function targetProperty(kind: Kind): 'metadataTarget' | 'interlinearTarget' | 'customTranslationTarget' {
@@ -219,10 +240,6 @@ function outputList(value: unknown, headers: string[], rows: Array<Array<string 
 
 async function main(): Promise<void> {
   const { command, options, positional } = parseArgs(process.argv.slice(2));
-  if (command === 'help' || command === '--help') {
-    console.log('Scriptures Inspector CLI. See README.md for commands and options.');
-    return;
-  }
   const commandOptions: Record<string, string[]> = {
     open: [], 'list-books': [], 'list-sources': [], 'list-targets': [],
     'read-metadata': ['target', 'book', 'chapter', 'verse'],
@@ -247,6 +264,74 @@ async function main(): Promise<void> {
     'clean-translation-interlinear': ['target', 'book', 'chapter', 'verse'],
     'clean-translation-variation': ['target', 'book', 'chapter', 'verse', 'variations']
   };
+  const verseOptions = ['target', 'book', 'chapter', 'verse'];
+  Object.assign(commandOptions, {
+    'derivate-translation-from-lexical': verseOptions,
+    'set-translation': verseOptions,
+    'list-scriptures': verseOptions,
+    'list-translation-spans': verseOptions,
+    'read-all-translations': [...verseOptions, 'origin'],
+    'list-variation-suggestions': [...verseOptions, 'span', 'variation'],
+    'set-translation-size': [...verseOptions, 'span', 'size'],
+    'remove-translation-span': [...verseOptions, 'span'],
+    'set-translation-scripture': [...verseOptions, 'span', 'scripture'],
+    'set-translation-word-of-god': [...verseOptions, 'span'],
+    'remove-translation-word-of-god': [...verseOptions, 'span'],
+    'set-variation-value': [...verseOptions, 'span', 'variation'],
+    'remove-variation-value': [...verseOptions, 'span', 'variation'],
+    'rename-variation': ['target', 'book', 'variation']
+  });
+  if (command === 'help' || command === '--help') {
+    if (positional.length > 1 || Object.keys(options).length) throw new Error('Usage: si help [command]');
+    const descriptions: Record<string, string> = {
+      open: 'Open a project in the graphical application.',
+      'list-books': 'List project book keys and names.', 'list-sources': 'List project sources.',
+      'list-targets': 'List targets by type.', 'read-metadata': 'Read verse metadata.',
+      'read-interlinear': 'Read verse interlinear mappings.', 'list-variations': 'List variation IDs and names.',
+      'add-variations': 'Create a variation: <name>.', 'remove-variations': 'Remove variations by comma-separated IDs.',
+      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Read translation with optional variation IDs.',
+      'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
+      'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
+      'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
+      'remove-lexical': 'Remove a lexical value: <text> <root|prefix|suffix>.',
+      'clean-unused-lexical': 'Remove lexical entries unused in the book.',
+      'read-lexical': 'Read verse segments and their lexical values.',
+      'list-pending-lexicals': 'List pending lexical occurrences in a chapter.',
+      'next-pending-lexical': 'Find the next pending lexical occurrence.',
+      'previous-pending-lexical': 'Find the previous pending lexical occurrence.',
+      'set-word-of-god': 'Mark original segments as Word of God.',
+      'remove-word-of-god': 'Unmark original segments.', 'clean-word-of-god': 'Clear verse Word of God marks.',
+      'clean-verse-lexical': 'Remove lexical entries used by this verse.',
+      'clean-interlinear': 'Clear verse interlinear mappings for an origin.',
+      'clean-translation': 'Clear a verse translation and its metadata and variations.',
+      'clean-translation-interlinear': 'Clear verse translation scripture links.',
+      'clean-translation-variation': 'Clear selected variation overrides in a verse.',
+      'derivate-translation-from-lexical': 'Overwrite a verse translation and spans from lexical values.',
+      'set-translation': 'Set verse translation text: <text>. Empty text clears the verse.',
+      'list-scriptures': 'List available source segment associations.',
+      'list-translation-spans': 'List translation spans, sizes and associations.',
+      'read-all-translations': 'Display original, custom translation and every variation.',
+      'list-variation-suggestions': 'List editor suggestions for a span and variation.',
+      'set-translation-size': 'Set span size in JavaScript UTF-16 code units.',
+      'remove-translation-span': 'Remove a configured span, as setting its size to zero in the editor.',
+      'set-translation-scripture': 'Associate a span with a scripture value, or none.',
+      'set-translation-word-of-god': 'Set a span Word of God override.',
+      'remove-translation-word-of-god': 'Remove a span Word of God override.',
+      'set-variation-value': 'Set a variation span override: <value>.',
+      'remove-variation-value': 'Remove a variation span override.'
+    };
+    const names = positional.length ? positional : Object.keys(commandOptions);
+    if (!names.every(name => Object.hasOwn(commandOptions, name))) throw new Error(`Unknown command: ${names[0]}`);
+    console.log('Usage: si <command> [arguments] [--project DIRECTORY] [options]\n');
+    for (const name of names) {
+      const optional = name === 'read-translation' ? ['variations']
+        : name === 'read-all-translations' ? ['origin']
+        : name === 'next-pending-lexical' || name === 'previous-pending-lexical' ? ['verse', 'segment'] : [];
+      console.log(`${name} — ${descriptions[name]}\n  Options: ${commandOptions[name].map(opt => optional.includes(opt) ? `[--${opt} VALUE]` : `--${opt} VALUE`).join(' ') || '(none)'}\n`);
+    }
+    console.log('All commands accept [--project DIRECTORY] (default: current directory). --target accepts a source or target name; --book is a book key; --chapter and --verse are positive numbers. --span and --segment are zero-based indexes; --segments and --variations are comma-separated; --variation is one variation ID. Navigation --verse and --segment must be given together. See README.md for examples and destructive operations.');
+    return;
+  }
   if (!Object.hasOwn(commandOptions, command)) throw new Error(`Unknown command: ${command}`);
   for (const option of Object.keys(options)) {
     if (option !== 'project' && !commandOptions[command].includes(option)) throw new Error(`Option --${option} is not valid for ${command}`);
@@ -289,7 +374,7 @@ async function main(): Promise<void> {
     return;
   }
   const kind: Kind = ['read-interlinear', 'clean-interlinear'].includes(command) ? 'interlinear'
-    : ['list-variations', 'add-variations', 'remove-variations', 'read-translation', 'clean-translation', 'clean-translation-interlinear', 'clean-translation-variation'].includes(command) ? 'translation' : 'metadata';
+    : ['list-variations', 'add-variations', 'remove-variations', 'read-translation', 'clean-translation', 'clean-translation-interlinear', 'clean-translation-variation', 'derivate-translation-from-lexical', 'set-translation', 'list-scriptures', 'list-translation-spans', 'read-all-translations', 'list-variation-suggestions', 'set-translation-size', 'remove-translation-span', 'set-translation-scripture', 'set-translation-word-of-god', 'remove-translation-word-of-god', 'set-variation-value', 'remove-variation-value', 'rename-variation'].includes(command) ? 'translation' : 'metadata';
   const { target, source } = resolveTarget(project, required(options, 'target'), kind);
   const book = identifier(required(options, 'book'), 'book');
   if (!(book in project.target.books)) throw new Error(`Unknown target book: ${book}`);
@@ -314,17 +399,139 @@ async function main(): Promise<void> {
       for (const id of selected) removeTranslationVariation(translation, id);
       await save(file, translation);
       output({ removed: selected });
+    } else if (command === 'rename-variation') {
+      expectPositionals(positional, 1);
+      const id = required(options, 'variation');
+      if (!Object.hasOwn(translation.variations, id)) throw new Error(`Unknown variation: ${id}`);
+      if (!positional[0].trim()) throw new Error('Variation name cannot be empty');
+      translation.variations[id].name = positional[0];
+      await save(file, translation);
+      output({ id, name: positional[0] });
     } else {
-      expectPositionals(positional, 0);
+      const positionalCount = command === 'set-translation' || command === 'set-variation-value' ? 1 : 0;
+      expectPositionals(positional, positionalCount);
       const selected = options['variations'] ? ids(options) : [];
       for (const id of selected) if (!translation.variations[id]) throw new Error(`Unknown variation: ${id}`);
-      const { sourceBook } = await sourceData(project, source, book);
+      const { sourceBook, language } = await sourceData(project, source, book);
       const index = findSourceVerse(sourceBook, numberOption(options, 'chapter'), numberOption(options, 'verse'));
+      const sourceVerse = sourceBook.chapters[index.chapterIndex].verses[index.verseIndex];
+      const current = { book, chapter: numberOption(options, 'chapter') };
+      const needsMetadata = ['derivate-translation-from-lexical', 'list-scriptures', 'read-all-translations', 'set-translation-scripture'].includes(command);
+      const metadataTargets = needsMetadata
+        ? [...new Set(structures(project).filter(item => item.source === source && item.customTranslationTarget === target).map(item => item.metadataTarget))]
+        : [];
+      if (needsMetadata && metadataTargets.length !== 1) throw new Error(`Cannot determine unique metadata target for ${target}`);
+      const metaTarget = needsMetadata ? identifier(metadataTargets[0], 'target') : '';
+      const bookMetadata = needsMetadata ? await loadTarget<BookMetadataTarget>(path.join(project.path, 'targets', metaTarget, `${book}.json`), () => ({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} })) : null;
+      const words = bookMetadata ? dataService.splitIntoMatrix(language, metadataService.parsePattern(bookMetadata.patterns, language), sourceVerse.text) : [];
+      if (command === 'derivate-translation-from-lexical') {
+        if (!bookMetadata) throw new Error('Metadata not available');
+        await translationService.derivateAllToCustom(sourceBook, sourceVerse, language, language, { lexical: bookMetadata.lexical, patterns: metadataService.parsePattern(bookMetadata.patterns, language) }, translation, current);
+        await save(file, translation);
+        output(translation.chapters[index.chapterIndex].verses[index.verseIndex]);
+        return;
+      }
+      if (command === 'set-translation') {
+        translationService.updateCustomTranslation(sourceBook, sourceVerse, { value: positional[0] }, translation, current);
+        await save(file, translation);
+        output(translation.chapters[index.chapterIndex].verses[index.verseIndex]);
+        return;
+      }
+      const scriptures = words.flatMap(word => word.segments.map(segment => ({ index: segment.index, text: segment.word, value: dataService.castSegmentIntoMetadataIndexSerialized(language, segment) })));
+      if (command === 'list-scriptures') {
+        outputList(scriptures, ['INDEX', 'SEGMENT', 'VALUE'], scriptures.map(item => [item.index, item.text, item.value]));
+        return;
+      }
       const verse = translation.chapters[index.chapterIndex]?.verses[index.verseIndex];
       if (!verse) throw new Error('Translation verse not found');
+      if (command === 'list-translation-spans') {
+        const spans = translationService.splitCustomTranslation(verse).map((piece, span) => ({ span, text: piece.segment, size: verse.metadata[span]?.size ?? null, scripture: verse.metadata[span]?.value ?? '', isWordOfGod: verse.metadata[span]?.isWordOfGod ?? false }));
+        outputList(spans, ['SPAN', 'TEXT', 'SIZE', 'SCRIPTURE', 'WORD OF GOD'], spans.map(item => [item.span, item.text, item.size ?? '', item.scripture, String(item.isWordOfGod)]));
+        return;
+      }
+      if (command === 'read-all-translations') {
+        const pathToSource = structurePath(project, target, options['origin']);
+        const mappings = await Promise.all(pathToSource.slice(1).map(async (item, i) => {
+          if (!item.interlinearTarget) throw new Error(`Missing interlinear target for ${item.source}`);
+          const targetFile = path.join(project.path, 'targets', identifier(item.interlinearTarget, 'target'), `${book}.json`);
+          return { origin: pathToSource[i].source, target: await loadTarget<InterlinearTarget>(targetFile, () => ({})) };
+        }));
+        const color = (segmentIndex: number): number => {
+          let chapter = current.chapter;
+          let verseNumber = sourceVerse.verse;
+          let currentIndex = segmentIndex;
+          for (const mapping of mappings.slice().reverse()) {
+            const mappedChapter = mapping.target[mapping.origin]?.chapters.find(item => item?.chapter === chapter);
+            const mappedVerse = mappedChapter?.verses.find(item => item?.verse === verseNumber);
+            const mappedWord = mappedVerse?.words?.[currentIndex];
+            if (!mappedChapter || !mappedVerse || !mappedWord || !Number.isInteger(mappedWord.originIndex) || mappedWord.originIndex < 0) return 0;
+            currentIndex = mappedWord.originIndex;
+            chapter = mappedVerse.originChapter ?? mappedChapter.origin;
+            verseNumber = mappedVerse.originVerse;
+          }
+          return Number(getPresentationColor(currentIndex));
+        };
+        const original = words.flatMap(word => [...word.segments.map(segment => ({ text: segment.word, color: color(segment.index) })), ...(word.separator ? [{ text: word.separator, color: 0 }] : [])]);
+        const pieces = translationService.splitCustomTranslation(verse);
+        const buildLine = (id?: string) => pieces.map((piece, i) => {
+          const value = id ? verse.variations?.[id]?.[String(i)]?.value : undefined;
+          const linked = getSerializedSegmentIndex(verse.metadata[i]?.value ?? '');
+          return { text: (value || piece.segment) + (piece.hasTrailingSpace ? ' ' : ''), color: linked === null ? 0 : color(linked) };
+        });
+        const lines = [{ id: 'original', name: source, pieces: original }, { id: 'custom', name: 'Custom translation', pieces: buildLine() }, ...Object.entries(translation.variations).map(([id, variation]) => ({ id, name: variation.name, pieces: buildLine(id) }))];
+        if (!process.stdout.isTTY) output(lines);
+        else {
+          const colors = ['211;1;1', '236;106;0', '206;203;0', '77;187;5', '1;146;165', '59;0;168', '206;1;179'];
+          for (const line of lines) {
+            const text = line.pieces.map(piece => piece.color && !process.env['NO_COLOR'] ? `\x1b[38;2;${colors[piece.color - 1]}m${piece.text}\x1b[0m` : piece.text).join('');
+            console.log(`${line.name}: ${text}`);
+          }
+        }
+        return;
+      }
+      if (['set-translation-size', 'remove-translation-span', 'set-translation-scripture', 'set-translation-word-of-god', 'remove-translation-word-of-god', 'set-variation-value', 'remove-variation-value', 'list-variation-suggestions'].includes(command)) {
+        const span = indexOption(options, 'span');
+        const pieces = translationService.splitCustomTranslation(verse);
+        if (span >= pieces.length) throw new Error(`Unknown translation span: ${span}`);
+        if (command === 'list-variation-suggestions') {
+          const id = required(options, 'variation');
+          if (!Object.hasOwn(translation.variations, id)) throw new Error(`Unknown variation: ${id}`);
+          const suggestions = translationService.getVariationDataListOptions(translation, verse.metadata[span]?.value ?? '', id);
+          outputList(suggestions, ['VALUE'], suggestions.map(value => [value]));
+          return;
+        }
+        if (command === 'set-translation-size') {
+          const size = indexOption(options, 'size');
+          if (!size) throw new Error('Size must be positive; use remove-translation-span to remove a span');
+          let start = 0;
+          for (const metadata of verse.metadata.slice(0, span)) {
+            start += metadata.size;
+            start += verse.text.slice(start).match(/^ */)?.[0].length ?? 0;
+          }
+          const available = verse.text.length - start;
+          if (size > available) throw new Error(`Size exceeds remaining translation text (${available} UTF-16 units)`);
+          translationService.onChangeWordSpan(current, verse, span, { value: String(size) });
+        } else if (command === 'remove-translation-span') {
+          if (!verse.metadata[span]) throw new Error('Translation span has no metadata to remove');
+          translationService.removeWordSpan(current, verse, span);
+        } else if (command === 'set-translation-scripture') {
+          const value = required(options, 'scripture');
+          if (value !== 'none' && !scriptures.some(item => item.value === value)) throw new Error(`Unknown scripture: ${value}`);
+          if (!verse.metadata[span]) throw new Error('Set the span size before assigning a scripture');
+          translationService.saveCustomTranslationInterlinearMetadata(sourceBook, sourceVerse, translation, current, value === 'none' ? '' : value, span);
+        } else if (command === 'set-translation-word-of-god' || command === 'remove-translation-word-of-god') {
+          if (!verse.metadata[span]) throw new Error('Set the span size before changing its Word of God override');
+          translationService.setAsWordOfGodOverriding(sourceBook, sourceVerse, translation, current, command === 'set-translation-word-of-god', span);
+        } else {
+          const id = required(options, 'variation');
+          if (!Object.hasOwn(translation.variations, id)) throw new Error(`Unknown variation: ${id}`);
+          translationService.updateVariationValue(current, span, verse.variations, id, command === 'set-variation-value' ? positional[0] : '');
+        }
+        await save(file, translation);
+        output({ span, metadata: verse.metadata[span] ?? null, variations: verse.variations });
+        return;
+      }
       if (command === 'clean-translation' || command === 'clean-translation-interlinear' || command === 'clean-translation-variation') {
-        const current = { book, chapter: numberOption(options, 'chapter') };
-        const sourceVerse = sourceBook.chapters[index.chapterIndex].verses[index.verseIndex];
         if (command === 'clean-translation') {
           translationService.cleanCustomTranslation(sourceBook, { value: verse.text }, translation, current, sourceVerse);
         } else if (command === 'clean-translation-interlinear') {

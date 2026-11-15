@@ -47,6 +47,110 @@ function success(...args) {
 const target = ['--target', 'hebrew-stuttgartensia', '--book', 'GEN'];
 const verse = ['--chapter', '1', '--verse', '1'];
 
+test('help documents every command without a project and supports a command topic', () => {
+  const result = run('help');
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /set-variation-value.*<value>/);
+  assert.match(result.stdout, /list-scriptures/);
+  assert.match(success('help', 'set-translation-size'), /--span VALUE --size VALUE/);
+  assert.notEqual(run('help', 'not-a-command').status, 0);
+});
+
+test('edits translation spans and variation overrides with validated scripture options', () => {
+  const file = path.join(project, 'targets/hebrew-stuttgartensia-custom-portuguese-translation/GEN.json');
+  const id = success('add-variations', 'CLI variation', ...target);
+  const scripture = JSON.parse(success('list-scriptures', ...target, ...verse))[1];
+  assert.equal(scripture.value, '1-ראשית');
+  success('clean-translation', ...target, ...verse);
+  success('set-translation', 'Alpha beta', ...target, ...verse);
+  success('set-translation-size', ...target, ...verse, '--span', '0', '--size', '5');
+  success('set-translation-scripture', ...target, ...verse, '--span', '0', '--scripture', scripture.value);
+  success('set-translation-word-of-god', ...target, ...verse, '--span', '0');
+  success('set-variation-value', 'Omega', ...target, ...verse, '--span', '0', '--variation', id);
+  success('rename-variation', 'Renamed', ...target, '--variation', id);
+  const spans = JSON.parse(success('list-translation-spans', ...target, ...verse));
+  assert.deepEqual(spans[0], { span: 0, text: 'Alpha', size: 5, scripture: scripture.value, isWordOfGod: true });
+  assert.equal(success('read-translation', ...target, ...verse, '--variations', id), 'Omega beta');
+  assert.deepEqual(JSON.parse(success('list-variation-suggestions', ...target, ...verse, '--span', '0', '--variation', id)), ['Omega']);
+  const lines = JSON.parse(success('read-all-translations', ...target, ...verse));
+  assert.equal(lines.find(line => line.id === id).pieces.map(piece => piece.text).join(''), 'Omega beta');
+  assert.equal(lines.find(line => line.id === id).pieces[0].color, 2);
+  const snapshot = fs.readFileSync(file, 'utf8');
+  for (const args of [
+    ['set-translation-size', ...target, ...verse, '--span', '0', '--size', '9999'],
+    ['set-translation-scripture', ...target, ...verse, '--span', '0', '--scripture', '999-unknown'],
+    ['set-translation-word-of-god', ...target, ...verse, '--span', '999'],
+    ['set-variation-value', 'x', ...target, ...verse, '--span', '0', '--variation', 'unknown']
+  ]) assert.notEqual(run(...args).status, 0);
+  assert.equal(fs.readFileSync(file, 'utf8'), snapshot);
+  success('remove-variation-value', ...target, ...verse, '--span', '0', '--variation', id);
+  success('remove-translation-word-of-god', ...target, ...verse, '--span', '0');
+  success('set-translation-scripture', ...target, ...verse, '--span', '0', '--scripture', 'none');
+  assert.equal(success('read-translation', ...target, ...verse, '--variations', id), 'Alpha beta');
+  const edited = JSON.parse(fs.readFileSync(file, 'utf8')).chapters[0].verses[0];
+  assert.equal(edited.metadata[0].isWordOfGod, undefined);
+  assert.equal(edited.metadata[0].value, '');
+  success('remove-translation-span', ...target, ...verse, '--span', '0');
+  const removed = JSON.parse(fs.readFileSync(file, 'utf8')).chapters[0].verses[0];
+  assert.equal(removed.text, 'Alpha beta');
+  assert.deepEqual(removed.metadata, []);
+});
+
+test('derives translation using lexical service and retains variation definitions', () => {
+  const lexical = JSON.parse(success('read-lexical', ...target, ...verse));
+  const id = success('add-variations', 'preserved', ...target);
+  const derived = JSON.parse(success('derivate-translation-from-lexical', ...target, ...verse));
+  assert.equal(derived.text, lexical.map(item => item.lexical.value).join(' ').replace(/ {2,}/g, ' '));
+  assert.deepEqual(derived.metadata.map(item => item.size), lexical.map(item => item.lexical.value.length));
+  assert.equal(derived.metadata[1].value, '1-ראשית');
+  assert.ok(JSON.parse(success('list-variations', ...target)).some(item => item.id === id));
+});
+
+test('derivation preserves the editor sizes for segments with empty lexical values', () => {
+  const file = path.join(project, 'targets/hebrew-stuttgartensia-portuguese-metadata/GEN.json');
+  const metadata = JSON.parse(fs.readFileSync(file, 'utf8'));
+  metadata.lexical = {};
+  fs.writeFileSync(file, JSON.stringify(metadata));
+  const lexical = JSON.parse(success('read-lexical', ...target, ...verse));
+  const derived = JSON.parse(success('derivate-translation-from-lexical', ...target, ...verse));
+  assert.deepEqual(derived.metadata.map(item => item.size), lexical.map(item => item.lexical.value.length));
+  assert.ok(derived.metadata.some(item => item.size === 0));
+});
+
+test('translation display emits matching terminal colors and honors NO_COLOR', () => {
+  const quote = value => `'${value.replace(/'/g, "'\\''")}'`;
+  const args = [process.execPath, cli, 'read-all-translations', '--project', project, ...target, ...verse];
+  const env = { ...process.env };
+  delete env.NO_COLOR;
+  const result = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env });
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /\x1b\[38;2;[\d;]+m/);
+  const plain = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env: { ...env, NO_COLOR: '1' } });
+  assert.equal(plain.status, 0, plain.stderr);
+  assert.doesNotMatch(plain.stdout, /\x1b\[38;2;/);
+});
+
+test('translation display follows interlinear origin colors and leaves unmapped segments uncolored', () => {
+  const translationFile = path.join(project, 'targets/greek-septuagint-custom-portuguese-translation/GEN.json');
+  fs.mkdirSync(path.dirname(translationFile), { recursive: true });
+  fs.writeFileSync(translationFile, JSON.stringify({
+    variations: { choice: { name: 'Choice' } },
+    chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'one two', metadata: [
+      { size: 3, value: '0-any' }, { size: 3, value: '1-any' }
+    ], variations: { choice: { 0: { value: 'first' } } } }] }]
+  }));
+  const interlinearFile = path.join(project, 'targets/greek-septuagint-hebrew-stuttgartensia-interlinear/GEN.json');
+  fs.writeFileSync(interlinearFile, JSON.stringify({ 'hebrew-stuttgartensia': { chapters: [
+    { chapter: 1, origin: 1, verses: [{ verse: 1, originVerse: 1, words: [{ originIndex: 5 }] }] }
+  ] } }));
+  const args = ['--target', 'greek-septuagint', '--book', 'GEN', ...verse];
+  const lines = JSON.parse(success('read-all-translations', ...args));
+  assert.equal(lines.find(line => line.id === 'original').pieces[0].color, 6);
+  const custom = lines.find(line => line.id === 'custom').pieces;
+  assert.deepEqual(custom.map(piece => piece.color), [6, 0]);
+  assert.equal(lines.find(line => line.id === 'choice').pieces[0].text, 'first ');
+});
+
 test('lists project resources and resolves project directory', () => {
   const books = JSON.parse(success('list-books'));
   assert.deepEqual(books[0], { key: 'GEN', name: 'Gênesis' });
