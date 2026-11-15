@@ -99,7 +99,8 @@
               [name]="'selectInterlinearCustomTranslationEl' + wordIndex"
               [attr.aria-label]="'Link custom translation segment ' + (wordIndex + 1) + ' to scripture'"
               [ngModel]="getCustomTranslationInterlinearValue(wordIndex)"
-              (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex, indexes)">
+              (change)="onChangeCustomTranslationInterlinearMetadata(interlinearCustomTranslationEl.value, wordIndex)"
+              (contextmenu)="openInterlinearTools($event, wordIndex, splittedCustomTranslation.original.length)">
               <option value=""></option>
               @for (word of wordMatrix; track $index) {
                 @for (segment of word.segments; track segment.index) {

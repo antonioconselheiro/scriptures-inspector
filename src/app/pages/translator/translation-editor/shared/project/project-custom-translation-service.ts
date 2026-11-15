@@ -466,7 +466,10 @@ export class ProjectCustomTranslationService {
     if (metadata[wordIndex]) {
       metadata[wordIndex].value = value;
     } else {
-      metadata[wordIndex] = { value, size: 0 };
+      const { chapterIndex, verseIndex } = this.getTranslationIndexes(sourceBook, current, sourceVerse);
+      const verse = customTranslation.chapters[chapterIndex].verses[verseIndex];
+      const size = this.splitCustomTranslation(verse)[wordIndex]?.segment.length ?? 0;
+      metadata[wordIndex] = { value, size };
     }
 
     this.systemService.triggerSaveCurrentBookTranslations(current);

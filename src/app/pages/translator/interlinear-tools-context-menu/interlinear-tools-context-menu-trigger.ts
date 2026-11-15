@@ -53,6 +53,7 @@ export class InterlinearToolsContextMenuTrigger {
     this.contextMenu.y = event.clientY;
     this.contextMenu.visible = true;
 
+    this.contextMenu.customActions = undefined;
     this.contextMenu.contextMenu = this.contextMenu;
     this.contextMenu.sourceLanguage = getProjectLanguageFn(this.project, this.sourceLanguage);
     this.contextMenu.interlinearTarget = this.interlinearTarget;
@@ -65,10 +66,4 @@ export class InterlinearToolsContextMenuTrigger {
     this.contextMenu.interlinearValue = this.interlinearValue;
   }
 
-  @HostListener('document:click')
-  onDocumentClick() {
-    if (this.contextMenu) {
-      this.contextMenu.visible = false;
-    }
-  }
 }

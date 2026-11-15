@@ -21,6 +21,12 @@ as the Word of God, and define translation variations as small overrides of a
 custom translation. Variations can be combined without creating a separate
 complete translation for each combination.
 
+In the translation editor, right-click a **scriptures** selector in a custom
+translation to fill associations sequentially or move/return them from that
+position to the right. These actions leave word-span sizes unchanged. Selecting
+the empty option clears only that segment's association. Sequential filling
+asks before overwriting existing associations.
+
 Website: https://antonioconselheiro.github.io/scriptures-inspector/
 
 ## Linux installation

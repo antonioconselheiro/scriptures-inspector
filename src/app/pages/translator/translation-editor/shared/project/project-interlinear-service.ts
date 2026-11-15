@@ -7,6 +7,8 @@ import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { getInterlinearOriginIndex, getInterlinearPresentationColor } from '../scripture-presentation-core';
+import { applyAssociationOperation, AssociationOperation } from '../association-operations';
+import { WordSegment } from '@domain/word-segment-model';
 
 @Injectable({
   providedIn: 'root'
@@ -128,55 +130,13 @@ export class ProjectInterlinearService {
     translationWord: string,
     interlinearValue: string
   ): void {
-    let previousValue = '';
-
-    for (let word of wordMatrix) {
-      for (let segment of word.segments) {
-        if (segment.index >= translationWordIndex) {
-
-          if (segment.index == translationWordIndex) {
-            previousValue = this.getInterlinearWordSegmentSerialized(
-              sourceLanguage,
-              interlinearTarget,
-              originSource,
-              current,
-              sourceVerse,
-              segment.index
-            );
-
-            this.saveInterlinearToBaseScripture(
-              interlinearTarget,
-              originSource,
-              current,
-              sourceVerse,
-              translationWordIndex,
-              translationWord,
-              interlinearValue
-            );
-          } else {
-            const currentValue = this.getInterlinearWordSegmentSerialized(
-              sourceLanguage,
-              interlinearTarget,
-              originSource,
-              current,
-              sourceVerse,
-              segment.index
-            );
-
-            this.saveInterlinearToBaseScripture(
-              interlinearTarget,
-              originSource,
-              current,
-              sourceVerse,
-              segment.index,
-              segment.word,
-              previousValue
-            );
-            previousValue = currentValue;
-          }
-        }
-      }
-    }
+    const segments = wordMatrix.flatMap(word => word.segments)
+      .filter(segment => segment.index >= translationWordIndex);
+    this.applyAssociationOperation(
+      sourceLanguage, interlinearTarget, originSource, current, sourceVerse, segments,
+      { kind: 'move', selectedValue: interlinearValue },
+      segment => segment.index === translationWordIndex ? translationWord : segment.word
+    );
   }
 
   returnOneWordToAllAssociationsToTheRight(
@@ -192,26 +152,9 @@ export class ProjectInterlinearService {
       .flatMap(word => word.segments)
       .filter(segment => segment.index >= translationWordIndex);
 
-    const values = segments.map(segment => this.getInterlinearWordSegmentSerialized(
-      sourceLanguage,
-      interlinearTarget,
-      originSource,
-      current,
-      sourceVerse,
-      segment.index
-    ));
-
-    segments.forEach((segment, i) => {
-      this.saveInterlinearToBaseScripture(
-        interlinearTarget,
-        originSource,
-        current,
-        sourceVerse,
-        segment.index,
-        segment.word,
-        values[i + 1] || ''
-      );
-    });
+    this.applyAssociationOperation(
+      sourceLanguage, interlinearTarget, originSource, current, sourceVerse, segments, { kind: 'return' }
+    );
   }
 
   fillSequentiallyAllAssociationsToTheRight(
@@ -232,44 +175,39 @@ export class ProjectInterlinearService {
       .flatMap(word => word.segments)
       .map(segment => this.dataService.castSegmentIntoMetadataIndexSerialized(sourceLanguage, segment));
 
-    // starts from the clicked select value or, if empty, from the origin word at the same position
-    let originStart = originValues.indexOf(interlinearValue);
-    if (originStart === this.indexNotFound) {
-      const clickedPosition = wordMatrix
-        .flatMap(word => word.segments)
-        .findIndex(segment => segment.index === translationWordIndex);
-      originStart = Math.max(clickedPosition, 0);
-    }
+    const clickedPosition = wordMatrix.flatMap(word => word.segments)
+      .findIndex(segment => segment.index === translationWordIndex);
+    this.applyAssociationOperation(
+      sourceLanguage, interlinearTarget, originSource, current, sourceVerse, segments,
+      {
+        kind: 'fill',
+        selectedValue: interlinearValue,
+        originValues,
+        fallbackPosition: Math.max(clickedPosition, 0),
+        confirmOverwrite: () => confirm('Overwrite current definition?')
+      }
+    );
+  }
 
-    const newValues = segments.map((_, i) => originValues[originStart + i] || '');
-    const hasDefinitionToOverwrite = segments.some((segment, i) => {
-      const currentValue = this.getInterlinearWordSegmentSerialized(
-        sourceLanguage,
-        interlinearTarget,
-        originSource,
-        current,
-        sourceVerse,
-        segment.index
-      );
-
-      return currentValue && currentValue !== newValues[i];
-    });
-
-    if (hasDefinitionToOverwrite && !confirm('Overwrite current definition?')) {
-      return;
-    }
-
-    segments.forEach((segment, i) => {
-      this.saveInterlinearToBaseScripture(
-        interlinearTarget,
-        originSource,
-        current,
-        sourceVerse,
-        segment.index,
-        segment.word,
-        newValues[i]
-      );
-    });
+  private applyAssociationOperation(
+    sourceLanguage: Language,
+    interlinearTarget: InterlinearTarget,
+    originSource: string,
+    current: CurrentChapter,
+    sourceVerse: SourceVerse,
+    segments: WordSegment[],
+    operation: AssociationOperation,
+    translationWord: (segment: WordSegment) => string = segment => segment.word
+  ): void {
+    applyAssociationOperation({
+      entries: segments,
+      read: segment => this.getInterlinearWordSegmentSerialized(
+        sourceLanguage, interlinearTarget, originSource, current, sourceVerse, segment.index
+      ),
+      write: (segment, value) => this.saveInterlinearToBaseScripture(
+        interlinearTarget, originSource, current, sourceVerse, segment.index, translationWord(segment), value
+      )
+    }, operation);
   }
 
   saveInterlinearToBaseScripture(

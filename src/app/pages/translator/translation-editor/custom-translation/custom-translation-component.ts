@@ -29,6 +29,8 @@ import { ProjectInterlinearService } from '../shared/project/project-interlinear
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { PinRowDirective } from '../pin-row.directive';
 import { CheckboxRangeSelectionDirective } from '../shared/checkbox-range-selection.directive';
+import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
+import { applyAssociationOperation, AssociationOperation } from '../shared/association-operations';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -86,6 +88,9 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   @Input({ required: true })
   customTranslation!: BookTranslationTarget;
+
+  @Input({ required: true })
+  interlinearToolsRef!: InterlinearToolsContextMenu;
 
   minified = false;
 
@@ -409,41 +414,47 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   onChangeCustomTranslationInterlinearMetadata(
     value: string,
-    wordIndex: number,
-    indexes: BookIndexes
+    wordIndex: number
   ): void {
-    if (!value && confirm('Advance one word to all associations to the right?')) {
-      const verse = this.customTranslation.chapters[indexes.chapterIndex]?.verses?.[indexes.verseIndex];
-      const splittedCustomTranslation = this.customTranslationService.splitCustomTranslationWithVariations(this.customTranslation, indexes);
-      let previousValue = '';
-      let previousSize = 0;
-      for (let originalWordIndex = 0; originalWordIndex < splittedCustomTranslation.original.length; originalWordIndex++) {
-        if (originalWordIndex >= wordIndex) {
+    this.customTranslationService.saveCustomTranslationInterlinearMetadata(
+      this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
+    );
+  }
 
-          if (originalWordIndex == wordIndex) {
-            previousValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
-            previousSize = verse.metadata[wordIndex].size;
-            this.customTranslationService.saveCustomTranslationInterlinearMetadata(
-              this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
-            );
-          } else {
-            const currentValue = this.getCustomTranslationInterlinearValue(originalWordIndex);
-            const currentSize = verse.metadata[originalWordIndex].size;
-            verse.metadata[originalWordIndex].size = previousSize;
-            this.customTranslationService.saveCustomTranslationInterlinearMetadata(
-              this.sourceBook, this.sourceVerse, this.customTranslation, this.current, previousValue, originalWordIndex
-            );
-            previousValue = currentValue;
-            previousSize = currentSize;
-          }
-        }
+  openInterlinearTools(event: MouseEvent, wordIndex: number, segmentCount: number): void {
+    event.preventDefault();
+    const menu = this.interlinearToolsRef;
+    menu.x = event.clientX;
+    menu.y = event.clientY;
+    menu.visible = true;
+    menu.customActions = {
+      fillSequentially: () => this.updateInterlinearAssociations(wordIndex, segmentCount, 'fill'),
+      moveOneToRight: () => this.updateInterlinearAssociations(wordIndex, segmentCount, 'move'),
+      returnOneToRight: () => this.updateInterlinearAssociations(wordIndex, segmentCount, 'return')
+    };
+  }
+
+  private updateInterlinearAssociations(
+    wordIndex: number,
+    segmentCount: number,
+    action: 'fill' | 'move' | 'return'
+  ): void {
+    const operation: AssociationOperation = action === 'fill'
+      ? {
+        kind: 'fill',
+        originValues: this.wordMatrix.flatMap(word => word.segments)
+          .map(segment => this.castSegmentIntoMetadataIndex(segment)),
+        fallbackPosition: wordIndex,
+        confirmOverwrite: () => confirm('Overwrite current definition?')
       }
-
-      setTimeout(() => this.pipeUpdaterController++);
-    } else {
-      this.customTranslationService.saveCustomTranslationInterlinearMetadata(
-        this.sourceBook, this.sourceVerse, this.customTranslation, this.current, value, wordIndex
-      );
+      : { kind: action };
+    const applied = applyAssociationOperation({
+      entries: Array.from({ length: segmentCount - wordIndex }, (_, i) => wordIndex + i),
+      read: index => this.getCustomTranslationInterlinearValue(index),
+      write: (index, value) => this.onChangeCustomTranslationInterlinearMetadata(value, index)
+    }, operation);
+    if (applied) {
+      this.pipeUpdaterController++;
     }
   }
 

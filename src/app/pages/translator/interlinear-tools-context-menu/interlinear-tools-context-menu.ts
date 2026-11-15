@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { Language } from '@domain/language-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
 import { ProjectInterlinearService } from '../translation-editor/shared/project/project-interlinear-service';
+
+export interface InterlinearToolsActions {
+  fillSequentially: () => void;
+  moveOneToRight: () => void;
+  returnOneToRight: () => void;
+}
 
 @Component({
   selector: 'app-interlinear-tools-context-menu',
@@ -33,12 +39,17 @@ export class InterlinearToolsContextMenu {
   translationWordIndex!: number;
   translationWord!: string;
   interlinearValue!: string;
+  customActions?: InterlinearToolsActions;
 
   constructor(
     private interlinearService: ProjectInterlinearService
   ) { }
 
   onClickFillSequentially(): void {
+    if (this.customActions) {
+      this.customActions.fillSequentially();
+      return;
+    }
     this.interlinearService.fillSequentiallyAllAssociationsToTheRight(
       this.sourceLanguage,
       this.interlinearTarget,
@@ -53,6 +64,10 @@ export class InterlinearToolsContextMenu {
   }
 
   onClickMoveOneToRight(): void {
+    if (this.customActions) {
+      this.customActions.moveOneToRight();
+      return;
+    }
     this.interlinearService.moveOneWordToAllAssociationsToTheRight(
       this.sourceLanguage,
       this.interlinearTarget,
@@ -67,6 +82,10 @@ export class InterlinearToolsContextMenu {
   }
 
   onClickReturnOneToRight(): void {
+    if (this.customActions) {
+      this.customActions.returnOneToRight();
+      return;
+    }
     this.interlinearService.returnOneWordToAllAssociationsToTheRight(
       this.sourceLanguage,
       this.interlinearTarget,
@@ -78,4 +97,8 @@ export class InterlinearToolsContextMenu {
     );
   }
 
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.visible = false;
+  }
 }
