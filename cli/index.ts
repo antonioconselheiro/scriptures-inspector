@@ -43,7 +43,7 @@ function parseArgs(args: string[]): { command: string; options: Options; positio
   const command = args.shift() ?? 'help';
   const options: Options = {};
   const positional: string[] = [];
-  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation']);
+  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation', 'mode']);
   while (args.length) {
     const arg = args.shift()!;
     if (!arg.startsWith('--')) {
@@ -246,7 +246,7 @@ async function main(): Promise<void> {
     'read-interlinear': ['target', 'book', 'chapter', 'verse'],
     'list-variations': ['target', 'book'], 'add-variations': ['target', 'book'],
     'remove-variations': ['target', 'book', 'variations'],
-    'read-translation': ['target', 'book', 'chapter', 'verse', 'variations'],
+    'read-translation': ['target', 'book', 'chapter', 'verse', 'variations', 'origin', 'mode'],
     'list-patterns': ['target', 'book'], 'set-pattern': ['target', 'book'],
     'remove-pattern': ['target', 'book'], 'list-lexicals': ['target', 'book'],
     'get-lexical': ['target', 'book'], 'set-lexical': ['target', 'book'],
@@ -270,7 +270,7 @@ async function main(): Promise<void> {
     'set-translation': verseOptions,
     'list-scriptures': verseOptions,
     'list-translation-spans': verseOptions,
-    'read-all-translations': [...verseOptions, 'origin'],
+    'read-all-translations': [...verseOptions, 'origin', 'mode'],
     'list-variation-suggestions': [...verseOptions, 'span', 'variation'],
     'set-translation-size': [...verseOptions, 'span', 'size'],
     'remove-translation-span': [...verseOptions, 'span'],
@@ -289,7 +289,7 @@ async function main(): Promise<void> {
       'list-targets': 'List targets by type.', 'read-metadata': 'Read verse metadata.',
       'read-interlinear': 'Read verse interlinear mappings.', 'list-variations': 'List variation IDs and names.',
       'add-variations': 'Create a variation: <name>.', 'remove-variations': 'Remove variations by comma-separated IDs.',
-      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Read translation with optional variation IDs.',
+      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered variation IDs; --mode prismatic (default) or wordOfGod.',
       'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
       'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
       'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
@@ -310,7 +310,7 @@ async function main(): Promise<void> {
       'set-translation': 'Set verse translation text: <text>. Empty text clears the verse.',
       'list-scriptures': 'List available source segment associations.',
       'list-translation-spans': 'List translation spans, sizes and associations.',
-      'read-all-translations': 'Display original, custom translation and every variation.',
+      'read-all-translations': 'Display source, translation and variations; --mode prismatic (default) or wordOfGod.',
       'list-variation-suggestions': 'List editor suggestions for a span and variation.',
       'set-translation-size': 'Set span size in JavaScript UTF-16 code units.',
       'remove-translation-span': 'Remove a configured span, as setting its size to zero in the editor.',
@@ -324,8 +324,8 @@ async function main(): Promise<void> {
     if (!names.every(name => Object.hasOwn(commandOptions, name))) throw new Error(`Unknown command: ${names[0]}`);
     console.log('Usage: si <command> [arguments] [--project DIRECTORY] [options]\n');
     for (const name of names) {
-      const optional = name === 'read-translation' ? ['variations']
-        : name === 'read-all-translations' ? ['origin']
+      const optional = name === 'read-translation' ? ['variations', 'origin', 'mode']
+        : name === 'read-all-translations' ? ['origin', 'mode']
         : name === 'next-pending-lexical' || name === 'previous-pending-lexical' ? ['verse', 'segment'] : [];
       console.log(`${name} — ${descriptions[name]}\n  Options: ${commandOptions[name].map(opt => optional.includes(opt) ? `[--${opt} VALUE]` : `--${opt} VALUE`).join(' ') || '(none)'}\n`);
     }
@@ -416,7 +416,7 @@ async function main(): Promise<void> {
       const index = findSourceVerse(sourceBook, numberOption(options, 'chapter'), numberOption(options, 'verse'));
       const sourceVerse = sourceBook.chapters[index.chapterIndex].verses[index.verseIndex];
       const current = { book, chapter: numberOption(options, 'chapter') };
-      const needsMetadata = ['derivate-translation-from-lexical', 'list-scriptures', 'read-all-translations', 'set-translation-scripture'].includes(command);
+      const needsMetadata = ['derivate-translation-from-lexical', 'list-scriptures', 'read-translation', 'read-all-translations', 'set-translation-scripture'].includes(command);
       const metadataTargets = needsMetadata
         ? [...new Set(structures(project).filter(item => item.source === source && item.customTranslationTarget === target).map(item => item.metadataTarget))]
         : [];
@@ -449,7 +449,9 @@ async function main(): Promise<void> {
         outputList(spans, ['SPAN', 'TEXT', 'SIZE', 'SCRIPTURE', 'WORD OF GOD'], spans.map(item => [item.span, item.text, item.size ?? '', item.scripture, String(item.isWordOfGod)]));
         return;
       }
-      if (command === 'read-all-translations') {
+      if (command === 'read-all-translations' || command === 'read-translation') {
+        const mode = options['mode'] ?? 'prismatic';
+        if (mode !== 'prismatic' && mode !== 'wordOfGod') throw new Error(`Invalid --mode: ${mode}; use prismatic or wordOfGod`);
         const pathToSource = structurePath(project, target, options['origin']);
         const mappings = await Promise.all(pathToSource.slice(1).map(async (item, i) => {
           if (!item.interlinearTarget) throw new Error(`Missing interlinear target for ${item.source}`);
@@ -471,19 +473,85 @@ async function main(): Promise<void> {
           }
           return Number(getPresentationColor(currentIndex));
         };
-        const original = words.flatMap(word => [...word.segments.map(segment => ({ text: segment.word, color: color(segment.index) })), ...(word.separator ? [{ text: word.separator, color: 0 }] : [])]);
+        const ancestorData = mode === 'wordOfGod' ? await Promise.all(pathToSource.slice(0, -1).map(async item => {
+          const [data, metadata] = await Promise.all([
+            sourceData(project, item.source, book),
+            loadTarget<BookMetadataTarget>(
+              path.join(project.path, 'targets', identifier(item.metadataTarget, 'target'), `${book}.json`),
+              () => ({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} })
+            )
+          ]);
+          return { ...data, metadata };
+        })) : [];
+        const matrices = new Map<string, ReturnType<ProjectDataService['splitIntoMatrix']>>();
+        const inheritedWordOfGod = (level: number, segmentIndex: number, chapter: number, verseNumber: number): boolean => {
+          if (level === 0) return false;
+          const mapping = mappings[level - 1];
+          const mappedChapter = mapping.target[mapping.origin]?.chapters.find(item => item?.chapter === chapter);
+          const mappedVerse = mappedChapter?.verses.find(item => item?.verse === verseNumber);
+          const mappedWord = mappedVerse?.words?.[segmentIndex];
+          if (!mappedChapter || !mappedVerse || !mappedWord || !Number.isInteger(mappedWord.originIndex) || mappedWord.originIndex < 0) return false;
+          const parentChapter = mappedVerse.originChapter ?? mappedChapter.origin;
+          const parentVerse = mappedVerse.originVerse;
+          const parent = ancestorData[level - 1];
+          const key = `${level - 1}:${parentChapter}:${parentVerse}`;
+          let matrix = matrices.get(key);
+          if (!matrix) {
+            const parentIndex = findSourceVerse(parent.sourceBook, parentChapter, parentVerse);
+            const parentText = parent.sourceBook.chapters[parentIndex.chapterIndex].verses[parentIndex.verseIndex].text;
+            matrix = dataService.splitIntoMatrix(parent.language, metadataService.parsePattern(parent.metadata.patterns, parent.language), parentText);
+            matrices.set(key, matrix);
+          }
+          const word = matrix.find(item => item.segments.some(segment => segment.index === mappedWord.originIndex));
+          return Boolean(word && (
+            metadataService.getScriptureMetadataWordOfGod(parent.metadata, parent.language, { book, chapter: parentChapter }, parentVerse, word)
+            || word.segments.some(segment => inheritedWordOfGod(level - 1, segment.index, parentChapter, parentVerse))
+          ));
+        };
+        const level = pathToSource.length - 1;
+        const fromRelated = (segmentIndex: number) => inheritedWordOfGod(level, segmentIndex, current.chapter, sourceVerse.verse);
+        const ownWordOfGod = (word: typeof words[number]) => bookMetadata !== null && metadataService.getScriptureMetadataWordOfGod(bookMetadata, language, current, sourceVerse.verse, word);
+        const original = words.flatMap(word => [
+          ...word.segments.map(segment => ({
+            text: segment.word, color: color(segment.index),
+            ...(mode === 'wordOfGod' ? { wordOfGod: ownWordOfGod({ segments: [segment] }) || fromRelated(segment.index) } : {})
+          })),
+          ...(word.separator ? [{ text: word.separator, color: 0, ...(mode === 'wordOfGod' ? { wordOfGod: false } : {}) }] : [])
+        ]);
         const pieces = translationService.splitCustomTranslation(verse);
-        const buildLine = (id?: string) => pieces.map((piece, i) => {
-          const value = id ? verse.variations?.[id]?.[String(i)]?.value : undefined;
+        const buildLine = (variationIds: string[]) => pieces.map((piece, i) => {
+          const variations = Object.fromEntries(variationIds.map(id => [id, verse.variations?.[id]?.[String(i)]?.value ?? '']));
           const linked = getSerializedSegmentIndex(verse.metadata[i]?.value ?? '');
-          return { text: (value || piece.segment) + (piece.hasTrailingSpace ? ' ' : ''), color: linked === null ? 0 : color(linked) };
+          const sourceWord = linked === null ? undefined : words.find(word => word.segments.some(segment => segment.index === linked));
+          return {
+            text: selectVariationText(piece.segment, variations, variationIds) + (piece.hasTrailingSpace ? ' ' : ''),
+            color: linked === null ? 0 : color(linked),
+            ...(mode === 'wordOfGod' ? {
+              wordOfGod: Boolean(verse.metadata[i]?.isWordOfGod)
+                || Boolean(sourceWord && ownWordOfGod(sourceWord))
+                || (linked !== null && fromRelated(linked))
+            } : {})
+          };
         });
-        const lines = [{ id: 'original', name: source, pieces: original }, { id: 'custom', name: 'Custom translation', pieces: buildLine() }, ...Object.entries(translation.variations).map(([id, variation]) => ({ id, name: variation.name, pieces: buildLine(id) }))];
+        const lines = [
+          { id: 'original', name: source, pieces: original },
+          { id: 'custom', name: 'Custom translation', pieces: buildLine(command === 'read-translation' ? selected : []) },
+          ...(command === 'read-all-translations'
+            ? Object.entries(translation.variations).map(([id, variation]) => ({ id, name: variation.name, pieces: buildLine([id]) }))
+            : [])
+        ];
         if (!process.stdout.isTTY) output(lines);
         else {
           const colors = ['211;1;1', '236;106;0', '206;203;0', '77;187;5', '1;146;165', '59;0;168', '206;1;179'];
           for (const line of lines) {
-            const text = line.pieces.map(piece => piece.color && !process.env['NO_COLOR'] ? `\x1b[38;2;${colors[piece.color - 1]}m${piece.text}\x1b[0m` : piece.text).join('');
+            const text = line.pieces.map(piece => {
+              const rgb = mode === 'wordOfGod'
+                ? (piece.wordOfGod ? '255;0;0' : '')
+                : (piece.color ? colors[piece.color - 1] : '');
+              if (!rgb || process.env['NO_COLOR']) return piece.text;
+              const content = mode === 'wordOfGod' ? piece.text.replace(/ +$/, '') : piece.text;
+              return content ? `\x1b[38;2;${rgb}m${content}\x1b[0m${piece.text.slice(content.length)}` : piece.text;
+            }).join('');
             console.log(`${line.name}: ${text}`);
           }
         }
@@ -546,13 +614,6 @@ async function main(): Promise<void> {
         }
         await save(file, translation);
         output({ cleared: command });
-      } else if (!selected.length) console.log(verse.text);
-      else {
-        const segments = translationService.splitCustomTranslation(verse);
-        console.log(segments.map((segment, i) => {
-          const variations = Object.fromEntries(selected.map(id => [id, verse.variations?.[id]?.[String(i)]?.value ?? '']));
-          return selectVariationText(segment.segment, variations, selected) + (segment.hasTrailingSpace ? ' ' : '');
-        }).join(''));
       }
     }
     return;

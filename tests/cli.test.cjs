@@ -47,6 +47,12 @@ function success(...args) {
 const target = ['--target', 'hebrew-stuttgartensia', '--book', 'GEN'];
 const verse = ['--chapter', '1', '--verse', '1'];
 
+function translationText(...args) {
+  const lines = JSON.parse(success('read-translation', ...args));
+  assert.deepEqual(lines.map(line => line.id), ['original', 'custom']);
+  return lines[1].pieces.map(piece => piece.text).join('');
+}
+
 test('help documents every command without a project and supports a command topic', () => {
   const result = run('help');
   assert.equal(result.status, 0, result.stderr);
@@ -70,7 +76,7 @@ test('edits translation spans and variation overrides with validated scripture o
   success('rename-variation', 'Renamed', ...target, '--variation', id);
   const spans = JSON.parse(success('list-translation-spans', ...target, ...verse));
   assert.deepEqual(spans[0], { span: 0, text: 'Alpha', size: 5, scripture: scripture.value, isWordOfGod: true });
-  assert.equal(success('read-translation', ...target, ...verse, '--variations', id), 'Omega beta');
+  assert.equal(translationText(...target, ...verse, '--variations', id), 'Omega beta');
   assert.deepEqual(JSON.parse(success('list-variation-suggestions', ...target, ...verse, '--span', '0', '--variation', id)), ['Omega']);
   const lines = JSON.parse(success('read-all-translations', ...target, ...verse));
   assert.equal(lines.find(line => line.id === id).pieces.map(piece => piece.text).join(''), 'Omega beta');
@@ -86,7 +92,7 @@ test('edits translation spans and variation overrides with validated scripture o
   success('remove-variation-value', ...target, ...verse, '--span', '0', '--variation', id);
   success('remove-translation-word-of-god', ...target, ...verse, '--span', '0');
   success('set-translation-scripture', ...target, ...verse, '--span', '0', '--scripture', 'none');
-  assert.equal(success('read-translation', ...target, ...verse, '--variations', id), 'Alpha beta');
+  assert.equal(translationText(...target, ...verse, '--variations', id), 'Alpha beta');
   const edited = JSON.parse(fs.readFileSync(file, 'utf8')).chapters[0].verses[0];
   assert.equal(edited.metadata[0].isWordOfGod, undefined);
   assert.equal(edited.metadata[0].value, '');
@@ -128,6 +134,141 @@ test('translation display emits matching terminal colors and honors NO_COLOR', (
   const plain = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env: { ...env, NO_COLOR: '1' } });
   assert.equal(plain.status, 0, plain.stderr);
   assert.doesNotMatch(plain.stdout, /\x1b\[38;2;/);
+});
+
+test('selected translation displays original and combined variations in both color modes', () => {
+  const first = '1389d4a7-688a-473d-89bb-372656f9a73b';
+  const second = 'fc5ca031-196a-4f7e-aca5-808369ed3b93';
+  const options = [...target, ...verse, '--variations', `${first},${second}`];
+  const lines = JSON.parse(success('read-translation', ...options));
+  assert.deepEqual(lines.map(line => line.id), ['original', 'custom']);
+  const all = JSON.parse(success('read-all-translations', ...target, ...verse));
+  assert.deepEqual(lines[0], all[0]);
+  assert.equal(lines[1].pieces.map(piece => piece.text).join(''), 'No princípio criou Elohim AZ os céus e AZ a terra.');
+  assert.equal(lines[1].pieces[3].color, lines[0].pieces.filter(piece => piece.color)[3].color);
+  const god = JSON.parse(success('read-translation', ...options, '--mode', 'wordOfGod'));
+  const allGod = JSON.parse(success('read-all-translations', ...target, ...verse, '--mode', 'wordOfGod'));
+  assert.deepEqual(god[0], allGod[0]);
+  assert.deepEqual(god[1].pieces.map(piece => piece.wordOfGod), allGod[1].pieces.map(piece => piece.wordOfGod));
+  const quote = value => `'${value.replace(/'/g, "'\\''")}'`;
+  const env = { ...process.env };
+  delete env.NO_COLOR;
+  for (const [mode, ansi] of [['prismatic', /\x1b\[38;2;[\d;]+m/], ['wordOfGod', /\x1b\[38;2;255;0;0m/]]) {
+    const args = [process.execPath, cli, 'read-translation', '--project', project, ...options, '--mode', mode];
+    const terminal = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env });
+    assert.equal(terminal.status, 0, terminal.stderr);
+    assert.match(terminal.stdout, /hebrew-stuttgartensia:/);
+    assert.match(terminal.stdout, /Custom translation:/);
+    assert.match(terminal.stdout, ansi);
+    assert.match(terminal.stdout, /Elohim/);
+    const plain = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env: { ...env, NO_COLOR: '1' } });
+    assert.equal(plain.status, 0, plain.stderr);
+    assert.doesNotMatch(plain.stdout, /\x1b\[38;2;/);
+  }
+  assert.notEqual(run('read-translation', ...options, '--mode', 'invalid').status, 0);
+});
+
+test('Word of God display uses original marks, whole-word inheritance and translation overrides for every variation', () => {
+  const file = path.join(project, 'targets/hebrew-stuttgartensia-custom-portuguese-translation/GEN.json');
+  const book = JSON.parse(fs.readFileSync(file, 'utf8'));
+  book.variations = { choice: { name: 'Choice' } };
+  book.chapters[0].verses[0] = {
+    verse: 1, text: 'linked editorial plain',
+    metadata: [
+      { size: 6, value: '1-ראשית' },
+      { size: 9, value: '', isWordOfGod: true },
+      { size: 5, value: '' }
+    ],
+    variations: { choice: { 0: { value: 'variant' }, 1: { value: 'supplied' }, 2: { value: 'unmarked' } } }
+  };
+  fs.writeFileSync(file, JSON.stringify(book));
+  success('clean-word-of-god', ...target, ...verse);
+  success('set-word-of-god', ...target, ...verse, '--segments', '0');
+  const lines = JSON.parse(success('read-all-translations', ...target, ...verse, '--mode', 'wordOfGod'));
+  const original = lines.find(line => line.id === 'original').pieces.filter(piece => piece.text.trim());
+  assert.equal(original[0].wordOfGod, true);
+  assert.equal(original[1].wordOfGod, false);
+  assert.deepEqual(lines.find(line => line.id === 'custom').pieces.map(piece => piece.wordOfGod), [true, true, false]);
+  assert.deepEqual(lines.find(line => line.id === 'choice').pieces.map(piece => piece.wordOfGod), [true, true, false]);
+  assert.equal(lines.find(line => line.id === 'choice').pieces[1].text, 'supplied ');
+  const quote = value => `'${value.replace(/'/g, "'\\''")}'`;
+  const args = [process.execPath, cli, 'read-all-translations', '--project', project, ...target, ...verse, '--mode', 'wordOfGod'];
+  const env = { ...process.env };
+  delete env.NO_COLOR;
+  const terminal = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env });
+  assert.equal(terminal.status, 0, terminal.stderr);
+  assert.match(terminal.stdout, /\x1b\[38;2;255;0;0mlinked\x1b\[0m \x1b\[38;2;255;0;0meditorial\x1b\[0m plain/);
+  assert.match(terminal.stdout, /\x1b\[38;2;255;0;0msupplied\x1b\[0m unmarked/);
+  assert.doesNotMatch(terminal.stdout, /\x1b\[38;2;236;106;0m/);
+  const plain = spawnSync('script', ['-q', '-e', '-c', args.map(quote).join(' '), '/dev/null'], { encoding: 'utf8', env: { ...env, NO_COLOR: '1' } });
+  assert.equal(plain.status, 0, plain.stderr);
+  assert.doesNotMatch(plain.stdout, /\x1b\[38;2;/);
+  assert.notEqual(run('read-all-translations', ...target, ...verse, '--mode', 'invalid').status, 0);
+  assert.deepEqual(JSON.parse(success('read-all-translations', ...target, ...verse)),
+    JSON.parse(success('read-all-translations', ...target, ...verse, '--mode', 'prismatic')));
+});
+
+test('Word of God follows related-source mappings and preserves explicit marks on unmapped spans', () => {
+  const greek = ['--target', 'greek-septuagint', '--book', 'GEN'];
+  const translationFile = path.join(project, 'targets/greek-septuagint-custom-portuguese-translation/GEN.json');
+  fs.mkdirSync(path.dirname(translationFile), { recursive: true });
+  fs.writeFileSync(translationFile, JSON.stringify({
+    variations: { choice: { name: 'Choice' } },
+    chapters: [{ chapter: 1, verses: [{ verse: 1, text: 'inherited direct no',
+      metadata: [{ size: 9, value: '0-any' }, { size: 6, value: '', isWordOfGod: true }, { size: 2, value: '1-any' }],
+      variations: { choice: { 0: { value: 'changed' } } } }] }]
+  }));
+  const interlinearFile = path.join(project, 'targets/greek-septuagint-hebrew-stuttgartensia-interlinear/GEN.json');
+  fs.writeFileSync(interlinearFile, JSON.stringify({ 'hebrew-stuttgartensia': { chapters: [
+    { chapter: 1, origin: 1, verses: [{ verse: 1, originVerse: 1, words: [{ originIndex: 1 }] }] }
+  ] } }));
+  success('clean-word-of-god', ...target, ...verse);
+  success('set-word-of-god', ...target, ...verse, '--segments', '0');
+  const lines = JSON.parse(success('read-all-translations', ...greek, ...verse, '--mode', 'wordOfGod'));
+  assert.equal(lines[0].pieces[0].wordOfGod, true);
+  assert.deepEqual(lines[1].pieces.map(piece => piece.wordOfGod), [true, true, false]);
+  assert.deepEqual(lines[2].pieces.map(piece => piece.wordOfGod), [true, true, false]);
+  assert.equal(lines[2].pieces[0].text, 'changed ');
+});
+
+test('Word of God traverses multiple interlinear levels and mapped verse references', () => {
+  for (const [source, text, verseNumber] of [
+    ['hebrew-stuttgartensia', 'אב גד', 2],
+    ['greek-septuagint', 'α β', 2],
+    ['geez-mashafa-qeddus', 'ወ ምድር', 1]
+  ]) {
+    const file = path.join(project, 'sources', source, 'GEN.json');
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    data.chapters = [{ chapter: 1, verses: [{ verse: verseNumber, text }] }];
+    fs.writeFileSync(file, JSON.stringify(data));
+  }
+  for (const name of ['hebrew-stuttgartensia-portuguese-metadata', 'greek-septuagint-custom-portuguese-metadata', 'geez-mashafa-qeddus-custom-portuguese-metadata']) {
+    const file = path.join(project, 'targets', name, 'GEN.json');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, JSON.stringify({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} }));
+  }
+  success('set-word-of-god', ...target, '--chapter', '1', '--verse', '2', '--segments', '0');
+  success('set-word-of-god', '--target', 'greek-septuagint', '--book', 'GEN', '--chapter', '1', '--verse', '2', '--segments', '1');
+  const mappings = [
+    ['greek-septuagint-hebrew-stuttgartensia-interlinear', 'hebrew-stuttgartensia', 2, 2],
+    ['geez-mashafa-qeddus-greek-septuagint-hebrew-stuttgartensia-interlinear', 'greek-septuagint', 1, 2]
+  ];
+  for (const [name, origin, currentVerse, originVerse] of mappings) {
+    const file = path.join(project, 'targets', name, 'GEN.json');
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, JSON.stringify({ [origin]: { chapters: [{ chapter: 1, origin: 1, verses: [
+      { verse: currentVerse, originVerse, words: [{ originIndex: 0 }, { originIndex: 1 }] }
+    ] }] } }));
+  }
+  const file = path.join(project, 'targets/geez-mashafa-qeddus-custom-portuguese-translation/GEN.json');
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify({ variations: {}, chapters: [{ chapter: 1, verses: [
+    { verse: 1, text: 'one two', metadata: [{ size: 3, value: '0-x' }, { size: 3, value: '1-y' }], variations: {} }
+  ] }] }));
+  const lines = JSON.parse(success('read-all-translations', '--target', 'geez-mashafa-qeddus', '--origin', 'greek-septuagint', '--book', 'GEN', ...verse, '--mode', 'wordOfGod'));
+  assert.deepEqual(lines[0].pieces.filter(piece => piece.text.trim()).map(piece => piece.wordOfGod), [true, true]);
+  assert.deepEqual(lines[1].pieces.map(piece => piece.wordOfGod), [true, true]);
+  assert.notEqual(run('read-all-translations', '--target', 'geez-mashafa-qeddus', '--book', 'GEN', ...verse, '--mode', 'wordOfGod').status, 0);
 });
 
 test('translation display follows interlinear origin colors and leaves unmapped segments uncolored', () => {
@@ -339,11 +480,11 @@ test('finds sparse numeric metadata verses by their identifiers', () => {
 test('combines variations, persists additions and removes verse overrides', () => {
   const one = '1389d4a7-688a-473d-89bb-372656f9a73b';
   const two = '4e5f9b02-385c-4192-bde4-1b5739dc797c';
-  assert.equal(success('read-translation', ...target, ...verse), 'No princípio criou Divos AZ os céus e AZ a terra.');
-  assert.equal(success('read-translation', ...target, ...verse, '--variations', `${one},${two}`), 'No princípio criou Deus ➜ os céus e ➜ a terra.');
+  assert.equal(translationText(...target, ...verse), 'No princípio criou Divos AZ os céus e AZ a terra.');
+  assert.equal(translationText(...target, ...verse, '--variations', `${one},${two}`), 'No princípio criou Deus ➜ os céus e ➜ a terra.');
   const transliteration = 'fc5ca031-196a-4f7e-aca5-808369ed3b93';
-  assert.equal(success('read-translation', ...target, ...verse, '--variations', `${one},${transliteration}`), 'No princípio criou Elohim AZ os céus e AZ a terra.');
-  assert.equal(success('read-translation', ...target, ...verse, '--variations', `${transliteration},${one}`), 'No princípio criou Deus AZ os céus e AZ a terra.');
+  assert.equal(translationText(...target, ...verse, '--variations', `${one},${transliteration}`), 'No princípio criou Elohim AZ os céus e AZ a terra.');
+  assert.equal(translationText(...target, ...verse, '--variations', `${transliteration},${one}`), 'No princípio criou Deus AZ os céus e AZ a terra.');
   assert.ok(JSON.parse(success('list-variations', ...target)).some(item => item.id === one));
   const id = success('add-variations', 'My variation', ...target);
   assert.match(id, /^[\da-f-]{36}$/);

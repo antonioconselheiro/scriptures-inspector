@@ -82,7 +82,11 @@ Chapter and verse are positive integers.
 List commands display tables in a terminal and retain their JSON output when
 redirected or piped. Structured read commands print JSON to standard output.
 Mutations print JSON describing their result, except `add-variations`, which
-prints the new UUID. `read-translation` prints plain text. `read-lexical`
+prints the new UUID. `read-translation` and `read-all-translations` show
+colored source and translation lines in a terminal and structured JSON when
+redirected. This replaces the earlier plain-text-only `read-translation`
+output; scripts should read the `custom` line's `pieces` from the JSON.
+`read-lexical`
 prints JSON when redirected and colored text in a terminal; set `NO_COLOR` to
 obtain JSON there too. Errors go to standard error and return a nonzero exit status. Missing
 target files are treated as empty targets; malformed JSON and other I/O errors
@@ -384,6 +388,31 @@ si read-all-translations --project . --target hebrew-stuttgartensia \
   --book GEN --chapter 1 --verse 1
 ```
 
+Explicitly select the same default Prismatic mode:
+
+```sh
+si read-all-translations --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --mode prismatic
+```
+
+Display Word of God in red instead of Prismatic colors:
+
+```sh
+si read-all-translations --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --mode wordOfGod
+```
+
+In this mode, source segments inherit marks through related interlinear
+sources. A translation span is marked when its associated source word or a
+related source is marked, or when the span itself has a Word of God override.
+The same span marking applies to its variation text; variation entries store
+replacement text, not separate Word of God flags. Unassociated editorial
+content can be marked directly with `set-translation-word-of-god`.
+`NO_COLOR` disables red output as well. Redirected JSON retains the Prismatic
+`color` field and adds a boolean `wordOfGod` to every piece, including
+unmarked pieces and separators. Default and explicit `prismatic` JSON retain
+the original output shape.
+
 For a translation source used under multiple interlinear parents, select its
 immediate parent with `--origin`; links are followed through the structure to
 the original source. Unmapped segments are uncolored:
@@ -443,20 +472,34 @@ scriptures-inspector remove-variations --project . --target hebrew-stuttgartensi
   --variations UUID1,UUID2
 ```
 
-Read the saved custom translation for a verse, without variations:
+Display the original and the saved custom translation for a verse, without
+variations. The default color mode is Prismatic:
 
 ```sh
 scriptures-inspector read-translation --project . --target hebrew-stuttgartensia \
   --book GEN --chapter 1 --verse 1
 ```
 
-Read the saved custom translation with selected variations applied in order.
-For each segment, the last selected nonempty override wins:
+Display the original and the saved custom translation with selected variations
+applied in order. Supply multiple IDs as one comma-separated `--variations`
+value; for each span, the last selected nonempty override wins:
 
 ```sh
 scriptures-inspector read-translation --project . --target hebrew-stuttgartensia \
   --book GEN --chapter 1 --verse 1 --variations UUID1,UUID2
 ```
+
+Display the combination with Word of God in red instead of Prismatic colors:
+
+```sh
+si read-translation --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --mode wordOfGod --variations UUID1,UUID2
+```
+
+`read-translation` supports the same `--mode`, `--origin`, `NO_COLOR` and
+piece fields as `read-all-translations`. In redirected JSON it returns two
+lines: `original` and `custom`, the latter containing the combined selected
+variations. In Word of God mode pieces also have a `wordOfGod` boolean.
 
 `read-translation` reads the saved custom translation, not a reference
 translation, and does not create or derive an unsaved translation. Unknown
