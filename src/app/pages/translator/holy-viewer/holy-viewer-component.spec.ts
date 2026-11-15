@@ -456,13 +456,13 @@ describe('HolyViewerComponent', () => {
     component.configurable = true;
     component.openSettings();
     component.selectedVariationToAdd['target'] = 'first';
+    component.selectedVariationMode['target'] = 'merge';
     component.addSelectedVariation('Source', 'target');
     component.selectedVariationToAdd['target'] = 'second';
     component.addSelectedVariation('Source', 'target');
 
     component.startVariationDrag(options[1], { dataTransfer: null } as DragEvent);
     component.dropVariation(options[0], { preventDefault: () => {} } as DragEvent);
-    component.draftConfig!.variationMode = 'merge';
     component.saveSettings();
 
     const line = {
@@ -476,6 +476,79 @@ describe('HolyViewerComponent', () => {
     expect(component.config.codices['Source'].selectedVariations['target']).toEqual(['second', 'first']);
     expect(component.pieceText(line, piece)).toBe('Divos (Elohim; Deus)');
     expect(piece.color).toBe('4');
+  });
+
+  it('composes overwrite and merge variations independently and preserves legacy global modes', () => {
+    const line = {
+      type: 'customTranslation' as const, label: '', source: 'Source', variationTarget: 'target', pieces: []
+    };
+    const piece = { text: 'Divos', variations: { a: 'Deus', b: 'Elohim', c: 'Divindade', d: 'Deidade' } };
+    const options = ['a', 'b', 'c', 'd'].map(id => ({ target: 'target', source: 'Source', id, name: id }));
+    component.configurable = true;
+    component.config.variationMode = 'merge';
+    component.config.codices['Source'] = {
+      ...structuredClone(defaultHolyViewerCodexConfig),
+      selectedVariations: { target: ['a'] }
+    };
+    expect(component.pieceText(line, piece)).toBe('Divos (Deus)');
+    component.openSettings();
+    expect(component.variationMode(options[0])).toBe('merge');
+    component.setVariation(options[1], true, 'overwrite');
+    component.setVariation(options[2], true, 'merge');
+    component.setVariation(options[3], true, 'overwrite');
+    component.saveSettings();
+    expect(component.pieceText(line, piece)).toBe('Deidade (Deus; Divindade)');
+    component.openSettings();
+    component.startVariationDrag(options[3], { dataTransfer: null } as DragEvent);
+    component.dropVariation(options[0], { preventDefault: () => {} } as DragEvent);
+    component.saveSettings();
+    expect(component.pieceText(line, piece)).toBe('Elohim (Deus; Divindade)');
+    expect(component.pieceText(line, { text: 'Base', variations: { a: 'Deus', b: '', c: '' } }))
+      .toBe('Base (Deus)');
+    component.openSettings();
+    component.removeVariation(options[2]);
+    component.saveSettings();
+    expect(component.config.codices['Source'].variationModes?.['target']?.['c']).toBeUndefined();
+    expect(component.pieceText(line, piece)).toBe('Elohim (Deus)');
+  });
+
+  it('selects and displays the composition mode beside each variation tag', () => {
+    const fixture = TestBed.createComponent(HolyViewerComponent);
+    const viewer = fixture.componentInstance;
+    viewer.config = structuredClone(defaultHolyViewerConfig);
+    viewer.configurable = true;
+    viewer.verses = [{
+      id: '1', bookName: 'Genesis', chapter: 1, verse: 1,
+      lines: [{ type: 'original', source: 'Source', label: '', pieces: [{ text: 'word' }] }]
+    }];
+    viewer.variationOptions = [
+      { target: 'target', source: 'Source', id: 'a', name: 'First' },
+      { target: 'target', source: 'Source', id: 'b', name: 'Second' }
+    ];
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('[aria-label="Configure Holy Viewer"]').click();
+    fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+    const variation = root.querySelector<HTMLSelectElement>('#variation-target')!;
+    const mode = root.querySelector<HTMLSelectElement>('[aria-label="Composition mode for target"]')!;
+    variation.value = 'a';
+    variation.dispatchEvent(new Event('change'));
+    mode.value = 'merge';
+    mode.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    root.querySelector<HTMLButtonElement>('.variationAdd button')!.click();
+    fixture.detectChanges();
+    expect(root.querySelector('.variationTag')?.textContent).toContain('First');
+    expect(root.querySelector('.variationTagMode')?.textContent).toBe('merge');
+    variation.value = 'b';
+    variation.dispatchEvent(new Event('change'));
+    mode.value = 'overwrite';
+    mode.dispatchEvent(new Event('change'));
+    fixture.detectChanges();
+    root.querySelector<HTMLButtonElement>('.variationAdd button')!.click();
+    fixture.detectChanges();
+    expect(Array.from(root.querySelectorAll('.variationTagMode')).map(tag => tag.textContent))
+      .toEqual(['merge', 'overwrite']);
   });
 
   it('renders unlinked segments with prisma only in prismatic mode', () => {

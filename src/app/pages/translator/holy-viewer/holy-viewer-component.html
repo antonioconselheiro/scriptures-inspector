@@ -96,13 +96,6 @@
         </select>
       </label>
       <label>
-        Variation composition
-        <select [(ngModel)]="draftConfig.variationMode" name="variationMode">
-          <option value="overwrite">Overwrite</option>
-          <option value="merge">Merge in parentheses</option>
-        </select>
-      </label>
-      <label>
         Text size (px)
         <input type="number" min="1" step="1" [(ngModel)]="draftConfig.fontSize" name="fontSize">
       </label>
@@ -185,11 +178,7 @@
           @if (codexVariations(source).length) {
             <fieldset>
               <legend>Custom translation variations</legend>
-              @if (draftConfig.variationMode !== 'merge') {
-                <p>In overwrite mode, the last selected variation takes precedence.</p>
-              } @else {
-                <p>In merge mode, selected alternatives are shown together in parentheses.</p>
-              }
+              <p>The last overwrite takes precedence; merge alternatives appear in parentheses.</p>
               @for (target of variationTargets(source); track target) {
                 <div class="variationSelector">
                   <label [for]="'variation-' + target">{{target}}</label>
@@ -203,6 +192,13 @@
                         }
                       }
                     </select>
+                    <select [attr.aria-label]="'Composition mode for ' + target"
+                      [ngModel]="selectedVariationMode[target] ?? 'overwrite'"
+                      (ngModelChange)="selectedVariationMode[target] = $event"
+                      [name]="'variation-mode-' + target">
+                      <option value="overwrite">Overwrite</option>
+                      <option value="merge">Merge</option>
+                    </select>
                     <button type="button" [disabled]="!selectedVariationToAdd[target]"
                       (click)="addSelectedVariation(source, target)">Add</button>
                   </div>
@@ -213,7 +209,7 @@
                         (dragover)="allowVariationDrop($event)"
                         (drop)="dropVariation(option, $event)"
                         (dragend)="endVariationDrag()">
-                        {{option.name}}
+                        {{option.name}} <span class="variationTagMode">{{variationMode(option)}}</span>
                         <button type="button" [attr.aria-label]="'Remove ' + option.name"
                           (click)="removeVariation(option)">×</button>
                       </span>

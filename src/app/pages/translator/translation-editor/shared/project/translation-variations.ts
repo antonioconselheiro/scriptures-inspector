@@ -1,6 +1,10 @@
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 
 export type VariationCompositionMode = 'overwrite' | 'merge';
+export interface VariationSelection {
+  id: string;
+  mode: VariationCompositionMode;
+}
 
 export function removeTranslationVariation(book: BookTranslationTarget, id: string): void {
   delete book.variations[id];
@@ -37,4 +41,17 @@ export function composeVariationText(
   }
   const base = original ? `${original} ` : '';
   return `${base}(${alternatives.join('; ')})`;
+}
+
+export function composeMixedVariationText(
+  original: string,
+  variations: Record<string, string>,
+  selected: VariationSelection[]
+): string {
+  const overwritten = composeVariationText(
+    original, variations, selected.filter(item => item.mode === 'overwrite').map(item => item.id)
+  );
+  return composeVariationText(
+    overwritten, variations, selected.filter(item => item.mode === 'merge').map(item => item.id), 'merge'
+  );
 }

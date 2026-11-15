@@ -60,7 +60,41 @@ test('help documents every command without a project and supports a command topi
   assert.match(result.stdout, /list-scriptures/);
   assert.match(success('help', 'set-translation-size'), /--span VALUE --size VALUE/);
   assert.match(success('help', 'read-translation'), /--variation-mode VALUE/);
+  assert.match(success('help', 'read-translation'), /ID\[:overwrite\|merge\]/);
   assert.notEqual(run('help', 'not-a-command').status, 0);
+});
+
+test('read-translation combines per-variation modes independently in selection order', () => {
+  const first = success('add-variations', 'First', ...target);
+  const second = success('add-variations', 'Second', ...target);
+  const third = success('add-variations', 'Third', ...target);
+  const fourth = success('add-variations', 'Fourth', ...target);
+  success('clean-translation', ...target, ...verse);
+  success('set-translation', 'Base other', ...target, ...verse);
+  success('set-translation-size', ...target, ...verse, '--span', '0', '--size', '4');
+  for (const [id, value] of [[first, 'One'], [second, 'Two'], [third, 'Three'], [fourth, 'Four']]) {
+    success('set-variation-value', value, ...target, ...verse, '--span', '0', '--variation', id);
+  }
+  const selected = `${first}:merge,${second}:overwrite,${third}:merge,${fourth}:overwrite`;
+  assert.equal(translationText(...target, ...verse, '--variations', selected), 'Four (One; Three) other');
+  assert.equal(translationText(...target, ...verse, '--variations',
+    `${fourth}:overwrite,${first}:merge,${second}:overwrite,${third}:merge`), 'Two (One; Three) other');
+  assert.equal(translationText(...target, ...verse, '--variations',
+    `${first},${second}:overwrite,${third}`, '--variation-mode', 'merge'), 'Two (One; Three) other');
+  assert.equal(translationText(...target, ...verse, '--variations',
+    `${first}:merge,${second}:merge`), 'Base (One; Two) other');
+  const lines = JSON.parse(success('read-translation', ...target, ...verse, '--variations', selected, '--mode', 'wordOfGod'));
+  assert.equal(lines[1].pieces[0].text, 'Four (One; Three) ');
+  assert.equal(typeof lines[1].pieces[0].wordOfGod, 'boolean');
+  for (const invalid of [
+    `${first}:invalid`, `${first}:`, `:${'merge'}`, `${first}:merge:overwrite`,
+    `${first}:merge,${first}:overwrite`, `${first}:merge,`, 'missing:merge'
+  ]) {
+    const result = run('read-translation', ...target, ...verse, '--variations', invalid);
+    assert.notEqual(result.status, 0, invalid);
+    assert.match(result.stderr, /Invalid --variations|Duplicate variation|Unknown variation/);
+  }
+  assert.notEqual(run('read-translation', ...target, ...verse, '--variation-mode', 'invalid').status, 0);
 });
 
 test('edits translation spans and variation overrides with validated scripture options', () => {

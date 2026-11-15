@@ -27,8 +27,6 @@ position to the right. These actions leave word-span sizes unchanged. Selecting
 the empty option clears only that segment's association. Sequential filling
 asks before overwriting existing associations.
 
-Website: https://antonioconselheiro.github.io/scriptures-inspector/
-
 ## Linux installation
 
 Install the project's Debian package with your package manager. It registers
@@ -73,10 +71,13 @@ not install it.
 
 Open **Preview Current** from the editor to view the current chapter in the
 Holy Viewer. Its settings let you choose custom translation variations in
-order: add them from the selector, remove them from their tags, or drag tags
-to change their precedence. `overwrite` keeps the last selected nonempty
-override for each span; `merge` keeps the base text and displays selected
-alternatives in parentheses, separated by semicolons. Associated original,
+order: choose `overwrite` or `merge` beside the variation selector before
+adding each variation, remove variations from their tags, or drag tags to
+change their order. The last nonempty `overwrite` determines each span's
+main text; all nonempty `merge` alternatives appear in parentheses after
+it, separated by semicolons. If no overwrite applies, the original text
+remains. Each tag displays its mode. Existing configurations with a global
+mode retain that mode for previously selected variations. Associated original,
 interlinear and translation segments are underlined together while hovered or
 keyboard-focused.
 
@@ -525,6 +526,23 @@ The default `--variation-mode overwrite` preserves the usual behavior. In
 `merge` mode, each span is displayed as `base (alternative 1; alternative 2)`;
 unassociated text retains its usual color behavior.
 
+To choose a different mode for each variation, append `:overwrite` or `:merge`
+to its ID. For example, from the repository root with the Bible project:
+
+```sh
+si read-translation --project ./projects/bible --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 \
+  --variations 1389d4a7-688a-473d-89bb-372656f9a73b:overwrite,fc5ca031-196a-4f7e-aca5-808369ed3b93:merge
+```
+
+For the saved values in that project this displays `Deus (Elohim)` for the
+corresponding span. As in the Holy Viewer, the last nonempty `overwrite` sets
+the main text and all nonempty `merge` alternatives appear afterward in their
+selected order, regardless of their positions relative to the overwrites. IDs
+without a suffix use `--variation-mode`, or `overwrite` if it is omitted.
+Each ID can appear only once. The mode suffix is specific to
+`read-translation`; other commands continue to accept plain variation IDs.
+
 Display the combination with Word of God in red instead of Prismatic colors:
 
 ```sh
@@ -536,8 +554,8 @@ si read-translation --project . --target hebrew-stuttgartensia \
 piece fields as `read-all-translations`. In redirected JSON it returns two
 lines: `original` and `custom`, the latter containing the combined selected
 variations. In Word of God mode pieces also have a `wordOfGod` boolean.
-The optional `--variation-mode overwrite|merge` controls how selected
-variations are composed; `overwrite` is the default.
+The optional `--variation-mode overwrite|merge` sets the default for selected
+variation IDs without a mode suffix; `overwrite` is the default.
 
 `read-translation` reads the saved custom translation, not a reference
 translation, and does not create or derive an unsaved translation. Unknown

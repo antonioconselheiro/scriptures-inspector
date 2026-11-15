@@ -309,7 +309,7 @@ describe('HolyViewerPageComponent', () => {
     expect(Array.from(root.querySelectorAll('[role="tab"]')).map(tab => tab.textContent?.trim()))
       .toEqual(['original', 'related', 'geez']);
     expect(root.textContent).not.toContain('Lexical values');
-    const selectVariation = (labelText: string): void => {
+    const selectVariation = (labelText: string, composition: 'overwrite' | 'merge' = 'overwrite'): void => {
       const checkboxLabel = Array.from(root.querySelectorAll('fieldset label'))
         .find(item => item.textContent?.includes(labelText) && item.querySelector('input[type="checkbox"]'));
       if (checkboxLabel) {
@@ -321,6 +321,9 @@ describe('HolyViewerPageComponent', () => {
         const option = Array.from(select!.options).find(item => item.textContent?.includes(labelText))!;
         select!.value = option.value;
         select!.dispatchEvent(new Event('change'));
+        const mode = select!.parentElement!.querySelector<HTMLSelectElement>('[aria-label^="Composition mode"]')!;
+        mode.value = composition;
+        mode.dispatchEvent(new Event('change'));
         fixture.detectChanges();
         select!.parentElement!.querySelector<HTMLButtonElement>('button')!.click();
       }
@@ -339,7 +342,7 @@ describe('HolyViewerPageComponent', () => {
     expect(relatedTooltip.checked).toBeTrue();
     relatedTooltip.click();
     selectVariation('hypothetical paleo');
-    selectVariation('Related variation');
+    selectVariation('Related variation', 'merge');
     const mode = root.querySelector<HTMLSelectElement>('select[name="displayMode"]')!;
     mode.value = 'prismatic';
     mode.dispatchEvent(new Event('change'));
@@ -352,6 +355,13 @@ describe('HolyViewerPageComponent', () => {
       'holyViewer',
       jasmine.objectContaining({ variationMode: 'overwrite' })
     );
+    expect(userSettings.save.calls.mostRecent().args[2]).toEqual(jasmine.objectContaining({
+      codices: jasmine.objectContaining({
+        related: jasmine.objectContaining({
+          variationModes: { 'related-translation': { singular: 'merge' } }
+        })
+      })
+    }));
     expect(root.querySelector('.settingsMessage')).toBeNull();
     const consoleError = spyOn(console, 'error');
     userSettings.save.and.rejectWith(new Error('Settings file unavailable'));
@@ -376,6 +386,7 @@ describe('HolyViewerPageComponent', () => {
     );
     expect(fixture.nativeElement.textContent).toContain('No princípio criou Deus ➜ os céus e ➜ a terra.');
     expect(fixture.nativeElement.textContent).toContain('Unido');
+    expect(fixture.nativeElement.textContent).toContain('Ligado (Unido)');
     const secondVerse = root.querySelectorAll('.holyVerse')[1];
     const gematriaLine = Array.from(secondVerse.querySelectorAll('.holyLine'))
       .find(line => line.querySelector('.holyLineLabel')?.textContent?.trim() === 'gematria')!;
@@ -402,7 +413,7 @@ describe('HolyViewerPageComponent', () => {
     expect(relatedSourceLineData?.pieces[0].associations).toContain('original:GEN:1:1:0');
     const relatedTranslation = lines.find(line => line.textContent?.includes('Unido'))!;
     expect(Array.from(relatedTranslation.querySelectorAll(':scope > span:last-child > span'))
-      .find(span => span.textContent === 'Unido')?.getAttribute('title')).toBe('גד');
+      .find(span => span.textContent === 'Ligado (Unido)')?.getAttribute('title')).toBe('גד');
     const relatedSourceLineElement = lines.find(line => line.textContent?.includes('Interlinear · Related'))!;
     const relatedSegment = relatedSourceLineElement.querySelector('[lang="hebrew"] span') as HTMLElement;
     relatedSegment.dispatchEvent(new MouseEvent('mouseenter'));

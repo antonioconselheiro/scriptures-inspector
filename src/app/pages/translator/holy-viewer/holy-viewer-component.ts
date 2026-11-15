@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { composeVariationText } from '../translation-editor/shared/project/translation-variations';
+import { composeMixedVariationText } from '../translation-editor/shared/project/translation-variations';
 import {
   defaultHolyViewerCodexConfig,
   defaultHolyViewerConfig,
@@ -10,6 +10,7 @@ import {
   HolyViewerSection,
   HolyViewerLine,
   HolyViewerPiece,
+  HolyViewerVariationMode,
   HolyViewerVariationOption,
   HolyViewerVerse
 } from './holy-viewer-model';
@@ -40,7 +41,8 @@ export class HolyViewerComponent {
   draftConfig: HolyViewerConfig | null = null;
   activeCodex: string | null = null;
   selectedVariationToAdd: Record<string, string> = {};
-  private draggedVariation: { target: string; id: string } | null = null;
+  selectedVariationMode: Partial<Record<string, HolyViewerVariationMode>> = {};
+  private draggedVariation: { source: string; target: string; id: string } | null = null;
   hoveredAssociations: string[] = [];
 
   get visibleVerses(): HolyViewerVerse[] {
@@ -189,22 +191,22 @@ export class HolyViewerComponent {
     return [...new Set(this.codexVariations(source).map(option => option.target))];
   }
 
-  variationOption(target: string, id: string): HolyViewerVariationOption | undefined {
-    return this.variationOptions.find(option => option.target === target && option.id === id);
+  variationOption(source: string, target: string, id: string): HolyViewerVariationOption | undefined {
+    return this.variationOptions.find(option => option.source === source && option.target === target && option.id === id);
   }
 
   selectedVariationOptions(source: string, target: string): HolyViewerVariationOption[] {
     const config = this.draftCodexConfig(source);
     return (config.selectedVariations[target] ?? [])
-      .map(id => this.variationOption(target, id))
+      .map(id => this.variationOption(source, target, id))
       .filter((option): option is HolyViewerVariationOption => option !== undefined);
   }
 
   addSelectedVariation(source: string, target: string): void {
     const id = this.selectedVariationToAdd[target];
-    const option = id ? this.variationOption(target, id) : undefined;
+    const option = id ? this.variationOption(source, target, id) : undefined;
     if (option) {
-      this.setVariation(option, true);
+      this.setVariation(option, true, this.selectedVariationMode[target] ?? 'overwrite');
     }
     this.selectedVariationToAdd[target] = '';
   }
@@ -213,8 +215,13 @@ export class HolyViewerComponent {
     this.setVariation(option, false);
   }
 
+  variationMode(option: HolyViewerVariationOption): HolyViewerVariationMode {
+    return this.draftCodexConfig(option.source).variationModes?.[option.target]?.[option.id]
+      ?? this.draftConfig?.variationMode ?? 'overwrite';
+  }
+
   startVariationDrag(option: HolyViewerVariationOption, event: DragEvent): void {
-    this.draggedVariation = { target: option.target, id: option.id };
+    this.draggedVariation = { source: option.source, target: option.target, id: option.id };
     event.dataTransfer?.setData('text/plain', option.id);
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
@@ -232,7 +239,8 @@ export class HolyViewerComponent {
     event.preventDefault();
     const dragged = this.draggedVariation;
     this.draggedVariation = null;
-    if (!dragged || dragged.target !== option.target || dragged.id === option.id || !this.draftConfig) {
+    if (!dragged || dragged.source !== option.source || dragged.target !== option.target
+      || dragged.id === option.id || !this.draftConfig) {
       return;
     }
     const config = this.draftCodexConfig(option.source);
@@ -281,6 +289,8 @@ export class HolyViewerComponent {
     this.draftConfig.textAlignment ??= 'left';
     this.draftConfig.variationMode ??= 'overwrite';
     this.activeCodex = null;
+    this.selectedVariationToAdd = {};
+    this.selectedVariationMode = {};
     for (const source of new Set(this.verses.flatMap(verse => verse.lines.map(line => line.source)))) {
       this.draftCodexConfig(source);
     }
@@ -301,7 +311,7 @@ export class HolyViewerComponent {
     this.closeSettings();
   }
 
-  setVariation(option: HolyViewerVariationOption, checked: boolean): void {
+  setVariation(option: HolyViewerVariationOption, checked: boolean, mode: HolyViewerVariationMode = 'overwrite'): void {
     if (!this.draftConfig) {
       return;
     }
@@ -310,6 +320,15 @@ export class HolyViewerComponent {
     config.selectedVariations[option.target] = checked
       ? [...selected.filter(id => id !== option.id), option.id]
       : selected.filter(id => id !== option.id);
+    if (checked) {
+      const modes = config.variationModes ??= {};
+      (modes[option.target] ??= {})[option.id] = mode;
+    } else {
+      const modes = config.variationModes?.[option.target];
+      if (modes) {
+        delete modes[option.id];
+      }
+    }
   }
 
   setHoveredAssociations(associations: string[] | undefined): void {
@@ -324,8 +343,12 @@ export class HolyViewerComponent {
     if (!line.variationTarget || !piece.variations) {
       return piece.text;
     }
-    const selected = this.getCodexConfig(line.source).selectedVariations[line.variationTarget] ?? [];
-    return composeVariationText(piece.text, piece.variations, selected, this.config.variationMode ?? 'overwrite');
+    const codex = this.getCodexConfig(line.source);
+    const selected = codex.selectedVariations[line.variationTarget] ?? [];
+    const modes = codex.variationModes?.[line.variationTarget];
+    return composeMixedVariationText(piece.text, piece.variations, selected.map(id => ({
+      id, mode: modes?.[id] ?? this.config.variationMode ?? 'overwrite'
+    })));
   }
 
   isPunctuation(text: string): boolean {

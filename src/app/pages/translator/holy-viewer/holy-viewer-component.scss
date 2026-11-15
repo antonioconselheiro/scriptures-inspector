@@ -103,6 +103,11 @@
   border: 1px solid currentColor;
   border-radius: 1rem;
   cursor: grab;
+  font-size: 0.85rem;
+}
+
+.variationTagMode {
+  font-weight: bold;
 }
 
 .variationTag button {
@@ -126,7 +131,7 @@
 
 .holyViewerDialog {
   box-sizing: border-box;
-  width: min(28rem, calc(100vw - 2rem));
+  width: min(36rem, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   max-height: calc(100dvh - 2rem);
   min-height: 0;

@@ -25,7 +25,7 @@ import { ProjectInterlinearService } from '../src/app/pages/translator/translati
 import { metadataVerseMatches } from '../src/app/pages/translator/translation-editor/shared/project/metadata-verse-matches';
 import { isPendingLexical } from '../src/app/pages/translator/translation-editor/shared/project/pending-lexical';
 import { removeLexical } from '../src/app/pages/translator/translation-editor/shared/project/remove-lexical';
-import { composeVariationText, removeTranslationVariation } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
+import { composeMixedVariationText, removeTranslationVariation, VariationCompositionMode, VariationSelection } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
 import { getPresentationColor, getSerializedSegmentIndex } from '../src/app/pages/translator/translation-editor/shared/scripture-presentation-core';
 
 type Kind = 'metadata' | 'interlinear' | 'translation';
@@ -205,6 +205,27 @@ function ids(options: Options): string[] {
   return values;
 }
 
+function selectedTranslationVariations(options: Options): VariationSelection[] {
+  const defaultMode = options['variation-mode'] ?? 'overwrite';
+  if (defaultMode !== 'overwrite' && defaultMode !== 'merge') {
+    throw new Error(`Invalid --variation-mode: ${defaultMode}; use overwrite or merge`);
+  }
+  if (!options['variations']) return [];
+  const selected = options['variations'].split(',').map(value => {
+    const parts = value.split(':');
+    if (parts.length > 2 || !parts[0] || (parts.length === 2 && parts[1] !== 'overwrite' && parts[1] !== 'merge')) {
+      throw new Error(`Invalid --variations entry: ${value}; use ID, ID:overwrite or ID:merge`);
+    }
+    const mode: VariationCompositionMode = parts[1] === 'merge' ? 'merge'
+      : parts[1] === 'overwrite' ? 'overwrite' : defaultMode;
+    return { id: parts[0], mode };
+  });
+  if (new Set(selected.map(item => item.id)).size !== selected.length) {
+    throw new Error('Duplicate variation ID in --variations list');
+  }
+  return selected;
+}
+
 function expectPositionals(values: string[], count: number): void {
   if (values.length !== count) throw new Error(`Expected ${count} positional argument(s), got ${values.length}`);
 }
@@ -289,7 +310,7 @@ async function main(): Promise<void> {
       'list-targets': 'List targets by type.', 'read-metadata': 'Read verse metadata.',
       'read-interlinear': 'Read verse interlinear mappings.', 'list-variations': 'List variation IDs and names.',
       'add-variations': 'Create a variation: <name>.', 'remove-variations': 'Remove variations by comma-separated IDs.',
-      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered variation IDs; --mode prismatic (default) or wordOfGod; --variation-mode overwrite (default) or merge.',
+      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered --variations ID[:overwrite|merge],...; --mode prismatic (default) or wordOfGod; --variation-mode sets the default for IDs without a mode (overwrite by default).',
       'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
       'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
       'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
@@ -410,8 +431,10 @@ async function main(): Promise<void> {
     } else {
       const positionalCount = command === 'set-translation' || command === 'set-variation-value' ? 1 : 0;
       expectPositionals(positional, positionalCount);
-      const selected = options['variations'] ? ids(options) : [];
-      for (const id of selected) if (!translation.variations[id]) throw new Error(`Unknown variation: ${id}`);
+      const selected = command === 'read-translation'
+        ? selectedTranslationVariations(options)
+        : (options['variations'] ? ids(options).map(id => ({ id, mode: 'overwrite' as const })) : []);
+      for (const { id } of selected) if (!translation.variations[id]) throw new Error(`Unknown variation: ${id}`);
       const { sourceBook, language } = await sourceData(project, source, book);
       const index = findSourceVerse(sourceBook, numberOption(options, 'chapter'), numberOption(options, 'verse'));
       const sourceVerse = sourceBook.chapters[index.chapterIndex].verses[index.verseIndex];
@@ -452,10 +475,6 @@ async function main(): Promise<void> {
       if (command === 'read-all-translations' || command === 'read-translation') {
         const mode = options['mode'] ?? 'prismatic';
         if (mode !== 'prismatic' && mode !== 'wordOfGod') throw new Error(`Invalid --mode: ${mode}; use prismatic or wordOfGod`);
-        const variationMode = options['variation-mode'] ?? 'overwrite';
-        if (variationMode !== 'overwrite' && variationMode !== 'merge') {
-          throw new Error(`Invalid --variation-mode: ${variationMode}; use overwrite or merge`);
-        }
         const pathToSource = structurePath(project, target, options['origin']);
         const mappings = await Promise.all(pathToSource.slice(1).map(async (item, i) => {
           if (!item.interlinearTarget) throw new Error(`Missing interlinear target for ${item.source}`);
@@ -523,12 +542,12 @@ async function main(): Promise<void> {
           ...(word.separator ? [{ text: word.separator, color: 0, ...(mode === 'wordOfGod' ? { wordOfGod: false } : {}) }] : [])
         ]);
         const pieces = translationService.splitCustomTranslation(verse);
-        const buildLine = (variationIds: string[]) => pieces.map((piece, i) => {
-          const variations = Object.fromEntries(variationIds.map(id => [id, verse.variations?.[id]?.[String(i)]?.value ?? '']));
+        const buildLine = (selections: VariationSelection[]) => pieces.map((piece, i) => {
+          const variations = Object.fromEntries(selections.map(({ id }) => [id, verse.variations?.[id]?.[String(i)]?.value ?? '']));
           const linked = getSerializedSegmentIndex(verse.metadata[i]?.value ?? '');
           const sourceWord = linked === null ? undefined : words.find(word => word.segments.some(segment => segment.index === linked));
           return {
-            text: composeVariationText(piece.segment, variations, variationIds, variationMode) + (piece.hasTrailingSpace ? ' ' : ''),
+            text: composeMixedVariationText(piece.segment, variations, selections) + (piece.hasTrailingSpace ? ' ' : ''),
             color: linked === null ? 0 : color(linked),
             ...(mode === 'wordOfGod' ? {
               wordOfGod: Boolean(verse.metadata[i]?.isWordOfGod)
@@ -541,7 +560,7 @@ async function main(): Promise<void> {
           { id: 'original', name: source, pieces: original },
           { id: 'custom', name: 'Custom translation', pieces: buildLine(command === 'read-translation' ? selected : []) },
           ...(command === 'read-all-translations'
-            ? Object.entries(translation.variations).map(([id, variation]) => ({ id, name: variation.name, pieces: buildLine([id]) }))
+            ? Object.entries(translation.variations).map(([id, variation]) => ({ id, name: variation.name, pieces: buildLine([{ id, mode: 'overwrite' }]) }))
             : [])
         ];
         if (!process.stdout.isTTY) output(lines);

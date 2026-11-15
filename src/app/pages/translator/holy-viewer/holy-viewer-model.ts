@@ -24,6 +24,7 @@ export interface HolyViewerCodexConfig {
   showOriginal: boolean;
   showOriginalLexicalTooltip: boolean;
   selectedVariations: Record<string, string[]>;
+  variationModes?: Record<string, Record<string, HolyViewerVariationMode>>;
   selectedSpellings?: string[];
   selectedNumerology?: string[];
   sections: Record<HolyViewerSection, boolean>;

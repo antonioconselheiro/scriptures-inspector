@@ -70,8 +70,9 @@
         "selectedVariations": {
           "hebrew-stuttgartensia-custom-portuguese-translation": [
             "4e5f9b02-385c-4192-bde4-1b5739dc797c",
+            "fa93b96f-4c08-4bc3-90ea-8785542126b1",
             "fc5ca031-196a-4f7e-aca5-808369ed3b93",
-            "fa93b96f-4c08-4bc3-90ea-8785542126b1"
+            "1389d4a7-688a-473d-89bb-372656f9a73b"
           ]
         },
         "sections": {
@@ -79,6 +80,12 @@
           "spelling": false,
           "transliteration": true,
           "numerology": false
+        },
+        "variationModes": {
+          "hebrew-stuttgartensia-custom-portuguese-translation": {
+            "fc5ca031-196a-4f7e-aca5-808369ed3b93": "merge",
+            "1389d4a7-688a-473d-89bb-372656f9a73b": "merge"
+          }
         }
       },
       "samaritan-pentateuch": {
