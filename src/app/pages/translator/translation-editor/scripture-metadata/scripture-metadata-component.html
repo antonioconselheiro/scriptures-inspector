@@ -113,19 +113,17 @@
             <td></td>
           </tr>
         }
-        <tr>
+        <tr appCheckboxRangeSelection #wordOfGodSelection="checkboxRangeSelection">
           <th>God said</th>
           @for (word of wordListValue; track $index; let wordIndex = $index) {
             <td
-              data-word-of-god-cell
-              [class.wordOfGodSelected]="isWordOfGodCellSelected(wordIndex)"
-              (pointerdown)="startWordOfGodSelection($event, wordIndex)"
-              (pointerenter)="extendWordOfGodSelection(wordIndex)"
+              [attr.data-checkbox-range-cell]="wordIndex"
+              [class.wordOfGodSelected]="wordOfGodSelection.isSelected(wordIndex)"
             >
               <input
                 type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + wordIndex"
                 [attr.aria-label]="'Mark ' + (wordList?.[wordIndex] ?? 'scripture word') + ' as Word of God'"
-                (change)="setAsWordOfGod(wordOfGodEl, wordMatrixValue, wordIndex)"
+                (change)="setAsWordOfGod(wordOfGodEl, wordMatrixValue, wordIndex, wordOfGodSelection.selectedIndexes(wordIndex, wordMatrixValue.length))"
                 [checked]="getScriptureMetadataWordOfGod(wordMatrixValue, wordIndex)"
               />
             </td>

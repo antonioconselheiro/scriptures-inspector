@@ -28,13 +28,15 @@ import { ProjectDataService } from '../shared/project/project-data-service';
 import { ProjectInterlinearService } from '../shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../shared/project/project-metadata-service';
 import { PinRowDirective } from '../pin-row.directive';
+import { CheckboxRangeSelectionDirective } from '../shared/checkbox-range-selection.directive';
 
 @Component({
   selector: 'app-custom-translation-component',
   imports: [
     CommonModule,
     FormsModule,
-    PinRowDirective
+    PinRowDirective,
+    CheckboxRangeSelectionDirective
   ],
   templateUrl: './custom-translation-component.html',
   styleUrl: './custom-translation-component.scss'
@@ -333,16 +335,20 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
 
   setAsWordOfGodOverriding(
     value: boolean,
-    wordIndex: number
+    wordIndexes: number[]
   ): void {
-    return this.customTranslationService.setAsWordOfGodOverriding(
-      this.sourceBook,
-      this.sourceVerse,
-      this.customTranslation,
-      this.current,
-      value,
-      wordIndex
-    );
+    for (const wordIndex of wordIndexes) {
+      if (!this.getScriptureMetadataWordOfGodOverriding(wordIndex).readonly) {
+        this.customTranslationService.setAsWordOfGodOverriding(
+          this.sourceBook,
+          this.sourceVerse,
+          this.customTranslation,
+          this.current,
+          value,
+          wordIndex
+        );
+      }
+    }
   }
 
   getCustomTranslationInterlinearValue(

@@ -71,15 +71,16 @@
         </td>
       </tr>
 
-      <tr>
+      <tr appCheckboxRangeSelection #wordOfGodSelection="checkboxRangeSelection">
         <th>God said</th>
         @for (sentence of splittedCustomTranslation.original; track $index) {
           @let wordOfGod = getScriptureMetadataWordOfGodOverriding($index);
-          <td>
+          <td [attr.data-checkbox-range-cell]="$index"
+            [class.wordOfGodSelected]="wordOfGodSelection.isSelected($index)">
             <input
               type="checkbox" #wordOfGodEl [name]="'isWordOfGod' + $index"
               [attr.aria-label]="'Mark custom translation segment ' + ($index + 1) + ' as Word of God'"
-              (change)="setAsWordOfGodOverriding(wordOfGodEl.checked, $index)"
+              (change)="setAsWordOfGodOverriding(wordOfGodEl.checked, wordOfGodSelection.selectedIndexes($index, splittedCustomTranslation.original.length))"
               [checked]="wordOfGod.checked"
               [attr.disabled]="wordOfGod.readonly ? true : null"
             />
