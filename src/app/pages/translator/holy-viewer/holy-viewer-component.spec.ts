@@ -447,6 +447,37 @@ describe('HolyViewerComponent', () => {
     expect(piece.wordOfGod).toBeTrue();
   });
 
+  it('adds variation tags, reorders them by drag and merges alternatives in one color span', () => {
+    const options = [
+      { target: 'target', source: 'Source', id: 'first', name: 'First' },
+      { target: 'target', source: 'Source', id: 'second', name: 'Second' }
+    ];
+    component.variationOptions = options;
+    component.configurable = true;
+    component.openSettings();
+    component.selectedVariationToAdd['target'] = 'first';
+    component.addSelectedVariation('Source', 'target');
+    component.selectedVariationToAdd['target'] = 'second';
+    component.addSelectedVariation('Source', 'target');
+
+    component.startVariationDrag(options[1], { dataTransfer: null } as DragEvent);
+    component.dropVariation(options[0], { preventDefault: () => {} } as DragEvent);
+    component.draftConfig!.variationMode = 'merge';
+    component.saveSettings();
+
+    const line = {
+      type: 'customTranslation' as const,
+      label: 'Custom translation',
+      source: 'Source',
+      variationTarget: 'target',
+      pieces: []
+    };
+    const piece = { text: 'Divos', color: '4', variations: { first: 'Deus', second: 'Elohim' } };
+    expect(component.config.codices['Source'].selectedVariations['target']).toEqual(['second', 'first']);
+    expect(component.pieceText(line, piece)).toBe('Divos (Elohim; Deus)');
+    expect(piece.color).toBe('4');
+  });
+
   it('renders unlinked segments with prisma only in prismatic mode', () => {
     const fixture = TestBed.createComponent(HolyViewerComponent);
     fixture.componentInstance.config = structuredClone(defaultHolyViewerConfig);

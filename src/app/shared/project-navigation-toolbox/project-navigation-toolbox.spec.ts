@@ -132,6 +132,28 @@ describe('ProjectNavigationToolbox', () => {
     expect(scrollTo).toHaveBeenCalledOnceWith({ top: 175, behavior: 'smooth' });
   });
 
+  it('navigates within the preview route and scrolls to the selected verse', async () => {
+    component.preview = true;
+    component.formSelectedArtifactOrChapter = 2;
+    component.formSelectedVerse = 3;
+    const previewVerse = document.createElement('article');
+    previewVerse.className = 'holyVerse';
+    previewVerse.dataset['verse'] = '3';
+    document.body.appendChild(previewVerse);
+    spyOn(previewVerse, 'getBoundingClientRect').and.returnValue(new DOMRect(0, 75));
+
+    await component.open();
+    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+
+    expect(systemService.saveCurrentPageImmediately).not.toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledOnceWith(
+      ['/translator/preview/book', 'GEN', 'chapter', '2'],
+      { queryParams: { verse: 3 } }
+    );
+    expect(scrollTo).toHaveBeenCalled();
+    previewVerse.remove();
+  });
+
   it('does not navigate when saving the current page fails', async () => {
     component.formSelectedArtifactOrChapter = 2;
     systemService.saveCurrentPageImmediately.and.rejectWith(new Error('Save failed'));

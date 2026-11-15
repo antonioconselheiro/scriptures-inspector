@@ -25,7 +25,7 @@ import { ProjectInterlinearService } from '../src/app/pages/translator/translati
 import { metadataVerseMatches } from '../src/app/pages/translator/translation-editor/shared/project/metadata-verse-matches';
 import { isPendingLexical } from '../src/app/pages/translator/translation-editor/shared/project/pending-lexical';
 import { removeLexical } from '../src/app/pages/translator/translation-editor/shared/project/remove-lexical';
-import { removeTranslationVariation, selectVariationText } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
+import { composeVariationText, removeTranslationVariation } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
 import { getPresentationColor, getSerializedSegmentIndex } from '../src/app/pages/translator/translation-editor/shared/scripture-presentation-core';
 
 type Kind = 'metadata' | 'interlinear' | 'translation';
@@ -43,7 +43,7 @@ function parseArgs(args: string[]): { command: string; options: Options; positio
   const command = args.shift() ?? 'help';
   const options: Options = {};
   const positional: string[] = [];
-  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation', 'mode']);
+  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation', 'mode', 'variation-mode']);
   while (args.length) {
     const arg = args.shift()!;
     if (!arg.startsWith('--')) {
@@ -246,7 +246,7 @@ async function main(): Promise<void> {
     'read-interlinear': ['target', 'book', 'chapter', 'verse'],
     'list-variations': ['target', 'book'], 'add-variations': ['target', 'book'],
     'remove-variations': ['target', 'book', 'variations'],
-    'read-translation': ['target', 'book', 'chapter', 'verse', 'variations', 'origin', 'mode'],
+    'read-translation': ['target', 'book', 'chapter', 'verse', 'variations', 'origin', 'mode', 'variation-mode'],
     'list-patterns': ['target', 'book'], 'set-pattern': ['target', 'book'],
     'remove-pattern': ['target', 'book'], 'list-lexicals': ['target', 'book'],
     'get-lexical': ['target', 'book'], 'set-lexical': ['target', 'book'],
@@ -289,7 +289,7 @@ async function main(): Promise<void> {
       'list-targets': 'List targets by type.', 'read-metadata': 'Read verse metadata.',
       'read-interlinear': 'Read verse interlinear mappings.', 'list-variations': 'List variation IDs and names.',
       'add-variations': 'Create a variation: <name>.', 'remove-variations': 'Remove variations by comma-separated IDs.',
-      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered variation IDs; --mode prismatic (default) or wordOfGod.',
+      'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered variation IDs; --mode prismatic (default) or wordOfGod; --variation-mode overwrite (default) or merge.',
       'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
       'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
       'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
@@ -324,7 +324,7 @@ async function main(): Promise<void> {
     if (!names.every(name => Object.hasOwn(commandOptions, name))) throw new Error(`Unknown command: ${names[0]}`);
     console.log('Usage: si <command> [arguments] [--project DIRECTORY] [options]\n');
     for (const name of names) {
-      const optional = name === 'read-translation' ? ['variations', 'origin', 'mode']
+      const optional = name === 'read-translation' ? ['variations', 'origin', 'mode', 'variation-mode']
         : name === 'read-all-translations' ? ['origin', 'mode']
         : name === 'next-pending-lexical' || name === 'previous-pending-lexical' ? ['verse', 'segment'] : [];
       console.log(`${name} — ${descriptions[name]}\n  Options: ${commandOptions[name].map(opt => optional.includes(opt) ? `[--${opt} VALUE]` : `--${opt} VALUE`).join(' ') || '(none)'}\n`);
@@ -452,6 +452,10 @@ async function main(): Promise<void> {
       if (command === 'read-all-translations' || command === 'read-translation') {
         const mode = options['mode'] ?? 'prismatic';
         if (mode !== 'prismatic' && mode !== 'wordOfGod') throw new Error(`Invalid --mode: ${mode}; use prismatic or wordOfGod`);
+        const variationMode = options['variation-mode'] ?? 'overwrite';
+        if (variationMode !== 'overwrite' && variationMode !== 'merge') {
+          throw new Error(`Invalid --variation-mode: ${variationMode}; use overwrite or merge`);
+        }
         const pathToSource = structurePath(project, target, options['origin']);
         const mappings = await Promise.all(pathToSource.slice(1).map(async (item, i) => {
           if (!item.interlinearTarget) throw new Error(`Missing interlinear target for ${item.source}`);
@@ -524,7 +528,7 @@ async function main(): Promise<void> {
           const linked = getSerializedSegmentIndex(verse.metadata[i]?.value ?? '');
           const sourceWord = linked === null ? undefined : words.find(word => word.segments.some(segment => segment.index === linked));
           return {
-            text: selectVariationText(piece.segment, variations, variationIds) + (piece.hasTrailingSpace ? ' ' : ''),
+            text: composeVariationText(piece.segment, variations, variationIds, variationMode) + (piece.hasTrailingSpace ? ' ' : ''),
             color: linked === null ? 0 : color(linked),
             ...(mode === 'wordOfGod' ? {
               wordOfGod: Boolean(verse.metadata[i]?.isWordOfGod)

@@ -1,0 +1,119 @@
+{
+  "scope": "chapter",
+  "verse": 16,
+  "startVerse": 16,
+  "endVerse": 16,
+  "displayMode": "prismatic",
+  "fontSize": 28,
+  "showLineLabels": false,
+  "textAlignment": "center",
+  "codices": {
+    "hebrew-stuttgartensia": {
+      "showOriginal": true,
+      "showOriginalLexicalTooltip": true,
+      "selectedVariations": {},
+      "sections": {
+        "customTranslation": true,
+        "spelling": false,
+        "transliteration": true,
+        "numerology": false
+      }
+    },
+    "samaritan-pentateuch": {
+      "showOriginal": false,
+      "showOriginalLexicalTooltip": true,
+      "selectedVariations": {},
+      "sections": {
+        "customTranslation": false,
+        "spelling": false,
+        "transliteration": false,
+        "numerology": false
+      }
+    },
+    "greek-septuagint": {
+      "showOriginal": false,
+      "showOriginalLexicalTooltip": true,
+      "selectedVariations": {},
+      "sections": {
+        "customTranslation": false,
+        "spelling": false,
+        "transliteration": false,
+        "numerology": false
+      }
+    },
+    "geez-mashafa-qeddus": {
+      "showOriginal": false,
+      "showOriginalLexicalTooltip": true,
+      "selectedVariations": {},
+      "sections": {
+        "customTranslation": false,
+        "spelling": false,
+        "transliteration": false,
+        "numerology": false
+      }
+    }
+  },
+  "holyViewer": {
+    "scope": "chapter",
+    "verse": 1,
+    "startVerse": 1,
+    "endVerse": 31,
+    "displayMode": "prismatic",
+    "fontSize": 28,
+    "showLineLabels": false,
+    "textAlignment": "center",
+    "variationMode": "overwrite",
+    "codices": {
+      "hebrew-stuttgartensia": {
+        "showOriginal": true,
+        "showOriginalLexicalTooltip": true,
+        "selectedVariations": {
+          "hebrew-stuttgartensia-custom-portuguese-translation": [
+            "4e5f9b02-385c-4192-bde4-1b5739dc797c",
+            "fc5ca031-196a-4f7e-aca5-808369ed3b93",
+            "fa93b96f-4c08-4bc3-90ea-8785542126b1"
+          ]
+        },
+        "sections": {
+          "customTranslation": true,
+          "spelling": false,
+          "transliteration": true,
+          "numerology": false
+        }
+      },
+      "samaritan-pentateuch": {
+        "showOriginal": false,
+        "showOriginalLexicalTooltip": true,
+        "selectedVariations": {},
+        "sections": {
+          "customTranslation": false,
+          "spelling": false,
+          "transliteration": false,
+          "numerology": false
+        }
+      },
+      "greek-septuagint": {
+        "showOriginal": false,
+        "showOriginalLexicalTooltip": true,
+        "selectedVariations": {},
+        "sections": {
+          "customTranslation": false,
+          "spelling": false,
+          "transliteration": false,
+          "numerology": false
+        }
+      },
+      "geez-mashafa-qeddus": {
+        "showOriginal": false,
+        "showOriginalLexicalTooltip": true,
+        "selectedVariations": {},
+        "sections": {
+          "customTranslation": false,
+          "spelling": false,
+          "transliteration": false,
+          "numerology": false
+        }
+      }
+    }
+  }
+}

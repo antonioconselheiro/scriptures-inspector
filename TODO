@@ -7,7 +7,7 @@ TODO
 [ ] - (gemini) (mvp fragmentator) posicionar letras da transcrição no svg usando a imagem como referência com a integração gemini
 [ ] - (holy viewer) Precisa poder exibir pedaços de um versículo
 [ ] - (holy viewer) Mecânica de sublinhar trechos do texto, para destacar um pedaço do que está se referindo no argumento
-[ ] - Está quebrando para derivar tradução personalizada, quebrou com genesis 1.1
+[ ] - Está quebrando para derivar tradução personalizada, quebrou com genesis 1.1, fazer com um projeto do zero
 [ ] - Quando houver opções disponíveis de uma variação de tradução, um icone deve ser exibido sobre o select para identificar isso
 [ ] - Variação de tradução onde números transcritos são transformados em algarismos preserva espaços entre os números, ex: "E viveu Jarede 1  6  2 anos e gerou AZ Enoque.". Pensar em solução.
 [ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença para situações que envolvem nomes, como Jarede

@@ -42,10 +42,22 @@
   color: CanvasText;
 }
 
+.settingsMessage {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1;
+  padding: 0.5rem;
+  background: Canvas;
+  color: CanvasText;
+}
+
 @media print {
   .returnToEditor,
   .exportConfig,
-  .clipboardMessage {
+  .clipboardMessage,
+  .settingsMessage,
+  app-project-navigation-toolbox {
     display: none;
   }
 }

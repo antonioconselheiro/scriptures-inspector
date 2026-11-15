@@ -59,6 +59,7 @@ test('help documents every command without a project and supports a command topi
   assert.match(result.stdout, /set-variation-value.*<value>/);
   assert.match(result.stdout, /list-scriptures/);
   assert.match(success('help', 'set-translation-size'), /--span VALUE --size VALUE/);
+  assert.match(success('help', 'read-translation'), /--variation-mode VALUE/);
   assert.notEqual(run('help', 'not-a-command').status, 0);
 });
 
@@ -77,6 +78,7 @@ test('edits translation spans and variation overrides with validated scripture o
   const spans = JSON.parse(success('list-translation-spans', ...target, ...verse));
   assert.deepEqual(spans[0], { span: 0, text: 'Alpha', size: 5, scripture: scripture.value, isWordOfGod: true });
   assert.equal(translationText(...target, ...verse, '--variations', id), 'Omega beta');
+  assert.equal(translationText(...target, ...verse, '--variations', id, '--variation-mode', 'merge'), 'Alpha (Omega) beta');
   assert.deepEqual(JSON.parse(success('list-variation-suggestions', ...target, ...verse, '--span', '0', '--variation', id)), ['Omega']);
   const lines = JSON.parse(success('read-all-translations', ...target, ...verse));
   assert.equal(lines.find(line => line.id === id).pieces.map(piece => piece.text).join(''), 'Omega beta');
@@ -166,6 +168,7 @@ test('selected translation displays original and combined variations in both col
     assert.doesNotMatch(plain.stdout, /\x1b\[38;2;/);
   }
   assert.notEqual(run('read-translation', ...options, '--mode', 'invalid').status, 0);
+  assert.notEqual(run('read-translation', ...options, '--variation-mode', 'invalid').status, 0);
 });
 
 test('Word of God display uses original marks, whole-word inheritance and translation overrides for every variation', () => {

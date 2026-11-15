@@ -69,6 +69,24 @@ npm run make -- --targets=@electron-forge/maker-rpm
 The resulting RPM is written under `out/make/rpm/`. Creating a package does
 not install it.
 
+## Current Preview
+
+Open **Preview Current** from the editor to view the current chapter in the
+Holy Viewer. Its settings let you choose custom translation variations in
+order: add them from the selector, remove them from their tags, or drag tags
+to change their precedence. `overwrite` keeps the last selected nonempty
+override for each span; `merge` keeps the base text and displays selected
+alternatives in parentheses, separated by semicolons. Associated original,
+interlinear and translation segments are underlined together while hovered or
+keyboard-focused.
+
+Holy Viewer settings are stored in the project-root `.scriptures-inspector`
+file and loaded again when the preview opens. The file is separate from the
+application's project data and preserves other settings stored there.
+The preview also includes the editor's book/chapter/verse navigation toolbox;
+changing books or chapters stays in the preview, and choosing a verse scrolls
+to it or selects it when it is outside the configured passage.
+
 ## Project and CLI conventions
 
 Commands expect a project directory containing `index.xenoglosproj`.
@@ -495,6 +513,18 @@ scriptures-inspector read-translation --project . --target hebrew-stuttgartensia
   --book GEN --chapter 1 --verse 1 --variations UUID1,UUID2
 ```
 
+Show the base text together with all selected nonempty alternatives in
+parentheses, in selection order:
+
+```sh
+si read-translation --project . --target hebrew-stuttgartensia \
+  --book GEN --chapter 1 --verse 1 --variations UUID1,UUID2 --variation-mode merge
+```
+
+The default `--variation-mode overwrite` preserves the usual behavior. In
+`merge` mode, each span is displayed as `base (alternative 1; alternative 2)`;
+unassociated text retains its usual color behavior.
+
 Display the combination with Word of God in red instead of Prismatic colors:
 
 ```sh
@@ -506,6 +536,8 @@ si read-translation --project . --target hebrew-stuttgartensia \
 piece fields as `read-all-translations`. In redirected JSON it returns two
 lines: `original` and `custom`, the latter containing the combined selected
 variations. In Word of God mode pieces also have a `wordOfGod` boolean.
+The optional `--variation-mode overwrite|merge` controls how selected
+variations are composed; `overwrite` is the default.
 
 `read-translation` reads the saved custom translation, not a reference
 translation, and does not create or derive an unsaved translation. Unknown

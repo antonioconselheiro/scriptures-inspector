@@ -21,7 +21,7 @@
     <p class="passageOmission">[...]</p>
   }
   @for (verse of displayedVerses; track verse.id) {
-    <article class="holyVerse">
+    <article class="holyVerse" [attr.data-verse]="verse.verse">
       <sup class="verseNumber">{{verse.verse}}</sup>
       <div>
         @for (line of orderedLines(verse); track $index) {
@@ -35,9 +35,14 @@
                   @if (piece.separator) {{{piece.text}}} @else if (pieceText(line, piece).length) {
                     <span
                       [attr.title]="line.type === 'customTranslation' || ((line.type === 'original' || line.type === 'interlinear' || line.type === 'spelling') && getCodexConfig(line.source).showOriginalLexicalTooltip) ? piece.title || null : null"
-                      [class]="config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : ''"
+                      [class]="(config.displayMode === 'prismatic' && piece.color !== undefined ? 'prisma' + piece.color : '') + (hasHoveredRelation(piece.associations) ? ' associationHover' : '')"
                       [attr.data-punctuation]="config.displayMode === 'prismatic' && piece.color === '' && isPunctuation(pieceText(line, piece)) ? '' : null"
                       [class.godsaid]="config.displayMode === 'wordOfGod' && piece.wordOfGod"
+                      [attr.tabindex]="piece.associations?.length ? 0 : null"
+                      (mouseenter)="setHoveredAssociations(piece.associations)"
+                      (mouseleave)="setHoveredAssociations([])"
+                      (focus)="setHoveredAssociations(piece.associations)"
+                      (blur)="setHoveredAssociations([])"
                     >{{pieceText(line, piece)}}</span>
                   }
                 }
@@ -88,6 +93,13 @@
         <select [(ngModel)]="draftConfig.displayMode" name="displayMode">
           <option value="wordOfGod">Word of God</option>
           <option value="prismatic">Prismatic</option>
+        </select>
+      </label>
+      <label>
+        Variation composition
+        <select [(ngModel)]="draftConfig.variationMode" name="variationMode">
+          <option value="overwrite">Overwrite</option>
+          <option value="merge">Merge in parentheses</option>
         </select>
       </label>
       <label>
@@ -173,14 +185,41 @@
           @if (codexVariations(source).length) {
             <fieldset>
               <legend>Custom translation variations</legend>
-              <p>When variations overlap, the last selected variation takes precedence.</p>
-              @for (option of codexVariations(source); track option.target + ':' + option.id) {
-                <label>
-                  <input type="checkbox" #variationCheckbox
-                    [checked]="(codexConfig.selectedVariations[option.target] || []).includes(option.id)"
-                    (change)="setVariation(option, variationCheckbox.checked)">
-                  {{option.name}}
-                </label>
+              @if (draftConfig.variationMode !== 'merge') {
+                <p>In overwrite mode, the last selected variation takes precedence.</p>
+              } @else {
+                <p>In merge mode, selected alternatives are shown together in parentheses.</p>
+              }
+              @for (target of variationTargets(source); track target) {
+                <div class="variationSelector">
+                  <label [for]="'variation-' + target">{{target}}</label>
+                  <div class="variationAdd">
+                    <select [id]="'variation-' + target" [(ngModel)]="selectedVariationToAdd[target]"
+                      [name]="'variation-' + target">
+                      <option value="">Select a variation</option>
+                      @for (option of codexVariations(source); track option.id) {
+                        @if (option.target === target && !(codexConfig.selectedVariations[target] || []).includes(option.id)) {
+                          <option [value]="option.id">{{option.name}}</option>
+                        }
+                      }
+                    </select>
+                    <button type="button" [disabled]="!selectedVariationToAdd[target]"
+                      (click)="addSelectedVariation(source, target)">Add</button>
+                  </div>
+                  <div class="variationTags" aria-label="Selected variations">
+                    @for (option of selectedVariationOptions(source, target); track option.id) {
+                      <span class="variationTag" draggable="true"
+                        (dragstart)="startVariationDrag(option, $event)"
+                        (dragover)="allowVariationDrop($event)"
+                        (drop)="dropVariation(option, $event)"
+                        (dragend)="endVariationDrag()">
+                        {{option.name}}
+                        <button type="button" [attr.aria-label]="'Remove ' + option.name"
+                          (click)="removeVariation(option)">×</button>
+                      </span>
+                    }
+                  </div>
+                </div>
               }
             </fieldset>
           }

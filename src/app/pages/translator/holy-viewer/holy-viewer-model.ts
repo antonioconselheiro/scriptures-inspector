@@ -5,6 +5,7 @@ export type HolyViewerSection =
   | 'numerology';
 
 export type HolyViewerAlignment = 'left' | 'center' | 'right' | 'justify';
+export type HolyViewerVariationMode = 'overwrite' | 'merge';
 
 export interface HolyViewerConfig {
   scope: 'verse' | 'range' | 'chapter';
@@ -15,6 +16,7 @@ export interface HolyViewerConfig {
   fontSize?: number;
   showLineLabels?: boolean;
   textAlignment?: HolyViewerAlignment;
+  variationMode?: HolyViewerVariationMode;
   codices: Record<string, HolyViewerCodexConfig>;
 }
 
@@ -34,6 +36,7 @@ export interface HolyViewerPiece {
   color?: string;
   wordOfGod?: boolean;
   variations?: Record<string, string>;
+  associations?: string[];
 }
 
 export interface HolyViewerVariationOption {
@@ -70,6 +73,7 @@ export const defaultHolyViewerConfig: HolyViewerConfig & { fontSize: number } = 
   fontSize: 20,
   showLineLabels: true,
   textAlignment: 'left',
+  variationMode: 'overwrite',
   codices: {}
 };
 

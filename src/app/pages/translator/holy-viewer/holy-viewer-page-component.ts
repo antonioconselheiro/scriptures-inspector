@@ -1,5 +1,6 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Data, Params, Router } from '@angular/router';
+import { skip, Subscription } from 'rxjs';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 import { Codex } from '@domain/codex-model';
@@ -15,6 +16,7 @@ import { ProjectStructureMetadata } from '@domain/project-structure-metadata-mod
 import { SourceBook } from '@domain/source-book-model';
 import { SourceVerse } from '@domain/source-verse-model';
 import { Word } from '@domain/word-model';
+import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
 import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { getProjectFn } from '@shared/project/get-project-fn';
@@ -22,6 +24,7 @@ import { ProjectCustomTranslationService } from '../translation-editor/shared/pr
 import { ProjectDataService } from '../translation-editor/shared/project/project-data-service';
 import { ProjectInterlinearService } from '../translation-editor/shared/project/project-interlinear-service';
 import { ProjectMetadataService } from '../translation-editor/shared/project/project-metadata-service';
+import { ProjectUserSettingsStore } from '@shared/project/project-user-settings-store';
 import {
   getCustomTranslationPresentationColor,
   getPresentationColor,
@@ -29,6 +32,7 @@ import {
 } from '../translation-editor/shared/scripture-presentation-core';
 import { HolyViewerComponent } from './holy-viewer-component';
 import {
+  defaultHolyViewerCodexConfig,
   defaultHolyViewerConfig,
   HolyViewerConfig,
   HolyViewerLine,
@@ -43,7 +47,7 @@ function isSupportedLanguage(language: string): language is LanguageUnionType {
 
 @Component({
   selector: 'app-holy-viewer-page',
-  imports: [HolyViewerComponent],
+  imports: [HolyViewerComponent, ProjectNavigationToolbox],
   template: `
     <button type="button" class="returnToEditor" (click)="returnToEditor()">
       <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24"
@@ -52,9 +56,13 @@ function isSupportedLanguage(language: string): language is LanguageUnionType {
       </svg>
       <span>Return to editor</span>
     </button>
+    <app-project-navigation-toolbox [project]="project" [preview]="true"></app-project-navigation-toolbox>
     <app-holy-viewer [verses]="verses" [config]="config" [variationOptions]="variationOptions" [configurable]="true"
-      (configChange)="config = $event"></app-holy-viewer>
+      (configChange)="onConfigChange($event)"></app-holy-viewer>
     <button type="button" class="exportConfig" (click)="exportConfig()">Export config to clipboard as JSON</button>
+    @if (settingsMessage) {
+      <p class="settingsMessage" role="status">{{settingsMessage}}</p>
+    }
     @if (clipboardMessage) {
       <p class="clipboardMessage" role="status">{{clipboardMessage}}</p>
     }
@@ -64,6 +72,7 @@ function isSupportedLanguage(language: string): language is LanguageUnionType {
 export class HolyViewerPageComponent implements OnInit, OnDestroy {
   project: Project | null = null;
   config: HolyViewerConfig = { ...structuredClone(defaultHolyViewerConfig), scope: 'chapter', fontSize: 28, textAlignment: 'center' };
+  settingsMessage = '';
   clipboardMessage = '';
   verses: HolyViewerVerse[] = [];
   variationOptions: HolyViewerVariationOption[] = [];
@@ -72,6 +81,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
   private codices: Record<string, Codex> = {};
   private projectData: ProjectData = {};
   private removeMenuListener: (() => void) | null = null;
+  private routeSubscriptions = new Subscription();
+  private settingsMessageTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -80,42 +91,27 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     private metadataService: ProjectMetadataService,
     private interlinearService: ProjectInterlinearService,
     private customTranslationService: ProjectCustomTranslationService,
+    private userSettings: ProjectUserSettingsStore,
+    private changeDetector: ChangeDetectorRef,
     private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
     this.project = getProjectFn();
-    const book = this.route.snapshot.paramMap.get('book')?.toUpperCase();
-    const chapter = Number(this.route.snapshot.paramMap.get('chapter'));
-    if (!this.project || !book || !Number.isInteger(chapter) || chapter < 1) {
+    if (!this.project) {
       throw new Error('Holy Viewer requires an open project and a valid book and chapter.');
     }
-
-    this.current = { book, chapter };
-    const data = this.route.snapshot.data;
-    this.sourceBooks = data['sources'] ?? {};
-    this.codices = this.route.parent?.snapshot.data['codex'] ?? data['codex'] ?? {};
-    this.projectData = data['targets'] ?? {};
-    this.variationOptions = this.collectVariationOptions(this.project.structures);
-    this.config = {
-      ...structuredClone(defaultHolyViewerConfig),
-      scope: 'chapter',
-      fontSize: 28,
-      textAlignment: 'center',
-      verse: 1,
-      startVerse: 1,
-      endVerse: 1
-    };
-    this.buildVerses();
-    const requestedVerse = Number(this.route.snapshot.queryParamMap.get('verse'));
-    if (Number.isInteger(requestedVerse) && this.verses.some(verse => verse.verse === requestedVerse)) {
-      this.config = {
-        ...this.config,
-        verse: requestedVerse,
-        startVerse: requestedVerse,
-        endVerse: requestedVerse
-      };
-    }
+    this.config = this.defaultPageConfig();
+    this.routeSubscriptions.add(this.route.params.subscribe(params => this.updateChapter(params, this.route.snapshot.data)));
+    this.routeSubscriptions.add(this.route.data.subscribe(data => {
+      if (this.current && Object.keys(data).length) {
+        this.updateChapter({ book: this.current.book, chapter: String(this.current.chapter) }, data);
+      }
+    }));
+    this.routeSubscriptions.add(this.route.queryParamMap.pipe(skip(1)).subscribe(params => {
+      this.selectNavigatedVerse(params.get('verse'), true);
+    }));
+    void this.loadUserSettings();
     this.removeMenuListener = window.api.onOpenProjectMenuAction(action => {
       if (action === 'return-to-editor') {
         this.ngZone.run(() => this.returnToEditor());
@@ -126,15 +122,140 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.removeMenuListener?.();
+    this.routeSubscriptions.unsubscribe();
+    this.clearSettingsMessageTimeout();
     void window.api.setPreviewActive(false).catch(error => console.error('Unable to update preview menu:', error));
+  }
+
+  private updateChapter(params: Params, data: Data): void {
+    const book = String(params['book'] ?? '').toUpperCase();
+    const chapter = Number(params['chapter']);
+    if (!book || !Number.isInteger(chapter) || chapter < 1) {
+      throw new Error('Holy Viewer requires an open project and a valid book and chapter.');
+    }
+    this.current = { book, chapter };
+    this.sourceBooks = data['sources'] ?? {};
+    this.codices = this.route.parent?.snapshot.data['codex'] ?? data['codex'] ?? {};
+    this.projectData = data['targets'] ?? {};
+    this.variationOptions = this.collectVariationOptions(this.project!.structures);
+    this.buildVerses();
+    this.applyRequestedVerse();
+  }
+
+  private async loadUserSettings(): Promise<void> {
+    const project = this.project;
+    if (!project) {
+      return;
+    }
+    try {
+      const settings = await this.userSettings.load(project);
+      if (settings?.['holyViewer'] !== undefined) {
+        if (!this.isHolyViewerConfig(settings['holyViewer'])) {
+          throw new Error('The saved Holy Viewer configuration is invalid.');
+        }
+        this.config = this.mergeHolyViewerConfig(settings['holyViewer']);
+        this.applyRequestedVerse();
+      }
+      this.changeDetector.markForCheck();
+    } catch (error) {
+      console.error('Unable to load project preview settings:', error);
+      this.showSettingsError('Unable to load saved preview settings. Check the console for details.');
+    }
+  }
+
+  private isHolyViewerConfig(value: unknown): value is HolyViewerConfig {
+    return Boolean(value && typeof value === 'object'
+      && 'scope' in value && 'displayMode' in value && 'codices' in value
+      && typeof value.codices === 'object' && value.codices !== null && !Array.isArray(value.codices));
+  }
+
+  private mergeHolyViewerConfig(saved: HolyViewerConfig): HolyViewerConfig {
+    return {
+      ...this.defaultPageConfig(),
+      ...saved,
+      codices: Object.fromEntries(Object.entries(saved.codices).map(([source, config]) => [
+        source,
+        { ...structuredClone(defaultHolyViewerCodexConfig), ...config }
+      ]))
+    };
+  }
+
+  private defaultPageConfig(): HolyViewerConfig {
+    return {
+      ...structuredClone(defaultHolyViewerConfig),
+      scope: 'chapter',
+      fontSize: 28,
+      textAlignment: 'center'
+    };
+  }
+
+  private applyRequestedVerse(): void {
+    this.selectNavigatedVerse(this.route.snapshot.queryParamMap.get('verse'));
+  }
+
+  private selectNavigatedVerse(value: string | null, allowScopeChange = false): void {
+    const requestedVerse = Number(value);
+    if (Number.isInteger(requestedVerse) && this.verses.some(verse => verse.verse === requestedVerse)) {
+      const inRange = requestedVerse >= Math.min(this.config.startVerse, this.config.endVerse)
+        && requestedVerse <= Math.max(this.config.startVerse, this.config.endVerse);
+      const leaveRange = allowScopeChange && this.config.scope === 'range' && !inRange;
+      this.config = {
+        ...this.config,
+        ...(leaveRange ? { scope: 'verse' as const } : {}),
+        verse: requestedVerse,
+        ...(this.config.scope === 'verse' || leaveRange
+          ? { startVerse: requestedVerse, endVerse: requestedVerse }
+          : {})
+      };
+    }
+  }
+
+  async onConfigChange(config: HolyViewerConfig): Promise<void> {
+    this.config = config;
+    this.clearSettingsMessage();
+    if (!this.project) {
+      return;
+    }
+    try {
+      await this.userSettings.save(this.project, 'holyViewer', config);
+      this.changeDetector.markForCheck();
+    } catch (error) {
+      console.error('Unable to save project preview settings:', error);
+      this.showSettingsError('Unable to save preview settings. Check the console for details.');
+    }
+  }
+
+  private showSettingsError(message: string): void {
+    this.clearSettingsMessageTimeout();
+    this.settingsMessage = message;
+    this.changeDetector.markForCheck();
+    this.settingsMessageTimeout = setTimeout(() => {
+      this.settingsMessage = '';
+      this.settingsMessageTimeout = null;
+      this.changeDetector.markForCheck();
+    }, 10_000);
+  }
+
+  private clearSettingsMessage(): void {
+    this.clearSettingsMessageTimeout();
+    this.settingsMessage = '';
+    this.changeDetector.markForCheck();
+  }
+
+  private clearSettingsMessageTimeout(): void {
+    if (this.settingsMessageTimeout !== null) {
+      clearTimeout(this.settingsMessageTimeout);
+      this.settingsMessageTimeout = null;
+    }
   }
 
   returnToEditor(): void {
     if (!this.current) {
       return;
     }
+    const verse = this.config.verse;
     void this.router.navigateByUrl(
-      `/translator/book/${encodeURIComponent(this.current.book)}/chapter/${this.current.chapter}`
+      `/translator/book/${encodeURIComponent(this.current.book)}/chapter/${this.current.chapter}?verse=${verse}`
     );
   }
 
@@ -143,9 +264,11 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     try {
       await navigator.clipboard.writeText(JSON.stringify(this.config, null, 2));
       this.clipboardMessage = 'Configuration copied to clipboard.';
+      this.changeDetector.markForCheck();
     } catch (error) {
       console.error('Unable to copy the Holy Viewer configuration:', error);
       this.clipboardMessage = 'Unable to copy the configuration to the clipboard.';
+      this.changeDetector.markForCheck();
     }
   }
 
@@ -194,6 +317,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     const parsedPatterns = this.metadataService.parsePattern(metadata.patterns, language);
     const bookName = codex.books?.[current.book]?.name ?? current.book;
     return chapter.verses.map(verse => {
+      const associationScope = `${current.book}:${current.chapter}:${verse.verse}`;
       const matrix = this.dataService.splitIntoMatrix(language, parsedPatterns, verse.text);
       const lines: HolyViewerLine[] = [
         {
@@ -206,6 +330,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
             return {
               title: lexical.value,
               color: getPresentationColor(segment.index),
+              associations: [this.associationId(structure.source, segment.index, associationScope)],
               wordOfGod: this.metadataService.getScriptureMetadataWordOfGod(
                 metadata, language, current, verse.verse, { segments: [segment] }
               )
@@ -216,14 +341,26 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
 
       this.addCustomTranslationLines(
         lines, structure.customTranslationTarget, sourceBook, current, verse, matrix, metadata, language,
-        structure.source, 'Custom translation'
+        structure.source, 'Custom translation', associationScope
       );
       this.addInterlinearLines(
-        lines, structure.interlinear ?? [], structure.source, current, verse, matrix, metadata, language
+        lines, structure.interlinear ?? [], structure.source, current, verse, matrix, metadata, language,
+        associationScope, undefined, getPresentationColor, segmentIndex => [
+          this.associationId(structure.source, segmentIndex, associationScope)
+        ]
       );
-      this.addSpellingLines(lines, matrix, languageName, structure.source, metadata, language);
-      this.addTransliterationLine(lines, matrix, languageName, structure.source);
-      this.addNumerologyLines(lines, matrix, languageName, structure.source);
+      this.addSpellingLines(
+        lines, matrix, languageName, structure.source, metadata, language,
+        getPresentationColor, segmentIndex => [this.associationId(structure.source, segmentIndex, associationScope)]
+      );
+      this.addTransliterationLine(
+        lines, matrix, languageName, structure.source, getPresentationColor,
+        segmentIndex => [this.associationId(structure.source, segmentIndex, associationScope)]
+      );
+      this.addNumerologyLines(
+        lines, matrix, languageName, structure.source, getPresentationColor,
+        segmentIndex => [this.associationId(structure.source, segmentIndex, associationScope)]
+      );
 
       return {
         id: `${structure.source}-${verse.verse}`,
@@ -243,6 +380,10 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       ...word.segments.map(segment => ({ text: segment.word, ...getAttributes(segment) })),
       ...(word.separator ? [{ text: word.separator, separator: true }] : [])
     ]);
+  }
+
+  private associationId(source: string, segmentIndex: number, scope: string): string {
+    return `${source}:${scope}:${segmentIndex}`;
   }
 
   private collectVariationOptions(structures: ProjectStructureMetadata[]): HolyViewerVariationOption[] {
@@ -278,8 +419,10 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     baseWordMatrix: Word[],
     baseMetadata: BookMetadataTarget,
     baseLanguage: ReturnType<typeof getProjectLanguageFn>,
+    associationScope: string,
     inheritedWordOfGod: (segmentIndex: number) => boolean = () => false,
-    inheritedColor: (segmentIndex: number) => string = getPresentationColor
+    inheritedColor: (segmentIndex: number) => string = getPresentationColor,
+    inheritedAssociations: (segmentIndex: number) => string[] = () => []
   ): void {
     for (const interlinear of interlinearStructures) {
       const interlinearBook = this.sourceBooks[interlinear.source];
@@ -325,6 +468,15 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         );
         return originIndex === null ? '' : inheritedColor(originIndex);
       };
+      const relatedAssociations = (segmentIndex: number): string[] => {
+        const originIndex = this.interlinearService.getOriginWordIndex(
+          target, source, interlinearCurrent, interlinearVerse, segmentIndex
+        );
+        return [
+          this.associationId(interlinear.source, segmentIndex, associationScope),
+          ...(originIndex === null ? [] : inheritedAssociations(originIndex))
+        ];
+      };
       lines.push({
         type: 'interlinear',
         source: interlinear.source,
@@ -336,6 +488,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
             title: this.dataService.getLexical(
               interlinearMetadata, language, segment.word, segment.morpheme
             ).value,
+            associations: relatedAssociations(segment.index),
             wordOfGod: relatedWordOfGod(segment.index) || this.metadataService.getScriptureMetadataWordOfGod(
               interlinearMetadata, language, interlinearCurrent, interlinearVerse.verse, { segments: [segment] }
             )
@@ -345,14 +498,18 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       this.addCustomTranslationLines(
         lines, interlinear.customTranslationTarget, interlinearBook, interlinearCurrent, interlinearVerse,
         matrix, interlinearMetadata, language, interlinear.source, `Custom translation · ${codex.name}`,
-        relatedWordOfGod, relatedColor
+        associationScope, relatedWordOfGod, relatedColor, relatedAssociations
       );
-      this.addSpellingLines(lines, matrix, codex.language, interlinear.source, interlinearMetadata, language, relatedColor);
-      this.addTransliterationLine(lines, matrix, codex.language, interlinear.source, relatedColor);
-      this.addNumerologyLines(lines, matrix, codex.language, interlinear.source, relatedColor);
+      this.addSpellingLines(
+        lines, matrix, codex.language, interlinear.source, interlinearMetadata, language,
+        relatedColor, relatedAssociations
+      );
+      this.addTransliterationLine(lines, matrix, codex.language, interlinear.source, relatedColor, relatedAssociations);
+      this.addNumerologyLines(lines, matrix, codex.language, interlinear.source, relatedColor, relatedAssociations);
       this.addInterlinearLines(
         lines, interlinear.interlinear ?? [], interlinear.source, interlinearCurrent, interlinearVerse,
-        matrix, interlinearMetadata, language, relatedWordOfGod, relatedColor
+        matrix, interlinearMetadata, language, associationScope, relatedWordOfGod, relatedColor,
+        relatedAssociations
       );
     }
   }
@@ -368,8 +525,10 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
     language: ReturnType<typeof getProjectLanguageFn>,
     source: string,
     label: string,
+    associationScope: string,
     relatedWordOfGod: (segmentIndex: number) => boolean = () => false,
-    relatedColor?: (segmentIndex: number) => string
+    relatedColor?: (segmentIndex: number) => string,
+    relatedAssociations?: (segmentIndex: number) => string[]
   ): void {
     if (!targetKey) {
       return;
@@ -400,6 +559,11 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         text,
         title: sourceSegment?.word,
         variations,
+        associations: linkedIndex === null
+          ? []
+          : relatedAssociations?.(linkedIndex) ?? [
+            this.associationId(source, linkedIndex, associationScope)
+          ],
         color: relatedColor && linkedIndex !== null
           ? relatedColor(linkedIndex)
           : getCustomTranslationPresentationColor(metadata?.value ?? ''),
@@ -423,7 +587,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
   private addSpellingLines(
     lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
     metadata: BookMetadataTarget, languageAttributes: ReturnType<typeof getProjectLanguageFn>,
-    color: (index: number) => string = getPresentationColor
+    color: (index: number) => string = getPresentationColor,
+    associations: (index: number) => string[] = index => [this.associationId(source, index, '')]
   ): void {
     for (const spelling of languageMetadataRecord[language].alternativeSpelling ?? []) {
       lines.push({
@@ -433,6 +598,7 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         optionId: spelling.label,
         pieces: this.matrixPieces(matrix, segment => ({
           color: color(segment.index),
+          associations: associations(segment.index),
           title: this.dataService.getLexical(metadata, languageAttributes, segment.word, segment.morpheme).value
         })).map(piece => ({
           ...piece,
@@ -444,7 +610,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
 
   private addNumerologyLines(
     lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
-    color: (index: number) => string = getPresentationColor
+    color: (index: number) => string = getPresentationColor,
+    associations: (index: number) => string[] = index => [this.associationId(source, index, '')]
   ): void {
     for (const algorithm of languageMetadataRecord[language].numerology ?? []) {
       lines.push({
@@ -455,7 +622,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
         pieces: matrix.flatMap(word => [
           ...word.segments.map(segment => ({
             text: String(algorithm.calc(segment.word)),
-            color: color(segment.index)
+            color: color(segment.index),
+            associations: associations(segment.index)
           })),
           ...(word.separator ? [{
             text: language === 'hebrew' && algorithm.label === 'gematria' ? ' ' : word.separator,
@@ -468,7 +636,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
 
   private addTransliterationLine(
     lines: HolyViewerLine[], matrix: Word[], language: LanguageUnionType, source: string,
-    color: (index: number) => string = getPresentationColor
+    color: (index: number) => string = getPresentationColor,
+    associations: (index: number) => string[] = index => [this.associationId(source, index, '')]
   ): void {
     const transliteration = languageMetadataRecord[language].transliteration;
     if (!transliteration) {
@@ -482,7 +651,8 @@ export class HolyViewerPageComponent implements OnInit, OnDestroy {
       pieces: matrix.flatMap(word => [
         ...word.segments.map(segment => ({
           text: transliteration(segment.word),
-          color: color(segment.index)
+          color: color(segment.index),
+          associations: associations(segment.index)
         })),
         ...(word.separator ? [{ text: word.separator, separator: true }] : [])
       ])

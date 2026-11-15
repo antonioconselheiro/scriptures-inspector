@@ -24,6 +24,7 @@ import { debounceTime, Subscription } from 'rxjs';
 export class ProjectNavigationToolbox implements OnInit, OnDestroy {
 
   @Input() project: Project | null = null;
+  @Input() preview = false;
   @Output() onProject = new EventEmitter<Project>();
   @Output() onCurrentChapter = new EventEmitter<CurrentChapter>();
   @Output() onCurrentArtifact = new EventEmitter<CurrentArtifact>();
@@ -134,7 +135,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
   }
 
   private getVerseTitles(): HTMLElement[] {
-    return Array.from(document.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse]'));
+    return Array.from(document.querySelectorAll<HTMLElement>('h2.verseTitle[data-verse], .holyVerse[data-verse]'));
   }
 
   private readProjectFromSession(): void {
@@ -301,7 +302,9 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
         alert('Choose a valid chapter number.');
         return;
       }
-      path = ['/translator/book', key, 'chapter', chapterOrArtifact];
+      path = this.preview
+        ? ['/translator/preview/book', key, 'chapter', chapterOrArtifact]
+        : ['/translator/book', key, 'chapter', chapterOrArtifact];
       verseToScroll = this.formSelectedVerse !== null && Number.isInteger(this.formSelectedVerse) && this.formSelectedVerse > 0
         ? this.formSelectedVerse
         : null;
@@ -331,7 +334,7 @@ export class ProjectNavigationToolbox implements OnInit, OnDestroy {
         && this.current.collection === targetPage.collection
         && this.current.artifact === targetPage.artifact;
 
-    if (!isCurrentPage) {
+    if (!this.preview && !isCurrentPage) {
       try {
         await this.systemService.saveCurrentPageImmediately();
       } catch (error) {

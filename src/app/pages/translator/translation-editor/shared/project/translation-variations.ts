@@ -1,5 +1,7 @@
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
 
+export type VariationCompositionMode = 'overwrite' | 'merge';
+
 export function removeTranslationVariation(book: BookTranslationTarget, id: string): void {
   delete book.variations[id];
   for (const chapter of book.chapters) {
@@ -15,4 +17,24 @@ export function selectVariationText(original: string, variations: Record<string,
     if (value) return value;
   }
   return original;
+}
+
+export function composeVariationText(
+  original: string,
+  variations: Record<string, string>,
+  selected: string[],
+  mode: VariationCompositionMode = 'overwrite'
+): string {
+  if (mode === 'overwrite') {
+    return selectVariationText(original, variations, selected);
+  }
+
+  const alternatives = selected
+    .map(id => variations[id])
+    .filter((value): value is string => Boolean(value));
+  if (!alternatives.length) {
+    return original;
+  }
+  const base = original ? `${original} ` : '';
+  return `${base}(${alternatives.join('; ')})`;
 }

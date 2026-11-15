@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { Project } from '@domain/project-model';
+import { ProjectUserSettingsStore } from '@shared/project/project-user-settings-store';
+import { CollectionsStatefull } from '@shared/system/collections-statefull';
+import { BehaviorSubject, of } from 'rxjs';
 import { HolyViewerPageComponent } from './holy-viewer-page-component';
 
 describe('HolyViewerPageComponent', () => {
@@ -8,14 +11,19 @@ describe('HolyViewerPageComponent', () => {
   let menuAction: (action: 'return-to-editor') => void;
   let removeMenuListener: jasmine.Spy;
   let setPreviewActive: jasmine.Spy;
+  let userSettings: jasmine.SpyObj<ProjectUserSettingsStore>;
 
   beforeEach(() => {
     removeMenuListener = jasmine.createSpy('removeMenuListener');
     setPreviewActive = jasmine.createSpy('setPreviewActive').and.resolveTo();
+    userSettings = jasmine.createSpyObj<ProjectUserSettingsStore>('ProjectUserSettingsStore', ['load', 'save']);
+    userSettings.load.and.resolveTo(null);
+    userSettings.save.and.resolveTo();
     Object.defineProperty(window, 'api', {
       configurable: true,
       value: {
         setPreviewActive,
+        readOptionalJsonFile: jasmine.createSpy('readOptionalJsonFile').and.resolveTo(null),
         onOpenProjectMenuAction: (callback: (action: 'return-to-editor') => void) => {
           menuAction = callback;
           return removeMenuListener;
@@ -62,12 +70,25 @@ describe('HolyViewerPageComponent', () => {
       ]
     };
     spyOn(sessionStorage, 'getItem').and.returnValue(JSON.stringify(project));
+    const queryParamMap = new BehaviorSubject(convertToParamMap({ verse: '2' }));
+    userSettings.load.and.resolveTo({
+      holyViewer: {
+        scope: 'chapter',
+        displayMode: 'prismatic',
+        variationMode: 'merge',
+        codices: {}
+      }
+    });
 
     TestBed.configureTestingModule({
       providers: [
         {
           provide: ActivatedRoute,
           useValue: {
+            params: of({ book: 'GEN', chapter: '1' }),
+            data: of({}),
+            queryParamMap,
+            queryParams: of({ verse: '2' }),
             snapshot: {
               paramMap: convertToParamMap({ book: 'GEN', chapter: '1' }),
               queryParamMap: convertToParamMap({ verse: '2' }),
@@ -186,19 +207,25 @@ describe('HolyViewerPageComponent', () => {
             }
           }
         },
-        { provide: Router, useValue: router }
+        { provide: Router, useValue: router },
+        {
+          provide: CollectionsStatefull,
+          useValue: { currentValue: [], data$: of([]), update: jasmine.createSpy('update') }
+        },
+        { provide: ProjectUserSettingsStore, useValue: userSettings }
       ]
     });
 
     const fixture = TestBed.createComponent(HolyViewerPageComponent);
     fixture.detectChanges();
+    await fixture.whenStable();
 
     const printRules = Array.from(document.querySelectorAll('style'))
       .flatMap(style => Array.from(style.sheet?.cssRules ?? []))
       .filter((rule): rule is CSSMediaRule => rule instanceof CSSMediaRule && rule.conditionText === 'print')
       .flatMap(rule => Array.from(rule.cssRules))
       .filter((rule): rule is CSSStyleRule => rule instanceof CSSStyleRule && rule.style.display === 'none');
-    for (const selector of ['.returnToEditor', '.exportConfig', '.holyViewerToolbar', '.holyViewerDialogBackdrop']) {
+    for (const selector of ['.returnToEditor', '.exportConfig', '.holyViewerToolbar', '.holyViewerDialogBackdrop', 'app-project-navigation-toolbox']) {
       expect(printRules.some(rule => rule.selectorText.includes(selector))).withContext(selector).toBeTrue();
     }
 
@@ -207,13 +234,32 @@ describe('HolyViewerPageComponent', () => {
     expect(fixture.componentInstance.config.displayMode).toBe('prismatic');
     expect(fixture.componentInstance.config.fontSize).toBe(28);
     expect(fixture.componentInstance.config.textAlignment).toBe('center');
+    expect(fixture.componentInstance.config.variationMode).toBe('merge');
     expect(fixture.nativeElement.querySelector('.holyViewer').style.textAlign).toBe('center');
+    fixture.componentInstance.config = {
+      ...fixture.componentInstance.config,
+      scope: 'range',
+      startVerse: 1,
+      endVerse: 2
+    };
+    queryParamMap.next(convertToParamMap({ verse: '1' }));
+    expect(fixture.componentInstance.config.scope).toBe('range');
+    expect(fixture.componentInstance.config.startVerse).toBe(1);
+    expect(fixture.componentInstance.config.endVerse).toBe(2);
+    queryParamMap.next(convertToParamMap({ verse: '2' }));
+    fixture.componentInstance.config = {
+      ...fixture.componentInstance.config,
+      scope: 'chapter',
+      variationMode: 'overwrite',
+      startVerse: 1,
+      endVerse: 2
+    };
     expect(setPreviewActive).toHaveBeenCalledOnceWith(true);
     menuAction('return-to-editor');
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/translator/book/GEN/chapter/1');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/translator/book/GEN/chapter/1?verse=2');
     router.navigateByUrl.calls.reset();
     fixture.nativeElement.querySelector('.returnToEditor').click();
-    expect(router.navigateByUrl).toHaveBeenCalledWith('/translator/book/GEN/chapter/1');
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/translator/book/GEN/chapter/1?verse=2');
     expect(fixture.nativeElement.querySelectorAll('.holyVerse').length).toBe(2);
     expect(fixture.nativeElement.querySelector('.passageTitle').textContent.trim()).toBe('GEN 1');
     expect(fixture.nativeElement.querySelector('.returnToEditor svg')).not.toBeNull();
@@ -264,10 +310,20 @@ describe('HolyViewerPageComponent', () => {
       .toEqual(['original', 'related', 'geez']);
     expect(root.textContent).not.toContain('Lexical values');
     const selectVariation = (labelText: string): void => {
-      const label = Array.from(root.querySelectorAll('fieldset label'))
-        .find(item => item.textContent?.includes(labelText));
-      expect(label).toBeDefined();
-      label!.querySelector<HTMLInputElement>('input')!.click();
+      const checkboxLabel = Array.from(root.querySelectorAll('fieldset label'))
+        .find(item => item.textContent?.includes(labelText) && item.querySelector('input[type="checkbox"]'));
+      if (checkboxLabel) {
+        checkboxLabel.querySelector<HTMLInputElement>('input')!.click();
+      } else {
+        const select = Array.from(root.querySelectorAll<HTMLSelectElement>('.variationSelector select'))
+          .find(item => Array.from(item.options).some(option => option.textContent?.includes(labelText)));
+        expect(select).toBeDefined();
+        const option = Array.from(select!.options).find(item => item.textContent?.includes(labelText))!;
+        select!.value = option.value;
+        select!.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+        select!.parentElement!.querySelector<HTMLButtonElement>('button')!.click();
+      }
       fixture.detectChanges();
     };
     selectVariation('Elohim no singular');
@@ -290,6 +346,34 @@ describe('HolyViewerPageComponent', () => {
     fixture.detectChanges();
     Array.from(root.querySelectorAll('button')).find(button => button.textContent?.trim() === 'Apply')!.click();
     fixture.detectChanges();
+    await fixture.whenStable();
+    expect(userSettings.save).toHaveBeenCalledWith(
+      project,
+      'holyViewer',
+      jasmine.objectContaining({ variationMode: 'overwrite' })
+    );
+    expect(root.querySelector('.settingsMessage')).toBeNull();
+    const consoleError = spyOn(console, 'error');
+    userSettings.save.and.rejectWith(new Error('Settings file unavailable'));
+    jasmine.clock().install();
+    try {
+      await fixture.componentInstance.onConfigChange(fixture.componentInstance.config);
+      fixture.detectChanges();
+      expect(root.querySelector('.settingsMessage')?.textContent)
+        .toContain('Unable to save preview settings');
+      jasmine.clock().tick(9_999);
+      fixture.detectChanges();
+      expect(root.querySelector('.settingsMessage')).not.toBeNull();
+      jasmine.clock().tick(1);
+      fixture.detectChanges();
+      expect(root.querySelector('.settingsMessage')).toBeNull();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+    expect(consoleError).toHaveBeenCalledWith(
+      'Unable to save project preview settings:',
+      jasmine.any(Error)
+    );
     expect(fixture.nativeElement.textContent).toContain('No princípio criou Deus ➜ os céus e ➜ a terra.');
     expect(fixture.nativeElement.textContent).toContain('Unido');
     const secondVerse = root.querySelectorAll('.holyVerse')[1];
@@ -313,9 +397,24 @@ describe('HolyViewerPageComponent', () => {
     const relatedLine = verse.lines.find(line => line.variationTarget === 'related-translation');
     expect(relatedLine?.pieces[0].wordOfGod).toBeTrue();
     expect(relatedLine?.pieces[0].color).toBe('1');
+    expect(relatedLine?.pieces[0].associations).toContain('original:GEN:1:1:0');
+    const relatedSourceLineData = verse.lines.find(line => line.type === 'interlinear' && line.source === 'related');
+    expect(relatedSourceLineData?.pieces[0].associations).toContain('original:GEN:1:1:0');
     const relatedTranslation = lines.find(line => line.textContent?.includes('Unido'))!;
     expect(Array.from(relatedTranslation.querySelectorAll(':scope > span:last-child > span'))
       .find(span => span.textContent === 'Unido')?.getAttribute('title')).toBe('גד');
+    const relatedSourceLineElement = lines.find(line => line.textContent?.includes('Interlinear · Related'))!;
+    const relatedSegment = relatedSourceLineElement.querySelector('[lang="hebrew"] span') as HTMLElement;
+    relatedSegment.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    expect(relatedSegment.classList.contains('associationHover')).toBeTrue();
+    const originalSegment = root.querySelector('.holyVerse .holyLine [lang="hebrew"] span') as HTMLElement;
+    expect(originalSegment.classList.contains('associationHover')).toBeTrue();
+    const associatedTranslation = lines.find(line => line.textContent?.includes('No princípio'))!
+      .querySelector('[title="אב"]') as HTMLElement;
+    expect(associatedTranslation.classList.contains('associationHover')).toBeTrue();
+    const secondVerseElement = root.querySelectorAll<HTMLElement>('.holyVerse')[1];
+    expect(secondVerseElement.querySelectorAll('.associationHover').length).toBe(0);
     fixture.componentInstance.config = { ...fixture.componentInstance.config, displayMode: 'wordOfGod' };
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -332,13 +431,12 @@ describe('HolyViewerPageComponent', () => {
       await fixture.whenStable();
       fixture.detectChanges();
       expect(JSON.parse(writeText.calls.mostRecent().args[0])).toEqual(fixture.componentInstance.config);
-      expect(root.querySelector('[role="status"]')?.textContent).toContain('Configuration copied');
+      expect(root.querySelector('.clipboardMessage')?.textContent).toContain('Configuration copied');
       writeText.and.rejectWith(new Error('Clipboard unavailable'));
-      spyOn(console, 'error');
       exportButton.click();
       await fixture.whenStable();
       fixture.detectChanges();
-      expect(root.querySelector('[role="status"]')?.textContent).toContain('Unable to copy');
+      expect(root.querySelector('.clipboardMessage')?.textContent).toContain('Unable to copy');
       expect(console.error).toHaveBeenCalled();
     } finally {
       if (clipboardDescriptor) {
