@@ -20,6 +20,7 @@
     "build:web": "rm -rf dist; ng build --base-href ./ --deploy-url ./; mv dist/browser/** dist; rm -rf dist/browser",
     "build:cli": "tsc -p tsconfig.cli.json && esbuild cli/index.ts --bundle --platform=node --format=esm --outfile=cli/dist/index.mjs",
     "build:lnx": "npm run build:web && npm run build:cli && electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png && rm -rf dist && mkdir -p dist && cp -r out/make/deb/x64/* dist/ && rm -rf out",
+    "build:debug": "npm run build:web && npm run build:cli && SCRIPTURES_INSPECTOR_DEBUG_BUILD=1 electron-forge make --targets=@electron-forge/maker-deb --icon=public/script.png && rm -rf dist && mkdir -p dist && cp -r out/make/deb/x64/* dist/ && rm -rf out",
     "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
     "prepackage": "npm run build:cli",
     "package": "electron-forge package",

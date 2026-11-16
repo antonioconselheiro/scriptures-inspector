@@ -1,5 +1,6 @@
 const { app, protocol, net, Menu, BrowserWindow, ipcMain, dialog, nativeImage } = require('electron/main');
 const path = require('path');
+const fsSync = require('fs');
 const fs = require('fs/promises');
 const { fileURLToPath, pathToFileURL } = require('url');
 
@@ -345,6 +346,7 @@ ipcMain.handle('read-image-base64', async (_, filePath) => {
 
 
 const isDev = !app.isPackaged;
+const isDebugBuild = isDev || fsSync.existsSync(path.join(process.resourcesPath, 'debug-menu-enabled'));
 
 function showSplash() {
   if (splashWindow && !splashWindow.isDestroyed()) {
@@ -466,10 +468,12 @@ function updateApplicationMenu(codices = []) {
         click: () => sendProjectMenuAction(previewActive ? 'return-to-editor' : 'preview-current')
       },
       { type: 'separator' },
-      { role: 'reload' },
-      { role: 'forceReload' },
-      { role: 'toggleDevTools' },
-      { type: 'separator' },
+      ...(isDebugBuild ? [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' }
+      ] : []),
       { role: 'resetZoom' },
       { role: 'zoomIn' },
       { role: 'zoomOut' },

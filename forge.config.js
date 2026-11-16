@@ -6,7 +6,12 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: iconPath,
-    extraResource: [path.resolve(__dirname, 'packaging/linux/scriptures-inspector')],
+    extraResource: [
+      path.resolve(__dirname, 'packaging/linux/scriptures-inspector'),
+      ...(process.env.SCRIPTURES_INSPECTOR_DEBUG_BUILD === '1'
+        ? [path.resolve(__dirname, 'packaging/debug-menu-enabled')]
+        : []),
+    ],
   },
   rebuildConfig: {},
   makers: [

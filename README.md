@@ -50,7 +50,10 @@ si list-books --project .
 For development, install the dependencies and use `npm run build:cli` to build
 the CLI. It can then be invoked as `node cli/dist/index.mjs ...`. The `open`
 command requires the installed launcher. `npm run test:cli` builds and runs the
-CLI tests. `npm run build` builds the Linux Debian application package.
+CLI tests. `npm run build` (or `npm run build:lnx`) builds the standard Linux
+Debian application package without the **Reload**, **Force Reload**, and
+**Toggle Developer Tools** menu options. Use `npm run build:debug` to build a
+package with those debugging options enabled.
 The devcontainer also includes `rpmbuild` from Debian's `rpm` package. After
 rebuilding the devcontainer, build the web application and create an RPM with:
 

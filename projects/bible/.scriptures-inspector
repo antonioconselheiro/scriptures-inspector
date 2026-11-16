@@ -54,10 +54,10 @@
     }
   },
   "holyViewer": {
-    "scope": "chapter",
+    "scope": "range",
     "verse": 1,
     "startVerse": 1,
-    "endVerse": 31,
+    "endVerse": 2,
     "displayMode": "prismatic",
     "fontSize": 28,
     "showLineLabels": false,
