@@ -32,6 +32,14 @@
               "3": {
                 "value": "Elohim"
               }
+            },
+            "8b8cd1ca-38e1-42f1-ba14-a08f215bb4e3": {
+              "4": {
+                "value": "➜"
+              },
+              "8": {
+                "value": "➜"
+              }
             }
           },
           "metadata": [
@@ -631,8 +639,7 @@
             },
             {
               "size": 2,
-              "value": "",
-              "isWordOfGod": true
+              "value": ""
             },
             {
               "size": 10,
@@ -847,7 +854,7 @@
             "end": "8",
             "index": 7
           },
-          "text": "E então chamou Divos ao firmamento Céus e houve tarde e houve manhã: Dia Dois.",
+          "text": "E então chamou Divos ao firmamento Céus e houve tarde e houve manhã: dia dois.",
           "variations": {
             "1389d4a7-688a-473d-89bb-372656f9a73b": {
               "3": {
@@ -1079,7 +1086,12 @@
         null,
         null,
         null,
-        null,
+        {
+          "verse": 14,
+          "text": "",
+          "variations": {},
+          "metadata": []
+        },
         {
           "verse": 15,
           "text": "E sejam luminosas no Firmamento, os Céus, para iluminar sobre a Terra. E assim foi.",
@@ -2705,9 +2717,6 @@
     }
   ],
   "variations": {
-    "46dd6cb6-96ba-4ed1-a965-c37880f4bb4d": {
-      "name": "Aleph e Taw como ⱯƵ"
-    },
     "1389d4a7-688a-473d-89bb-372656f9a73b": {
       "name": "Elohim no singular"
     },
@@ -2717,11 +2726,26 @@
     "fa93b96f-4c08-4bc3-90ea-8785542126b1": {
       "name": "Números como Algarismos"
     },
+    "0e468efa-7d94-487f-868f-07c8fe177c85": {
+      "name": "Aleph e Taw como 𐤀𐤕"
+    },
+    "46dd6cb6-96ba-4ed1-a965-c37880f4bb4d": {
+      "name": "Aleph e Taw como ⱯƵ"
+    },
     "4e5f9b02-385c-4192-bde4-1b5739dc797c": {
       "name": "Aleph e Taw como ➜"
     },
     "8b8cd1ca-38e1-42f1-ba14-a08f215bb4e3": {
-      "name": "ⱯƵ para nome e ➜ para indicador"
+      "name": "Aleph e Taw  como ⱯƵ para nome e ➜ para indicador"
+    },
+    "44e6d0b8-f4b8-4563-93e8-75917237ae63": {
+      "name": "Sinal como A e Z"
+    },
+    "8d58253e-ef4b-4255-b562-a45f3d4573db": {
+      "name": "Sinal como 𐤀 e 𐤕"
+    },
+    "38028e5e-40bc-4078-9a24-ce59eccc24fc": {
+      "name": "Sinal como Ɐ e Ƶ"
     }
   }
 }

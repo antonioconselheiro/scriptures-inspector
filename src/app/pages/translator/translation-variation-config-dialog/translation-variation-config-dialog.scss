@@ -1,0 +1,32 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  .dragHandle {
+    cursor: grab;
+  }
+
+  .dragHandle:active {
+    cursor: grabbing;
+  }
+
+  .cdk-drag-preview {
+    background: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+  }
+
+  .cdk-drag-placeholder {
+    opacity: .3;
+  }
+
+  .cdk-drag-animating,
+  tbody.cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
+    transition: transform 250ms;
+  }
+}

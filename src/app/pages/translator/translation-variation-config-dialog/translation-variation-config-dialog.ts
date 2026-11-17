@@ -1,3 +1,4 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
@@ -9,7 +10,8 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-translation-variation-config-dialog',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   templateUrl: './translation-variation-config-dialog.html',
   styleUrl: './translation-variation-config-dialog.scss',
@@ -49,6 +51,19 @@ export class TranslationVariationConfigDialog extends ModalableDirective<BookTra
         ...book.variations[key]
       }
     });
+  }
+
+  drop(event: CdkDragDrop<BookTranslationTarget['variations']>): void {
+    const book = this.book;
+    if (!book || event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    const variationKeys = Object.keys(book.variations);
+    moveItemInArray(variationKeys, event.previousIndex, event.currentIndex);
+    book.variations = Object.fromEntries(
+      variationKeys.map(key => [key, book.variations[key]])
+    );
   }
 
   onChangeVariantName(id: string, value: string): void {
