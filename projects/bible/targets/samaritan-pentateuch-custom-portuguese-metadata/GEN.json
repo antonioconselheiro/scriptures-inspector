@@ -8,6 +8,32 @@
           "metadata": {}
         }
       ]
+    },
+    {
+      "chapter": 3,
+      "verses": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 9,
+          "metadata": {
+            "13->J": {
+              "segment": ">J",
+              "isWordOfGod": true
+            },
+            "14-KH": {
+              "segment": "KH",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
     }
   ],
   "patterns": {
@@ -20,7 +46,11 @@
       "K",
       "M",
       "N",
-      "T"
+      "T",
+      "JT",
+      ">J",
+      "KH",
+      ">"
     ],
     "suffix": [
       "H",
@@ -34,7 +64,8 @@
       "J",
       "M",
       "JM",
-      "KM"
+      "KM",
+      "TJ"
     ],
     "lexeme": [
       "BR>",
@@ -172,7 +203,10 @@
       "TP>R",
       "T>NH",
       "XGRWT",
-      "<LJ"
+      "<LJ",
+      "KH",
+      ">NKJ",
+      ">RY"
     ]
   },
   "lexical": {
@@ -194,7 +228,7 @@
     },
     "W": {
       "prefix": "e",
-      "suffix": "-vos|seu|dele|nosso"
+      "suffix": "(d)o tal"
     },
     "H": {
       "prefix": "(d)o(a)(s)",
@@ -219,7 +253,7 @@
       "value": "a|sobre"
     },
     "PNJ": {
-      "value": "superfície de"
+      "value": "face de"
     },
     "THWM": {
       "value": "abismo"
@@ -237,7 +271,7 @@
       "value": "disse"
     },
     "JHJ": {
-      "value": "há|haja|houve"
+      "value": "há|haja|houve|estava"
     },
     ">WR": {
       "value": "luz"
@@ -268,7 +302,7 @@
       "value": "chamar"
     },
     "LJLH": {
-      "value": "Noite"
+      "value": "noite"
     },
     "JWM": {
       "value": "dia"
@@ -480,8 +514,9 @@
       "value": "imagem"
     },
     "K": {
-      "value": "como|conforme",
-      "suffix": "tu"
+      "suffix": "tu",
+      "prefix": "",
+      "value": "como|conforme"
     },
     "DMWTN": {
       "value": "semelhança"
@@ -667,7 +702,7 @@
       "value": "cabeça"
     },
     "PJCWN": {
-      "value": "Pisom"
+      "value": "Fisom"
     },
     "HW>": {
       "value": "ele|este"
@@ -868,13 +903,13 @@
       "value": "envergonhavam"
     },
     "<RM": {
-      "value": "nu"
+      "value": "pelado"
     },
     "NXC": {
       "value": "serpente"
     },
     "<RWM": {
-      "value": "astuto"
+      "value": "safado|pelado"
     },
     "XJT": {
       "value": "seres"
@@ -956,6 +991,37 @@
     },
     "<LJ": {
       "value": "folhas de"
+    },
+    "CM<": {
+      "value": "ouvir"
+    },
+    "QWL": {
+      "value": "voz"
+    },
+    "JT": {
+      "prefix": "então ele se",
+      "value": "então ele"
+    },
+    "XB>": {
+      "value": "esconder"
+    },
+    ">J": {
+      "value": "onde?",
+      "prefix": "onde?"
+    },
+    "KH": {
+      "value": "estás"
+    },
+    "TJ": {
+      "suffix": "eu",
+      "value": "e"
+    },
+    ">NKJ": {
+      "value": "eu"
+    },
+    ">": {
+      "prefix": "eu|me",
+      "value": "e"
     }
   }
 }

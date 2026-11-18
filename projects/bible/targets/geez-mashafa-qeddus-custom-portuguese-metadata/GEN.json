@@ -1,5 +1,32 @@
 {
-  "chapters": [],
+  "chapters": [
+    {
+      "chapter": 3,
+      "verses": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 9,
+          "metadata": {
+            "9-አንተ": {
+              "segment": "አንተ",
+              "isWordOfGod": true
+            },
+            "8-አይቴ": {
+              "segment": "አይቴ",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
+    }
+  ],
   "patterns": {
     "prefix": [
       "በ",
@@ -41,7 +68,8 @@
       "ክሙ",
       "የት",
       "ት",
-      "ሃ"
+      "ሃ",
+      "ቶ"
     ],
     "lexeme": [
       "ለይኩን",
@@ -98,7 +126,14 @@
       "በልዐ",
       "ወሀበ",
       "ቈጽለ",
-      "በለስ"
+      "በለስ",
+      "ገነት",
+      "አማልክት",
+      "ቃለ",
+      "ኀመልማለ",
+      "መንፈሰ",
+      "ሕይወት",
+      "እጓለ"
     ]
   },
   "lexical": {
@@ -178,7 +213,7 @@
       "value": "viu"
     },
     "ከመ": {
-      "value": "para que|que"
+      "value": "para que|que|como"
     },
     "ሠናይ": {
       "value": "agradável"
@@ -875,7 +910,7 @@
       "value": "terceiro"
     },
     "የሐውር": {
-      "value": "corre"
+      "value": "caminhar"
     },
     "ላዕለ": {
       "value": "sobre|em direção a"
@@ -1115,8 +1150,8 @@
       "value": "ver"
     },
     "ያ": {
-      "prefix": "tornar-se",
-      "value": "a"
+      "prefix": "ela ser",
+      "value": "ela ser"
     },
     "ጤይቅ": {
       "value": "sábio"
@@ -1157,6 +1192,48 @@
     },
     "መዋርእተ": {
       "value": "tangas"
+    },
+    "አምር": {
+      "value": "reconhecer"
+    },
+    "ወሀበ": {
+      "value": "dar"
+    },
+    "ቶ": {
+      "value": "para ele"
+    },
+    "እሙን": {
+      "value": "próprios"
+    },
+    "ሰምዑ": {
+      "value": "ouviram"
+    },
+    "ቃለ": {
+      "value": "voz"
+    },
+    "እንዘ": {
+      "value": "enquanto"
+    },
+    "ፍና": {
+      "value": "em direção de|no caminho do"
+    },
+    "ሰርክ": {
+      "value": "entardecer"
+    },
+    "ተኀብ": {
+      "value": "esconderam"
+    },
+    "ዕፀዊ": {
+      "value": "arvoredo"
+    },
+    "ጸውዖ": {
+      "value": "chamou-o"
+    },
+    "አይቴ": {
+      "value": "onde?"
+    },
+    "አንተ": {
+      "value": "você"
     }
   }
 }

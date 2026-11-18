@@ -964,6 +964,45 @@
             ]
           }
         ]
+      },
+      {
+        "origin": 3,
+        "chapter": 3,
+        "verses": [
+          {
+            "originChapter": 3,
+            "chapter": 3,
+            "verse": 9,
+            "originVerse": 9,
+            "words": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              {
+                "originIndex": 13,
+                "originWord": "אַיֶּֽ",
+                "translationIndex": 13,
+                "translationWord": ">J"
+              },
+              {
+                "originIndex": 14,
+                "originWord": "כָּה",
+                "translationIndex": 14,
+                "translationWord": "KH"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

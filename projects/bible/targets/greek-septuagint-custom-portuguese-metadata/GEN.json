@@ -1,5 +1,32 @@
 {
-  "chapters": [],
+  "chapters": [
+    {
+      "chapter": 3,
+      "verses": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 9,
+          "metadata": {
+            "12-εἶ": {
+              "segment": "εἶ",
+              "isWordOfGod": true
+            },
+            "11-ποῦ": {
+              "segment": "ποῦ",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
+    }
+  ],
   "patterns": {
     "prefix": [],
     "suffix": [],
@@ -950,7 +977,7 @@
       "value": "Adão"
     },
     "ξύλου": {
-      "value": "árvore|mandeira"
+      "value": "árvore|madeira"
     },
     "παντὸς": {
       "value": "toda"
@@ -1263,6 +1290,33 @@
     },
     "περιζώματα": {
       "value": "tangas"
+    },
+    "φωνὴν": {
+      "value": "voz"
+    },
+    "ἤκουσαν": {
+      "value": "ouviram"
+    },
+    "κυρίου": {
+      "value": "senhor"
+    },
+    "περιπατοῦντος": {
+      "value": "caminhando"
+    },
+    "δειλινόν": {
+      "value": "entardecer"
+    },
+    "ἐκρύβησαν": {
+      "value": "esconderam-se"
+    },
+    "προσώπου": {
+      "value": "presença"
+    },
+    "ποῦ": {
+      "value": "onde?"
+    },
+    "εἶ": {
+      "value": "estás"
     }
   }
 }

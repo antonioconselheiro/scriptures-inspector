@@ -644,6 +644,36 @@
           "metadata": {}
         }
       ]
+    },
+    {
+      "chapter": 3,
+      "verses": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 9,
+          "metadata": {
+            "13-אי": {
+              "segment": "אַיֶּֽ",
+              "isWordOfGod": true
+            },
+            "14-כה": {
+              "segment": "כָּה",
+              "isWordOfGod": true
+            },
+            "15-׃": {
+              "segment": "׃",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
     }
   ],
   "patterns": {
@@ -662,7 +692,10 @@
       "נ",
       "מ",
       "ת",
-      "ממ"
+      "ממ",
+      "ית",
+      "אי",
+      "א"
     ],
     "suffix": [
       "׃",
@@ -678,7 +711,8 @@
       "נה",
       "י",
       "כם",
-      "נו"
+      "נו",
+      "תי"
     ],
     "lexeme": [
       "היתה",
@@ -829,7 +863,12 @@
       "תפר",
       "תאנה",
       "חגרת",
-      "עלה"
+      "עלה",
+      "כה",
+      "עירם",
+      "אנכי",
+      "ארץ",
+      "אדמה"
     ]
   },
   "lexical": {
@@ -844,7 +883,7 @@
       "value": "AZ"
     },
     "ו": {
-      "suffix": "-vos|seu|dele|nosso",
+      "suffix": "(d)o(a) tal",
       "prefix": "e"
     },
     "ארץ": {
@@ -893,7 +932,7 @@
       "value": "dizer"
     },
     "יהי": {
-      "value": "há|haja|houve"
+      "value": "há|haja|houve|estava"
     },
     "כי": {
       "value": "que"
@@ -1201,7 +1240,10 @@
     "נתתי": {
       "value": "dei"
     },
-    "תי": {},
+    "תי": {
+      "suffix": "eu",
+      "value": "e"
+    },
     "רומש": {
       "value": "rastejante|rastejador"
     },
@@ -1400,9 +1442,6 @@
     "הולידו": {
       "value": "gerar"
     },
-    "חנוך": {
-      "value": "Enoque"
-    },
     "שמנה": {
       "value": "oito"
     },
@@ -1590,7 +1629,7 @@
       "value": "varoa"
     },
     "ערומ": {
-      "value": "nu"
+      "value": "pelado"
     },
     "תבששו": {
       "value": "envergonhavam"
@@ -1599,7 +1638,7 @@
       "value": "serpente"
     },
     "ערום": {
-      "value": "astuto"
+      "value": "safado"
     },
     "חית": {
       "value": "ser"
@@ -1677,7 +1716,7 @@
       "value": "com"
     },
     "עירמם": {
-      "value": "desnudos"
+      "value": "pelados"
     },
     "תפר": {
       "value": "costurar"
@@ -1693,6 +1732,39 @@
     },
     "שמע": {
       "value": "ouvir"
+    },
+    "קול": {
+      "value": "voz"
+    },
+    "חבא": {
+      "value": "esconder"
+    },
+    "ית": {
+      "prefix": "então ele se",
+      "value": "então ele"
+    },
+    "אי": {
+      "value": "onde?",
+      "prefix": "onde?"
+    },
+    "כה": {
+      "value": "estás"
+    },
+    "קל": {
+      "value": "voz"
+    },
+    "עירם": {
+      "value": "pelado"
+    },
+    "אנכי": {
+      "value": "eu"
+    },
+    "א": {
+      "prefix": "eu|me",
+      "value": "e"
+    },
+    "אדמה": {
+      "value": "terreno"
     }
   }
 }
