@@ -46,6 +46,17 @@ A forma samaritana **BDGT HJM** — **ࠁࠃࠂࠕ ࠄࠉࠌ** — é traduzida 
 
 Nas formas samaritanas **>DM** e **>DMH**, adota-se “terrestre” para o humano e “terreno” para o solo, mantendo a associação verbal e narrativa entre a pessoa formada e a terra de que procede. A defesa, incluindo a ressalva de que “filho terreno” é uma extensão interpretativa e não uma equivalência automática de toda ocorrência de “filho do homem”, está em [אָדָם e אֲדָמָה na nota hebraica](./hebrew-stuttgartensia.md#adam-terrestrial). Para o texto samaritano, veja [Gênesis 1:26](https://samaritantorah.com/gn1-26) e [Gênesis 2:7](https://samaritantorah.com/gn2-7).
 
+## Gênesis 2:23–25 — >JC, >C e >CT como “varão” e “varoa”
+
+Nas formas samaritanas **>JC** — **ࠀࠉࠔ** —, **>C** — **ࠀࠔ** — e **>CT** — **ࠀࠔࠕ** —, mantêm-se as opções **“varão”** e **“varoa”** adotadas para o par hebraico אִישׁ e אִשָּׁה. A conversão das letras foi conferida pelo mapeamento de escrita samaritana implementado no projeto. Em Gênesis 2:23, a fala de Adão aproxima os termos; em 2:24–25, reaparecem formas relacionadas, inclusive a designação da esposa.
+
+A justificativa para preferir “varão/varoa” a “homem/mulher” é resumida na [explicação de אִישׁ e אִשָּׁה na nota hebraica](./hebrew-stuttgartensia.md#ish-ishah-varao-varoa). Esta nota registra a correspondência samaritana e a mesma decisão em português, sem repetir a discussão lexical hebraica.
+
+### Referências — >JC / >C / >CT
+
+- [Gênesis 2:23 no Pentateuco Samaritano](https://samaritantorah.com/gn2-23), com >C e a forma >JC na expressão “de um homem”.
+- [Gênesis 2:24 no Pentateuco Samaritano](https://samaritantorah.com/gn2-24), com >JC e a forma >CTW (“sua mulher”).
+
 ## Gênesis
 
 ### Gênesis 3:1 e 3:7 — Safados e Pelados

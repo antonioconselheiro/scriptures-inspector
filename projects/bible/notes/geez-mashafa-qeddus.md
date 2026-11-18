@@ -8,9 +8,9 @@
 
 ### Decisão lexical
 
-Traduz-se **እግዚአብሔር (*ʾəgziʾabəḥer*)** por **“Senhor do Domínio”** nesta variante, em vez de reduzir o termo a “Deus”. A opção procura conservar a composição e a imagem de soberania presentes no título. Ela é uma tradução interpretativa, não uma equivalência palavra por palavra incontestável: as fontes lexicográficas consultadas analisam o composto como **እግዚአ (*ʾəgziʾ*, “senhor/régulo”) + ብሔር (*bəḥer*, “terra, região, país/mundo”)**, em construção de estado construto.
+Traduz-se **እግዚአብሔር (*ʾəgziʾabəḥer*)** por **“Senhor do Domínio”** ao invés de tratar o termo como “Deus”. A opção procura conservar a composição e a imagem de soberania presentes no título. As fontes lexicográficas consultadas analisam o composto como **እግዚአ (*ʾəgziʾ*, “senhor/régulo”) + ብሔር (*bəḥer*, “terra, região, país/mundo”)**, em construção de estado construto.
 
-### Defesa e comparação de traduções
+### Explicação e comparação de traduções
 
 Em traduções bíblicas correntes, o termo costuma aparecer simplesmente como **“Deus”** ou **“o Senhor”**, dando prioridade ao seu uso como designação divina estabelecida. Para aproximar a tradução de sua composição, referências lexicográficas e enciclopédicas oferecem glosas como **“Lord of the Land/Earth”** (“Senhor da Terra”) e descrevem *bəḥer* como “terra” ou “região”. A proposta **“Senhor do Domínio”** parte desse sentido territorial: “domínio” destaca a terra ou esfera sobre a qual o Senhor exerce soberania. É, portanto, uma formulação portuguesa mais interpretativa que “Senhor da Terra”, escolhida para explicitar a dimensão de autoridade sem perder a referência ao âmbito governado.
 
@@ -32,7 +32,7 @@ Em Gênesis 1:1, **እግዚአብሔር** aparece no ato de criar “céu” e 
 
 Em Gênesis 2:12, a sequência geʽez enumera ouro, **ዕንቍ ዘየኀቱ** e **ዕንቍ ኀመልሚል**. Para a primeira pedra preciosa, adota-se **“pedra preciosa que flameja”**. A escolha é deliberadamente imagética: os usos de የኀቱ incluem arder com tochas ou lâmpadas e reluzir em descrições poéticas. “Flameja” reúne essas associações numa formulação expressiva para uma gema; não afirma combustão literal.
 
-### Defesa
+### Explicação
 
 - **Uso com fogo e tochas — Ezequiel 1:13:** **መኃትው ዘየኀቱ** aparece no símile das tochas entre os seres viventes. A frase prossegue com **ብርሃነ እሳት**, “o brilho/luz do fogo”, e com o relâmpago que sai do fogo. O referente são tochas, de modo que “arder” é uma tradução contextual natural; a menção explícita à luz também associa o verbo à luminosidade.
 - **Uso com lâmpadas — Apocalipse 4:5 e João 5:35:** Apocalipse 4:5 descreve lâmpadas acesas diante do trono com **የኀትዉ ... መኀትው**. João 5:35 chama João de **ማኅቶት ዘያኀቱ ወያበርህ**, literalmente uma lâmpada que “arde e ilumina/brilha”. A coordenação de dois verbos deixa clara a proximidade contextual entre arder e emitir luz, sem tornar os sentidos idênticos em qualquer ocorrência.
@@ -62,7 +62,7 @@ Em Gênesis 2:12, a sequência geʽez enumera ouro, **ዕንቍ ዘየኀቱ** e
 
 As traduções preservam a faixa semântica de verde/verdura atestada pelos contextos. Em Gênesis 2:5, “verdejante” funciona como substantivação (“toda verdura/vegetação verde”); em 2:12, “esverdeado” qualifica a pedra. Para Apocalipse 6:8, “verde-pálido” comunica a nuance mórbida que a tradução tradicional “pálido” transmite, sem apagar o componente verde.
 
-### Defesa
+### Explicação
 
 Em Gênesis 2:5, ኀመልማለ aparece junto de ሐቅል (“campo”), ምድር (“terra”) e ይብቈል (“brotar”): o contexto trata de vegetação ainda não surgida. A forma reaparece em Gênesis 9:3 junto de ሣዕር (“erva/grama”) como alimento, em Deuteronômio 29:22 no contexto do que não nasce ou cresce na terra, e em Salmos 104:14 (103:15 na numeração da Septuaginta), em paralelo com a erva para os animais e a vegetação destinada à humanidade. Esses contextos apoiam o valor botânico “verdura/vegetação verde”.
 
@@ -152,7 +152,7 @@ Em **አዕዋፈ ሰማይ**, a tradução é **“aves do céu”**. A forma m
 
 Em Gênesis 1:30, **አራዊተ ምድር** é traduzido **“feras do campo”**. A expressão classifica animais terrestres em sentido amplo; “campo” é a opção desta variante para o domínio terrestre, não uma afirmação de que o referente habite apenas terreno agrícola. A formulação é importante porque, em Gênesis 3:1, a serpente é apresentada como **ወአርዌ ምድርሰ**, literalmente nesta opção “e fera do campo, porém”. O substantivo geʽez usado para a serpente pertence, assim, à mesma designação ampla de fera/animal terrestre; o início do versículo não a identifica por um nome zoológico específico equivalente a “cobra”.
 
-Essa correspondência não significa que toda fera seja serpente, nem que a serpente deixe de ser nomeada como tal em outros pontos. Ela registra que o texto geʽez de Gênesis 3:1 a inclui na categoria de animal terrestre que aparece na enumeração da criação. A leitura deve permanecer aberta à função narrativa e à identificação posterior do personagem como serpente.
+Essa correspondência não significa que toda fera seja serpente, nem que a serpente deixe de ser nomeada como tal em outros pontos. Ela registra que o texto geʽez de Gênesis 3:1 a inclui na categoria de animal terrestre que aparece na enumeração da criação.
 
 ### Referências — አራዊተ ምድር / ወአርዌ ምድርሰ
 
@@ -162,11 +162,11 @@ Essa correspondência não significa que toda fera seja serpente, nem que a serp
 
 ## Gênesis 2:5 — እጓለ እመሕያው: “descendente do que vive”
 
-Em Gênesis 2:5, **እጓለ እመሕያው** é traduzido **“descendente do que vive”**. A opção adota uma análise composicional na qual **እጓለ** é vertido “descendente”, **እመ** estabelece a relação “de/do que”, e **ሕያው** corresponde a “vivente”. Ela aproxima o sintagma da ideia de um ser procedente da vida, coerente com o contexto em que ainda se relata que o humano não fora criado.
+Em Gênesis 2:5, **እጓለ እመሕያው** é traduzido **“descendente do que vive”**. A opção adota uma análise composicional na qual **እጓለ** é vertido “descendente”, **እመ** estabelece a relação “de/do que”, e **ሕያው** corresponde a “vivente”. Ela aproxima o núcleo da ideia de um ser procedente da vida, coerente com o contexto em que ainda se relata que o humano não fora criado.
 
 É uma escolha deliberadamente literal e marcada, não a única leitura possível do idioma. Traduções tradicionais podem tratar a expressão como uma designação convencional para “homem/ser humano” ou “filho do homem”; “descendente do que vive” põe em primeiro plano os componentes que esta variante reconhece no geʽez. A decisão não deve ser usada como prova de que a expressão tenha sempre esse sentido composicional em todos os contextos.
 
-Um paralelo útil dentro da própria literatura geʽez aparece em Sirácida 40:1: **እጓለ እመሕያው** ocorre numa frase sobre a criação da humanidade e fica próximo de “os filhos de Adão”. Isso confirma que a expressão pode funcionar como designação geral de seres humanos; não prova, por si só, que “descendente do que vive” seja uma tradução idiomática portuguesa nem que cada componente conserve sempre esse valor isolado.
+Um paralelo útil dentro da própria literatura geʽez aparece em Sirácida 40:1: **እጓለ እመሕያው** ocorre numa frase sobre a criação da humanidade e fica próximo de “os filhos de Adão”.
 
 ### Referências — እጓለ እመሕያው
 
@@ -174,3 +174,15 @@ Um paralelo útil dentro da própria literatura geʽez aparece em Sirácida 40:1
 - [Gênesis 2 com tradução inglesa](https://bible-library.online/tewahedo/genesis/2), para comparar a expressão no contexto da criação ainda não ocorrida.
 - [Gênesis 2:5 em hebraico](https://www.sefaria.org/Genesis.2.5?lang=bi), para o contexto de que ainda não havia humano para trabalhar o solo.
 - [Sirácida 40:1–3 em geʽez e inglês](https://bible-library.online/tewahedo/sirach/40), para o uso de እጓለ እመሕያው como designação geral da humanidade, em paralelo com “filhos de Adão”.
+
+## Gênesis 2:23–25 — ብእሲ, ብእሲት e ብእሲቱ
+
+Nesta tradução, **ብእሲ** é vertido **“varão”**, **ብእሲት** como **“varoa”** e **ብእሲቱ** como **“sua varoa”**. Em Gênesis 2:23, a forma feminina aparece com sufixo de primeira pessoa em **ብእሲትየ** (“minha varoa”); em 2:24–25, **ብእሲቱ** expressa “sua mulher/esposa”. A variante portuguesa mantém “varão/varoa” para tornar visível a relação formal entre os nomes, em vez de alternar para “homem/mulher” e ocultar esse pareamento.
+
+Esta escolha geʽez é aproximada da decisão para o hebraico **אִישׁ / אִשָּׁה** em Gênesis 2:23, onde a narrativa põe as palavras em relação explícita. A comparação serve como orientação de tradução; não afirma que as formas geʽez e hebraicas tenham a mesma origem etimológica. A explicação sobre a escolha marcada de “varão/varoa”, incluindo por que “menino/menina” sugeriria idade e “homem/mulher” não preservaria a semelhança formal, está em [אִישׁ e אִשָּׁה na nota hebraica](./hebrew-stuttgartensia.md#ish-ishah-varao-varoa).
+
+### Referências — ብእሲ / ብእሲት / ብእሲቱ
+
+- [Gênesis 2 em geʽez, Juniper Bible](https://juniperbible.org/bible/geez/gen/2/), especialmente 2:23–25.
+- [Gênesis 2 com texto geʽez e tradução inglesa](https://bible-library.online/tewahedo/genesis/2), para comparar ብእሲ, ብእሲትየ e ብእሲቱ no contexto.
+- [Gênesis 2:23–25 em hebraico](https://www.sefaria.org/Genesis.2.23-25?lang=bi), para אִישׁ, אִשָּׁה e אִשְׁתּוֹ e o jogo de palavras no versículo 23.

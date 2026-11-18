@@ -76,7 +76,7 @@ Nesta tradução, o sinal massorético **פ (*pē*)** é representado por **¶**
 
 Em Gênesis 1:2, **וְר֣וּחַ אֱלֹהִים (*wə-rûaḥ ʾĕlōhîm*)** é traduzido nesta variante como **“e fôlego de Elohim”**. A escolha privilegia o sentido concreto de ar que se move ou respiração que dá vida, em vez de começar pela palavra portuguesa “espírito”, que hoje costuma evocar imediatamente uma entidade imaterial ou uma categoria teológica. “Fôlego” aproxima a tradução da experiência física que sustenta essas leituras: o ar que se respira, o sopro e, por extensão, a força vital.
 
-### Defesa e limites
+### Explicação e limites
 
 O hebraico **רוּחַ (*rûaḥ*)** abrange sentidos que incluem **vento, sopro/fôlego e espírito**; não há uma única tradução portuguesa adequada a todas as ocorrências. Em Gênesis 1:2, a expressão vem acompanhada de **אֱלֹהִים** e de um verbo que descreve algo que paira sobre as águas. Por isso, “Espírito de Deus”, “vento de Deus” e “fôlego de Elohim” refletem leituras distintas da mesma expressão. Esta tradução escolhe “fôlego” como imagem de partida e não afirma que o contexto exclua as leituras de vento ou de presença divina.
 
@@ -171,19 +171,6 @@ Textos judaicos antigos ampliam a recepção dessas criaturas primordiais. **2 B
 - University of Iowa, [verbete TANNIYN](https://bam.sites.uiowa.edu/RTL/tanniyn), sobre as traduções “sea monster/dragon” e os contextos hebraicos.
 - [2 Baruque 29:4](https://apocryphalibrary.lovable.app/apocalypses/2-baruch/29), [4 Esdras 6:47–52](https://www.biblegateway.com/passage/?search=2%20Esdras%206%3A47-52&version=NRSVUE) e [1 Enoque 60:7–8](https://orthodoxchristianbible.com/books/enoch/60/), para Beemote e Leviatã na tradição judaica antiga.
 
-<a id="adam-terrestrial"></a>
-## אָדָם e אֲדָמָה — “terrestre” e “terreno”
-
-Nesta variante, **אָדָם (*ʾādām*)** é traduzido **“terrestre”**, enquanto **אֲדָמָה (*ʾădāmāh*)** é **“terreno”**. A distinção procura conservar o jogo sonoro e semântico entre o humano e o solo de que é formado: em Gênesis 2:7, o terrestre é modelado do pó do terreno. “Terrestre” faz ouvir a procedência e a condição ligada à terra; “terreno” nomeia o solo. A relação é uma associação narrativa e lexical tradicional, embora a etimologia histórica exata dos dois vocábulos seja discutida.
-
-Essa opção também prepara uma leitura teológica de **“filho terreno”** para expressões como **בֶּן־אָדָם (*ben-ʾādām*)**, tradicionalmente “filho do homem”. A tradução “filho terreno” destaca a humanidade mortal e sua origem terrestre; não é, porém, a tradução convencional inequívoca de toda ocorrência de בן־אדם, que pode funcionar como expressão idiomática para “ser humano” ou como forma de tratamento profética. O contraste com o homem “do céu” em 1 Coríntios 15:47 é uma conexão teológica posterior, não prova de que cada uso hebraico de אָדָם já contenha esse contraste cristológico.
-
-### Referências — אָדָם / אֲדָמָה
-
-- [Gênesis 2:7 em hebraico](https://www.sefaria.org/Genesis.2.7?lang=bi), para a formação do humano a partir do solo; [Gênesis 1:26](https://www.sefaria.org/Genesis.1.26?lang=bi), com אָדָם.
-- [Bible Odyssey, “Adam/Adamah”](https://www.bibleodyssey.org/articles/adam-adamah/), sobre o jogo entre “human/earthling” e “ground/earth” e as ressalvas etimológicas.
-- [1 Coríntios 15:47](https://biblehub.com/text/1_corinthians/15-47.htm), para a oposição grega entre o primeiro homem “da terra, terreno” e o segundo “do céu”.
-
 <a id="sufixo-3ms-o-tal"></a>
 ## Sufixo וֹ — “o tal” como referência contextual
 
@@ -191,7 +178,7 @@ Essa opção também prepara uma leitura teológica de **“filho terreno”** p
 
 Nesta variante, o sufixo hebraico **־וֹ (*-ō*)** é representado por **“(d)o tal”**, no singular. A escolha procura conservar visível que a forma remete a um referente recuperado pelo contexto, sem decidir em cada ocorrência entre “seu”, “sua”, “dele”, “dela”, “a ele” ou “o”.
 
-### Defesa e precisão morfológica
+### Explicação e precisão morfológica
 
 Gramaticalmente, **־וֹ** é um sufixo pronominal de **terceira pessoa masculina singular**. O que varia com o contexto é a identidade do referente e a relação sintática expressa pela palavra hospedeira; não muda a pessoa ou o número gramatical do sufixo. Em nomes, costuma expressar posse ou relação (“dele/dela”, “seu/sua”); em preposições e outras formas, pode equivaler a “a ele”, “nele” ou a outra construção pronominal. As formas hebraicas de primeira pessoa “meu/minha” e “nosso/nossa” são morfologicamente distintas, não valores alternativos de וֹ.
 
@@ -273,3 +260,31 @@ Também é necessário distinguir as diferentes recensões da **Vida de Adão e 
 - E. Earle Ellis, *The Use of the Old Testament in the Pauline Epistles* (dissertação de doutorado, University of Edinburgh, 1955), pp. 78–80, “The Nature of Eve’s Sin”. A cópia consultada está em [references](./references/THE%20USE%20OP%20THE%20OLD%20TESTAMENT%20IN%20THE%20PATJLINE%20EPISTLES%20-%20EllisEE_1955redux.txt); o nome do arquivo preserva erros de OCR no título.
 - J. R. C. Cousland, [“Adam and Evel: Did Satan Sleep with Eve in the Greek and Latin Lives of Adam and Eve?”](https://doi.org/10.1093/jts/flaa001), *The Journal of Theological Studies* 71:1 (2020), pp. 134–157.
 - Sergey Minov, [“‘Serpentine’ Eve in Syriac Christian Literature of Late Antiquity”](https://publications.hse.ru/chapters/968682266), em Daphna V. Arbel e Andrei A. Orlov (orgs.), *With Letters of Light: Studies in the Dead Sea Scrolls, Early Jewish Apocalypticism, Magic, and Mysticism in Honor of Rachel Elior* (De Gruyter, 2010), pp. 92–114, especialmente pp. 94–97. A cópia local está em [references](./references/Studies%20in%20The%20Dead%20Sea%20Scrolls%20Early%20Jewish%20Apocalypticism%20Magic%20and%20Mysticism%20Daphna%20V.%20Arbel%20Andrei%20A.%20Orlov%20With%20Letters%20of%20Light.txt).
+
+<a id="adam-terrestrial"></a>
+## אָדָם e אֲדָמָה — “terrestre” e “terreno”
+
+Nesta variante, **אָדָם (*ʾādām*)** é traduzido **“terrestre”**, enquanto **אֲדָמָה (*ʾădāmāh*)** é **“terreno”**. A distinção procura conservar o jogo sonoro e semântico entre o humano e o solo de que é formado: em Gênesis 2:7, o terrestre é modelado do pó do terreno. “Terrestre” faz ouvir a procedência e a condição ligada à terra; “terreno” nomeia o solo. A relação é uma associação narrativa e lexical tradicional, embora a etimologia histórica exata dos dois vocábulos seja discutida.
+
+Essa opção também prepara uma leitura teológica de **“filho terreno”** para expressões como **בֶּן־אָדָם (*ben-ʾādām*)**, tradicionalmente “filho do homem”. A tradução “filho terreno” destaca a humanidade mortal e sua origem terrestre; não é, porém, a tradução convencional inequívoca de toda ocorrência de בן־אדם, que pode funcionar como expressão idiomática para “ser humano” ou como forma de tratamento profética. O contraste com o homem “do céu” em 1 Coríntios 15:47 é uma conexão teológica posterior, não prova de que cada uso hebraico de אָדָם já contenha esse contraste cristológico.
+
+### Referências — אָדָם / אֲדָמָה
+
+- [Gênesis 2:7 em hebraico](https://www.sefaria.org/Genesis.2.7?lang=bi), para a formação do humano a partir do solo; [Gênesis 1:26](https://www.sefaria.org/Genesis.1.26?lang=bi), com אָדָם.
+- [Bible Odyssey, “Adam/Adamah”](https://www.bibleodyssey.org/articles/adam-adamah/), sobre o jogo entre “human/earthling” e “ground/earth” e as ressalvas etimológicas.
+- [1 Coríntios 15:47](https://biblehub.com/text/1_corinthians/15-47.htm), para a oposição grega entre o primeiro homem “da terra, terreno” e o segundo “do céu”.
+
+<a id="ish-ishah-varao-varoa"></a>
+## Gênesis 2:23 — אִישׁ e אִשָּׁה como “varão” e “varoa”
+
+Em Gênesis 2:23, **אִישׁ (*ʾîš*)** é traduzido **“varão”** e **אִשָּׁה (*ʾiššāh*)**, **“varoa”**. O versículo aproxima as duas palavras ao dizer que ela será chamada אִשָּׁה porque foi tomada de אִישׁ. A tradução procura preservar esse pareamento formal e sonoro: “varão/varoa” oferece em português duas formas relacionadas, enquanto “homem/mulher” é natural, mas não deixa a relação audível.
+
+“Menino/menina” e “garoto/garota” não servem bem porque introduzem uma distinção de idade ausente do texto. “Homem/mulher” comunica com clareza os referentes, mas não a correspondência verbal que o narrador põe em evidência. “Varão/varoa” é uma solução menos corrente e marcada; “varoa” pode soar arcaica, mas foi escolhida por ser a aproximação portuguesa disponível que melhor conserva o par sem atribuir infância aos personagens. A tradução não afirma que אִשָּׁה seja simplesmente uma derivação histórica de אִישׁ: o próprio Gênesis explora a semelhança como jogo de palavras, e a relação etimológica deve ser distinguida da associação literária explícita do versículo.
+
+As palavras hebraicas podem designar homem/marido e mulher/esposa segundo o contexto; aqui, a repetição de אִישׁ e אִשָּׁה faz delas um par marcado pela narrativa. “Varão/varoa” é uma convenção desta variante para deixar esse vínculo visível, não uma proposta de substituir “homem/mulher” em todos os contextos.
+
+### Referências — אִישׁ / אִשָּׁה
+
+- [Gênesis 2:23 em hebraico](https://www.sefaria.org/Genesis.2.23?lang=bi), onde o narrador relaciona אִשָּׁה a אִישׁ.
+- [Gênesis 2:24–25 em hebraico](https://www.sefaria.org/Genesis.2.24-25?lang=bi), para o uso subsequente de אִישׁ e אִשְׁתּוֹ (“sua mulher/esposa”).
+- [Verbete אִישׁ (H376)](https://biblehub.com/hebrew/376.htm) e [אִשָּׁה (H802)](https://biblehub.com/hebrew/802.htm), para a faixa de sentidos contextuais “homem/marido” e “mulher/esposa”.

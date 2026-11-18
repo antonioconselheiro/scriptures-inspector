@@ -24,7 +24,7 @@ Nas ocorrências de **παράδεισος** no texto Elzeviriano, adota-se **�
 
 Esta decisão não nega os cenários celestes ou escatológicos dos versículos do Novo Testamento. Em Lucas 23:43, 2 Coríntios 12:4 e Apocalipse 2:7, o contexto pode indicar uma realidade bem-aventurada junto de Deus; “Jardim” conserva a metáfora do texto sem decidir além dela a natureza desse lugar. Em Lucas 23:43, é o Messias crucificado quem promete ao condenado ao seu lado: **“hoje estarás comigo no Jardim”**. A formulação conserva a imagem de um jardim de vida e bem-aventurança, em vez de antecipar como tradução a interpretação “céu”. Em Apocalipse 2:7, a menção à árvore da vida torna especialmente clara a ressonância do Éden.
 
-### Defesa a partir da Septuaginta
+### Explicação a partir da Septuaginta
 
 O uso de παράδεισος na Septuaginta oferece a base principal para esta escolha:
 
