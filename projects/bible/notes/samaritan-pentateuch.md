@@ -2,7 +2,13 @@
 
 ## Introdução
 
+Esta nota registra as decisões da tradução do Pentateuco Samaritano como um testemunho textual próprio, observando suas formas consonantais, vocabulário e correspondências com o hebraico massorético. A estratégia de preservar relações formais e efeitos que uma tradução fluente pode apagar acompanha, como método filológico, a abordagem descrita na [introdução da nota hebraica](./hebrew-stuttgartensia.md); aqui, porém, não se atribui à tradução samaritana a finalidade cabalística específica daquela versão.
+
+Quando uma escolha samaritana acompanha uma decisão hebraica, a nota registra a correspondência e remete à explicação mais extensa, sem tratar as duas tradições como idênticas. As diferenças entre os textos e os limites das equivalências permanecem explícitos.
+
 ## Fontes
+
+O texto e as formas samaritanas em Unicode foram obtidos a partir do repositório [DT-UCPH/sp](https://github.com/DT-UCPH/sp), indicado como fonte nos metadados de `sources/samaritan-pentateuch`. A correspondência entre a transcrição consonantal usada pelo projeto e os caracteres Unicode samaritanos é aplicada pelo mapeamento de escrita samaritana do software.
 
 ## Gênesis 1:1 e 2:4 — אלהים como “Divos”
 

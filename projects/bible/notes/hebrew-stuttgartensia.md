@@ -2,6 +2,10 @@
 
 ## Introdução
 
+Esta tradução parte de uma finalidade filológica e cabalística: tornar observáveis, em português, aspectos da escrita hebraica que traduções tradicionais tendem a normalizar ou deixar invisíveis. Interessa preservar, quando o texto permite, relações entre grafia consonantal, vocalização, forma morfológica, repetição, jogos de palavras e sinais gráficos que podem participar da leitura dos oráculos. A tradução inclui textos canônicos e, nas comparações e referências, apócrifos que ajudam a documentar sua recepção e os símbolos associados às passagens.
+
+Como a investigação busca identificar possíveis símbolos proféticos e seus sentidos, certas escolhas mantêm mais de perto a forma e a tipografia do original mesmo quando resultam em português pouco corrente. Essa literalidade não pretende substituir uma tradução fluente nem fazer toda hipótese cabalística passar por conclusão filológica: as notas distinguem o que a forma hebraica permite observar, o que é interpretação e o que permanece conjectura. O objetivo é que o leitor possa acompanhar as decisões e avaliar como uma tradução mais convencional pode apagar relações relevantes para essa leitura.
+
 ## Fontes
 
 ## Gênesis
@@ -51,7 +55,7 @@ O Evangelho de João torna explícita a relação com Zacarias: depois de narrar
 - A listagem de observações da tradução também mostra “AZ” associado a formas pronominais. Isso evidencia o limite de tratá-lo como nome próprio em toda ocorrência: em construções como **אֵת אֲשֶׁר** de Zacarias 12:10, o sinal introduz uma oração relativa (“a quem/aquele que”), e nas formas com sufixos pronominais — por exemplo, **אֹתִי** (“a mim”), **אֹתוֹ** (“a ele”) e **אֹתָם** (“a eles”) — את integra formas pronominais/preposicionais. Nesses contextos, “AZ” pode ser mantido como convenção gráfica da variante, mas a leitura como nome próprio é especialmente difícil e não deve ser apresentada como análise gramatical de cada token.
 - A Septuaginta grega de Zacarias 12:10 conserva “para mim”, mas sua continuação difere do Texto Massorético e não traz ali o verbo grego “traspassar”. João 19:37 cita uma forma grega que diz “aquele a quem traspassaram” (**εἰς ὃν ἐξεκέντησαν**); não translitera nem reproduz o marcador hebraico אֵת. A relação direta com Aleph-Tav é, portanto, visível no texto hebraico e construída teologicamente entre as passagens, não preservada como equivalência lexical no grego.
 
-Por esses motivos, “AZ” deve ser apresentado como uma opção interpretativa desta tradução: ela torna visível a forma Aleph-Tav e convida à leitura messiânica, sem alegar que a função gramatical usual de אֵת desapareça ou que essa identificação seja consenso filológico.
+Por esses motivos, “AZ” deve ser apresentado como uma opção interpretativa desta tradução: ela torna visível a forma Aleph-Tav e convida à leitura messiânica, sem alegar que a função gramatical usual de אֵת desapareça.
 
 ### Referências — אֵת / “AZ”
 

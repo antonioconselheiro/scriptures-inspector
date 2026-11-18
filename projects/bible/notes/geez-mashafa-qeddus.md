@@ -2,7 +2,13 @@
 
 ## Introdução
 
+Esta tradução documenta escolhas lexicais e sintáticas da tradição geʽez, procurando conservar imagens, repetições, construções e nuances que podem desaparecer quando o texto é normalizado em português. A prioridade é filológica: cada decisão deve ser examinada à luz do geʽez e, quando a história textual o justificar, comparada com a Septuaginta ou com o hebraico. A relação com essas tradições é indicada como comparação ou possível origem textual, não presumida para todo trecho.
+
+Como na abordagem da [nota hebraica](./hebrew-stuttgartensia.md), a tradução pode preferir uma formulação portuguesa marcada para tornar visível uma característica do texto de partida. O paralelo metodológico está em explicitar formas e relações; não se adota aqui a finalidade cabalística da versão hebraica. As notas distinguem a leitura direta do geʽez, as correspondências com outras tradições e as hipóteses que não podem ser estabelecidas apenas pelo vocabulário.
+
 ## Fontes
+
+Os metadados em `sources/geez-mashafa-qeddus` indicam como fontes a [Bíblia geʽez da Universidade de Tel Aviv](https://www.tau.ac.il/~hacohen/Biblia.html) e o catálogo de obras do projeto [Beta maṣāḥǝft](https://github.com/BetaMasaheft/Works). Os caracteres geʽez são registrados em sua escrita Unicode conforme apresentados nas fontes textuais.
 
 ## እግዚአብሔር — “Senhor do Domínio”
 

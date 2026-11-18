@@ -2,7 +2,13 @@
 
 ## Introdução
 
+Esta tradução registra decisões lexicais e formais do texto grego Elzeviriano, procurando conservar sentidos, repetições e relações internas que uma tradução portuguesa convencional pode suavizar. O foco é explicar cada escolha com base no grego desta edição; comparações com o hebraico são feitas quando ajudam a esclarecer uma relação textual ou uma opção tradutória, sem pressupor dependência direta em toda passagem.
+
+A estratégia filológica acompanha a [abordagem descrita na nota hebraica](./hebrew-stuttgartensia.md): tornar observáveis aspectos do texto de partida, mesmo que isso produza uma formulação portuguesa marcada. A referência é metodológica e não transfere para esta tradução a finalidade cabalística da versão hebraica. As notas distinguem o texto grego, suas relações com outras tradições e as interpretações que não constituem equivalências lexicais demonstráveis.
+
 ## Fontes
+
+O texto Elzeviriano é identificado como a edição grega usada na tradução; as referências de consulta de passagens são indicadas individualmente nas notas. Não há, nos metadados de `sources/greek-elzeviriana`, um registro geral de proveniência equivalente ao informado para outras coleções.
 
 ## πνεῦμα — “fôlego”
 
@@ -22,7 +28,7 @@ A opção de traduzir pelo sentido concreto de “fôlego”, em vez de começar
 
 Nas ocorrências de **παράδεισος** no texto Elzeviriano, adota-se **“Jardim”** em vez da forma tradicional “Paraíso”. A escolha preserva a continuidade com a Septuaginta, que emprega παράδεισος para o jardim plantado por Deus em Éden e para imagens de jardins férteis, arborizados e irrigados. “Jardim” mantém visível essa imagem concreta e evita que a tradução imponha desde logo a acepção portuguesa posterior de “Paraíso” como nome próprio ou lugar exclusivamente celeste.
 
-Esta decisão não nega os cenários celestes ou escatológicos dos versículos do Novo Testamento. Em Lucas 23:43, 2 Coríntios 12:4 e Apocalipse 2:7, o contexto pode indicar uma realidade bem-aventurada junto de Deus; “Jardim” conserva a metáfora do texto sem decidir além dela a natureza desse lugar. Em Lucas 23:43, é o Messias crucificado quem promete ao condenado ao seu lado: **“hoje estarás comigo no Jardim”**. A formulação conserva a imagem de um jardim de vida e bem-aventurança, em vez de antecipar como tradução a interpretação “céu”. Em Apocalipse 2:7, a menção à árvore da vida torna especialmente clara a ressonância do Éden.
+Esta decisão não nega os cenários celestes ou escatológicos dos versículos do Novo Testamento. Em Lucas 23:43, 2 Coríntios 12:4 e Apocalipse 2:7, o contexto pode indicar uma realidade bem-aventurada junto de Deus; “Jardim” conserva a metáfora do texto sem decidir além dela a natureza desse lugar. Em Lucas 23:43, é o Messias crucificado quem promete ao condenado ao seu lado: **“hoje estarás comigo no Jardim”**. A formulação conserva a imagem de um jardim fértil em vez de antecipar como tradução a ideia de um paraíso celeste. Em Apocalipse 2:7, a menção à árvore da vida torna especialmente clara a relação com o Éden.
 
 ### Explicação a partir da Septuaginta
 

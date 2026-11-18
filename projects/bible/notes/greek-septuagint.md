@@ -2,7 +2,13 @@
 
 ## Introdução
 
+Esta tradução registra escolhas para a Septuaginta grega, procurando conservar sentidos, construções e relações com o hebraico que podem ser atenuados por uma formulação portuguesa mais fluente. A comparação com o hebraico é feita quando a relação textual ajuda a explicar uma escolha; a Septuaginta permanece um texto grego com suas próprias leituras, e não é tratada como simples cópia palavra por palavra do Texto Massorético.
+
+Assim como na [abordagem filológica da nota hebraica](./hebrew-stuttgartensia.md), algumas opções podem soar pouco usuais em português para que o leitor perceba aspectos do texto de partida. A referência é metodológica — tornar visíveis formas e relações relevantes — e não adota a finalidade cabalística específica da tradução hebraica. As notas distinguem o dado grego, sua relação possível com o hebraico e as interpretações que ultrapassam a evidência lexical.
+
 ## Fontes
+
+O catálogo de fontes em `sources/greek-septuagint` identifica [Sacred Texts: The Septuagint](https://www.sacred-texts.com/bib/sep/) como uma das fontes do texto grego usado pelo projeto.
 
 ## πνεῦμα — “fôlego”
 
