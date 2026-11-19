@@ -20,14 +20,25 @@ export class AddPatternContextMenuTrigger {
   @HostListener('contextmenu', ['$event'])
   onRightClick(event: MouseEvent) {
     event.preventDefault();
-    const selection = window.getSelection()?.toString() ?? '';
-    const selectedText = selection.trim();
+    const selection = window.getSelection();
+    const selectedText = selection?.toString() ?? '';
+    const trimmedSelection = selectedText.trim();
 
-    if (selectedText) {
-      this.contextMenu.selectedWord = selectedText;
-      this.contextMenu.selectedText = selection;
+    if (trimmedSelection) {
+      this.contextMenu.selectedWord = trimmedSelection;
+      this.contextMenu.selectedText = selectedText;
       const target = event.target;
       const cell = target instanceof Element ? target.closest('td') : null;
+      const segmentFromNode = (node: Node | null): Element | null => {
+        const element = node instanceof Element ? node : node?.parentElement;
+        return element?.closest('span') ?? null;
+      };
+      const anchorSegment = segmentFromNode(selection?.anchorNode ?? null);
+      const focusSegment = segmentFromNode(selection?.focusNode ?? null);
+      const selectionSegment = anchorSegment === focusSegment ? anchorSegment : null;
+      const targetSegment = target instanceof Element ? target.closest('span') : null;
+      const segment = selectionSegment ?? targetSegment;
+      this.contextMenu.selectedSegment = segment?.textContent?.trim() ?? '';
       this.contextMenu.cellContent = cell?.textContent ?? '';
       this.contextMenu.x = event.clientX;
       this.contextMenu.y = event.clientY;

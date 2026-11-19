@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { PatternsService } from '../patterns-service';
 
 type PatternSortField = 'insertion' | 'type' | 'pattern';
+type PatternType = 'prefix' | 'suffix' | 'lexeme';
 type PatternSortOrder =
   | 'insertion-asc'
   | 'insertion-desc'
@@ -36,7 +37,12 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   @Input({ required: true }) patterns!: PatternsSerialized;
   @Input({ required: true }) language!: string;
   @Input({ required: true }) languageMetadata!: Language;
-  sortedPatterns: Array<{ type: 'prefix' | 'suffix' | 'lexeme'; pattern: string; index: number }> = [];
+  sortedPatterns: Array<{
+    type: PatternType;
+    pattern: string;
+    index: number;
+    onlyInContext?: string;
+  }> = [];
   sortBy: PatternSortField = 'insertion';
   sortOrder: PatternSortOrder = 'insertion-asc';
   readonly sortOrderOptions: Record<PatternSortField, Array<{ value: PatternSortOrder; label: string }>> = {
@@ -99,9 +105,22 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   }
 
   sortPatterns(): void {
-    const patterns = (['prefix', 'suffix', 'lexeme'] as const).flatMap(type =>
+    const patterns: typeof this.sortedPatterns = (['prefix', 'suffix', 'lexeme'] as const).flatMap(type =>
       this.patterns[type].map((pattern, index) => ({ type, pattern, index }))
     );
+    for (const [segment, pattern] of Object.entries(this.patterns.distinct ?? {})) {
+      for (const distinctType of ['prefix', 'suffix'] as const) {
+        const value = pattern[distinctType];
+        if (value) {
+          patterns.push({
+            type: distinctType,
+            pattern: value,
+            index: patterns.length,
+            onlyInContext: segment
+          });
+        }
+      }
+    }
 
     if (this.sortBy === 'insertion') {
       this.sortedPatterns = this.sortOrder === 'insertion-desc' ? patterns.reverse() : patterns;
@@ -133,12 +152,24 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
         this.alphabeticCharactersOnly(a.pattern),
         this.alphabeticCharactersOnly(b.pattern)
       );
-      return descending ? -alphabeticalDifference : alphabeticalDifference;
+      if (alphabeticalDifference) {
+        return descending ? -alphabeticalDifference : alphabeticalDifference;
+      }
+
+      const contextDifference = this.collator.compare(
+        this.alphabeticCharactersOnly(a.onlyInContext ?? ''),
+        this.alphabeticCharactersOnly(b.onlyInContext ?? '')
+      );
+      return descending ? -contextDifference : contextDifference;
     });
   }
 
-  deletePattern(type: 'prefix' | 'suffix' | 'lexeme', index: number): void {
-    this.patternsService.deletePattern(this.patterns, type, index);
+  deletePattern(item: typeof this.sortedPatterns[number]): void {
+    if (item.onlyInContext && item.type !== 'lexeme') {
+      this.patternsService.deleteDistinctPattern(this.patterns, item.onlyInContext, item.type);
+    } else {
+      this.patternsService.deletePattern(this.patterns, item.type, item.index);
+    }
     this.sortPatterns();
   }
 

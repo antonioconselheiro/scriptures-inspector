@@ -566,11 +566,14 @@ variation IDs and missing translation verses are errors.
 
 ### Patterns and lexicals
 
-Pattern types are `prefix`, `suffix` and `lexeme`; lexical types are `root`,
-`prefix` and `suffix`. Keys are normalized using the project's language
-configuration.
+Global pattern types are `prefix`, `suffix` and `lexeme`; `distinct` patterns
+associate an exact normalized segment with a segment-specific `prefix` and/or
+`suffix`. Distinct rules are applied to an otherwise unresolved root segment
+after global patterns, so they do not classify the same morpheme in other
+words. Lexical types are `root`, `prefix` and `suffix`. Matching uses the
+project's language normalization.
 
-List the book's prefix, suffix and lexeme patterns:
+List the book's global and distinct patterns:
 
 ```sh
 scriptures-inspector list-patterns --project . --target hebrew-stuttgartensia --book GEN
@@ -587,6 +590,26 @@ Remove the specified prefix pattern:
 ```sh
 scriptures-inspector remove-pattern "על" prefix --project . --target hebrew-stuttgartensia --book GEN
 ```
+
+Define א as a prefix only for the segment אֵחָבֵֽא. The final argument is the
+morpheme to split from that segment; use `prefix` or `suffix` to choose which
+side it occupies:
+
+```sh
+scriptures-inspector set-distinct-pattern "אֵחָבֵֽא" prefix "א" \
+  --project . --target hebrew-stuttgartensia --book GEN
+```
+
+Remove that segment-specific prefix definition:
+
+```sh
+scriptures-inspector remove-distinct-pattern "אֵחָבֵֽא" prefix \
+  --project . --target hebrew-stuttgartensia --book GEN
+```
+
+The equivalent context-menu action is **Define אֵ as prefix for אֵחָבֵֽא**.
+The suffix variant uses `suffix` in the CLI and the corresponding context-menu
+action. `list-patterns` includes distinct definitions in its JSON output.
 
 List all lexical entries for the book:
 

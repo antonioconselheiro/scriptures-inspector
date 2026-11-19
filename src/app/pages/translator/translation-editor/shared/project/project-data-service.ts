@@ -76,6 +76,8 @@ export class ProjectDataService {
     const lexemePatterns =
       preparePatterns(patterns.lexeme);
 
+    const distinctPatterns = patterns.distinct ?? new Map();
+
     /**
      * Normaliza a palavra preservando a correspondência
      * entre índices normalizados e índices originais.
@@ -147,7 +149,53 @@ export class ProjectDataService {
       ),
       morpheme,
       start: word.boundaries[start],
-      end: word.boundaries[end]
+      end: word.boundaries[end],
+      normalizedStart: start,
+      normalizedEnd: end
+    });
+
+    const applyDistinctPatterns = (
+      word: NormalizedWord,
+      segments: PatternSegment[]
+    ): PatternSegment[] => segments.flatMap(segment => {
+      if (segment.morpheme !== 'root') {
+        return [segment];
+      }
+
+      const distinct = distinctPatterns.get(
+        word.normalized.slice(segment.normalizedStart, segment.normalizedEnd)
+      );
+      if (!distinct) {
+        return [segment];
+      }
+
+      const prefix = distinct.prefix ?? '';
+      const suffix = distinct.suffix ?? '';
+      const prefixLength = prefix.length;
+      const suffixLength = suffix.length;
+      const segmentLength = segment.normalizedEnd - segment.normalizedStart;
+      if (
+        (prefixLength === 0 && suffixLength === 0)
+        || prefixLength + suffixLength > segmentLength
+        || (prefixLength > 0 && !word.normalized.startsWith(prefix, segment.normalizedStart))
+        || (suffixLength > 0 && !word.normalized.startsWith(suffix, segment.normalizedEnd - suffixLength))
+      ) {
+        throw new Error(`Invalid distinct pattern for segment: ${segment.word}`);
+      }
+
+      const result: PatternSegment[] = [];
+      const rootStart = segment.normalizedStart + prefixLength;
+      const rootEnd = segment.normalizedEnd - suffixLength;
+      if (prefixLength > 0) {
+        result.push(createSegment(word, segment.normalizedStart, rootStart, 'prefix'));
+      }
+      if (rootStart < rootEnd) {
+        result.push(createSegment(word, rootStart, rootEnd, 'root'));
+      }
+      if (suffixLength > 0) {
+        result.push(createSegment(word, rootEnd, segment.normalizedEnd, 'suffix'));
+      }
+      return result;
     });
 
     /**
@@ -838,13 +886,13 @@ export class ProjectDataService {
       }
 
       if (bestSegments) {
-        return bestSegments;
+        return applyDistinctPatterns(word, bestSegments);
       }
 
       /**
        * 2. Sem lexema.
        */
-      return segmentWithoutLexeme(word);
+      return applyDistinctPatterns(word, segmentWithoutLexeme(word));
     };
 
     /**

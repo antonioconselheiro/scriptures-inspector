@@ -54,19 +54,21 @@
       <tr>
         <th>Type</th>
         <th>Pattern</th>
+        <th>Only in context</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <th colspan="3">{{languageMetadataRecord[language].name}}</th>
+        <th colspan="4">{{languageMetadataRecord[language].name}}</th>
       </tr>
-      @for (item of sortedPatterns; track item.type + '-' + item.index) {
+      @for (item of sortedPatterns; track item.type + '-' + item.index + '-' + (item.onlyInContext ?? '')) {
       <tr>
         <td>{{item.type}}</td>
         <td>{{item.pattern}}</td>
+        <td [class.emptyContext]="!item.onlyInContext">{{item.onlyInContext ?? '—'}}</td>
         <td><button type="button" [attr.aria-label]="'Delete ' + item.type + ' pattern ' + item.pattern"
-          (click)="deletePattern(item.type, item.index)">×</button></td>
+          (click)="deletePattern(item)">×</button></td>
       </tr>
       }
     </tbody>

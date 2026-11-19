@@ -13,6 +13,7 @@ export async function loadTargetMetadataBookFn(project: Project, target: KeyMeta
   return {
     chapters: [],
     patterns: {
+      distinct: {},
       prefix: [],
       suffix: [],
       lexeme: []

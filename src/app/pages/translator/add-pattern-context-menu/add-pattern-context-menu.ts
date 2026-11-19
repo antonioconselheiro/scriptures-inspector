@@ -28,6 +28,7 @@ export class AddPatternContextMenu {
   project!: Project;
 
   selectedWord = '';
+  selectedSegment = '';
   selectedText = '';
   cellContent = '';
   visible = false;
@@ -47,6 +48,32 @@ export class AddPatternContextMenu {
       type,
       getProjectLanguageFn(this.project, this.sourceLanguage),
       word
+    );
+
+    if (this.current) {
+      this.systemService.triggerSaveCurrentBookMetadata(this.current);
+      this.systemService.triggerSaveCurrentBookInterlinear(this.current);
+    }
+
+    this.visible = false;
+  }
+
+  canDefineDistinct(type: 'prefix' | 'suffix'): boolean {
+    const normalize = getProjectLanguageFn(this.project, this.sourceLanguage).normalizeFn ?? ((value: string) => value);
+    const segment = normalize(this.selectedSegment);
+    const word = normalize(this.selectedWord);
+    return !!word
+      && word.length < segment.length
+      && (type === 'prefix' ? segment.startsWith(word) : segment.endsWith(word));
+  }
+
+  onAddDistinctPattern(type: 'prefix' | 'suffix'): void {
+    this.patternsService.addDistinctPattern(
+      this.bookTarget.patterns,
+      type,
+      getProjectLanguageFn(this.project, this.sourceLanguage),
+      this.selectedSegment,
+      this.selectedWord
     );
 
     if (this.current) {

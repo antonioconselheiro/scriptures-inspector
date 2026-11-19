@@ -5,4 +5,6 @@ export interface PatternSegment {
   morpheme: MorphemeType;
   start: number;
   end: number;
+  normalizedStart: number;
+  normalizedEnd: number;
 }

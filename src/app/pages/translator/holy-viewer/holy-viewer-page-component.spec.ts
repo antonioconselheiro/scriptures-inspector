@@ -109,7 +109,7 @@ describe('HolyViewerPageComponent', () => {
                       chapter: 1,
                       verses: [{ verse: 1, metadata: { '0-אב': { segment: 'אב', isWordOfGod: true } } }]
                     }],
-                    patterns: { prefix: [], suffix: [], lexeme: [] },
+                    patterns: { distinct: { 'גד': { prefix: 'ג' } }, prefix: [], suffix: [], lexeme: [] },
                     lexical: { 'אב': { value: 'Pai' } }
                   },
                   'related-metadata': {
@@ -293,12 +293,12 @@ describe('HolyViewerPageComponent', () => {
     const hebrewLine = fixture.nativeElement.querySelectorAll('.holyVerse')[1]
       .querySelector('.holyLine [lang="hebrew"]') as HTMLElement;
     expect(hebrewLine.textContent).toBe('גד־אב׀ה ו');
-    expect(Array.from(hebrewLine.children).map(child => child.textContent)).toEqual(['גד', 'אב', 'ה', 'ו']);
+    expect(Array.from(hebrewLine.children).map(child => child.textContent)).toEqual(['ג', 'ד', 'אב', 'ה', 'ו']);
     expect(Array.from(hebrewLine.childNodes).some(node => node.nodeType === Node.TEXT_NODE && node.textContent === '־'))
       .toBeTrue();
     const gematria = fixture.componentInstance.verses[1].lines.find(line => line.type === 'numerology');
-    expect(gematria?.pieces.map(piece => piece.text).join('')).toBe('7 3 5 6');
-    expect(gematria?.pieces.filter(piece => !piece.separator).map(piece => piece.color)).toEqual(['1', '2', '3', '4']);
+    expect(gematria?.pieces.map(piece => piece.text).join('')).toBe('34 3 5 6');
+    expect(gematria?.pieces.filter(piece => !piece.separator).map(piece => piece.color)).toEqual(['1', '2', '3', '4', '5']);
     const relatedGematria = verse.lines.find(line => line.type === 'numerology' && line.source === 'related');
     expect(relatedGematria?.pieces.map(piece => piece.text).join('')).toBe('7 3');
     expect(relatedGematria?.pieces.filter(piece => !piece.separator).map(piece => piece.color)).toEqual(['1', '']);
@@ -390,7 +390,7 @@ describe('HolyViewerPageComponent', () => {
     const secondVerse = root.querySelectorAll('.holyVerse')[1];
     const gematriaLine = Array.from(secondVerse.querySelectorAll('.holyLine'))
       .find(line => line.querySelector('.holyLineLabel')?.textContent?.trim() === 'gematria')!;
-    expect(gematriaLine.querySelector('span:last-child')?.textContent).toBe('7 3 5 6');
+    expect(gematriaLine.querySelector('span:last-child')?.textContent).toBe('34 3 5 6');
     expect(gematriaLine.querySelectorAll('.prisma1, .prisma2, .prisma3, .prisma4').length).toBe(4);
     const originalText = Array.from(root.querySelectorAll('.holyVerse'))[0].querySelectorAll('[title="Pai"]');
     const relatedText = Array.from(root.querySelectorAll('[title="relacionado"]'));

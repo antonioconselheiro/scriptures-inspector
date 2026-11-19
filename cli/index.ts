@@ -240,6 +240,11 @@ function patternType(value: string): 'prefix' | 'suffix' | 'lexeme' {
   return value;
 }
 
+function distinctPatternType(value: string): 'prefix' | 'suffix' {
+  if (value !== 'prefix' && value !== 'suffix') throw new Error(`Invalid distinct pattern type: ${value}`);
+  return value;
+}
+
 function output(value: unknown): void {
   console.log(JSON.stringify(value, null, 2));
 }
@@ -269,7 +274,8 @@ async function main(): Promise<void> {
     'remove-variations': ['target', 'book', 'variations'],
     'read-translation': ['target', 'book', 'chapter', 'verse', 'variations', 'origin', 'mode', 'variation-mode'],
     'list-patterns': ['target', 'book'], 'set-pattern': ['target', 'book'],
-    'remove-pattern': ['target', 'book'], 'list-lexicals': ['target', 'book'],
+    'remove-pattern': ['target', 'book'], 'set-distinct-pattern': ['target', 'book'],
+    'remove-distinct-pattern': ['target', 'book'], 'list-lexicals': ['target', 'book'],
     'get-lexical': ['target', 'book'], 'set-lexical': ['target', 'book'],
     'remove-lexical': ['target', 'book'], 'clean-unused-lexical': ['target', 'book'],
     'read-lexical': ['target', 'book', 'chapter', 'verse'],
@@ -313,6 +319,8 @@ async function main(): Promise<void> {
       'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered --variations ID[:overwrite|merge],...; --mode prismatic (default) or wordOfGod; --variation-mode sets the default for IDs without a mode (overwrite by default).',
       'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
       'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
+      'set-distinct-pattern': 'Set a segment-specific pattern: <segment> <prefix|suffix> <text>.',
+      'remove-distinct-pattern': 'Remove a segment-specific pattern: <segment> <prefix|suffix>.',
       'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
       'remove-lexical': 'Remove a lexical value: <text> <root|prefix|suffix>.',
       'clean-unused-lexical': 'Remove lexical entries unused in the book.',
@@ -445,7 +453,7 @@ async function main(): Promise<void> {
         : [];
       if (needsMetadata && metadataTargets.length !== 1) throw new Error(`Cannot determine unique metadata target for ${target}`);
       const metaTarget = needsMetadata ? identifier(metadataTargets[0], 'target') : '';
-      const bookMetadata = needsMetadata ? await loadTarget<BookMetadataTarget>(path.join(project.path, 'targets', metaTarget, `${book}.json`), () => ({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} })) : null;
+      const bookMetadata = needsMetadata ? await loadTarget<BookMetadataTarget>(path.join(project.path, 'targets', metaTarget, `${book}.json`), () => ({ chapters: [], patterns: { distinct: {}, prefix: [], suffix: [], lexeme: [] }, lexical: {} })) : null;
       const words = bookMetadata ? dataService.splitIntoMatrix(language, metadataService.parsePattern(bookMetadata.patterns, language), sourceVerse.text) : [];
       if (command === 'derivate-translation-from-lexical') {
         if (!bookMetadata) throw new Error('Metadata not available');
@@ -501,7 +509,7 @@ async function main(): Promise<void> {
             sourceData(project, item.source, book),
             loadTarget<BookMetadataTarget>(
               path.join(project.path, 'targets', identifier(item.metadataTarget, 'target'), `${book}.json`),
-              () => ({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} })
+              () => ({ chapters: [], patterns: { distinct: {}, prefix: [], suffix: [], lexeme: [] }, lexical: {} })
             )
           ]);
           return { ...data, metadata };
@@ -663,10 +671,19 @@ async function main(): Promise<void> {
     output(result);
     return;
   }
-  const metadata = await loadTarget<BookMetadataTarget>(file, () => ({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} }));
+  const metadata = await loadTarget<BookMetadataTarget>(file, () => ({ chapters: [], patterns: { distinct: {}, prefix: [], suffix: [], lexeme: [] }, lexical: {} }));
+  metadata.patterns.distinct ??= {};
   if (command === 'list-patterns') {
     expectPositionals(positional, 0);
-    outputList(metadata.patterns, ['TYPE', 'PATTERN'], (['prefix', 'suffix', 'lexeme'] as const).flatMap(type => metadata.patterns[type].map(pattern => [type, pattern])));
+    const distinct = Object.entries(metadata.patterns.distinct).flatMap(([segment, pattern]) =>
+      (['prefix', 'suffix'] as const).flatMap(type =>
+        pattern[type] ? [['distinct', `${segment} (${type}: ${pattern[type]})`]] : []
+      )
+    );
+    outputList(metadata.patterns, ['TYPE', 'PATTERN'], [
+      ...(['prefix', 'suffix', 'lexeme'] as const).flatMap(type => metadata.patterns[type].map(pattern => [type, pattern])),
+      ...distinct
+    ]);
     return;
   }
   if (command === 'list-lexicals') {
@@ -755,6 +772,20 @@ async function main(): Promise<void> {
       const index = metadata.patterns[type].indexOf(word);
       if (index < 0) throw new Error(`Pattern not found: ${word}`);
       patternService.deletePattern(metadata.patterns, type, index);
+    }
+    await save(file, metadata);
+    output(metadata.patterns);
+  } else if (command === 'set-distinct-pattern' || command === 'remove-distinct-pattern') {
+    expectPositionals(positional, command === 'set-distinct-pattern' ? 3 : 2);
+    const segment = positional[0];
+    const type = distinctPatternType(positional[1]);
+    if (command === 'set-distinct-pattern') {
+      patternService.addDistinctPattern(metadata.patterns, type, language, segment, positional[2]);
+    } else {
+      if (!metadata.patterns.distinct[segment]?.[type]) {
+        throw new Error(`Distinct pattern not found: ${segment} (${type})`);
+      }
+      patternService.deleteDistinctPattern(metadata.patterns, segment, type);
     }
     await save(file, metadata);
     output(metadata.patterns);

@@ -677,6 +677,11 @@
     }
   ],
   "patterns": {
+    "distinct": {
+      "אֵחָבֵֽא": {
+        "prefix": "א"
+      }
+    },
     "prefix": [
       "ו",
       "ה",
@@ -694,8 +699,7 @@
       "ת",
       "ממ",
       "ית",
-      "אי",
-      "א"
+      "אי"
     ],
     "suffix": [
       "׃",
@@ -1763,11 +1767,14 @@
       "value": "eu"
     },
     "א": {
-      "prefix": "eu|me",
+      "prefix": "me",
       "value": "e"
     },
     "אדמה": {
       "value": "terreno"
+    },
+    "אחבא": {
+      "value": "me escondi"
     }
   }
 }

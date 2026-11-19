@@ -20,4 +20,31 @@ describe('PatternsDialog', () => {
       { type: 'lexeme', pattern: 'run', index: 0 }
     ]);
   });
+
+  it('should list and remove distinct segment definitions', () => {
+    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService());
+    dialog.patterns = {
+      distinct: { careful: { suffix: 'ful' } },
+      prefix: [],
+      suffix: [],
+      lexeme: []
+    };
+
+    dialog.ngOnChanges();
+
+    expect(dialog.sortedPatterns).toEqual([
+      {
+        type: 'suffix',
+        pattern: 'ful',
+        index: 0,
+        onlyInContext: 'careful'
+      }
+    ]);
+    dialog.sortBy = 'type';
+    dialog.sortOrder = 'suffix-first';
+    dialog.sortPatterns();
+    expect(dialog.sortedPatterns[0].type).toBe('suffix');
+    dialog.deletePattern(dialog.sortedPatterns[0]);
+    expect(dialog.patterns.distinct).toEqual({});
+  });
 });

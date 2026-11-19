@@ -282,7 +282,7 @@ test('Word of God traverses multiple interlinear levels and mapped verse referen
   for (const name of ['hebrew-stuttgartensia-portuguese-metadata', 'greek-septuagint-custom-portuguese-metadata', 'geez-mashafa-qeddus-custom-portuguese-metadata']) {
     const file = path.join(project, 'targets', name, 'GEN.json');
     fs.mkdirSync(path.dirname(file), { recursive: true });
-    fs.writeFileSync(file, JSON.stringify({ chapters: [], patterns: { prefix: [], suffix: [], lexeme: [] }, lexical: {} }));
+    fs.writeFileSync(file, JSON.stringify({ chapters: [], patterns: { distinct: {}, prefix: [], suffix: [], lexeme: [] }, lexical: {} }));
   }
   success('set-word-of-god', ...target, '--chapter', '1', '--verse', '2', '--segments', '0');
   success('set-word-of-god', '--target', 'greek-septuagint', '--book', 'GEN', '--chapter', '1', '--verse', '2', '--segments', '1');
@@ -588,6 +588,25 @@ test('patterns and lexicals use normalization and persist changes', () => {
   assert.equal(JSON.parse(success('get-lexical', 'ברא', ...target)).prefix, undefined);
 });
 
+test('distinct patterns segment only their configured Hebrew word in CLI output', () => {
+  const file = path.join(project, 'targets/hebrew-stuttgartensia-portuguese-metadata/GEN.json');
+  const metadata = JSON.parse(fs.readFileSync(file, 'utf8'));
+  metadata.patterns.prefix = metadata.patterns.prefix.filter(pattern => pattern !== 'א');
+  metadata.patterns.distinct = {};
+  fs.writeFileSync(file, JSON.stringify(metadata));
+
+  success('set-distinct-pattern', 'אֵחָבֵֽא', 'prefix', 'א', ...target);
+  const patterns = JSON.parse(success('list-patterns', ...target));
+  assert.deepEqual(patterns.distinct, { 'אֵחָבֵֽא': { prefix: 'א' } });
+
+  const segments = JSON.parse(success('read-lexical', ...target, '--chapter', '3', '--verse', '10'));
+  assert.ok(segments.some(segment => segment.word === 'אֵ' && segment.morpheme === 'prefix'));
+  assert.ok(segments.some(segment => segment.word === 'חָבֵֽא' && segment.morpheme === 'root'));
+
+  success('remove-distinct-pattern', 'אֵחָבֵֽא', 'prefix', ...target);
+  assert.deepEqual(JSON.parse(success('list-patterns', ...target)).distinct, {});
+});
+
 test('clean-unused-lexical applies the shared editor rule to the entire book', () => {
   success('set-lexical', 'UNUSEDTEST', 'root', 'unused', ...target);
   const removed = JSON.parse(success('clean-unused-lexical', ...target)).removed;
@@ -626,7 +645,7 @@ test('reports invalid input and malformed targets without modifying data', () =>
 test('creates missing targets and preserves existing file permissions', () => {
   const file = path.join(project, 'targets/hebrew-stuttgartensia-portuguese-metadata/GEN.json');
   fs.unlinkSync(file);
-  assert.deepEqual(JSON.parse(success('list-patterns', ...target)), { prefix: [], suffix: [], lexeme: [] });
+  assert.deepEqual(JSON.parse(success('list-patterns', ...target)), { distinct: {}, prefix: [], suffix: [], lexeme: [] });
   success('set-lexical', 'ברא', 'root', 'create', ...target);
   fs.chmodSync(file, 0o640);
   success('set-lexical', 'ברא', 'root', 'new value', ...target);

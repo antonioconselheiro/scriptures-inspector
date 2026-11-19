@@ -49,8 +49,7 @@
       "T",
       "JT",
       ">J",
-      "KH",
-      ">"
+      "KH"
     ],
     "suffix": [
       "H",
@@ -1022,8 +1021,11 @@
       "value": "eu"
     },
     ">": {
-      "prefix": "eu|me",
+      "prefix": "",
       "value": "e"
+    },
+    ">XB>": {
+      "value": "me escondi"
     }
   }
 }

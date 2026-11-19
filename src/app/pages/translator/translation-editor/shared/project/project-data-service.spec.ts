@@ -380,6 +380,54 @@ describe('ProjectDataService', () => {
     }]);
   });
 
+  it('should apply a segment-specific prefix after global segmentation', () => {
+    const result = dataService.splitIntoMatrix(
+      hebrewLanguage,
+      metadataService.parsePattern({
+        distinct: { 'אֵחָבֵֽא': { prefix: 'א' } },
+        prefix: ['ו'],
+        suffix: ['׃'],
+        lexeme: []
+      }, hebrewLanguage),
+      'וָאֵחָבֵֽא׃'
+    );
+
+    expect(result).toEqual([{
+      segments: [
+        { word: 'וָ', index: 0, morpheme: 'prefix' },
+        { word: 'אֵ', index: 1, morpheme: 'prefix' },
+        { word: 'חָבֵֽא', index: 2, morpheme: 'root' },
+        { word: '׃', index: 3, morpheme: 'suffix' }
+      ]
+    }]);
+  });
+
+  it('should apply segment-specific suffixes only to their matching roots', () => {
+    const result = dataService.splitIntoMatrix(
+      englishLanguage,
+      metadataService.parsePattern({
+        distinct: { careful: { suffix: 'ful' } },
+        prefix: [],
+        suffix: [],
+        lexeme: []
+      }, englishLanguage),
+      'careful care'
+    );
+
+    expect(result).toEqual([
+      {
+        segments: [
+          { word: 'care', index: 0, morpheme: 'root' },
+          { word: 'ful', index: 1, morpheme: 'suffix' }
+        ],
+        separator: ' '
+      },
+      {
+        segments: [{ word: 'care', index: 2, morpheme: 'root' }]
+      }
+    ]);
+  });
+
   it('should respect lexemes', () => {
     const hebrewWord = 'וּרְב֗וּ';
     const hebrewPatterns: PatternsSerialized = {
