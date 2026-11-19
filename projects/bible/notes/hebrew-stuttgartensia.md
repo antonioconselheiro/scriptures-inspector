@@ -97,6 +97,43 @@ Também não é historicamente preciso dizer que a palavra **“espírito”** f
 - Oxford Classical Dictionary, [“Pneuma”](https://academic.oup.com/edited-volume/61673/chapter/549703161), para a relação etimológica de πνεῦμα com πνέω (“respirar/soprar”) e o sentido básico de ar em movimento/fôlego.
 - [“Spirit”, Etymonline](https://www.etymonline.com/word/spirit), para o desenvolvimento de *spiritus* desde “respiração/sopro” até “espírito” e seu uso cristão como equivalente de πνεῦμα.
 
+<a id="yamim-mares-dias"></a>
+## Gênesis 1:10 e 1:14 — ימים, “mares” e “dias”
+
+### Decisão lexical
+
+Foi considerada a possibilidade de traduzir por **“tempos”** as duas ocorrências da forma consonantal **ימים** em Gênesis 1:10 e 1:14. Sem os *niqqudim*, ambas têm a mesma sequência escrita: **ימים**. A decisão adotada, porém, é manter **“mares”** em Gênesis 1:10 e **“dias”** em 1:14, conforme o contexto. A entrada lexical do projeto registra os dois valores como alternativas — **“dias|mares”** — para que a tradução selecione o sentido contextual sem apagar a identidade consonantal que motivou a observação.
+
+Com a vocalização massorética, as formas e os lexemas são distintos: em 1:10 lê-se **יַמִּים (*yammîm*, “mares”)**, plural de **יָם (*yām*, “mar”)**; em 1:14, **יָמִים (*yāmîm*, “dias”)**, plural de **יוֹם (*yôm*, “dia”)**. Nos dois casos trata-se de formas plurais, mas de bases lexicais diferentes. A escrita sem vogais cria uma homografia real. É possível explorar a coincidência como ressonância literária ou teológica.
+
+“Tempos” foi rejeitado como tradução comum das duas ocorrências porque não comunica adequadamente os referentes locais. Em 1:10, **ימים** nomeia o conjunto das águas reunidas; em 1:14, aparece ao lado de “sinais”, “tempos determinados” (**מוֹעֲדִים**) e “anos”, na descrição das funções dos luminares. Traduzir ambos por “tempos” enfraqueceria tanto a nomeação concreta das águas quanto a referência a dias e ciclos calendáricos. A escolha contextual — “mares” em 1:10 e “dias” em 1:14 — mantém o sentido de cada frase e deixa a homografia disponível para o leitor.
+
+### “Mares”: nomeação, não necessariamente nome próprio
+
+Em Gênesis 1:10, Deus chama a porção seca de **אֶרֶץ** (“terra”) e o ajuntamento das águas de **יַמִּים** (“mares”). A fórmula “chamou X” pode dar à nomeação peso cosmogônico: a água reunida passa a ocupar uma categoria e um lugar na ordem criada. Numa leitura cabalística, é possível tomar esse ato como um nome dado por Deus a uma realidade primordial e perguntar se “Mares” funciona como nome de uma estrutura ou potência.
+
+O uso posterior, contudo, favorece a leitura de **יָם** como substantivo comum, não como nome próprio fixo. Em Gênesis 1:26 e 1:28, por exemplo, aparece **דְּגַת הַיָּם**, “os peixes do mar”; o artigo e a construção genitiva tratam “mar” como categoria ou domínio.
+
+### Mar, caos e ordem: alcance da leitura cabalística
+
+Uma leitura cabalística pode associar o mar ao caos primordial: não necessariamente mal moral, mas a realidade ainda não delimitada, cuja forma, fronteiras e possibilidades passam a ser ordenadas pela Palavra Divina. Gênesis começa com a terra descrita como **תֹהוּ וָבֹהוּ** e com o **תְּהוֹם** (“abismo”); depois, as águas são separadas e reunidas, a terra seca aparece e os limites entre os domínios recebem nomes. Nessa leitura simbólica, o mar pode figurar uma espécie de campo ainda aberto de possibilidades — uma “folha em branco” de tempos — sobre a qual Deus estabelece formas e orienta a história para uma direção que nenhuma potência finita poderia calcular.
+
+O texto bíblico também apresenta o mar como parte da criação, sujeito ao governo divino, e não apenas como caos hostil. Salmos 104:25–26 inclui o mar e Leviatã entre as obras de Deus; o monstro pode aparecer como criatura marinha. Em outras passagens, a imagética muda: Salmos 74:13–14 e Isaías 27:1 aproximam mar, dragões e Leviatã em cenas de derrota de forças ameaçadoras. Essas representações sustentam uma associação simbólica entre mar e caos em certos contextos.
+
+Apocalipse 21:1 declara que, na visão do novo céu e da nova terra, “o mar já não existe”. É possível ler essa imagem como a eliminação definitiva do caos que dá a possibilidade para forças hostis. A interpretação não é unívoca: estudos sobre a passagem também a entendem como nova criação que difere de Gênesis, como imagem da remoção de ameaças e poderes, ou por outras funções simbólicas e políticas. Portanto, “não haverá mar” pode servir de ressonância para a esperança de uma realidade sem caos.
+
+### Tradição rabínica e limites da pesquisa
+
+**Bereshit Rabbah 4:6** associa a ausência de “e Deus viu que era bom” no segundo dia à divisão ainda não concluída ou à desarmonia introduzida pela separação das águas, concluída no terceiro dia. É um paralelo rabínico para pensar a criação como passagem de conflito ou incompletude à ordem; não é uma interpretação da homografia **ימים** em 1:10 e 1:14.
+
+### Referências — ימים, “mares” e “dias”
+
+- [Gênesis 1:10 em hebraico](https://www.sefaria.org/Genesis.1.10?lang=bi), com **יַמִּים**; [Gênesis 1:14](https://www.sefaria.org/Genesis.1.14?lang=bi), com **יָמִים**; [Gênesis 1:26](https://www.sefaria.org/Genesis.1.26?lang=bi) e [1:28](https://www.sefaria.org/Genesis.1.28?lang=bi), com “peixes do mar”.
+- [Bereshit Rabbah 4:6](https://www.sefaria.org/Bereshit_Rabbah.4.6), sobre a separação das águas e o segundo dia.
+- [Salmos 104:25–26](https://www.sefaria.org/Psalms.104.25-26?lang=bi), que inclui o mar e Leviatã entre as obras divinas; [Salmos 74:13–14](https://www.sefaria.org/Psalms.74.13-14?lang=bi) e [Isaías 27:1](https://www.sefaria.org/Isaiah.27.1?lang=bi), para imagens do mar, dos dragões e de Leviatã.
+- [Bible Odyssey, “Biblical Conceptions of the Sea”](https://www.bibleodyssey.org/articles/biblical-conceptions-of-the-sea/) e [“Leviathan”](https://www.bibleodyssey.org/articles/leviathan/), sobre o mar sob o domínio de Deus e as diferentes representações de Leviatã, inclusive como força caótica ou criatura domesticada.
+- [Apocalipse 21:1 na NRSVUE](https://www.biblegateway.com/passage/?search=Revelation%2021%3A1&version=NRSVUE); para a interpretação da ausência do mar, ver também o estudo de [“The Sea That is No More”](https://brill.com/abstract/journals/nt/51/2/article-p148_3.xml), que discute os vários papéis da imagem marítima e leituras concorrentes de Apocalipse 21:1.
+
 <a id="genesis-1-20-creature-breath-fly"></a>
 ## Gênesis 1:20 — שֶׁרֶץ נֶפֶשׁ חַיָּה e וְעוֹף יְעוֹפֵף
 
@@ -232,12 +269,6 @@ Outras fontes ajudam a graduar a força da leitura:
 - **4 Macabeus 18:7–9**, obra judaica antiga, põe na fala da mãe dos mártires a afirmação de que nem sedutor nem “serpente enganadora” violou a pureza de sua virgindade. Sergey Minov considera esse trecho um possível indício de que o motivo sexual já circulava no período do Segundo Templo, mas isso é uma hipótese de história da tradição: a passagem não comenta diretamente Gênesis 3 nem identifica expressamente a serpente com a personagem de Eva.
 - O **Apocalipse de Moisés**, recensão grega da família textual mais ampla conhecida como **Vida de Adão e Eva** (capítulos 15–21), expande a narrativa de Gênesis: Satanás age pela boca da serpente, engana Eva e, no capítulo 19, põe no fruto seu “veneno” ou “desejo” (*epithymia*; traduzido em algumas versões como “luxúria”). Depois de comer, Eva percebe sua nudez. Isso aproxima desejo, serpente e nudez na recepção narrativa, mas o texto grego principal não relata claramente uma relação sexual de Eva com Satanás; a “luxúria” pode significar desejo/cobiça ou ser entendida sexualmente conforme a interpretação.
 - O **Zohar, Bereshit 44:455**, associa a serpente a Samael/Satan e reúne tradições de sedução, nudez e relação sexual com Eva. É um desenvolvimento místico medieval posterior, útil como testemunho de recepção, não como testemunho do sentido original do vocábulo.
-
-#### Limites da defesa
-
-Essas fontes sustentam bem a existência de uma antiga e persistente **tradição interpretativa** segundo a qual a serpente desejou Eva; algumas versões chegam a imaginar uma união sexual. Elas tornam defensável traduzir עָרוּם por “safado” nesta tradução de perfil simbólico, especialmente em contraponto a “pelados”. Não demonstram que esse seja o sentido lexical ordinário de עָרוּם, nem que Gênesis afirme literalmente que houve relação sexual. Por isso, “safado” deve ser apresentado como uma opção de tradução interpretativa informada pelo jogo de palavras e pela recepção rabínica.
-
-Não localizei, nas fontes consultadas, testemunho essênio ou dos Manuscritos do Mar Morto que ligue especificamente Gênesis 3:1 à paixão sexual da serpente por Eva. A coletânea de estudos sobre os Manuscritos do Mar Morto já disponível neste projeto contém o capítulo de Sergey Minov sobre a recepção siríaca, mas esse capítulo trata de tradições judaicas e cristãs posteriores/antigas; não é, por si, uma fonte essênia.
 
 #### Apocalipse de Moisés e a avaliação de E. Earle Ellis
 

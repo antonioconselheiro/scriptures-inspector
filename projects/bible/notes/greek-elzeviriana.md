@@ -8,7 +8,7 @@ A estratégia filológica acompanha a [abordagem descrita na nota hebraica](./he
 
 ## Fontes
 
-O texto Elzeviriano é identificado como a edição grega usada na tradução; as referências de consulta de passagens são indicadas individualmente nas notas. Não há, nos metadados de `sources/greek-elzeviriana`, um registro geral de proveniência equivalente ao informado para outras coleções.
+O texto Elzeviriano é identificado como a edição grega usada na tradução; as referências de consulta de passagens são indicadas individualmente nas notas.
 
 ## πνεῦμα — “fôlego”
 

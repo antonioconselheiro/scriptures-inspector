@@ -65,6 +65,27 @@ A justificativa para preferir “varão/varoa” a “homem/mulher” é resumid
 
 ## Gênesis
 
+## Gênesis 1:10 e 1:14 — ימים, “mares” e “dias”
+
+No texto consonantal crítico do Pentateuco Samaritano, **JMJM** aparece em Gênesis 1:10 para “mares” e em 1:14 para “dias”. A mesma sequência é, portanto, compatível com os dois sentidos, selecionados pelo contexto, como ocorre na decisão hebraica de traduzir “mares” em 1:10 e “dias” em 1:14. A forma singular de “dia” é **JWM** (por exemplo, Gênesis 1:5). O substantivo singular “mar” é **JM**, atestado em Gênesis 1:26 na forma com artigo **HJM** (“o mar”).
+
+Aplicando o mapeamento de escrita samaritana do projeto — **J → ࠉ**, **M → ࠌ**, **W → ࠅ** e **H → ࠄ** —, as formas ficam:
+
+| Sentido e passagem | Forma consonantal | Escrita samaritana |
+|---|---|---|
+| mares — Gênesis 1:10 | JMJM | ࠉࠌࠉࠌ |
+| dias — Gênesis 1:14 | JMJM | ࠉࠌࠉࠌ |
+| dia — Gênesis 1:5 | JWM | ࠉࠅࠌ |
+| o mar — Gênesis 1:26 | HJM | ࠄࠉࠌ |
+
+A decisão é manter “mares” e “dias” segundo cada contexto, sem apagar a identidade consonantal de **JMJM**. A semelhança permite observar uma ressonância gráfica entre os dois termos, mas não demonstra que tenham o mesmo sentido lexical ou que o texto necessariamente proponha um trocadilho. A leitura simbólica do mar e sua possível associação com o caos está desenvolvida na [explicação de ימים na nota hebraica](./hebrew-stuttgartensia.md#yamim-mares-dias); ela é uma interpretação comparativa aplicável à leitura, não uma afirmação atribuída ao texto samaritano.
+
+### Referências — ימים, “mares” e “dias”
+
+- [Gênesis 1:5](https://samaritantorah.com/gn1-5), para **JWM**; [1:10](https://samaritantorah.com/gn1-10), para **JMJM** como “mares”; e [1:14](https://samaritantorah.com/gn1-14), para **JMJM** como “dias”.
+- [Gênesis 1:26 no Pentateuco Samaritano](https://samaritantorah.com/gn1-26), para **HJM**, “o mar”.
+- A coleção de texto crítico usada pelo projeto tem como fonte [DT-UCPH/sp](https://github.com/DT-UCPH/sp); as equivalências Unicode acima seguem o mapeamento samaritano implementado no software.
+
 ### Gênesis 3:1 e 3:7 — Safados e Pelados
 
 | Referência | Forma consonantal samaritana | Decisão |
