@@ -44,9 +44,9 @@
       </select>
     </div>
     }
+    
+    <button type="submit" [disabled]="!metadataReady">Define Metadata</button>
   </fieldset>
-
-  <button type="submit" [disabled]="!metadataReady">Define Metadata</button>
 </form>
 
 @if (artifact) {
@@ -67,35 +67,41 @@
 
       <div>
         <strong>Show</strong>
-        <label for="transcriptionEditorShowImage" class="button">
-          <span>Imagem</span>
-          <input
-            type="checkbox"
-            id="transcriptionEditorShowImage"
-            #transcriptionEditorShowImage
-            (change)="showImage = transcriptionEditorShowImage.checked"
-          />
-        </label>
 
-        <label for="transcriptionEditorShowVector" class="button">
-          <span>Vector</span>
-          <input
-            type="checkbox"
-            id="transcriptionEditorShowVector"
-            #transcriptionEditorShowVector
-            (change)="showVector = transcriptionEditorShowVector.checked"
-          />
-        </label>
-
-        <label for="transcriptionEditorShowTranscriptionPositioning" class="button">
-          <span>Transcription Positioning</span>
-          <input
-            type="checkbox"
-            id="transcriptionEditorShowTranscriptionPositioning"
-            #transcriptionEditorShowTranscriptionPositioning
-            (change)="showTranscriptionPositioning = transcriptionEditorShowTranscriptionPositioning.checked"
-          />
-        </label>
+        <div class="transcriptionEditorWrapper">
+          <label for="transcriptionEditorShowImage" class="button">
+            <span>Imagem</span>
+            <input
+              type="checkbox"
+              id="transcriptionEditorShowImage"
+              #transcriptionEditorShowImage
+              [checked]="showImage"
+              (change)="showImage = transcriptionEditorShowImage.checked"
+            />
+          </label>
+  
+          <label for="transcriptionEditorShowVector" class="button">
+            <span>Vector</span>
+            <input
+              type="checkbox"
+              id="transcriptionEditorShowVector"
+              #transcriptionEditorShowVector
+              [checked]="showVector"
+              (change)="showVector = transcriptionEditorShowVector.checked"
+            />
+          </label>
+  
+          <label for="transcriptionEditorShowTranscriptionPositioning" class="button">
+            <span>Transcription Positioning</span>
+            <input
+              type="checkbox"
+              id="transcriptionEditorShowTranscriptionPositioning"
+              #transcriptionEditorShowTranscriptionPositioning
+              [checked]="showTranscriptionPositioning"
+              (change)="showTranscriptionPositioning = transcriptionEditorShowTranscriptionPositioning.checked"
+            />
+          </label>
+        </div>
       </div>
     }
 
@@ -118,7 +124,7 @@
       @if (artifact) {
         <div
           class="svgWrapper"
-          [innerHTML]="artifact.vector"
+          [innerHTML]="artifact.vector | safeSvg"
           [style.visibility]="showVector ? 'visible' : 'hidden'"
         ></div>
 

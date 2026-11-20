@@ -12,6 +12,7 @@ import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/pro
 import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { localImageUrlFn } from '@shared/project/local-image-url-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
+import { SafeSvgPipe } from '@shared/svg/safe-svg.pipe';
 import { Subscription } from 'rxjs';
 import { DefineTranscriptionDialog } from '../define-transcription-dialog/define-transcription-dialog';
 import { DefineVectorDialog } from '../define-vector-dialog/define-vector-dialog';
@@ -26,7 +27,8 @@ import { Router } from '@angular/router';
     CommonModule,
     ProjectNavigationToolbox,
     ReactiveFormsModule,
-    AsyncModalModule
+    AsyncModalModule,
+    SafeSvgPipe
   ],
   templateUrl: './transcription-editor-component.html',
   styleUrl: './transcription-editor-component.scss'
@@ -281,6 +283,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
         next: (result) => {
           if (result) {
             artifact.vector = result.vector;
+            this.cdr.markForCheck();
           }
         }
       });

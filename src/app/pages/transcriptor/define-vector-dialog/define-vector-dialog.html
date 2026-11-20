@@ -1,7 +1,7 @@
 <h2>Define Vector</h2>
 <div class="flex">
   <form [formGroup]="settingsForm">
-    <aside>
+    <aside class="filter">
       <h3>Filter</h3>
       <div>
         <label for="vectorBrightness">Brightness</label>
@@ -41,11 +41,11 @@
 
     <div
       class="svgWrapper"
-      [innerHTML]="tracedSvgSafe"
+      [innerHTML]="tracedSvg | safeSvg"
       [style.visibility]="showVector ? 'visible' : 'hidden'"
     ></div>
 
-    <app-artifact-text-editor text=""></app-artifact-text-editor>
+    <app-artifact-text-editor-component text=""></app-artifact-text-editor-component>
   </div>
 </div>
 

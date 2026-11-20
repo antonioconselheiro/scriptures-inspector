@@ -1,3 +1,7 @@
+.filter {
+  padding-right: 1rem;
+}
+
 .graphicsWrapper {
   position: relative;
 
@@ -15,5 +19,9 @@
     left: 0;
     color: white;
     filter: drop-shadow(5px 5px 5px #333) opacity(.5);
+  }
+  
+  app-artifact-text-editor-component {
+    float: left;
   }
 }

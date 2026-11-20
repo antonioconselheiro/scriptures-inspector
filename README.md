@@ -54,6 +54,9 @@ CLI tests. `npm run build` (or `npm run build:lnx`) builds the standard Linux
 Debian application package without the **Reload**, **Force Reload**, and
 **Toggle Developer Tools** menu options. Use `npm run build:debug` to build a
 package with those debugging options enabled.
+Run `npm run lint` to check that application components keep their templates and
+styles in separate files. Inline templates in test fixtures remain allowed.
+Run `npm run test:lint` to test this lint rule.
 The devcontainer also includes `rpmbuild` from Debian's `rpm` package. After
 rebuilding the devcontainer, build the web application and create an RPM with:
 

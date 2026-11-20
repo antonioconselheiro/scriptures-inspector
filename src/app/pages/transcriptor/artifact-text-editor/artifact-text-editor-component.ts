@@ -16,126 +16,18 @@ import {
   NgxMoveableModule,
 } from 'ngx-moveable';
 import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
-import { ArtifactFragmentView } from './artifact-fragment-view-model';
+import { ArtifactFragmentView } from '../artifact-fragment-view-model';
 
 @Component({
-  selector: 'app-artifact-text-editor',
+  selector: 'app-artifact-text-editor-component',
   standalone: true,
 
   imports: [
     NgxMoveableModule,
   ],
 
-  template: `
-    <div
-      #canvas
-      class="artifact-canvas"
-      (click)="onCanvasClick($event)"
-    >
-
-      @for (fragment of views; track fragment.index) {
-        <span
-          #fragmentElement
-          class="artifact-fragment"
-          [class.measuring]="measuring"
-          [class.selected]="selectedIndex === fragment.index"
-          [attr.data-fragment-index]="fragment.index"
-
-          [style.left.px]="
-            measuring ? null : fragment.x
-          "
-
-          [style.top.px]="
-            measuring ? null : fragment.y
-          "
-
-          [style.transform]="
-            measuring
-              ? null
-              : 'rotate(' + fragment.flip + 'deg)'
-          "
-
-          (click)="onFragmentClick($event, fragment)"
-        >
-          {{ fragment.text }}
-        </span>
-      }
-
-      @if (selectedElement) {
-        <ngx-moveable
-          [target]="selectedElement"
-
-          [draggable]="true"
-          [rotatable]="true"
-
-          [resizable]="false"
-          [scalable]="false"
-          [warpable]="false"
-          [pinchable]="false"
-
-          [origin]="true"
-          [edge]="false"
-
-          [throttleDrag]="1"
-          [throttleRotate]="1"
-
-          (drag)="onDrag($event)"
-          (rotate)="onRotate($event)"
-        />
-      }
-
-    </div>
-  `,
-
-  styles: [`
-    :host {
-      display: block;
-    }
-
-    .artifact-canvas {
-      position: relative;
-      width: 100%;
-      min-height: 300px;
-
-      /*
-       * É importante preservar whitespace enquanto
-       * estamos fazendo a medição inicial.
-       */
-      white-space: pre-wrap;
-
-      overflow: hidden;
-      user-select: none;
-    }
-
-    /*
-     * Estado temporário usado somente durante
-     * a medição inicial.
-     */
-    .artifact-fragment.measuring {
-      position: static;
-      display: inline;
-    }
-
-    /*
-     * Depois da medição cada fragmento passa a
-     * ser independente.
-     */
-    .artifact-fragment:not(.measuring) {
-      position: absolute;
-      display: inline-block;
-
-      white-space: pre;
-
-      transform-origin: center center;
-
-      cursor: pointer;
-    }
-
-    .artifact-fragment.selected {
-      outline: 1px dashed #1976d2;
-      outline-offset: 2px;
-    }
-  `],
+  templateUrl: './artifact-text-editor-component.html',
+  styleUrl: './artifact-text-editor-component.scss',
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

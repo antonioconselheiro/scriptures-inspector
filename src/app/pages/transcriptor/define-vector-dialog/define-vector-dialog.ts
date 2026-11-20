@@ -1,17 +1,18 @@
 import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
+import { SafeSvgPipe } from '@shared/svg/safe-svg.pipe';
 import { Subject } from 'rxjs';
-import { ArtifactTextEditorComponent } from '../artifact-text-editor';
+import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
 
 @Component({
   selector: 'app-define-vector-dialog',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    ArtifactTextEditorComponent
+    ArtifactTextEditorComponent,
+    SafeSvgPipe
   ],
   templateUrl: './define-vector-dialog.html',
   styleUrl: './define-vector-dialog.scss',
@@ -64,7 +65,6 @@ export class DefineVectorDialog extends ModalableDirective<{
 
   constructor(
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer,
     private fb: FormBuilder
   ) {
     super();
@@ -85,10 +85,6 @@ export class DefineVectorDialog extends ModalableDirective<{
         this.cdr.detectChanges();
       })
       .catch(e => console.error(e));
-  }
-
-  get tracedSvgSafe() {
-    return this.sanitizer.bypassSecurityTrustHtml(this.tracedSvg);
   }
 
   get showImage(): boolean {

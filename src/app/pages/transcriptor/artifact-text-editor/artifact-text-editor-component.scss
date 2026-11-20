@@ -1,0 +1,47 @@
+:host {
+  display: block;
+}
+
+.artifact-canvas {
+  position: relative;
+  width: 100%;
+  min-height: 300px;
+
+  /*
+   * É importante preservar whitespace enquanto
+   * estamos fazendo a medição inicial.
+   */
+  white-space: pre-wrap;
+
+  overflow: hidden;
+  user-select: none;
+}
+
+/*
+ * Estado temporário usado somente durante
+ * a medição inicial.
+ */
+.artifact-fragment.measuring {
+  position: static;
+  display: inline;
+}
+
+/*
+ * Depois da medição cada fragmento passa a
+ * ser independente.
+ */
+.artifact-fragment:not(.measuring) {
+  position: absolute;
+  display: inline-block;
+
+  white-space: pre;
+
+  transform-origin: center center;
+
+  cursor: pointer;
+}
+
+.artifact-fragment.selected {
+  outline: 1px dashed #1976d2;
+  outline-offset: 2px;
+}
