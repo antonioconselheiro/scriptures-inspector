@@ -6,6 +6,7 @@ import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-pos
 import { Language } from '@domain/language-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
 import { addNestedPosition, validNestedUpdate, validPosition } from '../transcription-positions';
+import { v4 as uuid } from 'uuid';
 
 interface TextSegment {
   start: number;
@@ -30,7 +31,9 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
   @Input() language?: Language;
   @Input() spelling?: LanguageAlternativeSpelling;
   @Input() boundsElement?: HTMLElement;
+  @Input() preserveSelectionOnChange = false;
   @Output() fragmentsChange = new EventEmitter<ArtifactFragmentWordPosition[]>();
+  @Output() selectionChange = new EventEmitter<number | null>();
 
   selectedIndex: number | null = null;
   selectedElement: HTMLElement | null = null;
@@ -58,7 +61,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
         !target.closest('.artifact-fragment, .floating-toolbar, ngx-moveable')) this.newEdit();
       return;
     }
-    if (target instanceof Element && target.closest('.edit-panel button, .edit-panel input, .delete-confirmation')) return;
+    if (target instanceof Element && target.closest('.edit-panel button, .edit-panel input, .delete-confirmation, .position-fields')) return;
     this.newEdit();
     this.cdr.markForCheck();
   }
@@ -76,11 +79,16 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
         this.boundsObserver.observe(this.boundsElement);
       }
     }
-    if (changes['text'] && !changes['text'].firstChange) this.newEdit();
+    if (changes['text'] && !changes['text'].firstChange) this.newEdit(false);
     const change = changes['fragments'];
     if (change && !change.firstChange && change.currentValue !== change.previousValue &&
       change.currentValue !== this.lastEmitted) {
-      this.newEdit();
+      if (this.preserveSelectionOnChange && this.selectedIndex !== null && this.fragments[this.selectedIndex]) {
+        this.draft = { ...this.fragments[this.selectedIndex] };
+        this.refreshControls(true);
+      } else {
+        this.newEdit(false);
+      }
       this.checked.clear();
     }
   }
@@ -133,6 +141,147 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     return segments;
   }
 
+  generateEdits(mode: 'text' | 'lines'): void {
+    const ranges: { start: number; length: number }[] = [];
+    if (mode === 'text' && this.text.length) {
+      ranges.push({ start: 0, length: this.text.length });
+    } else if (mode === 'lines') {
+      const linePattern = /[^\r\n]+/g;
+      for (const match of this.text.matchAll(linePattern)) {
+        ranges.push({ start: match.index, length: match[0].length });
+      }
+    }
+    if (!ranges.length) {
+      this.error = 'There is no text to turn into an edit.';
+      return;
+    }
+    if (this.boundsElement) {
+      const bounds = this.boundsElement.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) {
+        this.error = 'The image or SVG must be loaded before positioning text.';
+        return;
+      }
+    }
+
+    const original = this.fragments;
+    const originalSelected = this.selectedIndex;
+    const originalElement = this.selectedElement;
+    const next = original.map(position => ({ ...position }));
+    let added = 0;
+    let failure = '';
+    try {
+      for (const range of ranges) {
+        const end = range.start + range.length;
+        if (next.some(item => item.start === range.start && item.length === range.length)) continue;
+        const overlaps = next.filter(item => range.start < item.start + item.length && item.start < end);
+        if (overlaps.some(item =>
+          !(item.start <= range.start && item.start + item.length >= end) &&
+          !(range.start <= item.start && end >= item.start + item.length))) {
+          failure = 'An existing edit crosses a line boundary. Adjust that edit before generating line edits.';
+          break;
+        }
+        const containing = overlaps.filter(item => item.start <= range.start && item.start + item.length >= end)
+          .sort((a, b) => a.length - b.length)[0];
+        const parentIndex = containing ? next.indexOf(containing) : null;
+        const parent = parentIndex === null ? this.canvas.nativeElement :
+          this.canvas.nativeElement.querySelector<HTMLElement>(`[data-fragment-index="${parentIndex}"]`);
+        if (!parent) {
+          failure = 'Unable to measure the existing edit. Try again after the text is rendered.';
+          break;
+        }
+        const anchor = this.sourceRange(parentIndex, range.start, range.start + 1);
+        const complete = this.sourceRange(parentIndex, range.start, end);
+        if (!anchor || !complete) {
+          failure = 'Unable to measure the text for the new edits.';
+          break;
+        }
+        const position = this.rangePosition(anchor, parent);
+        const visualLines = this.unrotated(parent, () =>
+          new Set(Array.from(complete.getClientRects(), rect => Math.round(rect.top * 10))).size);
+        const logicalLines = this.text.slice(range.start, end).split(/\r\n|\r|\n/).length;
+        const parentId = containing ? (containing.id ??= uuid()) : undefined;
+        const childIndices = next.map((item, index) => ({ item, index }))
+          .filter(({ item }) => item.parentId === parentId && item.start >= range.start && item.start + item.length <= end)
+          .map(({ index }) => index);
+        const created: ArtifactFragmentWordPosition = {
+          ...range, id: uuid(), parentId, x: position.x, y: position.y, flip: 0,
+          alignLeft: parentIndex === null || getComputedStyle(parent).textAlign === 'left'
+        };
+        if (visualLines > logicalLines) created.width = parent.clientWidth;
+        for (const index of childIndices) {
+          next[index] = { ...next[index], parentId: created.id, x: next[index].x - created.x, y: next[index].y - created.y };
+        }
+        next.push(created);
+        this.fragments = next;
+        this.cdr.detectChanges();
+
+        const newIndex = next.length - 1;
+        const newParent = parentIndex === null ? this.canvas.nativeElement :
+          this.canvas.nativeElement.querySelector<HTMLElement>(`[data-fragment-index="${parentIndex}"]`);
+        const newAnchor = this.sourceRange(newIndex, range.start, range.start + 1);
+        if (!newParent || !newAnchor) {
+          failure = 'Unable to measure the generated edit.';
+          break;
+        }
+        const after = this.rangePosition(newAnchor, newParent);
+        const dx = position.x - after.x;
+        const dy = position.y - after.y;
+        created.x += dx;
+        created.y += dy;
+        for (const index of childIndices) {
+          next[index].x -= dx;
+          next[index].y -= dy;
+        }
+        this.cdr.detectChanges();
+        added++;
+      }
+      if (!failure && added) failure = this.validatePositions(this.text, next) ?? '';
+    } finally {
+      this.fragments = original;
+      this.cdr.detectChanges();
+      this.selectedElement = originalSelected !== null && originalElement
+        ? this.canvas.nativeElement.querySelector<HTMLElement>(`[data-fragment-index="${originalSelected}"]`)
+        : null;
+    }
+    if (failure) {
+      this.error = failure;
+      return;
+    }
+    if (!added) {
+      this.error = 'These edits already exist.';
+      return;
+    }
+    this.newEdit();
+    this.emitFragments(next);
+  }
+
+  private sourceRange(parentIndex: number | null, start: number, end: number): Range | null {
+    const parent = parentIndex === null
+      ? this.canvas.nativeElement.querySelector<HTMLElement>('.baseline')
+      : this.canvas.nativeElement.querySelector<HTMLElement>(`[data-fragment-index="${parentIndex}"]`);
+    if (!parent) return null;
+    const segments = this.segmentsFor(parentIndex);
+    const endpoint = (offset: number, isEnd: boolean): { node: Text; offset: number } | null => {
+      const segment = segments.find(item => isEnd
+        ? offset > item.start && offset <= item.start + item.text.length
+        : offset >= item.start && offset < item.start + item.text.length);
+      if (!segment) return null;
+      const span = Array.from(parent.children).find(element =>
+        element instanceof HTMLElement && element.dataset['segmentStart'] === String(segment.start));
+      const node = span?.firstChild;
+      if (!(node instanceof Text)) return null;
+      const displayedOffset = this.displayText(segment.text.slice(0, offset - segment.start)).length;
+      return displayedOffset <= node.length ? { node, offset: displayedOffset } : null;
+    };
+    const first = endpoint(start, false);
+    const last = endpoint(end, true);
+    if (!first || !last) return null;
+    const range = document.createRange();
+    range.setStart(first.node, first.offset);
+    range.setEnd(last.node, last.offset);
+    return range;
+  }
+
   selectCanvasText(): void {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0 || selection.isCollapsed) return;
@@ -169,13 +318,14 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     if (!this.error) selection.removeAllRanges();
   }
 
-  newEdit(): void {
+  newEdit(notify = true): void {
     this.selectedIndex = null;
     this.selectedElement = null;
     this.draft = this.emptyDraft();
     this.error = '';
     this.deleteIndex = null;
     this.selectingPart = false;
+    if (notify) this.selectionChange.emit(null);
   }
 
   selectEdit(index: number, element?: HTMLElement): void {
@@ -186,6 +336,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     this.deleteIndex = null;
     this.selectingPart = false;
     this.selectedElement = element ?? this.canvas.nativeElement.querySelector<HTMLElement>(`[data-fragment-index="${index}"]`);
+    this.selectionChange.emit(index);
     this.cdr.markForCheck();
   }
 
@@ -513,6 +664,14 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
   }
 
   private rangePosition(range: Range, parent: HTMLElement): { x: number; y: number } {
+    return this.unrotated(parent, () => {
+      const rect = range.getBoundingClientRect();
+      const origin = parent.getBoundingClientRect();
+      return { x: rect.left - origin.left, y: rect.top - origin.top };
+    });
+  }
+
+  private unrotated<T>(parent: HTMLElement, measure: () => T): T {
     const changed: { element: HTMLElement; transform: string }[] = [];
     let node: HTMLElement | null = parent;
     while (node && node !== this.canvas.nativeElement) {
@@ -523,9 +682,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
       node = node.parentElement;
     }
     try {
-      const rect = range.getBoundingClientRect();
-      const origin = parent.getBoundingClientRect();
-      return { x: rect.left - origin.left, y: rect.top - origin.top };
+      return measure();
     } finally {
       for (const item of changed) item.element.style.transform = item.transform;
     }

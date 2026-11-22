@@ -1,7 +1,7 @@
 <div #canvas class="artifact-canvas" [style.height.px]="boundsHeight" [attr.dir]="direction" [attr.lang]="language?.label || null" [style.font-family]="spelling?.font || null">
   <div class="baseline" (mouseup)="selectCanvasText()">
     @for (segment of segments; track segment.start) {
-      <span [attr.data-segment-start]="segment.start" [style.visibility]="segment.hidden ? 'hidden' : 'visible'">{{ displayText(segment.text) }}</span>
+      <span [attr.data-segment-start]="segment.start" [style.visibility]="segment.hidden ? 'hidden' : null">{{ displayText(segment.text) }}</span>
     }
   </div>
   @for (index of children(); track index) {
@@ -12,10 +12,12 @@
     <span #fragmentElement class="artifact-fragment" [class.selected]="selectedIndex === index || pendingDeletion.includes(index)"
       [attr.data-fragment-index]="index" [style.left.px]="fragment.x" [style.top.px]="fragment.y"
       [style.transform]="'rotate(' + fragment.flip + 'deg)'"
+      [style.text-align]="fragment.alignLeft ? 'left' : null"
+      [style.width.px]="fragment.width ?? null"
       [style.font-size.px]="fragment.fontSize ?? null" [style.letter-spacing.px]="fragment.letterSpacing ?? null"
       (mouseup)="onFragmentMouseUp($event)" (click)="$event.stopPropagation(); selectEdit(index, fragmentElement)">
       @for (segment of segmentsFor(index); track segment.start) {
-        <span [attr.data-segment-start]="segment.start" [style.visibility]="segment.hidden ? 'hidden' : 'visible'">{{ displayText(segment.text) }}</span>
+        <span [attr.data-segment-start]="segment.start" [style.visibility]="segment.hidden ? 'hidden' : null">{{ displayText(segment.text) }}</span>
       }
       @if (fragment.id) {
         @for (child of children(fragment.id); track child) {
@@ -48,6 +50,8 @@
 
 <aside class="edit-panel">
   <h3>Transcription edits</h3>
+  <button type="button" (click)="generateEdits('text')" [disabled]="!text.length">Create edit for entire text</button>
+  <button type="button" (click)="generateEdits('lines')" [disabled]="!text.length">Create edits for each line</button>
   <p>Select text on the fragment to position it. To select part of a positioned edit, click outside it or choose Select part first.</p>
   @if (selectingPart) { <p role="status">Select part of the text on the fragment.</p> }
   @if (fragments.length === 0) { <p>No edits yet.</p> }
@@ -56,8 +60,9 @@
       <li>
         <input #check type="checkbox" [checked]="checked.has($index)"
           (change)="toggleChecked($index, check.checked)" [attr.aria-label]="'Select edit ' + ($index + 1)">
-        <button type="button" (click)="selectEdit($index)">
-          {{ fragment.start }} + {{ fragment.length }}: {{ displayText(text.slice(fragment.start, fragment.start + fragment.length)) }}
+        <button type="button" (click)="selectEdit($index)"
+          [title]="displayText(text.slice(fragment.start, fragment.start + fragment.length))">
+          {{ fragment.start }} + {{ fragment.length }}
         </button>
         <button type="button" (click)="requestDelete($index)" [attr.aria-label]="'Delete edit ' + ($index + 1)">Delete</button>
       </li>
@@ -67,7 +72,7 @@
   <button type="button" [disabled]="fragments.length === 0" (click)="requestBulkDelete(true)">Delete all edits</button>
   @if (pendingDeletion.length) {
     <div class="delete-confirmation" role="alert">
-      <p>The following text will lose its positioning and formatting. Nested edits not selected for deletion will be kept.</p>
+      <p>The following text will lose its positioning and formatting.</p>
       <ul>
         @for (index of pendingDeletion; track index) {
           <li>{{ displayText(text.slice(fragments[index].start, fragments[index].start + fragments[index].length)) }}</li>

@@ -11,21 +11,7 @@
 Scriptures Inspector is a philological tool for studying ancient texts and
 expressing their relationship to translations. It associates original-language
 segments with lexical values, morphological patterns, custom translations and
-interlinear alignments. Color helps readers follow those associations. Lexical
-values can describe the effect of a morpheme rather than a literal word-for-word
-translation. A custom translation may consequently divide or phrase text
-differently while retaining its links to the original.
-
-Projects can combine multiple codices and languages, indicate passages marked
-as the Word of God, and define translation variations as small overrides of a
-custom translation. Variations can be combined without creating a separate
-complete translation for each combination.
-
-In the translation editor, right-click a **scriptures** selector in a custom
-translation to fill associations sequentially or move/return them from that
-position to the right. These actions leave word-span sizes unchanged. Selecting
-the empty option clears only that segment's association. Sequential filling
-asks before overwriting existing associations.
+interlinear alignments.
 
 ## Linux installation
 
@@ -72,27 +58,6 @@ npm run make -- --targets=@electron-forge/maker-rpm
 
 The resulting RPM is written under `out/make/rpm/`. Creating a package does
 not install it.
-
-## Current Preview
-
-Open **Preview Current** from the editor to view the current chapter in the
-Holy Viewer. Its settings let you choose custom translation variations in
-order: choose `overwrite` or `merge` beside the variation selector before
-adding each variation, remove variations from their tags, or drag tags to
-change their order. The last nonempty `overwrite` determines each span's
-main text; all nonempty `merge` alternatives appear in parentheses after
-it, separated by semicolons. If no overwrite applies, the original text
-remains. Each tag displays its mode. Existing configurations with a global
-mode retain that mode for previously selected variations. Associated original,
-interlinear and translation segments are underlined together while hovered or
-keyboard-focused.
-
-Holy Viewer settings are stored in the project-root `.scriptures-inspector`
-file and loaded again when the preview opens. The file is separate from the
-application's project data and preserves other settings stored there.
-The preview also includes the editor's book/chapter/verse navigation toolbox;
-changing books or chapters stays in the preview, and choosing a verse scrolls
-to it or selects it when it is outside the configured passage.
 
 ## Project and CLI conventions
 

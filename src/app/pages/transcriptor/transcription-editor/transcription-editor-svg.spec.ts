@@ -90,6 +90,50 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     fixture.destroy();
   });
 
+  it('passes the fragment preview configuration to the transcription dialog and applies only saved changes', () => {
+    const results = new Subject<{ transcription: string; positions: { start: number; length: number; x: number; y: number; flip: number }[] } | void>();
+    const modal = {
+      setBindToRoute() { return this; },
+      setData: jasmine.createSpy().and.callFake(() => modal),
+      setOutletName() { return this; },
+      build() { return results; }
+    };
+    TestBed.configureTestingModule({
+      imports: [TranscriptionEditorComponent],
+      providers: [
+        { provide: Router, useValue: {} },
+        { provide: ActivatedRoute, useValue: {} },
+        { provide: ModalService, useValue: { createModal: () => modal } },
+        { provide: CollectionsStatefull, useValue: { currentValue: [], data$: new Subject() } }
+      ]
+    }).overrideComponent(TranscriptionEditorComponent, {
+      remove: { imports: [ProjectNavigationToolbox, AsyncModalModule] },
+      add: { imports: [NavigationStub] }
+    });
+    const fixture = TestBed.createComponent(TranscriptionEditorComponent);
+    const component = fixture.componentInstance;
+    const artifact = {
+      language: 'hebrew' as const, spelling: '', vector: '<svg width="200" height="100"></svg>',
+      transcription: 'abc', positions: [{ start: 0, length: 1, x: 10, y: 10, flip: 0 }], bookSchema: []
+    };
+    component.artifact = artifact;
+    component.showVector = false;
+    spyOn(component, 'getImage').and.returnValue('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==');
+    fixture.detectChanges();
+    component.openDialogEditTranscription(artifact);
+    expect(modal.setData).toHaveBeenCalledWith(jasmine.objectContaining({
+      fragmentImage: component.getImage(), vector: artifact.vector, language: component.artifactLanguage,
+      showImage: true, showVector: false, showTranscriptionPositioning: true
+    }));
+    results.next();
+    expect(artifact.transcription).toBe('abc');
+    expect(artifact.positions.length).toBe(1);
+    results.next({ transcription: 'changed', positions: [] });
+    expect(artifact.transcription).toBe('changed');
+    expect(artifact.positions).toEqual([]);
+    fixture.destroy();
+  });
+
   it('keeps visible checkboxes synchronized with their layers across artifact changes', () => {
     TestBed.configureTestingModule({
       imports: [TranscriptionEditorComponent],
@@ -154,6 +198,51 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
       expect(component[property]).withContext(id).toBeTrue();
       expect(target.style.visibility).withContext(id).toBe('visible');
     }
+    fixture.destroy();
+  });
+
+  it('hides and restores positioned and unpositioned text with the transcription toggle', () => {
+    TestBed.configureTestingModule({
+      imports: [TranscriptionEditorComponent],
+      providers: [
+        { provide: Router, useValue: {} },
+        { provide: ActivatedRoute, useValue: {} },
+        { provide: ModalService, useValue: {} },
+        { provide: CollectionsStatefull, useValue: { currentValue: [], data$: new Subject() } }
+      ]
+    }).overrideComponent(TranscriptionEditorComponent, {
+      remove: { imports: [ProjectNavigationToolbox, AsyncModalModule] },
+      add: { imports: [NavigationStub] }
+    });
+    const fixture = TestBed.createComponent(TranscriptionEditorComponent);
+    const positions = [
+      { id: 'parent', start: 0, length: 5, x: 10, y: 10, flip: 0 },
+      { id: 'child', parentId: 'parent', start: 1, length: 3, x: 5, y: 5, flip: 0 }
+    ];
+    fixture.componentInstance.artifact = {
+      language: 'hebrew', spelling: '', vector: '<svg width="200" height="100"></svg>',
+      transcription: 'First second', positions, bookSchema: []
+    };
+    fixture.detectChanges();
+
+    const baseline: HTMLElement = fixture.nativeElement.querySelector('.baseline [data-segment-start="5"]');
+    const parentText: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="0"] > [data-segment-start="0"]');
+    const childText: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="1"] > [data-segment-start="1"]');
+    const toggle: HTMLInputElement = fixture.nativeElement.querySelector('#transcriptionEditorShowTranscriptionPositioning');
+    const covered: HTMLElement = fixture.nativeElement.querySelector('.baseline [data-segment-start="0"]');
+    const textElements = [baseline, parentText, childText];
+    for (const text of textElements) expect(getComputedStyle(text).visibility).toBe('visible');
+    expect(getComputedStyle(covered).visibility).toBe('hidden');
+
+    toggle.click();
+    fixture.detectChanges();
+    for (const text of textElements) expect(getComputedStyle(text).visibility).toBe('hidden');
+    expect(fixture.componentInstance.artifact.positions).toEqual(positions);
+
+    toggle.click();
+    fixture.detectChanges();
+    for (const text of textElements) expect(getComputedStyle(text).visibility).toBe('visible');
+    expect(getComputedStyle(covered).visibility).toBe('hidden');
     fixture.destroy();
   });
 

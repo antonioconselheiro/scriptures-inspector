@@ -87,4 +87,161 @@ describe('DefineTranscriptionDialog', () => {
     expect(response).not.toHaveBeenCalled();
     expect(close).not.toHaveBeenCalled();
   });
+
+  it('shares preview toggles, selection, formatting and bulk deletion without changing the original', () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    const original = [
+      { start: 0, length: 3, x: 10, y: 10, flip: 0 },
+      { start: 4, length: 3, x: 60, y: 10, flip: 0 }
+    ];
+    dialog.onInjectData({
+      title: 'Edit', transcription: 'abc def', positions: original,
+      vector: '<svg width="200" height="100"></svg>',
+      language: { name: 'Test', label: 'test', direction: 'rtl' },
+      spelling: { name: 'Test', label: 'test', parse: text => text.toUpperCase(), font: 'serif' }
+    });
+    fixture.detectChanges();
+
+    const toggle: HTMLInputElement = fixture.nativeElement.querySelector('[name="showTranscriptionPositioning"]');
+    expect(getComputedStyle(toggle).opacity).toBe('1');
+    expect(toggle.getBoundingClientRect().width).toBeGreaterThan(1);
+    const text: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="0"] [data-segment-start]');
+    expect(text.textContent).toBe('ABC');
+    expect(getComputedStyle(text).visibility).toBe('visible');
+    toggle.click();
+    fixture.detectChanges();
+    expect(getComputedStyle(text).visibility).toBe('hidden');
+    toggle.click();
+    fixture.detectChanges();
+    expect(getComputedStyle(text).visibility).toBe('visible');
+
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.edit-panel li button');
+    expect(button.textContent?.trim()).toBe('0 + 3');
+    expect(button.title).toBe('ABC');
+    button.click();
+    fixture.detectChanges();
+    expect(dialog.selectedIndex).toBe(0);
+    expect(dialog.draft.start).toBe(0);
+    const font: HTMLInputElement = fixture.nativeElement.querySelector('[aria-label="Font size in pixels"]');
+    font.value = '20';
+    font.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(dialog.positions[0].fontSize).toBe(20);
+    expect(dialog.draft.fontSize).toBe(20);
+    expect(original[0].flip).toBe(0);
+    expect('fontSize' in original[0]).toBeFalse();
+
+    const checks: NodeListOf<HTMLInputElement> = fixture.nativeElement.querySelectorAll('.edit-panel li input[type="checkbox"]');
+    checks.forEach(check => check.click());
+    fixture.detectChanges();
+    const bulk: HTMLButtonElement = [...fixture.nativeElement.querySelectorAll('.edit-panel button')]
+      .find((element: HTMLButtonElement) => element.textContent?.trim() === 'Delete selected edits')!;
+    bulk.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.delete-confirmation').textContent).toContain('ABC');
+    const cancel: HTMLButtonElement = fixture.nativeElement.querySelector('.delete-confirmation button:last-child');
+    cancel.click();
+    fixture.detectChanges();
+    expect(dialog.positions.length).toBe(2);
+    bulk.click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('.delete-confirmation button:first-of-type').click();
+    fixture.detectChanges();
+    expect(dialog.positions).toEqual([]);
+    expect(original.length).toBe(2);
+    fixture.destroy();
+  });
+
+  it('moves a preview selection and keeps the numeric form synchronized', async () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    const original = [{ start: 0, length: 3, x: 20, y: 20, flip: 0 }];
+    dialog.onInjectData({
+      title: 'Edit', transcription: 'abc def', positions: original,
+      vector: '<svg width="200" height="100"></svg>'
+    });
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const rect = fragment.getBoundingClientRect();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: rect.left + 5, clientY: rect.top + 5, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: rect.left + 25, clientY: rect.top + 15, buttons: 1 }));
+    fragment.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: rect.left + 25, clientY: rect.top + 15 }));
+    fragment.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: rect.left + 25, clientY: rect.top + 15 }));
+    fixture.detectChanges();
+    expect(dialog.positions[0].x).toBeCloseTo(40, 0);
+    expect(dialog.draft.x).toBeCloseTo(40, 0);
+    expect(original[0].x).toBe(20);
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const rotation: HTMLInputElement = fixture.nativeElement.querySelector('[name="rotation"]');
+    rotation.value = '45';
+    rotation.dispatchEvent(new Event('input'));
+    expect(dialog.draft.flip).toBe(45);
+    expect(dialog.selectedIndex).toBe(0);
+    const apply: HTMLButtonElement = [...fixture.nativeElement.querySelectorAll('.position-fields button')]
+      .find((button: HTMLButtonElement) => button.textContent?.includes('Apply edit'))!;
+    expect(apply).toBeDefined();
+    apply.click();
+    fixture.detectChanges();
+    expect(dialog.positions[0].flip).toBe(45);
+    expect(fragment.classList.contains('selected')).toBeTrue();
+    expect(fixture.nativeElement.querySelector('.floating-toolbar')).not.toBeNull();
+    const response = spyOn(dialog.response, 'next');
+    spyOn(dialog, 'close');
+    dialog.save();
+    expect(response).toHaveBeenCalledWith({ transcription: 'abc def', positions: dialog.positions });
+    fixture.destroy();
+  });
+
+  it('preserves unselected nested edits when their parent is deleted in the dialog', () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    dialog.onInjectData({
+      title: 'Edit', transcription: 'abc def',
+      vector: '<svg width="200" height="100"></svg>',
+      positions: [
+        { id: 'parent', start: 0, length: 7, x: 30, y: 20, flip: 20 },
+        { id: 'child', parentId: 'parent', start: 1, length: 2, x: 5, y: 5, flip: 0 }
+      ]
+    });
+    fixture.detectChanges();
+    const child: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="1"]');
+    const before = child.getBoundingClientRect();
+    fixture.nativeElement.querySelector('[aria-label="Delete edit 1"]').click();
+    fixture.detectChanges();
+    fixture.nativeElement.querySelector('.delete-confirmation button:first-of-type').click();
+    fixture.detectChanges();
+    const after = (fixture.nativeElement.querySelector('[data-fragment-index="0"]') as HTMLElement).getBoundingClientRect();
+    expect(dialog.positions.length).toBe(1);
+    expect(dialog.positions[0].parentId).toBeUndefined();
+    expect(after.left).toBeCloseTo(before.left, 0);
+    expect(after.top).toBeCloseTo(before.top, 0);
+    fixture.destroy();
+  });
+
+  it('creates line edits in the preview and saves them without modifying the original data', () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    const positions: { start: number; length: number; x: number; y: number; flip: number }[] = [];
+    dialog.onInjectData({
+      title: 'Edit', transcription: 'abc\ndef', positions,
+      vector: '<svg width="200" height="100"></svg>'
+    });
+    fixture.detectChanges();
+    const createLines: HTMLButtonElement = [...fixture.nativeElement.querySelectorAll('.edit-panel > button')]
+      .find((button: HTMLButtonElement) => button.textContent?.includes('each line'))!;
+    createLines.click();
+    fixture.detectChanges();
+    expect(dialog.positions.map(position => [position.start, position.length])).toEqual([[0, 3], [4, 3]]);
+    expect(positions).toEqual([]);
+    const response = spyOn(dialog.response, 'next');
+    spyOn(dialog, 'close');
+    dialog.save();
+    expect(response).toHaveBeenCalledWith({ transcription: 'abc\ndef', positions: dialog.positions });
+    fixture.destroy();
+  });
 });

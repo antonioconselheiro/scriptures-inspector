@@ -6,7 +6,8 @@ export function validPosition(position: ArtifactFragmentWordPosition, text: stri
     position.start >= 0 && position.length > 0 && position.start + position.length <= text.length &&
     Number.isFinite(position.x) && Number.isFinite(position.y) && Number.isFinite(position.flip) &&
     (position.fontSize == null || Number.isFinite(position.fontSize) && position.fontSize > 0) &&
-    (position.letterSpacing == null || Number.isFinite(position.letterSpacing));
+    (position.letterSpacing == null || Number.isFinite(position.letterSpacing)) &&
+    (position.width == null || Number.isFinite(position.width) && position.width > 0);
 }
 
 export function addNestedPosition(

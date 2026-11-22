@@ -7,15 +7,39 @@
   </fieldset>
 
   <fieldset>
+    <legend>Fragment preview</legend>
+    <div class="displayToggles">
+      <label class="button"><span>Image</span><input type="checkbox" name="showImage" #imageToggle [checked]="showImage" (change)="showImage = imageToggle.checked"></label>
+      <label class="button"><span>Vector</span><input type="checkbox" name="showVector" #vectorToggle [checked]="showVector" (change)="showVector = vectorToggle.checked"></label>
+      <label class="button"><span>Transcription Positioning</span><input type="checkbox" name="showTranscriptionPositioning" #textToggle [checked]="showTranscriptionPositioning" (change)="showTranscriptionPositioning = textToggle.checked"></label>
+    </div>
+    <div class="preview-scroll">
+      <div class="graphicsWrapper" [class.hasImage]="!!fragmentImage && !imageFailed">
+        <div #fragmentBounds class="fragmentBounds">
+          @if (fragmentImage) {
+            <img [src]="fragmentImage" alt="Fragment Image" (error)="onImageError()"
+              [style.display]="imageFailed ? 'none' : 'block'"
+              [style.visibility]="showImage ? 'visible' : 'hidden'">
+          }
+          <div class="svgWrapper" [innerHTML]="vector | safeSvg"
+            [style.visibility]="showVector ? 'visible' : 'hidden'"></div>
+        </div>
+        @if (imageFailed) {
+          <p class="image-error">Unable to load the artifact image. Check that the file exists and is accessible.</p>
+        }
+        <div class="transcriptionPositioningWrapper" [style.visibility]="showTranscriptionPositioning ? 'visible' : 'hidden'">
+          <app-artifact-text-editor-component [text]="transcription" [fragments]="positions"
+            [language]="language" [spelling]="spelling" [boundsElement]="fragmentBounds" [preserveSelectionOnChange]="true"
+            (fragmentsChange)="onPositionsChange($event)" (selectionChange)="onSelectionChange($event)" />
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="position-fields">
     <legend>Positioning edits</legend>
     <p>For nested edits, X and Y are relative to the containing edit.</p>
     <button type="button" (click)="newEdit()">New edit</button>
-    <ul>
-      @for (position of positions; track $index) {
-        <li><button type="button" (click)="selectEdit($index)">{{ position.start }} + {{ position.length }}:
-          {{ transcription.slice(position.start, position.start + position.length) }}</button></li>
-      }
-    </ul>
     <label>Start <input type="number" name="start" min="0" step="1" [(ngModel)]="draft.start"></label>
     <label>Length <input type="number" name="length" min="1" step="1" [(ngModel)]="draft.length"></label>
     <label>X (px) <input type="number" name="x" step="any" [(ngModel)]="draft.x"></label>

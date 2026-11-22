@@ -1,20 +1,42 @@
+@use '../fragment-preview' as preview;
+
 textarea {
   width: 100%;
   min-height: 7rem;
   font-family: inherit;
 }
 
-fieldset label {
+.position-fields label {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
 
-fieldset input {
+.position-fields input {
   width: 8rem;
 }
 
-ul {
-  max-height: 8rem;
+.displayToggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  label.button {
+    gap: 0.5rem;
+
+    input[type="checkbox"] {
+      position: static;
+      opacity: 1;
+      width: auto;
+      height: auto;
+      margin: 0;
+    }
+  }
+}
+
+.preview-scroll {
+  max-width: 100%;
   overflow: auto;
 }
+
+@include preview.styles;

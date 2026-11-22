@@ -6,6 +6,8 @@ export interface ArtifactFragmentWordPosition {
   flip: number;
   fontSize?: number;
   letterSpacing?: number;
+  alignLeft?: boolean;
+  width?: number;
   id?: string;
   parentId?: string;
 }

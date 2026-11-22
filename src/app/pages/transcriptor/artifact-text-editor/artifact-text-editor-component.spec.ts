@@ -27,6 +27,263 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('preserves wrapped and leading-blank lines when creating a whole-text edit', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '100px';
+    fixture.componentInstance.text = '\nfirst second third fourth fifth';
+    fixture.componentInstance.language.direction = 'ltr';
+    fixture.detectChanges();
+    const text = fixture.nativeElement.querySelector('.baseline [data-segment-start]').firstChild as Text;
+    const offsets = [1, 14, 26];
+    const before = offsets.map(offset => {
+      const range = document.createRange();
+      range.setStart(text, offset);
+      range.setEnd(text, offset + 1);
+      return range.getBoundingClientRect();
+    });
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('text');
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    const result = fixture.nativeElement.querySelector('.artifact-fragment [data-segment-start]').firstChild as Text;
+    offsets.forEach((offset, index) => {
+      const range = document.createRange();
+      range.setStart(result, offset);
+      range.setEnd(result, offset + 1);
+      const rect = range.getBoundingClientRect();
+      expect(rect.left).toBeCloseTo(before[index].left, 1);
+      expect(rect.top).toBeCloseTo(before[index].top, 1);
+    });
+    fixture.destroy();
+  });
+
+  it('preserves wrapped right-to-left text when creating a whole-text edit', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '100px';
+    fixture.componentInstance.text = 'אבגד הוזח טיכל מנסע פצקר';
+    fixture.detectChanges();
+    const node = fixture.nativeElement.querySelector('.baseline [data-segment-start]').firstChild as Text;
+    const offsets = [0, 5, 10, 15, 20];
+    const boxes = offsets.map(offset => {
+      const range = document.createRange();
+      range.setStart(node, offset);
+      range.setEnd(node, offset + 1);
+      return range.getBoundingClientRect();
+    });
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('text');
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    const result = fixture.nativeElement.querySelector('.artifact-fragment [data-segment-start]').firstChild as Text;
+    offsets.forEach((offset, index) => {
+      const range = document.createRange();
+      range.setStart(result, offset);
+      range.setEnd(result, offset + 1);
+      const rect = range.getBoundingClientRect();
+      expect(rect.left).toBeCloseTo(boxes[index].left, 1);
+      expect(rect.top).toBeCloseTo(boxes[index].top, 1);
+    });
+    fixture.destroy();
+  });
+
+  it('creates one whole-text edit without moving lines in either reading direction', () => {
+    for (const direction of ['ltr', 'rtl'] as const) {
+      const fixture = TestBed.createComponent(Host);
+      fixture.nativeElement.style.display = 'block';
+      fixture.nativeElement.style.width = '300px';
+      fixture.componentInstance.text = 'abcdef\nab';
+      fixture.componentInstance.language.direction = direction;
+      fixture.detectChanges();
+      const node = fixture.nativeElement.querySelector('.baseline [data-segment-start]').firstChild as Text;
+      const ranges = [0, 7].map(offset => {
+        const range = document.createRange();
+        range.setStart(node, offset);
+        range.setEnd(node, offset + 1);
+        return range.getBoundingClientRect();
+      });
+      fixture.nativeElement.querySelector('.edit-panel > button').click();
+      fixture.detectChanges();
+      const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+      expect(editor.error).withContext(direction).toBe('');
+      expect(fixture.componentInstance.positions.length).toBe(1);
+      const newNode = fixture.nativeElement.querySelector('.artifact-fragment [data-segment-start]').firstChild as Text;
+      [0, 7].forEach((offset, index) => {
+        const range = document.createRange();
+        range.setStart(newNode, offset);
+        range.setEnd(newNode, offset + 1);
+        const after = range.getBoundingClientRect();
+        expect(after.left).withContext(direction).toBeCloseTo(ranges[index].left, 1);
+        expect(after.top).withContext(direction).toBeCloseTo(ranges[index].top, 1);
+      });
+      fixture.destroy();
+    }
+  });
+
+  it('creates line edits at their original locations, skips blank lines and preserves UTF-16 offsets', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.text = 'ab😀\n\ncd\n';
+    fixture.componentInstance.language.direction = 'ltr';
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '300px';
+    fixture.detectChanges();
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    const text = fixture.nativeElement.querySelector('.baseline [data-segment-start]').firstChild as Text;
+    const first = document.createRange();
+    first.setStart(text, 0);
+    first.setEnd(text, 1);
+    const second = document.createRange();
+    second.setStart(text, 6);
+    second.setEnd(text, 7);
+    const before = [first.getBoundingClientRect(), second.getBoundingClientRect()];
+    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll('.edit-panel > button');
+    buttons[1].click();
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    expect(fixture.componentInstance.positions.map(item => [item.start, item.length])).toEqual([[0, 4], [6, 2]]);
+    for (let index = 0; index < 2; index++) {
+      const element: HTMLElement = fixture.nativeElement.querySelector(`[data-fragment-index="${index}"] [data-segment-start]`);
+      const afterRange = document.createRange();
+      afterRange.setStart(element.firstChild!, 0);
+      afterRange.setEnd(element.firstChild!, 1);
+      const after = afterRange.getBoundingClientRect();
+      expect(after.left).toBeCloseTo(before[index].left, 1);
+      expect(after.top).toBeCloseTo(before[index].top, 1);
+    }
+    fixture.destroy();
+  });
+
+  it('wraps existing rotated edits in the whole-text edit without moving them', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '300px';
+    fixture.componentInstance.positions = [{ id: 'existing', start: 6, length: 6, x: 90, y: 30, flip: 25, fontSize: 24 }];
+    fixture.detectChanges();
+    const before = fixture.nativeElement.querySelector('[data-fragment-index="0"]').getBoundingClientRect() as DOMRect;
+    fixture.nativeElement.querySelector('.edit-panel > button').click();
+    fixture.detectChanges();
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    expect(editor.error).toBe('');
+    expect(fixture.componentInstance.positions.length).toBe(2);
+    const child = fixture.componentInstance.positions[0];
+    expect(child.parentId).toBe(fixture.componentInstance.positions[1].id);
+    expect(child.flip).toBe(25);
+    expect(child.fontSize).toBe(24);
+    const after = fixture.nativeElement.querySelector('[data-fragment-index="0"]').getBoundingClientRect() as DOMRect;
+    expect(after.left).toBeCloseTo(before.left, 1);
+    expect(after.top).toBeCloseTo(before.top, 1);
+    fixture.destroy();
+  });
+
+  it('does not alter existing edits that cross a line boundary', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.text = 'abc\ndef';
+    fixture.componentInstance.positions = [{ start: 2, length: 3, x: 10, y: 10, flip: 0 }];
+    fixture.detectChanges();
+    const original = JSON.parse(JSON.stringify(fixture.componentInstance.positions));
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('lines');
+    expect(editor.error).toContain('crosses a line boundary');
+    expect(fixture.componentInstance.positions).toEqual(original);
+    fixture.destroy();
+  });
+
+  it('creates line edits inside an existing whole-text edit without moving the text', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '300px';
+    fixture.componentInstance.text = 'abcd\nefgh';
+    fixture.componentInstance.language.direction = 'ltr';
+    fixture.detectChanges();
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('text');
+    fixture.detectChanges();
+    const whole = fixture.componentInstance.positions[0];
+    const text = fixture.nativeElement.querySelector('[data-fragment-index="0"] [data-segment-start]').firstChild as Text;
+    const before = [0, 5].map(offset => {
+      const range = document.createRange();
+      range.setStart(text, offset);
+      range.setEnd(text, offset + 1);
+      return range.getBoundingClientRect();
+    });
+    editor.generateEdits('lines');
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    expect(fixture.componentInstance.positions.length).toBe(3);
+    for (let index = 1; index < 3; index++) {
+      expect(fixture.componentInstance.positions[index].parentId).toBe(whole.id);
+      const node = fixture.nativeElement.querySelector(`[data-fragment-index="${index}"] [data-segment-start]`).firstChild as Text;
+      const range = document.createRange();
+      range.setStart(node, 0);
+      range.setEnd(node, 1);
+      const rect = range.getBoundingClientRect();
+      expect(rect.left).toBeCloseTo(before[index - 1].left, 1);
+      expect(rect.top).toBeCloseTo(before[index - 1].top, 1);
+    }
+    fixture.destroy();
+  });
+
+  it('creates line edits inside a rotated and formatted parent without moving existing nested edits', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.nativeElement.style.display = 'block';
+    fixture.nativeElement.style.width = '300px';
+    fixture.componentInstance.text = 'abcd\nefgh';
+    fixture.componentInstance.positions = [
+      { id: 'parent', start: 0, length: 9, x: 80, y: 30, flip: 25, fontSize: 24 },
+      { id: 'child', parentId: 'parent', start: 1, length: 2, x: 8, y: 3, flip: 10 }
+    ];
+    fixture.detectChanges();
+    const child: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="1"]');
+    const before = child.getBoundingClientRect();
+    const editor = fixture.debugElement.children[0].componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('lines');
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    expect(fixture.componentInstance.positions.length).toBe(4);
+    expect(fixture.componentInstance.positions[1].parentId).toBe(fixture.componentInstance.positions[2].id);
+    const after = (fixture.nativeElement.querySelector('[data-fragment-index="1"]') as HTMLElement).getBoundingClientRect();
+    expect(after.left).toBeCloseTo(before.left, 1);
+    expect(after.top).toBeCloseTo(before.top, 1);
+    expect(after.width).toBeCloseTo(before.width, 1);
+    expect(after.height).toBeCloseTo(before.height, 1);
+    fixture.destroy();
+  });
+
+  it('leaves edits unchanged when generated text does not fit the fragment', () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [];
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(node => node.componentInstance instanceof ArtifactTextEditorComponent).componentInstance as ArtifactTextEditorComponent;
+    const bounds: HTMLElement = fixture.nativeElement.querySelector('[style*="width: 200px"]');
+    bounds.style.width = '10px';
+    bounds.style.height = '10px';
+    editor.generateEdits('text');
+    expect(editor.error).toContain('outside');
+    expect(fixture.componentInstance.positions).toEqual([]);
+    fixture.destroy();
+  });
+
+  it('shows edit positions on buttons and the displayed text in their titles', () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.positions = [
+      { start: 0, length: 5, x: 1, y: 2, flip: 0 },
+      { start: 6, length: 6, x: 3, y: 4, flip: 0 }
+    ];
+    fixture.detectChanges();
+
+    const buttons: NodeListOf<HTMLButtonElement> = fixture.nativeElement.querySelectorAll('.edit-panel li button:first-of-type');
+    expect(buttons.length).toBe(2);
+    expect(buttons[0].textContent?.trim()).toBe('0 + 5');
+    expect(buttons[0].title).toBe('FIRST');
+    expect(buttons[1].textContent?.trim()).toBe('6 + 6');
+    expect(buttons[1].title).toBe('SECOND');
+    buttons[1].click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[data-fragment-index="1"]').classList.contains('selected')).toBeTrue();
+    fixture.destroy();
+  });
+
   it('aligns the unpositioned transcription to the left for both reading directions', () => {
     for (const direction of ['rtl', 'ltr'] as const) {
       const fixture = TestBed.createComponent(Host);
