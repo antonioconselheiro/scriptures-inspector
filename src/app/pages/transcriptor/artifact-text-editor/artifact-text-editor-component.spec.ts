@@ -11,7 +11,7 @@ import { ArtifactTextEditorComponent } from './artifact-text-editor-component';
 class Host {
   text = 'First second';
   positions: ArtifactFragmentWordPosition[] = [];
-  language = { name: 'Test', label: 'test', direction: 'rtl' as const };
+  language: { name: string; label: string; direction: 'rtl' | 'ltr' } = { name: 'Test', label: 'test', direction: 'rtl' };
   spelling = { name: 'Test', label: 'test', parse: (text: string) => text.toUpperCase(), font: 'serif' };
 }
 
@@ -27,6 +27,24 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('aligns the unpositioned transcription to the left for both reading directions', () => {
+    for (const direction of ['rtl', 'ltr'] as const) {
+      const fixture = TestBed.createComponent(Host);
+      fixture.nativeElement.style.display = 'block';
+      fixture.nativeElement.style.width = '300px';
+      fixture.componentInstance.language = { name: 'Test', label: 'test', direction };
+      fixture.detectChanges();
+
+      const canvas: HTMLElement = fixture.nativeElement.querySelector('.artifact-canvas');
+      const baseline: HTMLElement = fixture.nativeElement.querySelector('.baseline');
+      const range = document.createRange();
+      range.selectNodeContents(baseline);
+      expect(canvas.getAttribute('dir')).toBe(direction);
+      expect(range.getBoundingClientRect().left).toBeCloseTo(canvas.getBoundingClientRect().left, 0);
+      fixture.destroy();
+    }
+  });
+
   it('creates a selection and formats it using the floating toolbar', async () => {
     const fixture = TestBed.createComponent(Host);
     fixture.detectChanges();

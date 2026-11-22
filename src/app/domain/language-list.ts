@@ -13,7 +13,8 @@ export const languageList: [
   'avestico',
   'pahlavi',
   'sogdiano',
-  'middle-persian'
+  'middle-persian',
+  'old-uyghur'
 ] = [
   'aramaic',
   'hebrew',
@@ -29,5 +30,6 @@ export const languageList: [
   'avestico',
   'pahlavi',
   'sogdiano',
-  'middle-persian'
+  'middle-persian',
+  'old-uyghur'
 ]

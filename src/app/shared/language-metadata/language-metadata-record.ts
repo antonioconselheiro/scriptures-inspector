@@ -8,6 +8,7 @@ import { samaritanSpellingFn } from './samaritan-spelling-fn';
 import { squareHebrewSpellingFn } from './square-hebrew-spelling-fn';
 import { sogdianSpellingFn } from './sogdian-spelling-fn';
 import { middlePersianSpellingFn } from './middle-persian-spelling-fn';
+import { oldUyghurSpellingFn } from './old-uyghur-spelling-fn';
 
 export const languageMetadataRecord: {
   [lang in LanguageUnionType]: Language
@@ -91,6 +92,17 @@ export const languageMetadataRecord: {
         name: 'Middle Persian',
         label: 'middle-persian',
         parse: (text: string) => middlePersianSpellingFn(text)
+      }
+    ]
+  },
+  'old-uyghur': {
+    name: 'Old Uyghur',
+    label: 'latim-old-uyghur',
+    alternativeSpelling: [
+      {
+        name: 'Old Uyghur',
+        label: 'old-uyghur',
+        parse: (text: string) => oldUyghurSpellingFn(text)
       }
     ]
   },
