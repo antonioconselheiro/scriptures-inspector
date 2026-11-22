@@ -27,6 +27,91 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('keeps the width of a generated line while dragging it toward the right edge', async () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(node => node.componentInstance instanceof ArtifactTextEditorComponent).componentInstance as ArtifactTextEditorComponent;
+    editor.generateEdits('lines');
+    fixture.detectChanges();
+    expect(editor.error).toBe('');
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = fragment.getBoundingClientRect();
+    const bounds: DOMRect = fixture.nativeElement.querySelector('[style*="width: 200px"]').getBoundingClientRect();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, button: 0, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 180, clientY: before.top + 5, buttons: 1 }));
+    fragment.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: before.left + 180, clientY: before.top + 5, button: 0 }));
+    fixture.detectChanges();
+    const after = fragment.getBoundingClientRect();
+    expect(after.left).toBeGreaterThan(before.left);
+    expect(after.width).toBeCloseTo(before.width, 1);
+    expect(after.height).toBeCloseTo(before.height, 1);
+    expect(after.right).toBeLessThanOrEqual(bounds.right + 0.1);
+    expect(after.right).toBeCloseTo(bounds.right, 1);
+    fixture.destroy();
+  });
+
+  it('preserves explicit wrapping width when moving a positioned edit', () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [{ start: 0, length: 12, x: 0, y: 0, flip: 0, width: 70 }];
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(node => node.componentInstance instanceof ArtifactTextEditorComponent).componentInstance as ArtifactTextEditorComponent;
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    const before = fragment.getBoundingClientRect();
+    editor.selectEdit(0);
+    editor.onDrag({ left: 190, top: 0 });
+    fixture.detectChanges();
+    const after = fragment.getBoundingClientRect();
+    expect(fragment.style.width).toBe('70px');
+    expect(after.width).toBeCloseTo(before.width, 1);
+    expect(after.height).toBeCloseTo(before.height, 1);
+    expect(fixture.componentInstance.positions[0].x).toBeCloseTo(130, 1);
+    fixture.destroy();
+  });
+
+  it('rejects font growth that would cross the edge instead of wrapping the text', () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [{ start: 0, length: 12, x: 90, y: 0, flip: 0, fontSize: 16 }];
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(node => node.componentInstance instanceof ArtifactTextEditorComponent).componentInstance as ArtifactTextEditorComponent;
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    editor.selectEdit(0);
+    editor.setFontSize(40);
+    fixture.detectChanges();
+    expect(editor.error).toContain('outside');
+    expect(fixture.componentInstance.positions[0].fontSize).toBe(16);
+    expect(fragment.style.fontSize).toBe('16px');
+    fixture.destroy();
+  });
+
+  it('keeps the toolbar above the selection and stationary when increasing its font size', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.positions = [{ start: 0, length: 5, x: 60, y: 120, flip: 0, fontSize: 16 }];
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    fixture.detectChanges();
+    const toolbar: HTMLElement = fixture.nativeElement.querySelector('.floating-toolbar');
+    const input: HTMLInputElement = toolbar.querySelector('[aria-label="Font size in pixels"]')!;
+    const before = input.getBoundingClientRect();
+    expect(toolbar.getBoundingClientRect().bottom).toBeLessThan(fragment.getBoundingClientRect().top);
+
+    input.value = '32';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.positions[0].fontSize).toBe(32);
+    expect(toolbar.getBoundingClientRect().bottom).toBeLessThan(fragment.getBoundingClientRect().top);
+    expect(input.getBoundingClientRect().top).toBeCloseTo(before.top, 1);
+    expect(input.getBoundingClientRect().left).toBeCloseTo(before.left, 1);
+    fixture.destroy();
+  });
+
   it('preserves wrapped and leading-blank lines when creating a whole-text edit', () => {
     const fixture = TestBed.createComponent(Host);
     fixture.nativeElement.style.display = 'block';

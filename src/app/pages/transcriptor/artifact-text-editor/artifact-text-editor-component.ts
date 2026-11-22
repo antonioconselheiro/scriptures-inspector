@@ -456,7 +456,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     if (!this.selectedElement) return { left: 0, top: 0 };
     const rect = this.selectedElement.getBoundingClientRect();
     const canvas = this.canvas.nativeElement.getBoundingClientRect();
-    return { left: rect.left - canvas.left, top: rect.bottom - canvas.top + 28 };
+    return { left: rect.left - canvas.left, top: rect.top - canvas.top - 28 };
   }
 
   get fontSize(): number {
