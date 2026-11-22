@@ -1,20 +1,9 @@
-import { Component, Input } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
 import { DefineVectorDialog } from './define-vector-dialog';
-
-@Component({ selector: 'app-artifact-text-editor-component', template: '' })
-class ArtifactTextEditorStub {
-  @Input() text = '';
-}
 
 describe('DefineVectorDialog SVG preview', () => {
   it('renders the generated vector after sanitizing it', () => {
-    TestBed.configureTestingModule({ imports: [DefineVectorDialog] })
-      .overrideComponent(DefineVectorDialog, {
-        remove: { imports: [ArtifactTextEditorComponent] },
-        add: { imports: [ArtifactTextEditorStub] }
-      });
+    TestBed.configureTestingModule({ imports: [DefineVectorDialog] });
 
     const fixture = TestBed.createComponent(DefineVectorDialog);
     fixture.componentInstance.tracedSvg =

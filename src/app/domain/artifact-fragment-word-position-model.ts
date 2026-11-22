@@ -4,4 +4,8 @@ export interface ArtifactFragmentWordPosition {
   x: number;
   y: number;
   flip: number;
+  fontSize?: number;
+  letterSpacing?: number;
+  id?: string;
+  parentId?: string;
 }

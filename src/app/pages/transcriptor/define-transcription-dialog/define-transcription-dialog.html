@@ -1,11 +1,34 @@
-<form>
+<form (ngSubmit)="save()">
   <fieldset>
-    <legend>Transcription</legend>
-    <textarea [(ngModel)]="transcription" name="transcription" aria-label="Transcription text" placeholder="Transcription"></textarea>
+    <legend>Edit Transcription</legend>
+    <textarea #source [(ngModel)]="pendingText" name="transcription" aria-label="Transcription text"
+      placeholder="Transcription" (select)="selectRange(source)" (blur)="syncText()"></textarea>
+    <p>Select text or enter its start and length. Offsets use UTF-16 units in the original text.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Positioning edits</legend>
+    <p>For nested edits, X and Y are relative to the containing edit.</p>
+    <button type="button" (click)="newEdit()">New edit</button>
+    <ul>
+      @for (position of positions; track $index) {
+        <li><button type="button" (click)="selectEdit($index)">{{ position.start }} + {{ position.length }}:
+          {{ transcription.slice(position.start, position.start + position.length) }}</button></li>
+      }
+    </ul>
+    <label>Start <input type="number" name="start" min="0" step="1" [(ngModel)]="draft.start"></label>
+    <label>Length <input type="number" name="length" min="1" step="1" [(ngModel)]="draft.length"></label>
+    <label>X (px) <input type="number" name="x" step="any" [(ngModel)]="draft.x"></label>
+    <label>Y (px) <input type="number" name="y" step="any" [(ngModel)]="draft.y"></label>
+    <label>Rotation (degrees) <input type="number" name="rotation" step="any" [(ngModel)]="draft.flip"></label>
+    <label>Font size (px) <input type="number" name="fontSize" min="1" step="any" [(ngModel)]="draft.fontSize"></label>
+    <label>Letter spacing (px) <input type="number" name="letterSpacing" step="any" [(ngModel)]="draft.letterSpacing"></label>
+    @if (error) { <p class="error" role="alert">{{ error }}</p> }
+    <button type="button" (click)="applyEdit()">{{ selectedIndex === null ? 'Add edit' : 'Apply edit' }}</button>
   </fieldset>
 
   <div class="dialogActions">
     <button type="button" (click)="close()">Cancel</button>
-    <button type="button" (click)="save()">Save</button>
+    <button type="submit">Save</button>
   </div>
 </form>

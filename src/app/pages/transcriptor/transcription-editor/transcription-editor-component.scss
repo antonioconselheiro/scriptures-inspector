@@ -32,12 +32,50 @@
 
 .graphicsWrapper {
   position: relative;
+  display: inline-grid;
+  width: max-content;
+  grid-template-columns: max-content 320px;
+  gap: 1rem;
+  align-items: start;
+
+  .fragmentBounds {
+    grid-area: 1 / 1;
+    position: relative;
+    width: max-content;
+  }
+
+  img {
+    display: block;
+  }
+
+  .image-error {
+    grid-area: 2 / 1;
+    width: 0;
+    min-width: 100%;
+    overflow-wrap: anywhere;
+  }
 
   .svgWrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
     color: white;
     filter: drop-shadow(5px 5px 5px #333) opacity(.5);
+    pointer-events: none;
+  }
+
+  .svgWrapper ::ng-deep svg {
+    display: block;
+  }
+
+  &.hasImage .svgWrapper {
+    position: absolute;
+    inset: 0;
+  }
+
+  &.hasImage .svgWrapper ::ng-deep svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .transcriptionPositioningWrapper {
+    display: contents;
   }
 }

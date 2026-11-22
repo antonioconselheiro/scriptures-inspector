@@ -1,0 +1,20 @@
+textarea {
+  width: 100%;
+  min-height: 7rem;
+  font-family: inherit;
+}
+
+fieldset label {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+fieldset input {
+  width: 8rem;
+}
+
+ul {
+  max-height: 8rem;
+  overflow: auto;
+}

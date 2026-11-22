@@ -156,4 +156,53 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     }
     fixture.destroy();
   });
+
+  it('aligns the transcription canvas and SVG with the image and keeps the edit panel outside it', async () => {
+    TestBed.configureTestingModule({
+      imports: [TranscriptionEditorComponent],
+      providers: [
+        { provide: Router, useValue: {} },
+        { provide: ActivatedRoute, useValue: {} },
+        { provide: ModalService, useValue: {} },
+        { provide: CollectionsStatefull, useValue: { currentValue: [], data$: new Subject() } }
+      ]
+    }).overrideComponent(TranscriptionEditorComponent, {
+      remove: { imports: [ProjectNavigationToolbox, AsyncModalModule] },
+      add: { imports: [NavigationStub] }
+    });
+    const fixture = TestBed.createComponent(TranscriptionEditorComponent);
+    fixture.componentInstance.artifact = {
+      language: 'hebrew', spelling: '', vector: '<svg width="10" height="10" viewBox="0 0 10 10"></svg>', transcription: 'אבג', positions: [], bookSchema: []
+    };
+    spyOn(fixture.componentInstance, 'getImage').and.returnValue('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==');
+    fixture.detectChanges();
+    const image: HTMLElement = fixture.nativeElement.querySelector('img');
+    image.style.width = '400px';
+    image.style.height = '300px';
+    fixture.detectChanges();
+    const canvas: HTMLElement = fixture.nativeElement.querySelector('.artifact-canvas');
+    const panel: HTMLElement = fixture.nativeElement.querySelector('.edit-panel');
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    fixture.detectChanges();
+    const vector: SVGElement = fixture.nativeElement.querySelector('.svgWrapper svg');
+    expect(canvas.getBoundingClientRect().left).toBe(image.getBoundingClientRect().left);
+    expect(canvas.getBoundingClientRect().top).toBe(image.getBoundingClientRect().top);
+    expect(canvas.getBoundingClientRect().width).toBe(image.getBoundingClientRect().width);
+    expect(canvas.getBoundingClientRect().height).toBe(image.getBoundingClientRect().height);
+    expect(vector.getBoundingClientRect().width).toBe(image.getBoundingClientRect().width);
+    expect(vector.getBoundingClientRect().height).toBe(image.getBoundingClientRect().height);
+    expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(image.getBoundingClientRect().right);
+    image.style.width = '200px';
+    fixture.detectChanges();
+    expect(canvas.getBoundingClientRect().width).toBe(image.getBoundingClientRect().width);
+    expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(image.getBoundingClientRect().right);
+    image.dispatchEvent(new Event('error'));
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    fixture.detectChanges();
+    expect(vector.getBoundingClientRect().width).toBe(10);
+    expect(canvas.getBoundingClientRect().width).toBe(vector.getBoundingClientRect().width);
+    expect(canvas.getBoundingClientRect().height).toBe(vector.getBoundingClientRect().height);
+    fixture.destroy();
+  });
 });

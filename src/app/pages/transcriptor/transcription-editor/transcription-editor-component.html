@@ -51,8 +51,8 @@
 
 @if (artifact) {
   <div>
-    <button type="button" (click)="openDialogIncludeTranscription(artifact)">
-      Include Transcription
+    <button type="button" (click)="openDialogEditTranscription(artifact)">
+      Edit Transcription
     </button>
     <button type="button" (click)="openDialogDefineVector(artifact)">
       Define Vector
@@ -105,20 +105,17 @@
       </div>
     }
 
-    <div class="graphicsWrapper">
+    <div class="graphicsWrapper" [class.hasImage]="!!getImage() && !imageFailed">
+      <div #fragmentBounds class="fragmentBounds">
       @if (getImage(); as image) {
         <img
           #imgPreview
           [src]="image"
           alt="Fragment Image"
           (error)="onImageError()"
+          [style.display]="imageFailed ? 'none' : 'block'"
           [style.visibility]="showImage ? 'visible' : 'hidden'"
         />
-        @if (imageFailed) {
-          <p>Unable to load the artifact image. Check that the file exists and is accessible.</p>
-        }
-      } @else if (currentCollectionDetail) {
-        <p>No image exists at this artifact index.</p>
       }
 
       @if (artifact) {
@@ -127,11 +124,27 @@
           [innerHTML]="artifact.vector | safeSvg"
           [style.visibility]="showVector ? 'visible' : 'hidden'"
         ></div>
-
+      }
+      </div>
+      @if (imageFailed) {
+        <p class="image-error">Unable to load the artifact image. Check that the file exists and is accessible.</p>
+      } @else if (!getImage() && currentCollectionDetail) {
+        <p class="image-error">No image exists at this artifact index.</p>
+      }
+      @if (artifact) {
         <div
           class="transcriptionPositioningWrapper"
           [style.visibility]="showTranscriptionPositioning ? 'visible' : 'hidden'"
-        ></div>
+        >
+          <app-artifact-text-editor-component
+            [text]="artifact.transcription"
+            [fragments]="artifact.positions || []"
+            [language]="artifactLanguage"
+            [spelling]="artifactSpelling"
+            [boundsElement]="fragmentBounds"
+            (fragmentsChange)="artifact.positions = $event"
+          />
+        </div>
       }
     </div>
   </fieldset>

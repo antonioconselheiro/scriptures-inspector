@@ -5,6 +5,7 @@ import { ArtifactFragment } from '@domain/artifact-fragment-model';
 import { Project } from '@domain/project-model';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { Subject } from 'rxjs';
+import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
 import { TranscriptionEditorComponent } from './transcription-editor-component';
 
 describe('TranscriptionEditorComponent artifact loading', () => {
@@ -109,5 +110,66 @@ describe('TranscriptionEditorComponent artifact loading', () => {
     state.data$.next(state.currentValue);
     expect(component.artifact).toBe(artifact);
     expect(component.metadataReady).toBeTrue();
+  });
+
+  it('saves positioning fields alongside the fragment and reloads them', async () => {
+    const artifact: ArtifactFragment = {
+      language: 'hebrew', spelling: 'hypothetical-paleo', vector: '<svg/>', transcription: 'אב',
+      positions: [
+        { id: 'parent', start: 0, length: 2, x: 12, y: 34, flip: 30, fontSize: 24, letterSpacing: 2 },
+        { id: 'child', parentId: 'parent', start: 0, length: 1, x: 5, y: 6, flip: 10 }
+      ],
+      bookSchema: []
+    };
+    api.readOptionalJsonFile.and.resolveTo(artifact);
+    state.currentValue = [{ name: 'Col1', folder: 'col1', order: [imageName] }];
+    component.onCurrentArtifactChange({ collection: 'col1', artifact: 0 });
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    spyOn(window, 'alert');
+    component.textEditor = TestBed.createComponent(ArtifactTextEditorComponent).componentInstance;
+    spyOn(component.textEditor, 'validatePositions').and.returnValue(null);
+    component.saveArtifactData();
+    expect(api.writeJsonFile.calls.mostRecent().args[1]).toEqual(artifact);
+    expect(component.artifactLanguage?.direction).toBe('rtl');
+    expect(component.artifactSpelling?.label).toBe('hypothetical-paleo');
+  });
+
+  it('does not save positions outside the image', async () => {
+    api.readOptionalJsonFile.and.resolveTo({
+      language: 'hebrew', spelling: '', vector: '', transcription: 'abc',
+      positions: [{ start: 0, length: 1, x: 500, y: 0, flip: 0 }], bookSchema: []
+    });
+    state.currentValue = [{ name: 'Col1', folder: 'col1', order: [imageName] }];
+    component.onCurrentArtifactChange({ collection: 'col1', artifact: 0 });
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    component.textEditor = TestBed.createComponent(ArtifactTextEditorComponent).componentInstance;
+    spyOn(component.textEditor, 'validatePositions').and.returnValue('Position outside bounds.');
+    const alert = spyOn(window, 'alert');
+    component.saveArtifactData();
+    expect(alert).toHaveBeenCalledWith('Position outside bounds.');
+    expect(api.writeJsonFile).not.toHaveBeenCalled();
+  });
+
+  it('preserves unaffected positions and asks before discarding affected ones', () => {
+    const artifact: ArtifactFragment = {
+      language: 'hebrew', spelling: '', vector: '', transcription: 'abc def ghi',
+      positions: [
+        { start: 0, length: 3, x: 1, y: 2, flip: 0 },
+        { start: 8, length: 3, x: 4, y: 5, flip: 10 }
+      ],
+      bookSchema: []
+    };
+    const confirm = spyOn(window, 'confirm').and.returnValue(false);
+    component.updateTranscription(artifact, 'abc XXdef ghi');
+    expect(artifact.positions[1].start).toBe(10);
+    expect(confirm).not.toHaveBeenCalled();
+    component.updateTranscription(artifact, 'xyz XXdef ghi');
+    expect(confirm).toHaveBeenCalled();
+    expect(artifact.transcription).toBe('abc XXdef ghi');
+    confirm.and.returnValue(true);
+    component.updateTranscription(artifact, 'xyz XXdef ghi');
+    expect(artifact.transcription).toBe('xyz XXdef ghi');
+    expect(artifact.positions.length).toBe(1);
+    expect(artifact.positions[0].start).toBe(10);
   });
 });

@@ -1,47 +1,81 @@
 :host {
-  display: block;
+  display: contents;
 }
 
 .artifact-canvas {
+  grid-area: 1 / 1;
   position: relative;
-  width: 100%;
-  min-height: 300px;
-
-  /*
-   * É importante preservar whitespace enquanto
-   * estamos fazendo a medição inicial.
-   */
+  width: 0;
+  min-width: 100%;
+  min-height: 0;
+  align-self: start;
   white-space: pre-wrap;
-
-  overflow: hidden;
-  user-select: none;
 }
 
-/*
- * Estado temporário usado somente durante
- * a medição inicial.
- */
-.artifact-fragment.measuring {
-  position: static;
-  display: inline;
-}
-
-/*
- * Depois da medição cada fragmento passa a
- * ser independente.
- */
-.artifact-fragment:not(.measuring) {
+.artifact-fragment {
   position: absolute;
   display: inline-block;
+  white-space: pre-wrap;
+  transform-origin: center;
+  cursor: grab;
+}
 
-  white-space: pre;
-
-  transform-origin: center center;
-
-  cursor: pointer;
+.artifact-fragment:active {
+  cursor: grabbing;
 }
 
 .artifact-fragment.selected {
   outline: 1px dashed #1976d2;
   outline-offset: 2px;
+}
+
+.floating-toolbar {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: white;
+  color: black;
+  border: 1px solid #aaa;
+  border-radius: 0.3rem;
+  box-shadow: 0 2px 6px #0004;
+  white-space: nowrap;
+}
+
+.floating-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.floating-toolbar input {
+  width: 4.5rem;
+}
+
+.canvas-error {
+  position: absolute;
+  top: 0;
+  background: white;
+  color: #a00;
+}
+
+.edit-panel {
+  grid-area: 1 / 2;
+  width: 320px;
+  color: var(--text-color, inherit);
+}
+
+.edit-panel ul {
+  max-height: 12rem;
+  overflow: auto;
+}
+
+.delete-confirmation {
+  border: 1px solid #a00;
+  padding: 0.5rem;
+}
+
+:host ::ng-deep .moveable-rotation-control {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M18 7a8 8 0 1 0 1.7 8' fill='none' stroke='white' stroke-width='4'/%3E%3Cpath d='M18 7a8 8 0 1 0 1.7 8M18 2v5h-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 12 12, crosshair !important;
 }

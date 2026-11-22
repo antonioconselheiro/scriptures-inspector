@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { ArtifactFragment } from '@domain/artifact-fragment-model';
@@ -20,6 +20,9 @@ import { Language } from '@domain/language-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { Router } from '@angular/router';
+import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
+import { rebasePositions } from '../transcription-positions';
+import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
 
 @Component({
   selector: 'app-transcription-editor-component',
@@ -28,12 +31,14 @@ import { Router } from '@angular/router';
     ProjectNavigationToolbox,
     ReactiveFormsModule,
     AsyncModalModule,
-    SafeSvgPipe
+    SafeSvgPipe,
+    ArtifactTextEditorComponent
   ],
   templateUrl: './transcription-editor-component.html',
   styleUrl: './transcription-editor-component.scss'
 })
 export class TranscriptionEditorComponent implements OnInit, OnDestroy {
+  @ViewChild(ArtifactTextEditorComponent) textEditor?: ArtifactTextEditorComponent;
 
   project: Project | null = null;
   current: CurrentArtifact | null = null;
@@ -117,6 +122,14 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
     return this.spellingOptions && this.spellingOptions.length > 0 || false;
   }
 
+  get artifactLanguage(): Language | undefined {
+    return this.artifact ? languageMetadataRecord[this.artifact.language] : undefined;
+  }
+
+  get artifactSpelling(): LanguageAlternativeSpelling | undefined {
+    return this.artifactLanguage?.alternativeSpelling?.find(item => item.label === this.artifact?.spelling);
+  }
+
   onProjectChange(project: Project | null): void {
     this.project = project;
     this.defineArtifactFolder();
@@ -191,6 +204,14 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
 
   saveArtifactData(): void {
     if (this.artifact && this.metadataFilePath) {
+      if (this.artifact.positions?.length) {
+        const error = this.textEditor?.validatePositions(this.artifact.transcription, this.artifact.positions)
+          ?? (!this.textEditor ? 'The transcription editor is unavailable.' : null);
+        if (error) {
+          alert(error);
+          return;
+        }
+      }
       writeJsonFileFn(this.metadataFilePath, this.artifact).then(() => {
         alert('Artifact data saved');
       }).catch(error => {
@@ -250,13 +271,16 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
     this.artifact.spelling = spelling ?? '';
   }
 
-  openDialogIncludeTranscription(artifact: ArtifactFragment): void {
+  openDialogEditTranscription(artifact: ArtifactFragment): void {
     this.modalService
       .createModal(DefineTranscriptionDialog)
       .setBindToRoute(this.router)
       .setData({
         title: 'Edit Transcription',
-        transcription: artifact.transcription
+        transcription: artifact.transcription,
+        positions: artifact.positions ?? [],
+        validatePositions: (text: string, positions: ArtifactFragmentWordPosition[]) =>
+          this.textEditor?.validatePositions(text, positions) ?? (positions.length ? 'The transcription editor is unavailable.' : null)
       })
       .setOutletName('main')
       .build()
@@ -264,9 +288,20 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
         next: (result) => {
           if (result) {
             artifact.transcription = result.transcription;
+            artifact.positions = result.positions;
+            this.cdr.markForCheck();
           }
         }
       });
+  }
+
+  updateTranscription(artifact: ArtifactFragment, next: string): void {
+    if (next === artifact.transcription) return;
+    const result = rebasePositions(artifact.transcription, next, artifact.positions ?? []);
+    if (result.affected.length && !confirm('This change affects positioned text. Discard the affected edits?')) return;
+    artifact.positions = result.positions;
+    artifact.transcription = next;
+    this.cdr.markForCheck();
   }
 
   openDialogDefineVector(artifact: ArtifactFragment): void {

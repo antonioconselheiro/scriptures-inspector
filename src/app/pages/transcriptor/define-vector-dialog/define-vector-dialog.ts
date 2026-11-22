@@ -4,14 +4,12 @@ import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { readImageBase64 } from '@shared/project/read-image-base64-fn';
 import { SafeSvgPipe } from '@shared/svg/safe-svg.pipe';
 import { Subject } from 'rxjs';
-import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
 
 @Component({
   selector: 'app-define-vector-dialog',
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    ArtifactTextEditorComponent,
     SafeSvgPipe
   ],
   templateUrl: './define-vector-dialog.html',
