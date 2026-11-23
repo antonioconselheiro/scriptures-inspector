@@ -3,13 +3,30 @@ import { FormsModule } from '@angular/forms';
 import { ModalableDirective } from '@belomonte/async-modal-ngx';
 import { Subject } from 'rxjs';
 import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
+import { ArtifactFragmentBookSchema } from '@domain/artifact-fragment-book-schema-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
-import { addNestedPosition, rebasePositions, validNestedUpdate, validPosition } from '../transcription-positions';
+import { addNestedPosition, rebasePositions, rebaseRanges, validNestedUpdate, validPosition } from '../transcription-positions';
+
+interface BookDraft {
+  book: string;
+  chapter: number | null;
+  verse: number | null;
+  start: number | null;
+  end: number | null;
+}
+
+interface TranscriptionResult {
+  transcription: string;
+  positions: ArtifactFragmentWordPosition[];
+  bookSchema: ArtifactFragmentBookSchema[];
+}
 
 interface TranscriptionDialogData {
   title: string;
   transcription: string;
   positions: ArtifactFragmentWordPosition[];
+  bookSchema?: ArtifactFragmentBookSchema[];
+  books?: { [key: string]: { name: string } };
   spelling?: LanguageAlternativeSpelling;
   validatePositions?: (text: string, positions: ArtifactFragmentWordPosition[]) => string | null;
   deletePositions?: (text: string, positions: ArtifactFragmentWordPosition[], deleted: Set<number>) => ArtifactFragmentWordPosition[] | null;
@@ -23,12 +40,18 @@ interface TranscriptionDialogData {
   templateUrl: './define-transcription-dialog.html',
   styleUrl: './define-transcription-dialog.scss',
 })
-export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionDialogData, { transcription: string; positions: ArtifactFragmentWordPosition[] }> {
+export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionDialogData, TranscriptionResult> {
 
   @ViewChild('source') source?: ElementRef<HTMLTextAreaElement>;
   transcription = '';
   pendingText = '';
   positions: ArtifactFragmentWordPosition[] = [];
+  bookSchema: ArtifactFragmentBookSchema[] = [];
+  books: { key: string; name: string }[] = [];
+  activeTab: 'positioning' | 'book' = 'positioning';
+  bookDraft: BookDraft = this.newBookDraft();
+  selectedBookIndex: number | null = null;
+  bookError = '';
   selectedIndex: number | null = null;
   draft: ArtifactFragmentWordPosition = this.newDraft();
   error = '';
@@ -37,12 +60,14 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
   pendingDeletion: number[] = [];
   private validatePositions?: (text: string, positions: ArtifactFragmentWordPosition[]) => string | null;
   private deletePositions?: TranscriptionDialogData['deletePositions'];
-  override response = new Subject<{ transcription: string; positions: ArtifactFragmentWordPosition[] } | void>();
+  override response = new Subject<TranscriptionResult | void>();
 
   override onInjectData(data: TranscriptionDialogData): void {
     this.transcription = data.transcription;
     this.pendingText = data.transcription;
     this.positions = (data.positions ?? []).map(position => ({ ...position }));
+    this.bookSchema = (data.bookSchema ?? []).map(entry => ({ ...entry }));
+    this.books = Object.entries(data.books ?? {}).map(([key, book]) => ({ key, name: book.name }));
     this.validatePositions = data.validatePositions;
     this.spelling = data.spelling;
     this.deletePositions = data.deletePositions;
@@ -51,23 +76,88 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
   syncText(): boolean {
     if (this.pendingText === this.transcription) return true;
     const result = rebasePositions(this.transcription, this.pendingText, this.positions);
-    if (result.affected.length && !confirm('This change affects positioned text. Discard the affected edits and their nested edits?')) {
+    const bookResult = rebaseRanges(this.transcription, this.pendingText, this.bookSchema);
+    if ((result.affected.length || bookResult.affected.length) &&
+      !confirm('This change affects positioning edits or book associations. Discard the affected entries and nested edits?')) {
       this.pendingText = this.transcription;
       return false;
     }
     this.positions = result.positions;
+    this.bookSchema = bookResult.ranges;
     this.transcription = this.pendingText;
     this.checked.clear();
     this.pendingDeletion = [];
     this.newEdit();
+    this.newBookEdit();
     return true;
   }
 
   selectRange(input: HTMLTextAreaElement): void {
     if (this.pendingDeletion.length || input.selectionStart === input.selectionEnd || !this.syncText()) return;
-    this.newEdit();
-    this.draft.start = input.selectionStart;
-    this.draft.length = input.selectionEnd - input.selectionStart;
+    if (this.activeTab === 'book') {
+      this.newBookEdit();
+      this.bookDraft.start = input.selectionStart;
+      this.bookDraft.end = input.selectionEnd;
+    } else {
+      this.newEdit();
+      this.draft.start = input.selectionStart;
+      this.draft.length = input.selectionEnd - input.selectionStart;
+    }
+  }
+
+  newBookEdit(): void {
+    this.selectedBookIndex = null;
+    this.bookDraft = this.newBookDraft();
+    this.bookError = '';
+  }
+
+  selectBookEdit(index: number): void {
+    const mapped = this.rebasedBookIndex(index);
+    if (!this.syncText()) return;
+    if (mapped < 0) return;
+    const entry = this.bookSchema[mapped];
+    if (!entry) return;
+    this.selectedBookIndex = mapped;
+    this.bookDraft = { book: entry.book, chapter: entry.chapter, verse: entry.verse,
+      start: entry.start, end: entry.start + entry.length };
+    this.bookError = '';
+  }
+
+  applyBookEdit(): void {
+    if (!this.syncText()) return;
+    const { book, start, end, chapter, verse } = this.bookDraft;
+    if (!/^[a-zA-Z0-9]{3}$/.test(book) || start === null || end === null ||
+      !Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start || end > this.transcription.length ||
+      chapter === null || verse === null || !Number.isSafeInteger(chapter) || !Number.isSafeInteger(verse) ||
+      chapter < 0 || verse < 0) {
+      this.bookError = 'Enter a three-character book key, a valid text range, and non-negative whole chapter and verse numbers.';
+      return;
+    }
+    const entry: ArtifactFragmentBookSchema = { book, chapter, verse, start, length: end - start };
+    if (this.selectedBookIndex === null) {
+      this.bookSchema = [...this.bookSchema, entry];
+      this.selectedBookIndex = this.bookSchema.length - 1;
+    } else {
+      this.bookSchema = this.bookSchema.map((item, index) => index === this.selectedBookIndex ? entry : item);
+    }
+    this.bookError = '';
+  }
+
+  deleteBookEdit(index: number): void {
+    const mapped = this.rebasedBookIndex(index);
+    if (!this.syncText()) return;
+    if (mapped < 0) return;
+    const entry = this.bookSchema[mapped];
+    if (!entry || !confirm(`Delete the association ${entry.book} ${entry.chapter}:${entry.verse}?`)) return;
+    this.bookSchema = this.bookSchema.filter((_, itemIndex) => itemIndex !== mapped);
+    this.newBookEdit();
+  }
+
+  private rebasedBookIndex(index: number): number {
+    if (this.pendingText === this.transcription) return index;
+    const affected = rebaseRanges(this.transcription, this.pendingText, this.bookSchema).affected;
+    return this.bookSchema.map((entry, itemIndex) => ({ entry, itemIndex }))
+      .filter(({ entry }) => !affected.includes(entry)).findIndex(({ itemIndex }) => itemIndex === index);
   }
 
   newEdit(): void {
@@ -183,11 +273,16 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
       this.error = error;
       return;
     }
-    this.response.next({ transcription: this.transcription, positions: this.positions.map(position => ({ ...position })) });
+    this.response.next({ transcription: this.transcription, positions: this.positions.map(position => ({ ...position })),
+      bookSchema: this.bookSchema.map(entry => ({ ...entry })) });
     this.close();
   }
 
   private newDraft(): ArtifactFragmentWordPosition {
     return { start: 0, length: 1, x: 0, y: 0, flip: 0, fontSize: 16, letterSpacing: 0 };
+  }
+
+  private newBookDraft(): BookDraft {
+    return { book: '', chapter: null, verse: null, start: 0, end: 1 };
   }
 }

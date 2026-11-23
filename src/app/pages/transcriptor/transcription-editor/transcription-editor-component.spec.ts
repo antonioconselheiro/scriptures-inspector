@@ -134,6 +134,43 @@ describe('TranscriptionEditorComponent artifact loading', () => {
     expect(component.artifactSpelling?.label).toBe('hypothetical-paleo');
   });
 
+  it('saves and reloads book associations in fragment metadata', async () => {
+    let stored: ArtifactFragment | null = {
+      language: 'hebrew', spelling: '', vector: '<svg/>', transcription: 'abc def', positions: [],
+      bookSchema: [{ book: '1EN', chapter: 2, verse: 3, start: 4, length: 3 }]
+    };
+    api.readOptionalJsonFile.and.callFake(async () => JSON.parse(JSON.stringify(stored)));
+    api.writeJsonFile.and.callFake(async (_path, content) => {
+      stored = JSON.parse(JSON.stringify(content));
+    });
+    state.currentValue = [{ name: 'Col1', folder: 'col1', order: [imageName] }];
+    component.onCurrentArtifactChange({ collection: 'col1', artifact: 0 });
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    component.artifact!.bookSchema[0].verse = 4;
+    spyOn(window, 'alert');
+    component.saveArtifactData();
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    component.onCurrentArtifactChange({ collection: 'col1', artifact: 0 });
+    await new Promise<void>(resolve => setTimeout(resolve, 0));
+    expect(component.artifact?.bookSchema).toEqual([{ book: '1EN', chapter: 2, verse: 4, start: 4, length: 3 }]);
+  });
+
+  it('rebases book associations on direct transcription updates', () => {
+    const artifact: ArtifactFragment = {
+      language: 'hebrew', spelling: '', vector: '', transcription: 'abc def', positions: [],
+      bookSchema: [{ book: 'GEN', chapter: 1, verse: 1, start: 4, length: 3 }]
+    };
+    component.updateTranscription(artifact, 'xabc def');
+    expect(artifact.bookSchema[0].start).toBe(5);
+    const confirmation = spyOn(window, 'confirm').and.returnValue(false);
+    component.updateTranscription(artifact, 'xabc xyz');
+    expect(artifact.transcription).toBe('xabc def');
+    expect(artifact.bookSchema.length).toBe(1);
+    confirmation.and.returnValue(true);
+    component.updateTranscription(artifact, 'xabc xyz');
+    expect(artifact.bookSchema).toEqual([]);
+  });
+
   it('does not save positions outside the image', async () => {
     api.readOptionalJsonFile.and.resolveTo({
       language: 'hebrew', spelling: '', vector: '', transcription: 'abc',

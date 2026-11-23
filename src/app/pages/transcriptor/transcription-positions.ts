@@ -47,17 +47,8 @@ export function rebasePositions(previous: string, next: string, positions: Artif
   positions: ArtifactFragmentWordPosition[];
   affected: ArtifactFragmentWordPosition[];
 } {
-  if (previous === next) return { positions: positions.map(position => ({ ...position })), affected: [] };
-  let prefix = 0;
-  while (prefix < previous.length && prefix < next.length && previous[prefix] === next[prefix]) prefix++;
-  let suffix = 0;
-  while (suffix < previous.length - prefix && suffix < next.length - prefix &&
-    previous[previous.length - 1 - suffix] === next[next.length - 1 - suffix]) suffix++;
-  const changedEnd = previous.length - suffix;
-  const delta = next.length - previous.length;
-  const affected = positions.filter(position =>
-    position.start < changedEnd && position.start + position.length > prefix ||
-    (prefix === changedEnd && position.start < prefix && position.start + position.length > prefix));
+  const { affected, changedEnd, delta } = changedRanges(previous, next, positions);
+  if (previous === next) return { positions: positions.map(position => ({ ...position })), affected };
   let count: number;
   do {
     count = affected.length;
@@ -72,4 +63,33 @@ export function rebasePositions(previous: string, next: string, positions: Artif
     positions: positions.filter(position => !affected.includes(position)).map(position =>
       position.start >= changedEnd ? { ...position, start: position.start + delta } : { ...position })
   };
+}
+
+export function rebaseRanges<T extends { start: number; length: number }>(previous: string, next: string, ranges: T[]): {
+  ranges: T[];
+  affected: T[];
+} {
+  const { affected, changedEnd, delta } = changedRanges(previous, next, ranges);
+  return {
+    affected,
+    ranges: ranges.filter(range => !affected.includes(range)).map(range =>
+      range.start >= changedEnd ? { ...range, start: range.start + delta } : { ...range })
+  };
+}
+
+function changedRanges<T extends { start: number; length: number }>(previous: string, next: string, ranges: T[]): {
+  affected: T[]; changedEnd: number; delta: number;
+} {
+  if (previous === next) return { affected: [], changedEnd: next.length, delta: 0 };
+  let prefix = 0;
+  while (prefix < previous.length && prefix < next.length && previous[prefix] === next[prefix]) prefix++;
+  let suffix = 0;
+  while (suffix < previous.length - prefix && suffix < next.length - prefix &&
+    previous[previous.length - 1 - suffix] === next[next.length - 1 - suffix]) suffix++;
+  const changedEnd = previous.length - suffix;
+  const delta = next.length - previous.length;
+  const affected = ranges.filter(position =>
+    position.start < changedEnd && position.start + position.length > prefix ||
+    (prefix === changedEnd && position.start < prefix && position.start + position.length > prefix));
+  return { affected, changedEnd, delta };
 }

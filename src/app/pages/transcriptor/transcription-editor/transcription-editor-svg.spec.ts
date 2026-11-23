@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AsyncModalModule, ModalService } from '@belomonte/async-modal-ngx';
 import { CurrentArtifact } from '@domain/current-artifact-model';
+import { ArtifactFragment } from '@domain/artifact-fragment-model';
 import { Project } from '@domain/project-model';
 import { ProjectNavigationToolbox } from '@shared/project-navigation-toolbox/project-navigation-toolbox';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
@@ -91,7 +92,8 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
   });
 
   it('passes positioning helpers to the transcription dialog and applies only saved changes', () => {
-    const results = new Subject<{ transcription: string; positions: { start: number; length: number; x: number; y: number; flip: number }[] } | void>();
+    const results = new Subject<{ transcription: string; positions: { start: number; length: number; x: number; y: number; flip: number }[];
+      bookSchema: { book: string; chapter: number; verse: number; start: number; length: number }[] } | void>();
     const modal = {
       setBindToRoute() { return this; },
       setData: jasmine.createSpy().and.callFake(() => modal),
@@ -112,25 +114,30 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     });
     const fixture = TestBed.createComponent(TranscriptionEditorComponent);
     const component = fixture.componentInstance;
-    const artifact = {
+    const artifact: ArtifactFragment = {
       language: 'hebrew' as const, spelling: '', vector: '<svg width="200" height="100"></svg>',
       transcription: 'abc', positions: [{ start: 0, length: 1, x: 10, y: 10, flip: 0 }], bookSchema: []
     };
     component.artifact = artifact;
+    component.project = { name: 'Test', path: '/project', structures: [],
+      target: { language: 'en', books: { GEN: { name: 'Genesis' } } } };
     component.showVector = false;
     spyOn(component, 'getImage').and.returnValue('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==');
     fixture.detectChanges();
     component.openDialogEditTranscription(artifact);
     expect(modal.setData).toHaveBeenCalledWith(jasmine.objectContaining({
       transcription: artifact.transcription, positions: artifact.positions, spelling: component.artifactSpelling,
+      bookSchema: [], books: { GEN: { name: 'Genesis' } },
       validatePositions: jasmine.any(Function), deletePositions: jasmine.any(Function)
     }));
     results.next();
     expect(artifact.transcription).toBe('abc');
     expect(artifact.positions.length).toBe(1);
-    results.next({ transcription: 'changed', positions: [] });
+    const bookSchema = [{ book: 'GEN', chapter: 1, verse: 1, start: 0, length: 7 }];
+    results.next({ transcription: 'changed', positions: [], bookSchema });
     expect(artifact.transcription).toBe('changed');
     expect(artifact.positions).toEqual([]);
+    expect(artifact.bookSchema).toEqual(bookSchema);
     fixture.destroy();
   });
 

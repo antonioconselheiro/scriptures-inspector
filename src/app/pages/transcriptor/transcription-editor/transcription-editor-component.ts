@@ -21,7 +21,7 @@ import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelli
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { Router } from '@angular/router';
 import { ArtifactTextEditorComponent } from '../artifact-text-editor/artifact-text-editor-component';
-import { rebasePositions } from '../transcription-positions';
+import { rebasePositions, rebaseRanges } from '../transcription-positions';
 import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
 
 @Component({
@@ -279,6 +279,8 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
         title: 'Edit Transcription',
         transcription: artifact.transcription,
         positions: artifact.positions ?? [],
+        bookSchema: artifact.bookSchema ?? [],
+        books: this.project?.target.books ?? {},
         spelling: this.artifactSpelling,
         validatePositions: (text: string, positions: ArtifactFragmentWordPosition[]) =>
           this.textEditor?.validatePositions(text, positions) ?? (positions.length ? 'The transcription editor is unavailable.' : null),
@@ -292,6 +294,7 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
           if (result) {
             artifact.transcription = result.transcription;
             artifact.positions = result.positions;
+            artifact.bookSchema = result.bookSchema;
             this.cdr.markForCheck();
           }
         }
@@ -301,8 +304,11 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
   updateTranscription(artifact: ArtifactFragment, next: string): void {
     if (next === artifact.transcription) return;
     const result = rebasePositions(artifact.transcription, next, artifact.positions ?? []);
-    if (result.affected.length && !confirm('This change affects positioned text. Discard the affected edits?')) return;
+    const bookResult = rebaseRanges(artifact.transcription, next, artifact.bookSchema ?? []);
+    if ((result.affected.length || bookResult.affected.length) &&
+      !confirm('This change affects positioning edits or book associations. Discard the affected entries?')) return;
     artifact.positions = result.positions;
+    artifact.bookSchema = bookResult.ranges;
     artifact.transcription = next;
     this.cdr.markForCheck();
   }

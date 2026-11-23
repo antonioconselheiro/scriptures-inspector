@@ -3,9 +3,17 @@
     <legend>Edit Transcription</legend>
     <textarea #source [(ngModel)]="pendingText" name="transcription" aria-label="Transcription text"
       placeholder="Transcription" (select)="selectRange(source)" (blur)="syncText()"></textarea>
-    <p>Select text or enter its start and length. Offsets use UTF-16 units in the original text.</p>
+    <p>Select text or enter its range below. Offsets use UTF-16 units in the original text.</p>
   </fieldset>
 
+  @if (pendingText.trim().length > 0) {
+  <div class="tabs" role="group" aria-label="Transcription sections">
+    <button type="button" [attr.aria-pressed]="activeTab === 'positioning'"
+      (click)="activeTab = 'positioning'">Positioning edits</button>
+    <button type="button" [attr.aria-pressed]="activeTab === 'book'"
+      (click)="activeTab = 'book'">Book structure</button>
+  </div>
+  @if (activeTab === 'positioning') {
   <fieldset class="position-fields">
     <legend>Positioning edits</legend>
     @if (positions.length === 0) { <p>No edits yet.</p> }
@@ -45,9 +53,46 @@
     <label>Rotation (degrees) <input type="number" name="rotation" step="any" [(ngModel)]="draft.flip"></label>
     <label>Font size (px) <input type="number" name="fontSize" min="1" step="any" [(ngModel)]="draft.fontSize"></label>
     <label>Letter spacing (px) <input type="number" name="letterSpacing" step="any" [(ngModel)]="draft.letterSpacing"></label>
-    @if (error) { <p class="error" role="alert">{{ error }}</p> }
     <button type="button" (click)="applyEdit()">{{ selectedIndex === null ? 'Add edit' : 'Apply edit' }}</button>
   </fieldset>
+  } @else {
+  <fieldset class="position-fields">
+    <legend>Book structure</legend>
+    <p>Associate ranges of the original transcription with book, chapter and verse. End is exclusive.</p>
+    @if (bookSchema.length === 0) { <p>No book associations yet.</p> }
+    <ul class="edits-list">
+      @for (entry of bookSchema; track $index) {
+        <li [class.selected]="selectedBookIndex === $index">
+          <button type="button" class="edit-selection" (click)="selectBookEdit($index)"
+            [attr.aria-pressed]="selectedBookIndex === $index"
+            [title]="transcription.slice(entry.start, entry.start + entry.length)">
+            {{ entry.start }}–{{ entry.start + entry.length }}: {{ entry.book }} {{ entry.chapter }}:{{ entry.verse }}
+            <span class="edit-excerpt">{{ transcription.slice(entry.start, entry.start + entry.length) }}</span>
+          </button>
+          <button type="button" (click)="deleteBookEdit($index)" [attr.aria-label]="'Delete book association ' + ($index + 1)">Delete</button>
+        </li>
+      }
+    </ul>
+    <button type="button" (click)="newBookEdit()">New association</button>
+    <label>Book key
+      <input type="text" name="bookKey" list="projectBookKeys" maxlength="3"
+        [(ngModel)]="bookDraft.book" placeholder="GEN">
+    </label>
+    <datalist id="projectBookKeys">
+      @for (book of books; track book.key) {
+        <option [value]="book.key">{{ book.name }}</option>
+      }
+    </datalist>
+    <label>Start <input type="number" name="bookStart" min="0" step="1" [(ngModel)]="bookDraft.start"></label>
+    <label>End (exclusive) <input type="number" name="bookEnd" min="1" step="1" [(ngModel)]="bookDraft.end"></label>
+    <label>Chapter <input type="number" name="bookChapter" min="0" step="1" [(ngModel)]="bookDraft.chapter"></label>
+    <label>Verse <input type="number" name="bookVerse" min="0" step="1" [(ngModel)]="bookDraft.verse"></label>
+    @if (bookError) { <p class="error" role="alert">{{ bookError }}</p> }
+    <button type="button" (click)="applyBookEdit()">{{ selectedBookIndex === null ? 'Add association' : 'Apply association' }}</button>
+  </fieldset>
+  }
+  }
+  @if (error) { <p class="error" role="alert">{{ error }}</p> }
 
   <div class="dialogActions">
     <button type="button" (click)="close()">Cancel</button>
