@@ -76,8 +76,10 @@
 }
 
 .edit-panel {
-  grid-area: 1 / 2;
-  width: 320px;
+  width: min(320px, calc(100vw - 3.4rem));
+  max-height: calc(100vh - 5.5rem);
+  overflow: auto;
+  overflow-wrap: anywhere;
   color: var(--text-color, inherit);
 }
 

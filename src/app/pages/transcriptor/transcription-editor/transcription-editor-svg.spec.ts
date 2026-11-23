@@ -186,6 +186,9 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
       fixture.detectChanges();
       expect(component[property]).withContext(id).toBeFalse();
       expect(target.style.visibility).withContext(id).toBe('hidden');
+      if (property === 'showTranscriptionPositioning') {
+        expect(getComputedStyle(fixture.nativeElement.querySelector('.transcription-edits-toolbox .toolbox')).visibility).toBe('hidden');
+      }
     }
 
     component.artifact = null;
@@ -253,7 +256,7 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     fixture.destroy();
   });
 
-  it('aligns the transcription canvas and SVG with the image and keeps the edit panel outside it', async () => {
+  it('aligns the transcription canvas and SVG with the image while the edit toolbox floats', async () => {
     TestBed.configureTestingModule({
       imports: [TranscriptionEditorComponent],
       providers: [
@@ -277,7 +280,7 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     image.style.height = '300px';
     fixture.detectChanges();
     const canvas: HTMLElement = fixture.nativeElement.querySelector('.artifact-canvas');
-    const panel: HTMLElement = fixture.nativeElement.querySelector('.edit-panel');
+    const toolbox: HTMLElement = fixture.nativeElement.querySelector('.transcription-edits-toolbox .toolbox');
     await new Promise<void>(resolve => setTimeout(resolve, 50));
     fixture.detectChanges();
     const vector: SVGElement = fixture.nativeElement.querySelector('.svgWrapper svg');
@@ -287,11 +290,13 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     expect(canvas.getBoundingClientRect().height).toBe(image.getBoundingClientRect().height);
     expect(vector.getBoundingClientRect().width).toBe(image.getBoundingClientRect().width);
     expect(vector.getBoundingClientRect().height).toBe(image.getBoundingClientRect().height);
-    expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(image.getBoundingClientRect().right);
+    expect(toolbox.classList.contains('bottom-right')).toBeTrue();
+    expect(getComputedStyle(toolbox).position).toBe('fixed');
+    expect(toolbox.getBoundingClientRect().right).toBeCloseTo(document.documentElement.clientWidth - 16, 0);
+    expect(toolbox.getBoundingClientRect().bottom).toBeCloseTo(document.documentElement.clientHeight - 16, 0);
     image.style.width = '200px';
     fixture.detectChanges();
     expect(canvas.getBoundingClientRect().width).toBe(image.getBoundingClientRect().width);
-    expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(image.getBoundingClientRect().right);
     image.dispatchEvent(new Event('error'));
     fixture.detectChanges();
     await new Promise<void>(resolve => setTimeout(resolve, 50));

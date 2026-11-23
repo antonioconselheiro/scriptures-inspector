@@ -5,6 +5,7 @@ import { NgxMoveableComponent, NgxMoveableModule } from 'ngx-moveable';
 import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-position-model';
 import { Language } from '@domain/language-model';
 import { LanguageAlternativeSpelling } from '@domain/language-alternative-spelling-model';
+import { Toolbox } from '@shared/toolbox/toolbox';
 import { addNestedPosition, validNestedUpdate, validPosition } from '../transcription-positions';
 import { v4 as uuid } from 'uuid';
 
@@ -17,7 +18,7 @@ interface TextSegment {
 @Component({
   selector: 'app-artifact-text-editor-component',
   standalone: true,
-  imports: [FormsModule, NgxMoveableModule, NgTemplateOutlet],
+  imports: [FormsModule, NgxMoveableModule, NgTemplateOutlet, Toolbox],
   templateUrl: './artifact-text-editor-component.html',
   styleUrl: './artifact-text-editor-component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,7 +66,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
         !target.closest('.artifact-fragment, .floating-toolbar, ngx-moveable')) this.newEdit();
       return;
     }
-    if (target instanceof Element && target.closest('.edit-panel button, .edit-panel input, .delete-confirmation, .position-fields')) return;
+    if (target instanceof Element && target.closest('.transcription-edits-toolbox, .position-fields')) return;
     this.newEdit();
     this.cdr.markForCheck();
   }

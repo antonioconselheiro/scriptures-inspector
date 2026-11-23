@@ -51,8 +51,8 @@
   @if (error) { <p class="canvas-error" role="alert">{{ error }}</p> }
 </div>
 
-<aside class="edit-panel">
-  <h3>Transcription edits</h3>
+<app-toolbox class="transcription-edits-toolbox" title="Transcription edits" corner="bottom-right">
+<aside class="edit-panel" aria-label="Transcription edits">
   <button type="button" (click)="generateEdits('text')" [disabled]="!text.length">Create edit for entire text</button>
   <button type="button" (click)="generateEdits('lines')" [disabled]="!text.length">Create edits for each line</button>
   <p>Select text on the fragment to position it. To select part of a positioned edit, click outside it or choose Select part first.</p>
@@ -87,3 +87,4 @@
     </div>
   }
 </aside>
+</app-toolbox>

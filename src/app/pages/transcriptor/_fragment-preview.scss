@@ -3,8 +3,7 @@
     position: relative;
     display: inline-grid;
     width: max-content;
-    grid-template-columns: max-content 320px;
-    gap: 1rem;
+    grid-template-columns: max-content;
     align-items: start;
 
     .fragmentBounds {

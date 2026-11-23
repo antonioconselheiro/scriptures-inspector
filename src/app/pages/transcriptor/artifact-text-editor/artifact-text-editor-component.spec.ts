@@ -27,6 +27,35 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('starts with a draggable toolbox at the bottom right and keeps the text selected', async () => {
+    const fixture = TestBed.createComponent(Host);
+    fixture.componentInstance.positions = [{ start: 0, length: 5, x: 30, y: 30, flip: 0 }];
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(
+      node => node.componentInstance instanceof ArtifactTextEditorComponent
+    ).componentInstance as ArtifactTextEditorComponent;
+    const toolbox: HTMLElement = fixture.nativeElement.querySelector('.transcription-edits-toolbox .toolbox');
+    const header: HTMLElement = toolbox.querySelector('.toolboxHeader')!;
+    expect(header.textContent?.trim()).toBe('Transcription edits');
+    expect(toolbox.classList.contains('bottom-right')).toBeTrue();
+    const before = toolbox.getBoundingClientRect();
+    header.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerId: 7,
+      button: 0, clientX: before.left + 5, clientY: before.top + 5 }));
+    document.dispatchEvent(new PointerEvent('pointermove', { bubbles: true, pointerId: 7,
+      clientX: before.left - 25, clientY: before.top - 15 }));
+    document.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, pointerId: 7 }));
+    header.click();
+    fixture.detectChanges();
+    expect(toolbox.classList.contains('positioned')).toBeTrue();
+    expect(toolbox.getBoundingClientRect().left).toBeCloseTo(before.left - 30, 0);
+    expect(toolbox.getBoundingClientRect().top).toBeCloseTo(before.top - 20, 0);
+    expect(editor.selectedIndex).toBe(0);
+    fixture.destroy();
+  });
+
   it('promotes nested dialog edits using their staged geometry without changing the main editor', () => {
     const fixture = TestBed.createComponent(BoundedHost);
     const original = [{ start: 0, length: 5, x: 10, y: 10, flip: 0 }];
