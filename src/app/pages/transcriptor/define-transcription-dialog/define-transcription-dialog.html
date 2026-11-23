@@ -1,4 +1,4 @@
-<form (ngSubmit)="save()">
+<form class="scrollable" (ngSubmit)="save()">
   <fieldset>
     <legend>Edit Transcription</legend>
     <textarea #source [(ngModel)]="pendingText" name="transcription" aria-label="Transcription text"
