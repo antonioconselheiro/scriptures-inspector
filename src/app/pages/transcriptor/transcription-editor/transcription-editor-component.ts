@@ -279,15 +279,11 @@ export class TranscriptionEditorComponent implements OnInit, OnDestroy {
         title: 'Edit Transcription',
         transcription: artifact.transcription,
         positions: artifact.positions ?? [],
-        fragmentImage: this.imageFailed ? '' : this.getImage(),
-        vector: artifact.vector,
-        language: this.artifactLanguage,
         spelling: this.artifactSpelling,
-        showImage: this.showImage,
-        showVector: this.showVector,
-        showTranscriptionPositioning: this.showTranscriptionPositioning,
         validatePositions: (text: string, positions: ArtifactFragmentWordPosition[]) =>
-          this.textEditor?.validatePositions(text, positions) ?? (positions.length ? 'The transcription editor is unavailable.' : null)
+          this.textEditor?.validatePositions(text, positions) ?? (positions.length ? 'The transcription editor is unavailable.' : null),
+        deletePositions: (text: string, positions: ArtifactFragmentWordPosition[], deleted: Set<number>) =>
+          this.textEditor?.deletePositions(text, positions, deleted) ?? null
       })
       .setOutletName('main')
       .build()

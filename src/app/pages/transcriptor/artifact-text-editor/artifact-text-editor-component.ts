@@ -725,6 +725,27 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     }
   }
 
+  deletePositions(text: string, positions: ArtifactFragmentWordPosition[], deleted: Set<number>): ArtifactFragmentWordPosition[] | null {
+    const previousText = this.text;
+    const previousFragments = this.fragments;
+    this.text = text;
+    this.fragments = positions;
+    this.cdr.detectChanges();
+    try {
+      return this.promoteChildren(deleted);
+    } finally {
+      this.text = previousText;
+      this.fragments = previousFragments;
+      this.cdr.detectChanges();
+      if (this.selectedIndex !== null && this.selectedElement) {
+        this.selectedElement = this.canvas.nativeElement.querySelector<HTMLElement>(
+          `[data-fragment-index="${this.selectedIndex}"]`
+        );
+        this.cdr.markForCheck();
+      }
+    }
+  }
+
   private emitFragments(fragments: ArtifactFragmentWordPosition[]): void {
     this.fragments = fragments;
     this.lastEmitted = fragments;

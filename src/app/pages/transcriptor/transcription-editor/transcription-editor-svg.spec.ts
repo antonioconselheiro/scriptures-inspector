@@ -90,7 +90,7 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     fixture.destroy();
   });
 
-  it('passes the fragment preview configuration to the transcription dialog and applies only saved changes', () => {
+  it('passes positioning helpers to the transcription dialog and applies only saved changes', () => {
     const results = new Subject<{ transcription: string; positions: { start: number; length: number; x: number; y: number; flip: number }[] } | void>();
     const modal = {
       setBindToRoute() { return this; },
@@ -122,8 +122,8 @@ describe('TranscriptionEditorComponent SVG rendering', () => {
     fixture.detectChanges();
     component.openDialogEditTranscription(artifact);
     expect(modal.setData).toHaveBeenCalledWith(jasmine.objectContaining({
-      fragmentImage: component.getImage(), vector: artifact.vector, language: component.artifactLanguage,
-      showImage: true, showVector: false, showTranscriptionPositioning: true
+      transcription: artifact.transcription, positions: artifact.positions, spelling: component.artifactSpelling,
+      validatePositions: jasmine.any(Function), deletePositions: jasmine.any(Function)
     }));
     results.next();
     expect(artifact.transcription).toBe('abc');

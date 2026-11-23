@@ -27,6 +27,41 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('promotes nested dialog edits using their staged geometry without changing the main editor', () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    const original = [{ start: 0, length: 5, x: 10, y: 10, flip: 0 }];
+    fixture.componentInstance.positions = original;
+    fixture.detectChanges();
+    const editor = fixture.debugElement.query(
+      node => node.componentInstance instanceof ArtifactTextEditorComponent
+    ).componentInstance as ArtifactTextEditorComponent;
+    const staged = [
+      { id: 'parent', start: 0, length: 5, x: 55, y: 30, flip: 30, fontSize: 20 },
+      { id: 'child', parentId: 'parent', start: 1, length: 3, x: 4, y: 2, flip: 15 }
+    ];
+    fixture.componentInstance.positions = staged;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const before = (fixture.nativeElement.querySelector('[data-fragment-index="1"]') as HTMLElement).getBoundingClientRect();
+    fixture.componentInstance.positions = original;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const promoted = editor.deletePositions('First second', staged, new Set([0]));
+    expect(promoted?.length).toBe(1);
+    expect(promoted?.[0].parentId).toBeUndefined();
+    expect(promoted?.[0].flip).toBe(45);
+    expect(promoted?.[0].fontSize).toBe(20);
+    expect(fixture.componentInstance.positions).toEqual(original);
+    expect(editor.fragments).toBe(original);
+    fixture.componentInstance.positions = promoted!;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const after = (fixture.nativeElement.querySelector('[data-fragment-index="0"]') as HTMLElement).getBoundingClientRect();
+    expect(after.left).toBeCloseTo(before.left, 0);
+    expect(after.top).toBeCloseTo(before.top, 0);
+    fixture.destroy();
+  });
+
   it('cancels a drag with the right mouse button and allows a new drag', async () => {
     const fixture = TestBed.createComponent(BoundedHost);
     fixture.componentInstance.positions = [{ start: 0, length: 5, x: 30, y: 30, flip: 0, fontSize: 16 }];

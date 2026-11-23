@@ -6,38 +6,36 @@
     <p>Select text or enter its start and length. Offsets use UTF-16 units in the original text.</p>
   </fieldset>
 
-  <fieldset>
-    <legend>Fragment preview</legend>
-    <div class="displayToggles">
-      <label class="button"><span>Image</span><input type="checkbox" name="showImage" #imageToggle [checked]="showImage" (change)="showImage = imageToggle.checked"></label>
-      <label class="button"><span>Vector</span><input type="checkbox" name="showVector" #vectorToggle [checked]="showVector" (change)="showVector = vectorToggle.checked"></label>
-      <label class="button"><span>Transcription Positioning</span><input type="checkbox" name="showTranscriptionPositioning" #textToggle [checked]="showTranscriptionPositioning" (change)="showTranscriptionPositioning = textToggle.checked"></label>
-    </div>
-    <div class="preview-scroll">
-      <div class="graphicsWrapper" [class.hasImage]="!!fragmentImage && !imageFailed">
-        <div #fragmentBounds class="fragmentBounds">
-          @if (fragmentImage) {
-            <img [src]="fragmentImage" alt="Fragment Image" (error)="onImageError()"
-              [style.display]="imageFailed ? 'none' : 'block'"
-              [style.visibility]="showImage ? 'visible' : 'hidden'">
-          }
-          <div class="svgWrapper" [innerHTML]="vector | safeSvg"
-            [style.visibility]="showVector ? 'visible' : 'hidden'"></div>
-        </div>
-        @if (imageFailed) {
-          <p class="image-error">Unable to load the artifact image. Check that the file exists and is accessible.</p>
-        }
-        <div class="transcriptionPositioningWrapper" [style.visibility]="showTranscriptionPositioning ? 'visible' : 'hidden'">
-          <app-artifact-text-editor-component [text]="transcription" [fragments]="positions"
-            [language]="language" [spelling]="spelling" [boundsElement]="fragmentBounds" [preserveSelectionOnChange]="true"
-            (fragmentsChange)="onPositionsChange($event)" (selectionChange)="onSelectionChange($event)" />
-        </div>
-      </div>
-    </div>
-  </fieldset>
-
   <fieldset class="position-fields">
     <legend>Positioning edits</legend>
+    @if (positions.length === 0) { <p>No edits yet.</p> }
+    <ul class="edits-list">
+      @for (position of positions; track $index) {
+        <li [class.selected]="selectedIndex === $index || pendingDeletion.includes($index)">
+          <input #check type="checkbox" [checked]="checked.has($index)"
+            (change)="toggleChecked($index, check.checked)" [attr.aria-label]="'Select edit ' + ($index + 1)">
+          <button type="button" class="edit-selection" (click)="selectEdit($index)" [title]="editText($index)"
+            [attr.aria-pressed]="selectedIndex === $index">
+            {{ position.start }} + {{ position.length }} — <span class="edit-excerpt">{{ editExcerpt($index) }}</span>
+          </button>
+          <button type="button" (click)="requestDelete([$index])" [attr.aria-label]="'Delete edit ' + ($index + 1)">Delete</button>
+        </li>
+      }
+    </ul>
+    <button type="button" [disabled]="checked.size === 0" (click)="requestBulkDelete(false)">Delete selected edits</button>
+    <button type="button" [disabled]="positions.length === 0" (click)="requestBulkDelete(true)">Delete all edits</button>
+    @if (pendingDeletion.length) {
+      <div class="delete-confirmation" role="alert">
+        <p>The following text will lose its positioning and formatting.</p>
+        <ul>
+          @for (index of pendingDeletion; track index) {
+            <li [title]="editText(index)">{{ editExcerpt(index) }}</li>
+          }
+        </ul>
+        <button type="button" (click)="confirmDelete()">Confirm deletion</button>
+        <button type="button" (click)="cancelDelete()">Cancel</button>
+      </div>
+    }
     <p>For nested edits, X and Y are relative to the containing edit.</p>
     <button type="button" (click)="newEdit()">New edit</button>
     <label>Start <input type="number" name="start" min="0" step="1" [(ngModel)]="draft.start"></label>
