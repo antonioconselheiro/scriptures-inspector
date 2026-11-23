@@ -27,6 +27,146 @@ class BoundedHost {
 }
 
 describe('ArtifactTextEditorComponent', () => {
+  it('cancels a drag with the right mouse button and allows a new drag', async () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [{ start: 0, length: 5, x: 30, y: 30, flip: 0, fontSize: 16 }];
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = fragment.getBoundingClientRect();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, button: 0, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 35, clientY: before.top + 25, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.positions[0].x).not.toBe(30);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).not.toBeNull();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 2, buttons: 3 }));
+    const menu = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2 });
+    fragment.dispatchEvent(menu);
+    fixture.detectChanges();
+    expect(menu.defaultPrevented).toBeTrue();
+    expect(fixture.componentInstance.positions[0]).toEqual({ start: 0, length: 5, x: 30, y: 30, flip: 0, fontSize: 16 });
+    expect(fragment.getBoundingClientRect().left).toBeCloseTo(before.left, 0);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 55, clientY: before.top + 35, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, button: 0 }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.positions[0].x).toBe(30);
+    expect(fixture.componentInstance.positions[0].y).toBe(30);
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, button: 0, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 15, clientY: before.top + 15, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, button: 0 }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.positions[0].x).toBeCloseTo(40, 0);
+    expect(fixture.componentInstance.positions[0].y).toBeCloseTo(40, 0);
+    const normalMenu = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2 });
+    fragment.dispatchEvent(normalMenu);
+    expect(normalMenu.defaultPrevented).toBeFalse();
+    fixture.destroy();
+  });
+
+  it('restores a nested edit relative to its rotated parent when cancelling a drag', async () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    const original: ArtifactFragmentWordPosition[] = [
+      { id: 'parent', start: 0, length: 5, x: 55, y: 30, flip: 30 },
+      { id: 'child', parentId: 'parent', start: 1, length: 3, x: 4, y: 2, flip: 15 }
+    ];
+    fixture.componentInstance.positions = original.map(position => ({ ...position }));
+    fixture.detectChanges();
+    const child: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="1"]');
+    child.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = child.getBoundingClientRect();
+    child.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 25, clientY: before.top + 15, buttons: 1 }));
+    expect(fixture.componentInstance.positions[1].x).not.toBe(4);
+    child.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, button: 2, buttons: 3 }));
+    child.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, button: 2 }));
+    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, button: 0 }));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.positions).toEqual(original);
+    expect(child.getBoundingClientRect().left).toBeCloseTo(before.left, 0);
+    expect(child.getBoundingClientRect().top).toBeCloseTo(before.top, 0);
+    fixture.destroy();
+  });
+
+  it('constrains actual Shift dragging horizontally and resumes free movement without jumping', async () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [{ start: 0, length: 5, x: 30, y: 30, flip: 0 }];
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = fragment.getBoundingClientRect();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, button: 0, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 35, clientY: before.top + 25, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    const moved = fragment.getBoundingClientRect();
+    const guide: HTMLElement = fixture.nativeElement.querySelector('.horizontal-drag-guide');
+    expect(guide).not.toBeNull();
+    expect(getComputedStyle(guide).borderTopStyle).toBe('dashed');
+    expect(getComputedStyle(guide).pointerEvents).toBe('none');
+    expect(guide.getBoundingClientRect().top).toBeCloseTo((before.top + before.bottom) / 2, 0);
+    expect(moved.left - before.left).toBeCloseTo(30, 0);
+    expect(moved.top).toBeCloseTo(before.top, 0);
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 40, clientY: before.top + 30, buttons: 1 }));
+    fixture.detectChanges();
+    const free = fragment.getBoundingClientRect();
+    expect(free.left - moved.left).toBeCloseTo(5, 0);
+    expect(free.top - moved.top).toBeCloseTo(5, 0);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 500, clientY: before.top + 200, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    const edge = fragment.getBoundingClientRect();
+    const bounds = fixture.nativeElement.querySelector('[style*="width: 200px"]').getBoundingClientRect() as DOMRect;
+    expect(edge.right).toBeCloseTo(bounds.right, 0);
+    expect(edge.top).toBeCloseTo(free.top, 0);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).not.toBeNull();
+    document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift', bubbles: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift', bubbles: true, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).not.toBeNull();
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 490, clientY: before.top + 200, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fragment.getBoundingClientRect().left).toBeCloseTo(edge.left - 10, 0);
+    expect(fragment.getBoundingClientRect().top).toBeCloseTo(edge.top, 0);
+    fragment.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: before.left + 490, clientY: before.top + 200, button: 0, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    fixture.destroy();
+  });
+
+  it('constrains Shift dragging to the image horizontal axis inside a rotated parent', async () => {
+    const fixture = TestBed.createComponent(BoundedHost);
+    fixture.componentInstance.positions = [
+      { id: 'parent', start: 0, length: 5, x: 55, y: 30, flip: 30 },
+      { id: 'child', parentId: 'parent', start: 1, length: 3, x: 4, y: 2, flip: 15 }
+    ];
+    fixture.detectChanges();
+    const child: HTMLElement = fixture.nativeElement.querySelector('[data-fragment-index="1"]');
+    child.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = child.getBoundingClientRect();
+    child.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 35, clientY: before.top + 25, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    const after = child.getBoundingClientRect();
+    expect(after.left - before.left).toBeCloseTo(30, 0);
+    expect(after.top).toBeCloseTo(before.top, 0);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).not.toBeNull();
+    child.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: before.left + 35, clientY: before.top + 25, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    fixture.destroy();
+  });
+
   it('keeps the width of a generated line while dragging it toward the right edge', async () => {
     const fixture = TestBed.createComponent(BoundedHost);
     fixture.detectChanges();

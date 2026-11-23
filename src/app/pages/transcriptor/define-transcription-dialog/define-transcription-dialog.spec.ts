@@ -197,6 +197,33 @@ describe('DefineTranscriptionDialog', () => {
     fixture.destroy();
   });
 
+  it('constrains Shift dragging in the dialog preview without modifying the original', async () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const original = [{ start: 0, length: 3, x: 20, y: 20, flip: 0 }];
+    fixture.componentInstance.onInjectData({
+      title: 'Edit', transcription: 'abc def', positions: original,
+      vector: '<svg width="200" height="100"></svg>'
+    });
+    fixture.detectChanges();
+    const fragment: HTMLElement = fixture.nativeElement.querySelector('.artifact-fragment');
+    fragment.click();
+    fixture.detectChanges();
+    await new Promise<void>(resolve => setTimeout(resolve, 50));
+    const before = fragment.getBoundingClientRect();
+    fragment.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, clientX: before.left + 5, clientY: before.top + 5, buttons: 1 }));
+    window.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: before.left + 25, clientY: before.top + 35, buttons: 1, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fragment.getBoundingClientRect().left - before.left).toBeCloseTo(20, 0);
+    expect(fragment.getBoundingClientRect().top).toBeCloseTo(before.top, 0);
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).not.toBeNull();
+    expect(fixture.componentInstance.draft.x).toBeCloseTo(40, 0);
+    expect(original[0].x).toBe(20);
+    fragment.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, clientX: before.left + 25, clientY: before.top + 35, shiftKey: true }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.horizontal-drag-guide')).toBeNull();
+    fixture.destroy();
+  });
+
   it('preserves unselected nested edits when their parent is deleted in the dialog', () => {
     const fixture = TestBed.createComponent(DefineTranscriptionDialog);
     const dialog = fixture.componentInstance;

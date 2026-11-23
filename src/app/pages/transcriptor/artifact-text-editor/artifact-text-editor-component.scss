@@ -34,6 +34,15 @@
   outline-offset: 2px;
 }
 
+.horizontal-drag-guide {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 19;
+  border-top: 1px dashed #1976d2;
+  pointer-events: none;
+}
+
 .floating-toolbar {
   position: absolute;
   transform: translateY(-100%);

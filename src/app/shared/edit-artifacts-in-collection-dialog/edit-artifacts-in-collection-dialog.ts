@@ -101,15 +101,16 @@ export class EditArtifactsInCollectionDialog extends ModalableDirective<{
     );
   }
 
-  saveCollectionMetadata(collectionFiles: Array<string>, collectionFolder: string): Promise<void> {
+  async saveCollectionMetadata(collectionFiles: Array<string>, collectionFolder: string): Promise<void> {
     const collection = this.collections.find(c => c.folder === collectionFolder);
-    if (collection && this.project) {
-      collection.order = collectionFiles.map(file => file.split(/[\\/]/).pop() || file);
-      const { folder, ...metadata } = { ...collection };
-      return writeJsonFileFn(`${getArtifactCollectionFolderFn(this.project, collectionFolder)}/metadata.json`, metadata);
-    }
-    
-    return Promise.reject(new Error('No artifact collection selected'));
+    if (!collection || !this.project) throw new Error('No artifact collection selected');
+    const path = `${getArtifactCollectionFolderFn(this.project, collectionFolder)}/metadata.json`;
+    const metadata = await window.api.readOptionalJsonFile<Omit<FragmentCollection, 'folder'>>(path);
+    if (!metadata) throw new Error('Collection metadata no longer exists.');
+    const order = collectionFiles.map(file => file.split(/[\\/]/).pop() || file);
+    await writeJsonFileFn(path, { ...metadata, order });
+    collection.order = order;
+    collection.sources = metadata.sources;
   }
 
   importArtifacts(collectionFolder: string): void {

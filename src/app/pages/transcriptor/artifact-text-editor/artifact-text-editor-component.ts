@@ -44,11 +44,15 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
   pendingDeletion: number[] = [];
   selectingPart = false;
   boundsHeight = 300;
+  horizontalGuideTop: number | null = null;
   readonly rotationPositions: ('top' | 'bottom' | 'left' | 'right')[] = ['top', 'bottom', 'left', 'right'];
   private selectionFrame: number | null = null;
   private controlsFrame: number | null = null;
   private needsControlResize = false;
   private boundsObserver?: ResizeObserver;
+  private lastDragPosition: { left: number; top: number } | null = null;
+  private dragOrigin: { index: number; x: number; y: number } | null = null;
+  private suppressDragContextMenu = false;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
@@ -64,6 +68,40 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     if (target instanceof Element && target.closest('.edit-panel button, .edit-panel input, .delete-confirmation, .position-fields')) return;
     this.newEdit();
     this.cdr.markForCheck();
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  onDocumentMouseDown(event: MouseEvent): void {
+    if (event.button !== 2) return;
+    this.suppressDragContextMenu = false;
+    const origin = this.dragOrigin;
+    if (!origin || this.selectedIndex !== origin.index) return;
+    this.suppressDragContextMenu = true;
+    event.preventDefault();
+    this.moveable?.stopDrag();
+    this.onDragEnd();
+    this.error = '';
+    this.updateSelected({ x: origin.x, y: origin.y });
+  }
+
+  @HostListener('document:contextmenu', ['$event'])
+  onDocumentContextMenu(event: MouseEvent): void {
+    if (!this.suppressDragContextMenu) return;
+    this.suppressDragContextMenu = false;
+    if (event.button === 2) event.preventDefault();
+  }
+
+  @HostListener('document:keydown.shift')
+  onShiftDown(): void {
+    if (this.lastDragPosition) this.showHorizontalGuide();
+  }
+
+  @HostListener('document:keyup.shift')
+  onShiftUp(): void {
+    if (this.horizontalGuideTop !== null) {
+      this.horizontalGuideTop = null;
+      this.cdr.markForCheck();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -319,6 +357,7 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
   }
 
   newEdit(notify = true): void {
+    this.onDragEnd();
     this.selectedIndex = null;
     this.selectedElement = null;
     this.draft = this.emptyDraft();
@@ -478,10 +517,65 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     });
   }
 
-  onDrag(event: { left: number; top: number }): void {
+  onDragStart(): void {
+    if (this.selectedIndex === null) return;
+    const position = this.fragments[this.selectedIndex];
+    this.dragOrigin = { index: this.selectedIndex, x: position.x, y: position.y };
+    this.lastDragPosition = { left: position.x, top: position.y };
+    this.horizontalGuideTop = null;
+  }
+
+  onDragEnd(): void {
+    this.dragOrigin = null;
+    this.lastDragPosition = null;
+    this.horizontalGuideTop = null;
+    this.cdr.markForCheck();
+  }
+
+  private showHorizontalGuide(): void {
+    if (this.horizontalGuideTop !== null || !this.selectedElement) return;
+    const rect = this.selectedElement.getBoundingClientRect();
+    this.horizontalGuideTop = (rect.top + rect.bottom) / 2 - this.canvas.nativeElement.getBoundingClientRect().top;
+    this.cdr.markForCheck();
+  }
+
+  onDrag(event: { left: number; top: number; inputEvent?: Event }): void {
     if (!this.selectedElement || this.selectedIndex === null) return;
+    let angle = 0;
+    let parentId = this.fragments[this.selectedIndex].parentId;
+    while (parentId) {
+      const parent = this.fragments.find(item => item.id === parentId);
+      if (!parent) break;
+      angle += parent.flip;
+      parentId = parent.parentId;
+    }
+    const radians = angle * Math.PI / 180;
+    const cosine = Math.cos(radians);
+    const sine = Math.sin(radians);
+    const shift = (event.inputEvent instanceof MouseEvent || event.inputEvent instanceof TouchEvent) && event.inputEvent.shiftKey;
+    let x = event.left;
+    let y = event.top;
+    if (this.lastDragPosition) {
+      const dx = event.left - this.lastDragPosition.left;
+      const dy = event.top - this.lastDragPosition.top;
+      const current = this.fragments[this.selectedIndex];
+      if (shift) {
+        const horizontal = dx * cosine - dy * sine;
+        x = current.x + horizontal * cosine;
+        y = current.y - horizontal * sine;
+      } else {
+        x = current.x + dx;
+        y = current.y + dy;
+      }
+      this.lastDragPosition = { left: event.left, top: event.top };
+    }
+    if (shift && this.lastDragPosition) {
+      this.showHorizontalGuide();
+    } else {
+      this.horizontalGuideTop = null;
+    }
     if (!this.boundsElement) {
-      this.updateSelected({ x: event.left, y: event.top });
+      this.updateSelected({ x, y });
       return;
     }
     const bounds = this.boundsElement.getBoundingClientRect();
@@ -492,8 +586,8 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     const element = this.selectedElement;
     const oldLeft = element.style.left;
     const oldTop = element.style.top;
-    element.style.left = `${event.left}px`;
-    element.style.top = `${event.top}px`;
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
     const rects = [element, ...element.querySelectorAll<HTMLElement>('.artifact-fragment')]
       .map(item => item.getBoundingClientRect());
     element.style.left = oldLeft;
@@ -508,19 +602,14 @@ export class ArtifactTextEditorComponent implements OnChanges, OnDestroy {
     }
     const dx = Math.max(bounds.left - left, Math.min(0, bounds.right - right));
     const dy = Math.max(bounds.top - top, Math.min(0, bounds.bottom - bottom));
-    let angle = 0;
-    let parentId = this.fragments[this.selectedIndex].parentId;
-    while (parentId) {
-      const parent = this.fragments.find(item => item.id === parentId);
-      if (!parent) break;
-      angle += parent.flip;
-      parentId = parent.parentId;
+    if (shift && Math.abs(dy) > 0.1) {
+      this.error = 'The text is outside the image or SVG bounds. Move it inside before using horizontal drag.';
+      return;
     }
-    const radians = angle * Math.PI / 180;
     this.error = '';
     this.updateSelected({
-      x: event.left + dx * Math.cos(radians) + dy * Math.sin(radians),
-      y: event.top - dx * Math.sin(radians) + dy * Math.cos(radians)
+      x: x + dx * cosine + dy * sine,
+      y: y - dx * sine + dy * cosine
     });
   }
 

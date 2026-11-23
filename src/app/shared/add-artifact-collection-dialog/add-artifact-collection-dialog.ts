@@ -5,6 +5,7 @@ import { FragmentCollection } from '@domain/fragment-collection-model';
 import { Project } from '@domain/project-model';
 import { deleteDirectoryFn } from '@shared/project/delete-directory-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
+import { getArtifactCollectionFolderFn } from '@shared/project/get-artifact-collection-folder-fn';
 import { CollectionsStatefull } from '@shared/system/collections-statefull';
 import { Subject, Subscription } from 'rxjs';
 
@@ -27,6 +28,12 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
   project: Project | null = null;
   collections: Array<FragmentCollection> = [];
   creating = false;
+  editingFolder: string | null = null;
+  collectionName = '';
+  collectionDescription = '';
+  collectionSources = '';
+  saving = false;
+  private initialForm = { name: '', description: '', sources: '' };
 
   private subscriptions = new Subscription();
 
@@ -69,6 +76,7 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
         .then(success => {
           if (success) {
             this.collections = this.collections.filter(c => c.folder !== folder);
+            if (this.editingFolder === folder) this.resetForm();
             this.collectionsStatefull.update(project);
             this.cdr.detectChanges();
           } else {
@@ -96,16 +104,13 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
       .replace(/^-+|-+$/g, '');         // remove '-' do início/fim
   }
 
-  createCollection(
-    collectionNameEl: HTMLInputElement,
-    collectionDescriptionEl: HTMLTextAreaElement
-  ): void {
-    if (!collectionNameEl.value || this.creating) {
+  createCollection(): void {
+    if (!this.collectionName.trim() || this.creating || this.saving || this.editingFolder) {
       return;
     }
 
-    const collectionName = collectionNameEl.value;
-    const collectionDescription = collectionDescriptionEl.value;
+    const collectionName = this.collectionName;
+    const collectionDescription = this.collectionDescription;
     const folder = this.derivateFolderName(collectionName);
     if (!folder || this.collections.some(collection => collection.folder === folder)) {
       alert('Choose a name that produces a unique, non-empty folder name.');
@@ -118,11 +123,11 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
       writeJsonFileFn(`${project.path}/artifacts/${folder}/metadata.json`, {
         name: collectionName,
         description: collectionDescription || '',
-        order: []
+        order: [],
+        sources: this.parseSources(this.collectionSources)
       })
         .then(() => {
-          collectionNameEl.value = '';
-          collectionDescriptionEl.value = '';
+          this.resetForm();
           this.collectionsStatefull.update(project);
         })
         .catch(e => {
@@ -134,5 +139,70 @@ export class AddArtifactCollectionDialog extends ModalableDirective<{
           this.cdr.detectChanges();
         });
     }
+  }
+
+  editCollection(collection: FragmentCollection): void {
+    if (this.saving || this.creating || this.editingFolder === collection.folder) return;
+    if ((this.collectionName !== this.initialForm.name ||
+      this.collectionDescription !== this.initialForm.description ||
+      this.collectionSources !== this.initialForm.sources) &&
+      !confirm('Discard unsaved changes to the collection form?')) {
+      return;
+    }
+    this.editingFolder = collection.folder;
+    this.collectionName = collection.name;
+    this.collectionDescription = collection.description ?? '';
+    this.collectionSources = (collection.sources ?? []).join('\n');
+    this.initialForm = {
+      name: this.collectionName, description: this.collectionDescription, sources: this.collectionSources
+    };
+  }
+
+  cancelEdit(): void {
+    if (this.saving) return;
+    this.resetForm();
+  }
+
+  private resetForm(): void {
+    this.editingFolder = null;
+    this.collectionName = '';
+    this.collectionDescription = '';
+    this.collectionSources = '';
+    this.initialForm = { name: '', description: '', sources: '' };
+  }
+
+  async saveCollection(): Promise<void> {
+    const project = this.project;
+    const folder = this.editingFolder;
+    if (!project || !folder || this.saving || this.creating) return;
+    if (!this.collectionName.trim()) {
+      alert('Enter a collection name.');
+      return;
+    }
+    const name = this.collectionName;
+    const description = this.collectionDescription;
+    const sources = this.parseSources(this.collectionSources);
+    const path = `${getArtifactCollectionFolderFn(project, folder)}/metadata.json`;
+    this.saving = true;
+    try {
+      const metadata = await window.api.readOptionalJsonFile<Omit<FragmentCollection, 'folder'>>(path);
+      if (!metadata) throw new Error('Collection metadata no longer exists.');
+      await writeJsonFileFn(path, { ...metadata, name, description, sources });
+      this.collections = this.collections.map(collection => collection.folder === folder
+        ? { ...collection, name, description, sources }
+        : collection);
+      this.resetForm();
+      this.collectionsStatefull.update(project);
+    } catch (error) {
+      console.error('Unable to save collection:', error);
+      alert('Unable to save the collection. Check the console for details.');
+    } finally {
+      this.saving = false;
+      this.cdr.markForCheck();
+    }
+  }
+
+  private parseSources(value: string): string[] {
+    return value.split(/\r\n|\r|\n/).map(source => source.trim()).filter(Boolean);
   }
 }

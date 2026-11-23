@@ -26,11 +26,14 @@
       }
     </span>
   </ng-template>
+  @if (horizontalGuideTop !== null) {
+    <div class="horizontal-drag-guide" [style.top.px]="horizontalGuideTop" aria-hidden="true"></div>
+  }
   @if (selectedElement) {
     <ngx-moveable [target]="selectedElement" [draggable]="true" [rotatable]="true"
       [rotationPosition]="rotationPositions" [resizable]="false" [scalable]="false"
       [origin]="false" [useResizeObserver]="true"
-      (drag)="onDrag($event)" (rotateStart)="onRotateStart($event)"
+      (dragStart)="onDragStart()" (drag)="onDrag($event)" (dragEnd)="onDragEnd()" (rotateStart)="onRotateStart($event)"
       (beforeRotate)="onBeforeRotate($event)" (rotate)="onRotate($event)" />
     <div class="floating-toolbar" role="group" aria-label="Selected text formatting"
       [style.left.px]="toolbarPosition.left" [style.top.px]="toolbarPosition.top" dir="ltr">
@@ -53,6 +56,7 @@
   <button type="button" (click)="generateEdits('text')" [disabled]="!text.length">Create edit for entire text</button>
   <button type="button" (click)="generateEdits('lines')" [disabled]="!text.length">Create edits for each line</button>
   <p>Select text on the fragment to position it. To select part of a positioned edit, click outside it or choose Select part first.</p>
+  <p>Hold Shift while dragging to move horizontally. Right-click while dragging to cancel the move.</p>
   @if (selectingPart) { <p role="status">Select part of the text on the fragment.</p> }
   @if (fragments.length === 0) { <p>No edits yet.</p> }
   <ul>

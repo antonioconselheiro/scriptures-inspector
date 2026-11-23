@@ -13,11 +13,12 @@ describe('EditArtifactsInCollectionDialog', () => {
 
   beforeEach(async () => {
     originalApi = Object.getOwnPropertyDescriptor(window, 'api');
-    api = jasmine.createSpyObj<Window['api']>('api', ['listDirectories', 'readJsonFile', 'writeJsonFile', 'importImages']);
+    api = jasmine.createSpyObj<Window['api']>('api', ['listDirectories', 'readJsonFile', 'readOptionalJsonFile', 'writeJsonFile', 'importImages']);
     api.listDirectories.and.resolveTo(['first', 'second']);
     api.readJsonFile.and.callFake(async path => JSON.parse(JSON.stringify(path.includes('/first/')
       ? { name: 'First', order: ['old.png'] }
       : { name: 'Second', order: ['previous.png'] })));
+    api.readOptionalJsonFile.and.callFake(async path => api.readJsonFile(path));
     api.writeJsonFile.and.resolveTo();
     api.importImages.and.resolveTo();
     Object.defineProperty(window, 'api', { configurable: true, value: api });
@@ -95,5 +96,13 @@ describe('EditArtifactsInCollectionDialog', () => {
     component.importArtifacts('');
     expect(api.importImages).not.toHaveBeenCalled();
     expect(window.alert).toHaveBeenCalledWith('Select an artifact collection before importing images.');
+  });
+
+  it('preserves collection references when updating image order', async () => {
+    api.readOptionalJsonFile.and.resolveTo({ name: 'First', order: ['old.png'], sources: ['A book', 'https://example.org'] });
+    await component.saveCollectionMetadata(['/project/artifacts/first/old.png'], 'first');
+    expect(api.writeJsonFile).toHaveBeenCalledOnceWith('/project/artifacts/first/metadata.json', {
+      name: 'First', order: ['old.png'], sources: ['A book', 'https://example.org']
+    });
   });
 });

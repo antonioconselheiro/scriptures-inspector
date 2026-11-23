@@ -5,7 +5,7 @@
 
 <form [formGroup]="artifactForm" (ngSubmit)="onArtifactSubmit()">
   <fieldset>
-    <legend>Define Artifact Properties</legend>
+    <legend>Define Artifact Spelling</legend>
 
     <div class="displayToggles">
       <label for="language">Language</label>
@@ -50,14 +50,17 @@
 </form>
 
 @if (artifact) {
-  <div>
-    <button type="button" (click)="openDialogEditTranscription(artifact)">
-      Edit Transcription
-    </button>
-    <button type="button" (click)="openDialogDefineVector(artifact)">
-      Define Vector
-    </button>
-  </div>
+  <form>
+    <fieldset>
+      <legend>Define Artifact Data</legend>
+      <button type="button" (click)="openDialogEditTranscription(artifact)">
+        Edit Transcription
+      </button>
+      <button type="button" (click)="openDialogDefineVector(artifact)">
+        Define Vector
+      </button>
+    </fieldset>
+  </form>
 }
 
 <form>

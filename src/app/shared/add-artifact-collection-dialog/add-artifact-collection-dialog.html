@@ -10,7 +10,9 @@
       @for (collection of collections; track $index) {
         <tr>
           <td [title]="collection.folder">{{ collection.name }}</td>
-          <td><button type="button" [attr.aria-label]="'Delete collection ' + collection.name"
+          <td><button type="button" [disabled]="saving || creating" (click)="editCollection(collection)"
+            [attr.aria-label]="'Edit collection ' + collection.name">Edit</button>
+            <button type="button" [disabled]="saving || creating" [attr.aria-label]="'Delete collection ' + collection.name"
             (click)="deleteCollection(project, collection.folder)">×</button></td>
         </tr>
       }
@@ -18,16 +20,17 @@
   }
 
   <fieldset>
-    <legend>Project Artifact Collections</legend>
+    <legend>{{ editingFolder ? 'Edit artifact collection' : 'Project Artifact Collections' }}</legend>
 
     <div>
       <label for="projectCreateArtifactCollections">Collection name</label>
       <input
-        #artifactCollectionName
         name="collectionName"
         type="text"
         id="projectCreateArtifactCollections"
         placeholder="Collection name"
+        [(ngModel)]="collectionName"
+        [disabled]="saving || creating"
       />
     </div>
 
@@ -40,22 +43,35 @@
         aria-readonly="true"
         readonly
         placeholder="Folder name"
-        [ngModel]="derivateFolderName(artifactCollectionName.value)"
+        [value]="editingFolder ?? derivateFolderName(collectionName)"
       />
     </div>
 
     <div>
       <label for="projectCreateArtifactCollectionsDescription">Collection description</label>
       <textarea
-        #collectionDescription
         id="projectCreateArtifactCollectionsDescription"
         name="collectionDescription"
         placeholder="Collection description"
+        [(ngModel)]="collectionDescription"
+        [disabled]="saving || creating"
       ></textarea>
     </div>
 
+    <div>
+      <label for="projectCreateArtifactCollectionSources">References (one per line)</label>
+      <textarea id="projectCreateArtifactCollectionSources" name="collectionSources" [(ngModel)]="collectionSources"
+        [disabled]="saving || creating"
+        placeholder="Links or bibliographic references"></textarea>
+    </div>
+
     <div class="dialogActions">
-      <button type="button" [disabled]="creating" (click)="createCollection(artifactCollectionName, collectionDescription)">Create</button>
+      @if (editingFolder) {
+        <button type="button" [disabled]="saving" (click)="cancelEdit()">Cancel</button>
+        <button type="button" [disabled]="saving" (click)="saveCollection()">Save</button>
+      } @else {
+        <button type="button" [disabled]="creating" (click)="createCollection()">Create</button>
+      }
     </div>
   </fieldset>
 </form>
