@@ -1,18 +1,27 @@
 <form class="scrollable" (ngSubmit)="save()">
-  <fieldset>
+  <div class="tabs" role="group" aria-label="Transcription sections">
+    <button type="button" [attr.aria-pressed]="activeTab === 'transcription'"
+      (click)="activeTab = 'transcription'">Transcription</button>
+    @if (pendingText.trim().length > 0) {
+      <button type="button" [attr.aria-pressed]="activeTab === 'positioning'"
+        (click)="activeTab = 'positioning'">Positioning edits</button>
+      <button type="button" [attr.aria-pressed]="activeTab === 'book'"
+        (click)="activeTab = 'book'">Book structure</button>
+    }
+  </div>
+
+  <fieldset [hidden]="activeTab !== 'transcription'">
     <legend>Edit Transcription</legend>
     <textarea #source [(ngModel)]="pendingText" name="transcription" aria-label="Transcription text"
-      placeholder="Transcription" (select)="selectRange(source)" (blur)="syncText()"></textarea>
-    <p>Select text or enter its range below. Offsets use UTF-16 units in the original text.</p>
+      placeholder="Transcription" (ngModelChange)="onTextInput()" (select)="selectRange(source)" (blur)="syncText()"></textarea>
+    <p>Select text to use its range in an edit or association. Offsets use UTF-16 units in the original text.</p>
+    @if (pendingText.trim().length > 0) {
+      <button type="button" [disabled]="!selectedRange" (click)="useSelection('positioning')">Use selection for positioning</button>
+      <button type="button" [disabled]="!selectedRange" (click)="useSelection('book')">Use selection for book structure</button>
+    }
   </fieldset>
 
   @if (pendingText.trim().length > 0) {
-  <div class="tabs" role="group" aria-label="Transcription sections">
-    <button type="button" [attr.aria-pressed]="activeTab === 'positioning'"
-      (click)="activeTab = 'positioning'">Positioning edits</button>
-    <button type="button" [attr.aria-pressed]="activeTab === 'book'"
-      (click)="activeTab = 'book'">Book structure</button>
-  </div>
   @if (activeTab === 'positioning') {
   <fieldset class="position-fields">
     <legend>Positioning edits</legend>
@@ -55,7 +64,7 @@
     <label>Letter spacing (px) <input type="number" name="letterSpacing" step="any" [(ngModel)]="draft.letterSpacing"></label>
     <button type="button" (click)="applyEdit()">{{ selectedIndex === null ? 'Add edit' : 'Apply edit' }}</button>
   </fieldset>
-  } @else {
+  } @else if (activeTab === 'book') {
   <fieldset class="position-fields">
     <legend>Book structure</legend>
     <p>Associate ranges of the original transcription with book, chapter and verse. End is exclusive.</p>

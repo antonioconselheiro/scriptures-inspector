@@ -3,31 +3,40 @@ import { ArtifactFragmentWordPosition } from '@domain/artifact-fragment-word-pos
 import { DefineTranscriptionDialog } from './define-transcription-dialog';
 
 describe('DefineTranscriptionDialog', () => {
-  it('only displays section tabs for a populated transcription', async () => {
+  it('shows only the transcription tab when empty and switches sections when populated', async () => {
     const fixture = TestBed.createComponent(DefineTranscriptionDialog);
     const dialog = fixture.componentInstance;
     dialog.onInjectData({ title: 'Edit', transcription: '', positions: [] });
     fixture.detectChanges();
     await fixture.whenStable();
     const root: HTMLElement = fixture.nativeElement;
-    expect(root.querySelector('.tabs')).toBeNull();
-    expect(root.querySelector('[name="transcription"]')).not.toBeNull();
+    expect(root.querySelectorAll('.tabs button').length).toBe(1);
+    expect(root.querySelector('.tabs button')?.textContent?.trim()).toBe('Transcription');
+    expect(root.querySelector('[name="transcription"]')?.closest('fieldset')?.hidden).toBeFalse();
     const textarea = root.querySelector<HTMLTextAreaElement>('[name="transcription"]')!;
     textarea.value = 'abc';
     textarea.dispatchEvent(new Event('input'));
     fixture.detectChanges();
     const tabs = root.querySelectorAll<HTMLButtonElement>('.tabs button');
-    expect(tabs.length).toBe(2);
+    expect(tabs.length).toBe(3);
     expect(tabs[0].getAttribute('aria-pressed')).toBe('true');
-    tabs[1].click();
+    tabs[2].click();
     fixture.detectChanges();
     expect(root.querySelector('[name="bookKey"]')).not.toBeNull();
     expect(root.querySelector('[name="start"]')).toBeNull();
-    expect(root.querySelector('[name="transcription"]')).not.toBeNull();
+    expect(textarea.closest('fieldset')?.hidden).toBeTrue();
+    tabs[1].click();
+    fixture.detectChanges();
+    expect(root.querySelector('[name="start"]')).not.toBeNull();
+    expect(root.querySelector('[name="bookKey"]')).toBeNull();
+    tabs[0].click();
+    fixture.detectChanges();
+    expect(textarea.closest('fieldset')?.hidden).toBeFalse();
     textarea.value = '';
     textarea.dispatchEvent(new Event('input'));
     fixture.detectChanges();
-    expect(root.querySelector('.tabs')).toBeNull();
+    expect(root.querySelectorAll('.tabs button').length).toBe(1);
+    expect(root.querySelector('.tabs button')?.getAttribute('aria-pressed')).toBe('true');
     fixture.destroy();
   });
 
@@ -40,7 +49,11 @@ describe('DefineTranscriptionDialog', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const root: HTMLElement = fixture.nativeElement;
-    root.querySelectorAll<HTMLButtonElement>('.tabs button')[1].click();
+    const source = root.querySelector<HTMLTextAreaElement>('[name="transcription"]')!;
+    source.setSelectionRange(4, 7);
+    source.dispatchEvent(new Event('select'));
+    fixture.detectChanges();
+    Array.from(root.querySelectorAll('button')).find(button => button.textContent?.trim() === 'Use selection for book structure')!.click();
     fixture.detectChanges();
     await fixture.whenStable();
     const options = root.querySelectorAll<HTMLOptionElement>('#projectBookKeys option');
@@ -50,11 +63,6 @@ describe('DefineTranscriptionDialog', () => {
       input.value = value;
       input.dispatchEvent(new Event('input'));
     };
-    const source = root.querySelector<HTMLTextAreaElement>('[name="transcription"]')!;
-    source.setSelectionRange(4, 7);
-    source.dispatchEvent(new Event('select'));
-    fixture.detectChanges();
-    await fixture.whenStable();
     expect(dialog.bookDraft.start).toBe(4);
     expect(dialog.bookDraft.end).toBe(7);
     enter('[name="bookKey"]', '1EN');
@@ -81,6 +89,64 @@ describe('DefineTranscriptionDialog', () => {
     expect(result).toHaveBeenCalledWith({ transcription: 'abc def', positions: [],
       bookSchema: [{ book: 'GEN', chapter: 1, verse: 5, start: 0, length: 3 }] });
     expect(original[0].verse).toBe(1);
+    fixture.destroy();
+  });
+
+  it('uses the selected range for positioning and keeps form drafts across tab switches', async () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    dialog.onInjectData({ title: 'Edit', transcription: 'abc def', positions: [] });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const root: HTMLElement = fixture.nativeElement;
+    const source = root.querySelector<HTMLTextAreaElement>('[name="transcription"]')!;
+    const selection = Array.from(root.querySelectorAll('button'))
+      .find(button => button.textContent?.trim() === 'Use selection for positioning')!;
+    expect(selection.disabled).toBeTrue();
+    source.setSelectionRange(1, 3);
+    source.dispatchEvent(new Event('select'));
+    fixture.detectChanges();
+    expect(selection.disabled).toBeFalse();
+    selection.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(dialog.activeTab).toBe('positioning');
+    expect(dialog.draft.start).toBe(1);
+    expect(dialog.draft.length).toBe(2);
+    const x = root.querySelector<HTMLInputElement>('[name="x"]')!;
+    x.value = '42';
+    x.dispatchEvent(new Event('input'));
+    root.querySelectorAll<HTMLButtonElement>('.tabs button')[2].click();
+    fixture.detectChanges();
+    root.querySelectorAll<HTMLButtonElement>('.tabs button')[1].click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(dialog.draft.x).toBe(42);
+    expect(root.querySelector<HTMLInputElement>('[name="x"]')!.value).toBe('42');
+    fixture.destroy();
+  });
+
+  it('keeps existing edits and restores text if clearing the transcription is cancelled', async () => {
+    const fixture = TestBed.createComponent(DefineTranscriptionDialog);
+    const dialog = fixture.componentInstance;
+    dialog.onInjectData({ title: 'Edit', transcription: 'abc', positions: [
+      { start: 0, length: 3, x: 0, y: 0, flip: 0 }
+    ] });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const root: HTMLElement = fixture.nativeElement;
+    const source = root.querySelector<HTMLTextAreaElement>('[name="transcription"]')!;
+    spyOn(window, 'confirm').and.returnValue(false);
+    source.value = '';
+    source.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(root.querySelectorAll('.tabs button').length).toBe(1);
+    source.dispatchEvent(new Event('blur'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(dialog.pendingText).toBe('abc');
+    expect(root.querySelectorAll('.tabs button').length).toBe(3);
+    expect(dialog.positions.length).toBe(1);
     fixture.destroy();
   });
 
@@ -231,6 +297,9 @@ describe('DefineTranscriptionDialog', () => {
     await fixture.whenStable();
     const root: HTMLElement = fixture.nativeElement;
     expect(root.querySelector('app-artifact-text-editor-component, .graphicsWrapper, svg, img')).toBeNull();
+    root.querySelectorAll<HTMLButtonElement>('.tabs button')[1].click();
+    fixture.detectChanges();
+    await fixture.whenStable();
     const button: HTMLButtonElement = root.querySelector('.edit-selection')!;
     expect(button.textContent).toContain('0 + 100');
     expect(button.querySelector('.edit-excerpt')!.textContent).toBe('A'.repeat(60) + '…');
@@ -259,6 +328,8 @@ describe('DefineTranscriptionDialog', () => {
     dialog.onInjectData({ title: 'Edit', transcription: 'abc def', positions: original });
     fixture.detectChanges();
     await fixture.whenStable();
+    fixture.nativeElement.querySelectorAll('.tabs button')[1].click();
+    fixture.detectChanges();
     fixture.nativeElement.querySelector('[aria-label="Delete edit 1"]').click();
     fixture.detectChanges();
     expect(dialog.selectedIndex).toBe(0);

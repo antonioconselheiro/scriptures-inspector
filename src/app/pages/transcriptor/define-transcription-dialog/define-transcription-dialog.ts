@@ -48,7 +48,8 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
   positions: ArtifactFragmentWordPosition[] = [];
   bookSchema: ArtifactFragmentBookSchema[] = [];
   books: { key: string; name: string }[] = [];
-  activeTab: 'positioning' | 'book' = 'positioning';
+  activeTab: 'transcription' | 'positioning' | 'book' = 'transcription';
+  selectedRange: { start: number; end: number } | null = null;
   bookDraft: BookDraft = this.newBookDraft();
   selectedBookIndex: number | null = null;
   bookError = '';
@@ -87,22 +88,41 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
     this.transcription = this.pendingText;
     this.checked.clear();
     this.pendingDeletion = [];
+    this.selectedRange = null;
     this.newEdit();
     this.newBookEdit();
     return true;
   }
 
   selectRange(input: HTMLTextAreaElement): void {
-    if (this.pendingDeletion.length || input.selectionStart === input.selectionEnd || !this.syncText()) return;
-    if (this.activeTab === 'book') {
+    if (this.pendingDeletion.length) return;
+    const start = input.selectionStart;
+    const end = input.selectionEnd;
+    if (start === end || !this.syncText()) {
+      this.selectedRange = null;
+      return;
+    }
+    this.selectedRange = { start, end };
+  }
+
+  onTextInput(): void {
+    this.selectedRange = null;
+    if (!this.pendingText.trim()) this.activeTab = 'transcription';
+  }
+
+  useSelection(tab: 'positioning' | 'book'): void {
+    const range = this.selectedRange;
+    if (!range || !this.syncText()) return;
+    if (tab === 'book') {
       this.newBookEdit();
-      this.bookDraft.start = input.selectionStart;
-      this.bookDraft.end = input.selectionEnd;
+      this.bookDraft.start = range.start;
+      this.bookDraft.end = range.end;
     } else {
       this.newEdit();
-      this.draft.start = input.selectionStart;
-      this.draft.length = input.selectionEnd - input.selectionStart;
+      this.draft.start = range.start;
+      this.draft.length = range.end - range.start;
     }
+    this.activeTab = tab;
   }
 
   newBookEdit(): void {
@@ -210,7 +230,6 @@ export class DefineTranscriptionDialog extends ModalableDirective<TranscriptionD
       const index = this.pendingDeletion[0];
       this.selectEdit(index);
       const position = this.positions[index];
-      this.source?.nativeElement.focus();
       this.source?.nativeElement.setSelectionRange(position.start, position.start + position.length);
     }
   }
