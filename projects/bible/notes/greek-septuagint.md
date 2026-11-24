@@ -12,7 +12,7 @@ O catálogo de fontes em `sources/greek-septuagint` identifica [Sacred Texts: Th
 
 ## πνεῦμα — “fôlego”
 
-Na Septuaginta, **πνεῦμα (*pneûma*)** é traduzido nesta variante por **“fôlego”** quando essa opção torna visível a imagem concreta de sopro, ar em movimento e força vital. A palavra grega, relacionada a **πνέω** (“soprar, respirar”), também pode significar “vento” ou “espírito”; portanto, “fôlego” é uma decisão contextual, não uma substituição automática em todas as ocorrências. Em Gênesis 1:2, a Septuaginta traz **πνεῦμα θεοῦ** (*pneûma theoû*), correspondente a **וְר֣וּחַ אֱלֹהִים** no hebraico. A justificativa lexical mais extensa, inclusive as ressalvas sobre a ambiguidade da expressão e o campo de רוח, está em [וְר֣וּחַ — “fôlego” na nota hebraica](./hebrew-stuttgartensia.md#ruach-folego).
+Na Septuaginta, **πνεῦμα (*pneûma*)** é traduzido por **“fôlego”** quando essa opção torna visível a imagem concreta de sopro, ar em movimento e força vital. Em Gênesis 1:2, a Septuaginta traz **πνεῦμα θεοῦ** (*pneûma theoû*), correspondente a **וְר֣וּחַ אֱלֹהִים** no hebraico. A justificativa lexical mais extensa, inclusive as ressalvas sobre a ambiguidade da expressão e o campo de רוח, está em [וְר֣וּחַ — “fôlego” na nota hebraica](./hebrew-stuttgartensia.md#ruach-folego).
 
 ### Referências
 

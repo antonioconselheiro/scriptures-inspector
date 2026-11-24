@@ -182,115 +182,39 @@
             },
             {
               "size": 5,
-              "value": "14-אלה"
+              "value": "14-אלהים"
             },
             {
               "size": 7,
-              "value": "15-ים"
-            },
-            {
-              "size": 7,
-              "value": "16-מרחפת"
+              "value": "15-מרחפת"
             },
             {
               "size": 5,
-              "value": "17-על"
+              "value": "16-על"
             },
             {
               "size": 10,
-              "value": "18-פני"
+              "value": "17-פני"
             },
             {
-              "value": "19-ה",
-              "size": 2
+              "size": 3,
+              "value": "18-ה"
             },
             {
-              "value": "20-מים",
+              "value": "19-מים",
               "size": 5
             },
             {
-              "value": "21-׃",
+              "value": "20-׃",
               "size": 1
             }
           ]
         },
         {
-          "verse": {
-            "start": "3",
-            "end": "3",
-            "index": 2
-          },
-          "text": "E então disse Divos: haja Luz; e houve Luz.",
-          "variations": {
-            "1389d4a7-688a-473d-89bb-372656f9a73b": {
-              "3": {
-                "value": "Deus"
-              },
-              "4": {
-                "value": " "
-              }
-            },
-            "fc5ca031-196a-4f7e-aca5-808369ed3b93": {
-              "3": {
-                "value": "Elohim"
-              }
-            }
-          },
-          "metadata": [
-            {
-              "size": 1,
-              "value": "0-ו"
-            },
-            {
-              "size": 5,
-              "value": "1-י"
-            },
-            {
-              "size": 5,
-              "value": "2-אמר"
-            },
-            {
-              "size": 5,
-              "value": "3-אלה"
-            },
-            {
-              "size": 1,
-              "value": "4-ים"
-            },
-            {
-              "size": 4,
-              "value": ""
-            },
-            {
-              "size": 4,
-              "value": "5-יהי"
-            },
-            {
-              "size": 3,
-              "value": "6-אור"
-            },
-            {
-              "size": 1,
-              "value": "",
-              "isWordOfGod": true
-            },
-            {
-              "size": 1,
-              "value": "7-ו"
-            },
-            {
-              "size": 5,
-              "value": "8-יהי"
-            },
-            {
-              "value": "9-אור",
-              "size": 3
-            },
-            {
-              "size": 1,
-              "value": "10-׃"
-            }
-          ]
+          "verse": 3,
+          "text": "",
+          "variations": {},
+          "metadata": []
         },
         {
           "verse": {
@@ -356,15 +280,15 @@
               "value": "5-את"
             },
             {
-              "size": 1,
+              "size": 3,
               "value": "6-ה"
             },
             {
-              "size": 3,
+              "size": 1,
               "value": "7-אור"
             },
             {
-              "size": 1,
+              "size": 3,
               "value": ""
             },
             {
@@ -372,7 +296,7 @@
               "value": "8-כי"
             },
             {
-              "size": 3,
+              "size": 1,
               "value": "9-טוב"
             },
             {
@@ -380,7 +304,7 @@
               "value": ""
             },
             {
-              "size": 1,
+              "size": 5,
               "value": "10-ו"
             },
             {
@@ -849,37 +773,16 @@
           ]
         },
         {
-          "verse": {
-            "start": "8",
-            "end": "8",
-            "index": 7
-          },
-          "text": "E então chamou Divos ao firmamento Céus e houve tarde e houve manhã: dia dois.",
-          "variations": {
-            "1389d4a7-688a-473d-89bb-372656f9a73b": {
-              "3": {
-                "value": "Deus"
-              },
-              "4": {
-                "value": " "
-              }
-            },
-            "fc5ca031-196a-4f7e-aca5-808369ed3b93": {
-              "3": {
-                "value": "Eloh"
-              },
-              "4": {
-                "value": "im"
-              }
-            }
-          },
+          "verse": 8,
+          "text": "E chamou Divos ao firmamento \"céus\" e houve tarde e houve manhã: dia dois. ¶",
+          "variations": {},
           "metadata": [
             {
               "size": 1,
               "value": "0-ו"
             },
             {
-              "size": 5,
+              "size": 9,
               "value": "1-י"
             },
             {
@@ -887,68 +790,60 @@
               "value": "2-קרא"
             },
             {
-              "size": 4,
-              "value": "3-אלה"
+              "size": 5,
+              "value": "3-אלהים"
             },
             {
-              "size": 1,
-              "value": "4-ים"
-            },
-            {
-              "size": 2,
-              "value": "5-ל"
+              "size": 12,
+              "value": "4-ל"
             },
             {
               "size": 10,
-              "value": "6-רקיע"
-            },
-            {
-              "size": 3,
-              "value": "7-שמ"
-            },
-            {
-              "size": 1,
-              "value": "8-ים"
-            },
-            {
-              "size": 1,
-              "value": "9-ו"
-            },
-            {
-              "size": 5,
-              "value": "10-יהי"
-            },
-            {
-              "size": 5,
-              "value": "11-ערב"
-            },
-            {
-              "size": 1,
-              "value": "12-ו"
-            },
-            {
-              "size": 5,
-              "value": "13-יהי"
-            },
-            {
-              "size": 5,
-              "value": "14-בקר"
-            },
-            {
-              "size": 1,
-              "value": ""
-            },
-            {
-              "size": 3,
-              "value": "15-יום"
+              "value": "5-רקיע"
             },
             {
               "size": 4,
-              "value": "16-שני"
+              "value": "6-שמים"
             },
             {
               "size": 1,
-              "value": "17-׃"
+              "value": "7-ו"
+            },
+            {
+              "size": 4,
+              "value": "8-יהי"
+            },
+            {
+              "size": 5,
+              "value": "9-ערב"
+            },
+            {
+              "size": 1,
+              "value": "10-ו"
+            },
+            {
+              "size": 4,
+              "value": "11-יהי"
+            },
+            {
+              "size": 5,
+              "value": "12-בקר"
+            },
+            {
+              "size": 3,
+              "value": "13-יום"
+            },
+            {
+              "size": 4,
+              "value": "14-שני"
+            },
+            {
+              "size": 1,
+              "value": "15-׃"
+            },
+            {
+              "size": 1,
+              "value": "16-פ"
             }
           ]
         },
@@ -958,7 +853,7 @@
             "end": "9",
             "index": 8
           },
-          "text": "E então disse Divos: \"então reunam-se as águas debaixo dos Céus para um lugar e seja vista o solo seco\" e assim foi.",
+          "text": "E então disse Divos: \"então reuna as tais das águas debaixo dos Céus para um lugar e seja vista o solo seco\" e assim foi.",
           "variations": {},
           "metadata": [
             {
@@ -995,15 +890,15 @@
               "value": "5-י"
             },
             {
-              "size": 6,
+              "size": 5,
               "value": "6-קוו"
             },
             {
-              "size": 3,
+              "size": 7,
               "value": "5-י"
             },
             {
-              "size": 2,
+              "size": 3,
               "value": "7-ה"
             },
             {
@@ -1094,7 +989,7 @@
         },
         {
           "verse": 15,
-          "text": "E sejam luminosas no Firmamento, os Céus, para iluminar sobre a Terra. E assim foi.",
+          "text": "E servirão os tais para luminarias no firmamento dos céus, para o iluminar sobre a Terra. E assim foi.",
           "variations": {},
           "metadata": [
             {
@@ -1102,83 +997,91 @@
               "value": "0-ו"
             },
             {
-              "size": 5,
-              "value": "1-היו"
+              "size": 8,
+              "value": "1-הי"
             },
             {
               "size": 7,
-              "value": "3-מאור"
-            },
-            {
-              "size": 2,
-              "value": "4-ת"
-            },
-            {
-              "size": 1,
-              "value": "5-ב"
-            },
-            {
-              "size": 1,
-              "value": "2-ל"
-            },
-            {
-              "size": 10,
-              "value": "6-רקיע"
-            },
-            {
-              "size": 1,
-              "value": ""
-            },
-            {
-              "size": 2,
-              "value": "7-ה"
+              "value": "2-ו"
             },
             {
               "size": 4,
-              "value": "8-שמים"
-            },
-            {
-              "size": 1,
-              "value": ""
-            },
-            {
-              "size": 5,
-              "value": "9-ל"
+              "value": "3-ל"
             },
             {
               "size": 8,
-              "value": "10-האיר"
+              "value": "4-מאור"
             },
             {
-              "size": 5,
-              "value": "11-על"
+              "size": 2,
+              "value": "5-ת"
             },
             {
-              "size": 1,
-              "value": "12-ה"
+              "size": 2,
+              "value": "6-ב"
             },
             {
-              "size": 5,
-              "value": "13-ארץ"
+              "size": 10,
+              "value": "7-רקיע"
+            },
+            {
+              "size": 3,
+              "value": "8-ה"
+            },
+            {
+              "size": 4,
+              "value": "9-שמים"
             },
             {
               "size": 1,
               "value": ""
             },
             {
-              "size": 1,
-              "value": "14-ו"
+              "size": 4,
+              "value": "10-ל"
             },
             {
-              "value": "15-יהי",
+              "size": 1,
+              "value": "11-ה"
+            },
+            {
+              "size": 8,
+              "value": "12-איר"
+            },
+            {
+              "size": 5,
+              "value": "13-על"
+            },
+            {
+              "size": 1,
+              "value": "14-ה"
+            },
+            {
+              "size": 5,
+              "value": "15-ארץ"
+            },
+            {
+              "value": "",
+              "size": 1
+            },
+            {
+              "value": "16-ו",
+              "size": 1
+            },
+            {
+              "value": "17-יהי",
               "size": 5
             },
             {
-              "value": "16-כן",
-              "size": 3
+              "size": 3,
+              "value": "18-כן"
             },
             {
-              "value": "17-׃",
+              "size": 1,
+              "value": "19-׃"
+            },
+            {
+              "value": "",
               "size": 1
             }
           ]

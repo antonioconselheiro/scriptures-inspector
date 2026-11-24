@@ -25,116 +25,538 @@
           }
         }
       ]
+    },
+    {
+      "chapter": 1,
+      "verses": [
+        null,
+        null,
+        {
+          "verse": 3,
+          "metadata": {
+            "7-ብርሃን": {
+              "segment": "ብርሃን",
+              "isWordOfGod": true
+            },
+            "4-ለ": {
+              "segment": "ለ",
+              "isWordOfGod": true
+            },
+            "5-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "6-ኩን": {
+              "segment": "ኩን",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 5,
+          "metadata": {
+            "6-ዕለተ": {
+              "segment": "ዕለተ",
+              "isWordOfGod": true
+            },
+            "13-ሌሊተ": {
+              "segment": "ሌሊተ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        {
+          "verse": 8,
+          "metadata": {
+            "7-ሰማየ": {
+              "segment": "ሰማየ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 9,
+          "metadata": {
+            "16-የብስ": {
+              "segment": "የብስ",
+              "isWordOfGod": true
+            },
+            "4-ለ": {
+              "segment": "ለ",
+              "isWordOfGod": true
+            },
+            "5-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "6-ትጋባእ": {
+              "segment": "ትጋባእ",
+              "isWordOfGod": true
+            },
+            "7-ማይ": {
+              "segment": "ማይ",
+              "isWordOfGod": true
+            },
+            "8-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "9-መትሕተ": {
+              "segment": "መትሕተ",
+              "isWordOfGod": true
+            },
+            "10-ሰማይ": {
+              "segment": "ሰማይ",
+              "isWordOfGod": true
+            },
+            "11-ውስተ": {
+              "segment": "ውስተ",
+              "isWordOfGod": true
+            },
+            "12-አሐዱ": {
+              "segment": "አሐዱ",
+              "isWordOfGod": true
+            },
+            "13-መካን": {
+              "segment": "መካን",
+              "isWordOfGod": true
+            },
+            "14-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "15-ያስተርኢ": {
+              "segment": "ያስተርኢ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 10,
+          "metadata": {
+            "6-ምድረ": {
+              "segment": "ምድረ",
+              "isWordOfGod": true
+            },
+            "15-ባሕረ": {
+              "segment": "ባሕረ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 11,
+          "metadata": {
+            "18-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "19-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "20-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "4-ለ": {
+              "segment": "ለ",
+              "isWordOfGod": true
+            },
+            "5-ታ": {
+              "segment": "ታ",
+              "isWordOfGod": true
+            },
+            "6-ብቍል": {
+              "segment": "ብቍል",
+              "isWordOfGod": true
+            },
+            "7-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            },
+            "8-ሐመልማለ": {
+              "segment": "ሐመልማለ",
+              "isWordOfGod": true
+            },
+            "9-ሣዕር": {
+              "segment": "ሣዕር",
+              "isWordOfGod": true
+            },
+            "10-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "11-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "14-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "15-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "25-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "26-አምሳሊ": {
+              "segment": "አምሳሊ",
+              "isWordOfGod": true
+            },
+            "27-ሁ": {
+              "segment": "ሁ",
+              "isWordOfGod": true
+            },
+            "28-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "29-ዕፀወ": {
+              "segment": "ዕፀወ",
+              "isWordOfGod": true
+            },
+            "30-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "31-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "32-ፈሪ": {
+              "segment": "ፈሪ",
+              "isWordOfGod": true
+            },
+            "33-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "34-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "35-ገብር": {
+              "segment": "ገብር",
+              "isWordOfGod": true
+            },
+            "36-ፍሬ": {
+              "segment": "ፍሬ",
+              "isWordOfGod": true
+            },
+            "37-ሁ": {
+              "segment": "ሁ",
+              "isWordOfGod": true
+            },
+            "38-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "42-ዘር": {
+              "segment": "ዘር",
+              "isWordOfGod": true
+            },
+            "43-ኡ": {
+              "segment": "ኡ",
+              "isWordOfGod": true
+            },
+            "44-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "45-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "47-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "48-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "49-ከውን": {
+              "segment": "ከውን",
+              "isWordOfGod": true
+            },
+            "50-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "51-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "52-ዘመዱ": {
+              "segment": "ዘመዱ",
+              "isWordOfGod": true
+            },
+            "53-ዲበ": {
+              "segment": "ዲበ",
+              "isWordOfGod": true
+            },
+            "54-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            },
+            "39-እም": {
+              "segment": "እም",
+              "isWordOfGod": true
+            },
+            "40-ውስቴ": {
+              "segment": "ውስቴ",
+              "isWordOfGod": true
+            },
+            "41-ቱ": {
+              "segment": "ቱ",
+              "isWordOfGod": true
+            },
+            "46-ወጽእ": {
+              "segment": "ወጽእ",
+              "isWordOfGod": true
+            },
+            "22-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "23-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "24-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "12-ዘራ": {
+              "segment": "ዘራ",
+              "isWordOfGod": true
+            },
+            "13-እ": {
+              "segment": "እ",
+              "isWordOfGod": true
+            },
+            "16-ዘር": {
+              "segment": "ዘር",
+              "isWordOfGod": true
+            },
+            "17-ኡ": {
+              "segment": "ኡ",
+              "isWordOfGod": true
+            },
+            "21-ዘመዱ": {
+              "segment": "ዘመዱ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 22,
+          "metadata": {
+            "20-።": {
+              "segment": "።",
+              "isWordOfGod": true
+            },
+            "6-ብዝኁ": {
+              "segment": "ብዝኁ",
+              "isWordOfGod": true
+            },
+            "7-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "8-ተባዝኁ": {
+              "segment": "ተባዝኁ",
+              "isWordOfGod": true
+            },
+            "9-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "10-ምልእዋ": {
+              "segment": "ምልእዋ",
+              "isWordOfGod": true
+            },
+            "11-ለ": {
+              "segment": "ለ",
+              "isWordOfGod": true
+            },
+            "12-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            },
+            "13-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "14-አዕዋፍ": {
+              "segment": "አዕዋፍ",
+              "isWordOfGod": true
+            },
+            "15-ኒ": {
+              "segment": "ኒ",
+              "isWordOfGod": true
+            },
+            "16-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "17-ብዝኁ": {
+              "segment": "ብዝኁ",
+              "isWordOfGod": true
+            },
+            "18-ውስተ": {
+              "segment": "ውስተ",
+              "isWordOfGod": true
+            },
+            "19-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 24,
+          "metadata": {
+            "20-ዘመዱ": {
+              "segment": "ዘመዱ",
+              "isWordOfGod": true
+            },
+            "4-ለ": {
+              "segment": "ለ",
+              "isWordOfGod": true
+            },
+            "5-ታ": {
+              "segment": "ታ",
+              "isWordOfGod": true
+            },
+            "6-ውጽእ": {
+              "segment": "ውጽእ",
+              "isWordOfGod": true
+            },
+            "7-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            },
+            "8-ዘመደ": {
+              "segment": "ዘመደ",
+              "isWordOfGod": true
+            },
+            "9-እንስሳ": {
+              "segment": "እንስሳ",
+              "isWordOfGod": true
+            },
+            "10-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "11-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "12-ይ": {
+              "segment": "ይ",
+              "isWordOfGod": true
+            },
+            "13-ትሐወስ": {
+              "segment": "ትሐወስ",
+              "isWordOfGod": true
+            },
+            "14-ወ": {
+              "segment": "ወ",
+              "isWordOfGod": true
+            },
+            "15-አራዊተ": {
+              "segment": "አራዊተ",
+              "isWordOfGod": true
+            },
+            "16-ምድር": {
+              "segment": "ምድር",
+              "isWordOfGod": true
+            },
+            "17-ዘ": {
+              "segment": "ዘ",
+              "isWordOfGod": true
+            },
+            "18-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            },
+            "19-በ": {
+              "segment": "በ",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
     }
   ],
   "patterns": {
     "prefix": [
       "በ",
       "ወ",
+      "[",
+      "(",
       "ኢ",
       "ታ",
       "ለ",
-      "ዘ",
       "ይ",
+      "ዘ",
       "እም",
-      "[",
-      "የ",
-      "እመ",
-      "ኩን",
-      "ት",
-      "(",
-      "ን",
-      "ያ"
+      "እመ"
     ],
     "suffix": [
       "ሁ",
       "ኡ",
-      "ዱ",
-      "ቱ",
+      "እ",
       "ኒ",
-      "ነ",
       "ሂ",
-      "ሙ",
-      "ዋ",
-      "ዎሙ",
-      "ኩክ",
-      "ዓመተ",
-      "ሆሙ",
-      "ሰ",
-      "የ",
-      "ኒሆሙ",
-      "ላ",
-      "ለ",
-      "ክሙ",
-      "የት",
-      "ት",
-      "ሃ",
-      "ቶ"
+      "ሙ"
     ],
     "lexeme": [
-      "ለይኩን",
       "ታሕተ",
-      "ዘራእ",
       "ዘር",
-      "ዘመ",
-      "ወጽእ",
-      "ለውእቱ",
-      "ዘርእ",
-      "ይምልክ",
-      "የብስ",
-      "አሐዱ",
-      "ዘመደ",
+      "ዘራ",
       "ዘመዱ",
-      "ይኰንን",
-      "ኮነ",
-      "ናሁ",
-      "በቍል",
-      "ዘሪኦ",
-      "ክሙ",
-      "ውእቱ",
-      "ይኩን",
-      "ይብቈል",
-      "የዐርግ",
-      "ባሕቱ",
-      "በሊዕ",
-      "መኣዝነ",
-      "ወርቃ",
-      "ይእቲ",
-      "የኀቱ",
-      "ኢትዮጵያ",
-      "ወለዶ",
-      "የሐውር",
-      "እምኔሁ",
-      "በልዑ",
-      "መውቱ",
-      "ባሕቲቱ",
-      "ድቃሰ",
-      "ትኩ",
-      "ወጽአት",
-      "እምታ",
-      "ዝንቱ",
-      "ብእሲቱ",
-      "ትል",
-      "ሰማየ",
-      "ነፍሰ",
-      "ትሐወስ",
-      "ማእከለ",
-      "በልዕ",
-      "አላ",
-      "ሠናየ",
-      "እኩየ",
-      "በልዐ",
-      "ወሀበ",
-      "ቈጽለ",
-      "በለስ",
-      "ገነት",
-      "አማልክት",
-      "ቃለ",
-      "ኀመልማለ",
-      "መንፈሰ",
-      "ሕይወት",
-      "እጓለ"
-    ]
+      "ወጽእ",
+      "ይምልክ",
+      "ውጽእ",
+      "ዘመደ"
+    ],
+    "distinct": {
+      "ሰመዮ": {
+        "suffix": "ዮ"
+      },
+      "ውስቴቱ": {
+        "suffix": "ቱ"
+      },
+      "የዐቢ": {
+        "prefix": "የ"
+      },
+      "አርአያነ": {
+        "suffix": "ነ"
+      },
+      "አምሳሊነ": {
+        "suffix": "ነ"
+      }
+    }
   },
   "lexical": {
     "ቀዳሚ": {
@@ -157,7 +579,7 @@
     },
     "በ": {
       "prefix": "em|cada|qual",
-      "value": "em|cada"
+      "value": "em|cada|qual"
     },
     "እግዚአ": {},
     "ብሔር": {},
@@ -170,14 +592,11 @@
     "ምድርሰ": {
       "value": "terra"
     },
-    "ኢ": {
-      "value": "não"
-    },
     "ስተርኢ": {
       "value": "vista"
     },
     "ኮነት": {
-      "value": "acontecia"
+      "value": "havia"
     },
     "ድሉተ": {
       "value": "ordem"
@@ -200,14 +619,11 @@
     "ማይ": {
       "value": "águas"
     },
-    "ለይኩን": {
-      "value": "haja"
-    },
     "ብርሃን": {
       "value": "luz"
     },
     "ኮነ": {
-      "value": "houve|aconteceu|foi"
+      "value": "havia|aconteceu|foi"
     },
     "ርእዮ": {
       "value": "viu"
@@ -223,9 +639,6 @@
     },
     "ፈለጠ": {
       "value": "separou"
-    },
-    "ሰመዮ": {
-      "value": "chamou"
     },
     "ዕለተ": {
       "value": "dia"
@@ -295,7 +708,7 @@
       "value": "apareça"
     },
     "የብስ": {
-      "value": "terra seca"
+      "value": "solo seco"
     },
     "ተጋብአ": {
       "value": "reuniram-se"
@@ -316,10 +729,10 @@
       "value": "pairar"
     },
     "ሁ": {
-      "suffix": "dele|-se"
+      "suffix": "isso|seu|sua(s)"
     },
     "ባሕረ": {
-      "value": "Mar"
+      "value": "mar"
     },
     "ሐመልማለ": {
       "value": "verdejante"
@@ -331,7 +744,7 @@
       "value": "erva"
     },
     "ታ": {
-      "prefix": "sua|dela|ela"
+      "prefix": "sua|dela|ela|se"
     },
     "ብቍል": {
       "value": "semeie"
@@ -355,7 +768,7 @@
       "value": "árvores"
     },
     "ፈሪ": {
-      "value": "frutifica"
+      "value": "frutificar"
     },
     "ገብር": {
       "value": "produz"
@@ -396,7 +809,7 @@
       "value": "]"
     },
     "አርአያ": {
-      "value": "forma|modelo"
+      "value": "forma"
     },
     "ዘርእ": {
       "value": "semente"
@@ -408,7 +821,7 @@
       "value": "dia"
     },
     "አውጽአት": {
-      "value": "produzir|fez sair"
+      "value": "produzir"
     },
     "ኩኑ": {
       "value": "sejam"
@@ -446,11 +859,8 @@
     "ክልኤተ": {
       "value": "dois"
     },
-    "ዐበይተ": {
-      "value": "grandes"
-    },
     "ይምልክ": {
-      "value": "governe|domine"
+      "value": "governe"
     },
     "መዐልተ": {
       "value": "dia"
@@ -460,10 +870,10 @@
       "suffix": "meu|minha"
     },
     "ዐቢ": {
-      "value": "grande|maior"
+      "value": "grande"
     },
     "ንእስ": {
-      "value": "pequeno|menor"
+      "value": "pequeno"
     },
     "ምስለ": {
       "value": "com"
@@ -592,7 +1002,7 @@
       "value": "fêmea"
     },
     "ሙ": {
-      "suffix": "dele|seu|-o(a)|-lhe(s)"
+      "suffix": "deles|seus|-os|-lhes"
     },
     "ባረኮ": {
       "value": "abençoou"
@@ -658,7 +1068,8 @@
       "value": "alimento"
     },
     "ኩን": {
-      "prefix": "para"
+      "prefix": "para",
+      "value": "haja|exista"
     },
     "ጥቀ": {
       "value": "muito"
@@ -732,9 +1143,6 @@
     "ሐቅል": {
       "value": "campo"
     },
-    "ይኩን": {
-      "value": "exista"
-    },
     "ይብቈል": {
       "value": "brote"
     },
@@ -784,7 +1192,7 @@
       "value": "ali"
     },
     "መንገለ": {
-      "value": "em direção a|para o lado de"
+      "value": "para o lado de"
     },
     "ጽባሕ": {
       "value": "manhã"
@@ -1215,7 +1623,7 @@
       "value": "enquanto"
     },
     "ፍና": {
-      "value": "em direção de|no caminho do"
+      "value": "no caminho do"
     },
     "ሰርክ": {
       "value": "entardecer"
@@ -1234,6 +1642,26 @@
     },
     "አንተ": {
       "value": "você"
+    },
+    "ኢ": {
+      "prefix": "não",
+      "value": "não"
+    },
+    "ዮ": {
+      "suffix": "-o"
+    },
+    "ሰመ": {
+      "value": "chamou"
+    },
+    "ዘራ": {
+      "value": "semente"
+    },
+    "እ": {
+      "suffix": "seu",
+      "value": "s"
+    },
+    "ዐበይተ": {
+      "value": "grandiosos"
     }
   }
 }

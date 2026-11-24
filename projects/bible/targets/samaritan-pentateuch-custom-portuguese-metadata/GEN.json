@@ -6,6 +6,555 @@
         {
           "verse": 1,
           "metadata": {}
+        },
+        null,
+        {
+          "verse": 3,
+          "metadata": {
+            "4-JHJ": {
+              "segment": "JHJ",
+              "isWordOfGod": true
+            },
+            "5->WR": {
+              "segment": ">WR",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 5,
+          "metadata": {
+            "6-JWM": {
+              "segment": "JWM",
+              "isWordOfGod": true
+            },
+            "11-LJLH": {
+              "segment": "LJLH",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 6,
+          "metadata": {
+            "8-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "9-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            },
+            "4-JHJ": {
+              "segment": "JHJ",
+              "isWordOfGod": true
+            },
+            "5-RQJ<": {
+              "segment": "RQJ<",
+              "isWordOfGod": true
+            },
+            "6-B": {
+              "segment": "B",
+              "isWordOfGod": true
+            },
+            "7-TWK": {
+              "segment": "TWK",
+              "isWordOfGod": true
+            },
+            "15-L": {
+              "segment": "L",
+              "isWordOfGod": true
+            },
+            "16-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            },
+            "10-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "11-JHJ": {
+              "segment": "JHJ",
+              "isWordOfGod": true
+            },
+            "12-MBDJL": {
+              "segment": "MBDJL",
+              "isWordOfGod": true
+            },
+            "13-BJN": {
+              "segment": "BJN",
+              "isWordOfGod": true
+            },
+            "14-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 8,
+          "metadata": {
+            "6-CMJM": {
+              "segment": "CMJM",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 9,
+          "metadata": {
+            "17-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "18-JBCH": {
+              "segment": "JBCH",
+              "isWordOfGod": true
+            },
+            "4-J": {
+              "segment": "J",
+              "isWordOfGod": true
+            },
+            "5-QW": {
+              "segment": "QW",
+              "isWordOfGod": true
+            },
+            "6-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "7-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "8-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            },
+            "9-MTXT": {
+              "segment": "MTXT",
+              "isWordOfGod": true
+            },
+            "10-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "11-CMJM": {
+              "segment": "CMJM",
+              "isWordOfGod": true
+            },
+            "12->L": {
+              "segment": ">L",
+              "isWordOfGod": true
+            },
+            "13-MQWM": {
+              "segment": "MQWM",
+              "isWordOfGod": true
+            },
+            "14->XD": {
+              "segment": ">XD",
+              "isWordOfGod": true
+            },
+            "15-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "16-TR>H": {
+              "segment": "TR>H",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 10,
+          "metadata": {
+            "13-JMJM": {
+              "segment": "JMJM",
+              "isWordOfGod": true
+            },
+            "6->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 11,
+          "metadata": {
+            "20-ZR<": {
+              "segment": "ZR<",
+              "isWordOfGod": true
+            },
+            "21-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "3->LHJM": {
+              "segment": ">LHJM",
+              "isWordOfGod": true
+            },
+            "4-TDC>": {
+              "segment": "TDC>",
+              "isWordOfGod": true
+            },
+            "5-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "6->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            },
+            "7-DC>": {
+              "segment": "DC>",
+              "isWordOfGod": true
+            },
+            "8-<FB": {
+              "segment": "<FB",
+              "isWordOfGod": true
+            },
+            "9-MZRJ<": {
+              "segment": "MZRJ<",
+              "isWordOfGod": true
+            },
+            "10-ZR<": {
+              "segment": "ZR<",
+              "isWordOfGod": true
+            },
+            "11-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "12-<Y": {
+              "segment": "<Y",
+              "isWordOfGod": true
+            },
+            "13-PRJ": {
+              "segment": "PRJ",
+              "isWordOfGod": true
+            },
+            "14-<FH": {
+              "segment": "<FH",
+              "isWordOfGod": true
+            },
+            "15-PRJ": {
+              "segment": "PRJ",
+              "isWordOfGod": true
+            },
+            "16-L": {
+              "segment": "L",
+              "isWordOfGod": true
+            },
+            "17-MJN": {
+              "segment": "MJN",
+              "isWordOfGod": true
+            },
+            "18-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "19->CR": {
+              "segment": ">CR",
+              "isWordOfGod": true
+            },
+            "22-B": {
+              "segment": "B",
+              "isWordOfGod": true
+            },
+            "23-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "24-<L": {
+              "segment": "<L",
+              "isWordOfGod": true
+            },
+            "25-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "26->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 20,
+          "metadata": {
+            "23-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "24-CMJM": {
+              "segment": "CMJM",
+              "isWordOfGod": true
+            },
+            "4-J": {
+              "segment": "J",
+              "isWordOfGod": true
+            },
+            "5-CRY": {
+              "segment": "CRY",
+              "isWordOfGod": true
+            },
+            "6-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "7-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "8-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            },
+            "9-CRY": {
+              "segment": "CRY",
+              "isWordOfGod": true
+            },
+            "10-NPC": {
+              "segment": "NPC",
+              "isWordOfGod": true
+            },
+            "11-XJ": {
+              "segment": "XJ",
+              "isWordOfGod": true
+            },
+            "12-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "13-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "14-<WP": {
+              "segment": "<WP",
+              "isWordOfGod": true
+            },
+            "15-J": {
+              "segment": "J",
+              "isWordOfGod": true
+            },
+            "16-<PP": {
+              "segment": "<PP",
+              "isWordOfGod": true
+            },
+            "17-<L": {
+              "segment": "<L",
+              "isWordOfGod": true
+            },
+            "18-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "19->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            },
+            "20-<L": {
+              "segment": "<L",
+              "isWordOfGod": true
+            },
+            "21-PNJ": {
+              "segment": "PNJ",
+              "isWordOfGod": true
+            },
+            "22-RQJ<": {
+              "segment": "RQJ<",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 22,
+          "metadata": {
+            "27-B": {
+              "segment": "B",
+              "isWordOfGod": true
+            },
+            "28->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            },
+            "8-PR": {
+              "segment": "PR",
+              "isWordOfGod": true
+            },
+            "9-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "10-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "11-RB": {
+              "segment": "RB",
+              "isWordOfGod": true
+            },
+            "12-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "13-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "14-ML>": {
+              "segment": "ML>",
+              "isWordOfGod": true
+            },
+            "15-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "16->T": {
+              "segment": ">T",
+              "isWordOfGod": true
+            },
+            "17-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "18-MJM": {
+              "segment": "MJM",
+              "isWordOfGod": true
+            },
+            "19-B": {
+              "segment": "B",
+              "isWordOfGod": true
+            },
+            "20-JMJM": {
+              "segment": "JMJM",
+              "isWordOfGod": true
+            },
+            "21-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "22-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "23-<WP": {
+              "segment": "<WP",
+              "isWordOfGod": true
+            },
+            "24-J": {
+              "segment": "J",
+              "isWordOfGod": true
+            },
+            "25-RB": {
+              "segment": "RB",
+              "isWordOfGod": true
+            },
+            "26-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 24,
+          "metadata": {
+            "23-W": {
+              "segment": "W"
+            },
+            "24-JHJ": {
+              "segment": "JHJ"
+            },
+            "4-TWY>": {
+              "segment": "TWY>",
+              "isWordOfGod": true
+            },
+            "5-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "6->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            },
+            "7-NPC": {
+              "segment": "NPC",
+              "isWordOfGod": true
+            },
+            "8-XJ": {
+              "segment": "XJ",
+              "isWordOfGod": true
+            },
+            "9-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "10-L": {
+              "segment": "L",
+              "isWordOfGod": true
+            },
+            "11-MJN": {
+              "segment": "MJN",
+              "isWordOfGod": true
+            },
+            "12-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "13-BHMH": {
+              "segment": "BHMH",
+              "isWordOfGod": true
+            },
+            "14-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "15-RMF": {
+              "segment": "RMF",
+              "isWordOfGod": true
+            },
+            "16-W": {
+              "segment": "W",
+              "isWordOfGod": true
+            },
+            "17-XJT": {
+              "segment": "XJT",
+              "isWordOfGod": true
+            },
+            "18-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            },
+            "19->RY": {
+              "segment": ">RY",
+              "isWordOfGod": true
+            },
+            "20-L": {
+              "segment": "L",
+              "isWordOfGod": true
+            },
+            "21-MJN": {
+              "segment": "MJN",
+              "isWordOfGod": true
+            },
+            "22-H": {
+              "segment": "H",
+              "isWordOfGod": true
+            }
+          }
         }
       ]
     },
@@ -39,176 +588,83 @@
   "patterns": {
     "prefix": [
       "B",
-      "W",
       "H",
+      "W",
       "J",
-      "L",
-      "K",
-      "M",
-      "N",
-      "T",
-      "JT",
-      ">J",
-      "KH"
+      "L"
     ],
     "suffix": [
-      "H",
       "W",
-      "T",
-      "HM",
-      "HW",
-      "K",
-      "JW",
-      "JH",
-      "J",
-      "M",
-      "JM",
-      "KM",
-      "TJ"
+      "HW"
     ],
     "lexeme": [
       "BR>",
       "HJTH",
       "BHW",
-      "MJM",
-      "JHJ",
       "BDL",
       "BJN",
-      "LJLH",
       "JWM",
+      "LJLH",
       "BQR",
+      "JHJ",
+      "QW",
       "JBCH",
       "JMJM",
-      ">LH",
-      "QWW",
-      "MQWH",
-      "M>WRW",
-      "H>JR",
-      "HBDJL",
-      "WHJW",
-      ">TWT",
-      ">T",
-      "MMCLT",
-      "JTN",
-      "CM",
-      "R>CJT",
-      "THW",
-      "THWM",
-      "MRXPT",
-      "MTXT",
-      "TR>H",
-      "MQWM",
-      "CRYW",
+      "BDJL",
+      "HJ",
       "BRK",
       "BHMH",
-      ">DM",
-      "NPC",
-      "YLM",
-      "NQBH",
-      "KBCW",
-      "JM",
-      "KL",
-      "HNH",
-      "KM",
-      ">KLH",
-      "KN",
-      "JRQ",
-      "HCCJ",
       "KLW",
-      "ML>KT",
-      "CBT",
-      "KJ",
-      "<FWT",
-      "CMJM",
-      ">LHJM",
-      "TWLDT",
-      "JHWH",
-      "FDH",
-      "VRM",
-      "L>",
-      "J<LH",
-      "HCQH",
-      "NCMT",
-      "QDM",
-      "FM",
-      "MN",
-      "MR>H",
-      "M>KL",
-      "D<T",
-      "HCQWT",
-      "HJH",
-      ">RB<H",
-      "HW>",
-      "XWJLH",
-      "CHM",
-      "HHJ>",
-      "BDLX",
-      "M>D",
-      "KWC",
-      "JRD",
-      "CNH",
-      "CMNJM",
-      "M>W",
-      "WLJD",
-      "BNWT",
-      "BNJM",
-      "CTJM",
-      "CCJM",
-      "PRT",
-      "HLK",
-      "YW",
-      "MWT",
-      "MMNW",
-      "KNGD",
-      "HJWT",
-      "BDW",
-      "B>",
-      "TRDMH",
-      "JCN",
-      ">XT",
-      "BFR",
-      "TMWT",
-      "TXT",
-      "BN",
-      "BJ>",
-      "Z>T",
-      "P<M",
-      "<YM",
-      ">M",
-      ">CT",
-      "CNJ",
-      "PNJ",
-      "TBCCW",
-      "<RM",
-      "NXC",
-      "<RWM",
-      "XJT",
-      "MJN",
-      "XJ",
-      "NPL",
-      "HJW",
-      "HHM",
-      "GM",
-      ">XRJ",
-      "<WLM",
-      "TWK",
-      "ZH",
-      "TMWTWN",
-      "HJJTM",
-      "T>WH",
-      "NXMD",
-      "TN",
-      "XCK",
-      "TP>R",
-      "T>NH",
-      "XGRWT",
-      "<LJ",
-      "KH",
-      ">NKJ",
-      ">RY",
-      ">JC",
-      ">XD"
-    ]
+      "JM",
+      "THW"
+    ],
+    "distinct": {
+      "M>WRWT": {
+        "suffix": "T"
+      },
+      "MW<DJM": {
+        "suffix": "JM"
+      },
+      "CNJM": {
+        "suffix": "JM"
+      },
+      "GDLJM": {
+        "suffix": "JM"
+      },
+      "KWKBJM": {
+        "suffix": "JM"
+      },
+      ">TM": {
+        "suffix": "M"
+      },
+      "XJH": {
+        "suffix": "H"
+      },
+      "TNJNJM": {
+        "suffix": "JM"
+      },
+      "RMFT": {
+        "suffix": "T"
+      },
+      "RBH": {
+        "suffix": "H"
+      },
+      "MJNH": {
+        "suffix": "H"
+      },
+      "N<FH": {
+        "prefix": "N"
+      },
+      "KDMWTN": {
+        "prefix": "K"
+      },
+      "DGT": {
+        "suffix": "T"
+      },
+      "KBCWH": {
+        "suffix": "H"
+      }
+    }
   },
   "lexical": {
     "R>CJT": {
@@ -222,18 +678,18 @@
       "value": "mar"
     },
     "B": {
-      "prefix": "em"
+      "prefix": "em|no(a)"
     },
     ">T": {
       "value": "AZ"
     },
     "W": {
       "prefix": "e",
-      "suffix": "(d)o tal"
+      "suffix": "(d)o(a)(s) tal(is)"
     },
     "H": {
       "prefix": "(d)o(a)(s)",
-      "suffix": "seu|dele|-o(a)"
+      "suffix": "seu|dele|vos|-o(a)"
     },
     ">RY": {
       "value": "terra"
@@ -272,7 +728,7 @@
       "value": "disse"
     },
     "JHJ": {
-      "value": "há|haja|houve|estava"
+      "value": "há|haja|houve|estava|foi"
     },
     ">WR": {
       "value": "luz"
@@ -339,13 +795,10 @@
       "value": "abaixo"
     },
     "KN": {
-      "value": "foi|assim"
+      "value": "assim"
     },
     "CNJ": {
       "value": "dois"
-    },
-    "QWW": {
-      "value": "reunam"
     },
     ">L": {
       "value": "para|em"
@@ -402,20 +855,11 @@
     "M>WRW": {
       "value": "luzeiro(a)"
     },
-    "H>JR": {
-      "value": "separar|iluminar"
-    },
-    "HBDJL": {
-      "value": "separar"
-    },
-    "WHJW": {
-      "value": "e sejam"
-    },
     ">TWT": {
       "value": "sinais"
     },
     "MW<D": {
-      "value": "estaçãoo"
+      "value": "estação"
     },
     "CN": {
       "value": "ano"
@@ -455,7 +899,7 @@
       "value": "populem"
     },
     "CRY": {
-      "value": "criaturas"
+      "value": "seres|proliferar"
     },
     "NPC": {
       "value": "garganta"
@@ -503,7 +947,7 @@
       "value": "besta"
     },
     ">DM": {
-      "value": "terreno|terrestre"
+      "value": "terrestre"
     },
     "HW": {
       "value": "seu|dele(a)"
@@ -516,8 +960,7 @@
     },
     "K": {
       "suffix": "tu",
-      "prefix": "",
-      "value": "como|conforme"
+      "prefix": "como|conforme"
     },
     "DMWTN": {
       "value": "semelhança"
@@ -560,9 +1003,6 @@
     },
     "YB>": {
       "value": "exércitos"
-    },
-    "KLW": {
-      "value": "concluiu"
     },
     "ML>KT": {
       "value": "obras"
@@ -913,7 +1353,7 @@
       "value": "safado|pelado"
     },
     "XJT": {
-      "value": "seres"
+      "value": "criatura de"
     },
     ">P": {
       "value": "porventura"
@@ -1026,6 +1466,27 @@
     },
     ">XB>": {
       "value": "me escondi"
+    },
+    "QW": {
+      "value": "reunir"
+    },
+    "<FH": {
+      "value": "faça"
+    },
+    ">JR": {
+      "value": "iluminar"
+    },
+    "BDJL": {
+      "value": "separar"
+    },
+    "HJ": {
+      "value": "servirão"
+    },
+    ">DMH": {
+      "value": "terreno"
+    },
+    "KLW": {
+      "value": "concluiu"
     }
   }
 }

@@ -25,6 +25,455 @@
           }
         }
       ]
+    },
+    {
+      "chapter": 1,
+      "verses": [
+        null,
+        null,
+        {
+          "verse": 3,
+          "metadata": {
+            "4-γενηθήτω": {
+              "segment": "γενηθήτω",
+              "isWordOfGod": true
+            },
+            "5-φῶς": {
+              "segment": "φῶς",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 5,
+          "metadata": {
+            "6-ἡμέραν": {
+              "segment": "ἡμέραν",
+              "isWordOfGod": true
+            },
+            "11-νύκτα": {
+              "segment": "νύκτα",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 6,
+          "metadata": {
+            "17-ὕδατος": {
+              "segment": "ὕδατος",
+              "isWordOfGod": true
+            },
+            "4-γενηθήτω": {
+              "segment": "γενηθήτω",
+              "isWordOfGod": true
+            },
+            "5-στερέωμα": {
+              "segment": "στερέωμα",
+              "isWordOfGod": true
+            },
+            "6-ἐν": {
+              "segment": "ἐν",
+              "isWordOfGod": true
+            },
+            "7-μέσῳ": {
+              "segment": "μέσῳ",
+              "isWordOfGod": true
+            },
+            "8-τοῦ": {
+              "segment": "τοῦ",
+              "isWordOfGod": true
+            },
+            "9-ὕδατος": {
+              "segment": "ὕδατος",
+              "isWordOfGod": true
+            },
+            "10-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "11-ἔστω": {
+              "segment": "ἔστω",
+              "isWordOfGod": true
+            },
+            "12-διαχωρίζον": {
+              "segment": "διαχωρίζον",
+              "isWordOfGod": true
+            },
+            "13-ἀνὰ": {
+              "segment": "ἀνὰ",
+              "isWordOfGod": true
+            },
+            "14-μέσον": {
+              "segment": "μέσον",
+              "isWordOfGod": true
+            },
+            "15-ὕδατος": {
+              "segment": "ὕδατος",
+              "isWordOfGod": true
+            },
+            "16-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        {
+          "verse": 8,
+          "metadata": {
+            "6-οὐρανόν": {
+              "segment": "οὐρανόν",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 9,
+          "metadata": {
+            "4-συναχθήτω": {
+              "segment": "συναχθήτω",
+              "isWordOfGod": true
+            },
+            "5-τὸ": {
+              "segment": "τὸ",
+              "isWordOfGod": true
+            },
+            "6-ὕδωρ": {
+              "segment": "ὕδωρ",
+              "isWordOfGod": true
+            },
+            "7-τὸ": {
+              "segment": "τὸ",
+              "isWordOfGod": true
+            },
+            "8-ὑποκάτω": {
+              "segment": "ὑποκάτω",
+              "isWordOfGod": true
+            },
+            "9-τοῦ": {
+              "segment": "τοῦ",
+              "isWordOfGod": true
+            },
+            "10-οὐρανοῦ": {
+              "segment": "οὐρανοῦ",
+              "isWordOfGod": true
+            },
+            "11-εἰς": {
+              "segment": "εἰς",
+              "isWordOfGod": true
+            },
+            "12-συναγωγὴν": {
+              "segment": "συναγωγὴν",
+              "isWordOfGod": true
+            },
+            "13-μίαν": {
+              "segment": "μίαν",
+              "isWordOfGod": true
+            },
+            "14-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "15-ὀφθήτω": {
+              "segment": "ὀφθήτω",
+              "isWordOfGod": true
+            },
+            "16-ἡ": {
+              "segment": "ἡ",
+              "isWordOfGod": true
+            },
+            "17-ξηρά": {
+              "segment": "ξηρά",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 10,
+          "metadata": {
+            "6-γῆν": {
+              "segment": "γῆν",
+              "isWordOfGod": true
+            },
+            "13-θαλάσσας": {
+              "segment": "θαλάσσας",
+              "isWordOfGod": true
+            }
+          }
+        },
+        {
+          "verse": 11,
+          "metadata": {
+            "15-ὁμοιότητα": {
+              "segment": "ὁμοιότητα",
+              "isWordOfGod": true
+            },
+            "4-βλαστησάτω": {
+              "segment": "βλαστησάτω",
+              "isWordOfGod": true
+            },
+            "5-ἡ": {
+              "segment": "ἡ",
+              "isWordOfGod": true
+            },
+            "6-γῆ": {
+              "segment": "γῆ",
+              "isWordOfGod": true
+            },
+            "7-βοτάνην": {
+              "segment": "βοτάνην",
+              "isWordOfGod": true
+            },
+            "8-χόρτου": {
+              "segment": "χόρτου",
+              "isWordOfGod": true
+            },
+            "9-σπεῖρον": {
+              "segment": "σπεῖρον",
+              "isWordOfGod": true
+            },
+            "10-σπέρμα": {
+              "segment": "σπέρμα",
+              "isWordOfGod": true
+            },
+            "11-κατὰ": {
+              "segment": "κατὰ",
+              "isWordOfGod": true
+            },
+            "12-γένος": {
+              "segment": "γένος",
+              "isWordOfGod": true
+            },
+            "13-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "14-καθ᾽": {
+              "segment": "καθ᾽",
+              "isWordOfGod": true
+            },
+            "16-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "17-ξύλον": {
+              "segment": "ξύλον",
+              "isWordOfGod": true
+            },
+            "18-κάρπιμον": {
+              "segment": "κάρπιμον",
+              "isWordOfGod": true
+            },
+            "19-ποιοῦν": {
+              "segment": "ποιοῦν",
+              "isWordOfGod": true
+            },
+            "20-καρπόν": {
+              "segment": "καρπόν",
+              "isWordOfGod": true
+            },
+            "21-οὗ": {
+              "segment": "οὗ",
+              "isWordOfGod": true
+            },
+            "22-τὸ": {
+              "segment": "τὸ",
+              "isWordOfGod": true
+            },
+            "23-σπέρμα": {
+              "segment": "σπέρμα",
+              "isWordOfGod": true
+            },
+            "24-αὐτοῦ": {
+              "segment": "αὐτοῦ",
+              "isWordOfGod": true
+            },
+            "25-ἐν": {
+              "segment": "ἐν",
+              "isWordOfGod": true
+            },
+            "26-αὐτῷ": {
+              "segment": "αὐτῷ",
+              "isWordOfGod": true
+            },
+            "27-κατὰ": {
+              "segment": "κατὰ",
+              "isWordOfGod": true
+            },
+            "28-γένος": {
+              "segment": "γένος",
+              "isWordOfGod": true
+            },
+            "29-ἐπὶ": {
+              "segment": "ἐπὶ",
+              "isWordOfGod": true
+            },
+            "30-τῆς": {
+              "segment": "τῆς",
+              "isWordOfGod": true
+            },
+            "31-γῆς": {
+              "segment": "γῆς",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        {
+          "verse": 20,
+          "metadata": {
+            "17-τὸ": {
+              "segment": "τὸ",
+              "isWordOfGod": true
+            },
+            "4-ἐξαγαγέτω": {
+              "segment": "ἐξαγαγέτω",
+              "isWordOfGod": true
+            },
+            "5-τὰ": {
+              "segment": "τὰ",
+              "isWordOfGod": true
+            },
+            "6-ὕδατα": {
+              "segment": "ὕδατα",
+              "isWordOfGod": true
+            },
+            "7-ἑρπετὰ": {
+              "segment": "ἑρπετὰ",
+              "isWordOfGod": true
+            },
+            "8-ψυχῶν": {
+              "segment": "ψυχῶν",
+              "isWordOfGod": true
+            },
+            "9-ζωσῶν": {
+              "segment": "ζωσῶν",
+              "isWordOfGod": true
+            },
+            "10-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "11-πετεινὰ": {
+              "segment": "πετεινὰ",
+              "isWordOfGod": true
+            },
+            "12-πετόμενα": {
+              "segment": "πετόμενα",
+              "isWordOfGod": true
+            },
+            "13-ἐπὶ": {
+              "segment": "ἐπὶ",
+              "isWordOfGod": true
+            },
+            "14-τῆς": {
+              "segment": "τῆς",
+              "isWordOfGod": true
+            },
+            "15-γῆς": {
+              "segment": "γῆς",
+              "isWordOfGod": true
+            },
+            "16-κατὰ": {
+              "segment": "κατὰ",
+              "isWordOfGod": true
+            },
+            "18-στερέωμα": {
+              "segment": "στερέωμα",
+              "isWordOfGod": true
+            },
+            "19-τοῦ": {
+              "segment": "τοῦ",
+              "isWordOfGod": true
+            },
+            "20-οὐρανοῦ": {
+              "segment": "οὐρανοῦ",
+              "isWordOfGod": true
+            }
+          }
+        },
+        null,
+        null,
+        null,
+        {
+          "verse": 24,
+          "metadata": {
+            "19-γένος": {
+              "segment": "γένος",
+              "isWordOfGod": true
+            },
+            "4-ἐξαγαγέτω": {
+              "segment": "ἐξαγαγέτω",
+              "isWordOfGod": true
+            },
+            "5-ἡ": {
+              "segment": "ἡ",
+              "isWordOfGod": true
+            },
+            "6-γῆ": {
+              "segment": "γῆ",
+              "isWordOfGod": true
+            },
+            "7-ψυχὴν": {
+              "segment": "ψυχὴν",
+              "isWordOfGod": true
+            },
+            "8-ζῶσαν": {
+              "segment": "ζῶσαν",
+              "isWordOfGod": true
+            },
+            "9-κατὰ": {
+              "segment": "κατὰ",
+              "isWordOfGod": true
+            },
+            "10-γένος": {
+              "segment": "γένος",
+              "isWordOfGod": true
+            },
+            "11-τετράποδα": {
+              "segment": "τετράποδα",
+              "isWordOfGod": true
+            },
+            "12-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "13-ἑρπετὰ": {
+              "segment": "ἑρπετὰ",
+              "isWordOfGod": true
+            },
+            "14-καὶ": {
+              "segment": "καὶ",
+              "isWordOfGod": true
+            },
+            "15-θηρία": {
+              "segment": "θηρία",
+              "isWordOfGod": true
+            },
+            "16-τῆς": {
+              "segment": "τῆς",
+              "isWordOfGod": true
+            },
+            "17-γῆς": {
+              "segment": "γῆς",
+              "isWordOfGod": true
+            },
+            "18-κατὰ": {
+              "segment": "κατὰ",
+              "isWordOfGod": true
+            }
+          }
+        }
+      ]
     }
   ],
   "patterns": {
@@ -106,7 +555,7 @@
       "value": "para|do(a)"
     },
     "ὕδατος": {
-      "value": "água"
+      "value": "águas"
     },
     "εἶπεν": {
       "value": "disse"

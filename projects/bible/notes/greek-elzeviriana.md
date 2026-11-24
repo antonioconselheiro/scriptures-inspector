@@ -12,13 +12,10 @@ O texto Elzeviriano é identificado como a edição grega usada na tradução; a
 
 ## πνεῦμα — “fôlego”
 
-No texto Elzeviriano, **πνεῦμα (*pneûma*)** é vertido como **“fôlego”** quando se quer privilegiar a imagem de sopro, respiração ou ar em movimento. A palavra também significa “vento” e “espírito”, por isso a escolha precisa ser lida conforme cada contexto. Em João 3:8, por exemplo, o próprio texto explora a proximidade entre o vento que sopra (**πνεῦμα ... πνεῖ**) e o nascido do Espírito (**ἐκ τοῦ πνεύματος**); em João 19:30, “entregou o espírito” usa a mesma palavra para a vida que se extingue. Esses exemplos ilustram a faixa semântica, mas não determinam uma única tradução para todas as ocorrências.
-
-A opção de traduzir pelo sentido concreto de “fôlego”, em vez de começar pela leitura teológica de “espírito”, acompanha a decisão registrada para o hebraico **רוּחַ**. A justificativa mais extensa e suas ressalvas estão em [וְר֣וּחַ — “fôlego” na nota hebraica](./hebrew-stuttgartensia.md#ruach-folego).
+Na tradução **πνεῦμα (*pneûma*)** é vertido como **“fôlego”** para destacar a ideia de sopro, respiração ou ar em movimento. A opção de traduzir pelo sentido concreto de “fôlego”, em vez de começar pela leitura teológica de “espírito”, acompanha a decisão registrada para o hebraico **רוּחַ**. A justificativa mais extensa e suas ressalvas estão em [וְר֣וּחַ — “fôlego” na nota hebraica](./hebrew-stuttgartensia.md#ruach-folego).
 
 ### Referências
 
-- [João 3:8 no texto Elzeviriano grego](https://www.studylight.org/interlinear-study-bible/greek/john/3-8.html) e [João 19:30](https://www.studylight.org/interlinear-study-bible/greek/john/19-30.html), para os usos relacionados a vento e à vida que se entrega.
 - [Defesa hebraica de רוּחַ como “fôlego”](./hebrew-stuttgartensia.md#ruach-folego).
 - Oxford Classical Dictionary, [“Pneuma”](https://academic.oup.com/edited-volume/61673/chapter/549703161), sobre a relação de πνεῦμα com πνέω (“soprar/respirar”).
 
