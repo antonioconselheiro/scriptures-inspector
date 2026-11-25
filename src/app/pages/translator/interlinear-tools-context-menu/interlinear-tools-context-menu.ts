@@ -8,7 +8,7 @@ import { Word } from '@domain/word-model';
 import { ProjectInterlinearService } from '../translation-editor/shared/project/project-interlinear-service';
 
 export interface InterlinearToolsActions {
-  fillSequentially: () => void;
+  fillSequentially?: () => void;
   moveOneToRight: () => void;
   returnOneToRight: () => void;
 }
@@ -47,7 +47,7 @@ export class InterlinearToolsContextMenu {
 
   onClickFillSequentially(): void {
     if (this.customActions) {
-      this.customActions.fillSequentially();
+      this.customActions.fillSequentially?.();
       return;
     }
     this.interlinearService.fillSequentiallyAllAssociationsToTheRight(

@@ -139,6 +139,37 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     this.customTranslationService.onChangeWordSpan(this.current, verse, index, wordSpanEl);
   }
 
+  openWordSpanTools(
+    event: MouseEvent,
+    verse: { metadata: Array<BookTranslationTargetMetadata> } | undefined,
+    index: number,
+    segmentCount: number
+  ): void {
+    if (!verse) {
+      return;
+    }
+
+    event.preventDefault();
+    const menu = this.interlinearToolsRef;
+    menu.x = event.clientX;
+    menu.y = event.clientY;
+    menu.visible = true;
+    menu.customActions = {
+      moveOneToRight: () => this.updateWordSpans(verse, index, segmentCount, 'move'),
+      returnOneToRight: () => this.updateWordSpans(verse, index, segmentCount, 'return')
+    };
+  }
+
+  private updateWordSpans(
+    verse: { metadata: Array<BookTranslationTargetMetadata> },
+    index: number,
+    segmentCount: number,
+    action: 'move' | 'return'
+  ): void {
+    this.customTranslationService.shiftWordSpans(this.current, verse, index, segmentCount, action);
+    this.pipeUpdaterController++;
+  }
+
   derivateAllToCustom(): void {
     const current = confirm('overwrite verse translation and interlineares?');
     if (current) {

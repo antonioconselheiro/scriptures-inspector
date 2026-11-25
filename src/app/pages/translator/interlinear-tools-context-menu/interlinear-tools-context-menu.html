@@ -4,7 +4,9 @@
     [ngStyle]="{ top: y + 'px', left: x + 'px' }"
   >
     <ul>
-      <li (click)="onClickFillSequentially()">⦿ Fill sequentially from here</li>
+      @if (!customActions || customActions.fillSequentially) {
+        <li (click)="onClickFillSequentially()">⦿ Fill sequentially from here</li>
+      }
 
       <li (click)="onClickMoveOneToRight()">▶ Move one to RIGHT from here</li>
       <li (click)="onClickReturnOneToRight()">▶ Return one to RIGHT from here</li>

@@ -55,6 +55,7 @@
             [attr.aria-label]="'Word span for position ' + ($index + 1)"
             [value]="verse?.metadata?.[$index]?.size"
             (change)="onChangeWordSpan(verse, $index, wordSpanEl)"
+            (contextmenu)="openWordSpanTools($event, verse, $index, splittedCustomTranslation.original.length)"
           />
         </td>
         }

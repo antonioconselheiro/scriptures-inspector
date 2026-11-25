@@ -87,6 +87,59 @@ describe('CustomTranslationComponent Word of God selection', () => {
       expect([menu.visible, menu.x, menu.y]).toEqual([true, 20, 30]);
     }
 
+    function openSpans(index: number, count = 4): void {
+      const event = new MouseEvent('contextmenu', { cancelable: true, clientX: 40, clientY: 50 });
+      component.openWordSpanTools(event, component.customTranslation.chapters[0].verses[0], index, count);
+      expect(event.defaultPrevented).toBeTrue();
+      expect([menu.visible, menu.x, menu.y]).toEqual([true, 40, 50]);
+      expect(menu.customActions?.fillSequentially).toBeUndefined();
+    }
+
+    it('shifts sizes in either direction without changing links or other metadata', () => {
+      const original = structuredClone(metadata);
+      openSpans(1);
+      menu.onClickMoveOneToRight();
+      expect(metadata.map(item => item.size)).toEqual([2, 3, 3, 4]);
+      menu.onClickReturnOneToRight();
+      expect(metadata.map(item => item.size)).toEqual([2, 3, 4, 0]);
+      expect(metadata.map(item => item.value)).toEqual(original.map(item => item.value));
+      expect(metadata.map(item => item.isWordOfGod)).toEqual(original.map(item => item.isWordOfGod));
+      expect(saves.calls.allArgs()).toEqual([[component.current], [component.current]]);
+      expect(component.pipeUpdaterController).toBe(2);
+    });
+
+    it('shifts sizes into the implicit final segment and preserves existing links', () => {
+      metadata.pop();
+      openSpans(2);
+      menu.onClickMoveOneToRight();
+      expect(metadata.map(item => item.size)).toEqual([2, 3, 4, 4]);
+      expect(metadata.map(item => item.value)).toEqual(['0-a', '1-b', '2-c', '']);
+      expect(saves).toHaveBeenCalledOnceWith(component.current);
+    });
+
+    it('handles the first and last size positions and an implicit final segment', () => {
+      openSpans(0);
+      menu.onClickMoveOneToRight();
+      expect(metadata.map(item => item.size)).toEqual([2, 2, 3, 4]);
+      openSpans(3);
+      menu.onClickReturnOneToRight();
+      expect(metadata.map(item => item.size)).toEqual([2, 2, 3, 0]);
+      metadata.pop();
+      openSpans(3);
+      menu.onClickReturnOneToRight();
+      expect(metadata.length).toBe(3);
+      expect(metadata.map(item => item.size)).toEqual([2, 2, 3]);
+    });
+
+    it('restores association actions after opening the size menu', () => {
+      openSpans(1);
+      open(1);
+      expect(menu.customActions?.fillSequentially).toBeDefined();
+      menu.onClickMoveOneToRight();
+      expect(metadata.map(item => item.value)).toEqual(['0-a', '1-b', '1-b', '2-c']);
+      expect(metadata.map(item => item.size)).toEqual([2, 3, 4, 5]);
+    });
+
     it('confirms before clearing all custom translation interlinear links', () => {
       const confirmation = spyOn(window, 'confirm').and.returnValue(false);
       component.cleanInterlinear();

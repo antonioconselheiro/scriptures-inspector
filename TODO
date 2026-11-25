@@ -21,7 +21,7 @@ TODO
 [ ] - Pode-se incluir mecanica que narra palavra por palavra, já vi algo assim do geez;
 [X] - Um sufixo limitado pelo contexto não pode ser aplicado depois de já se ter aplicado um em uma mesma palavra, precisa-se ser continuamente incremental;
 [X] - incluir confirm para deleção de lexicos nas configurações, as vezes um clique no x pega dois x e deleta dois sem nem saber qual foi;
-[ ] - Incluir menu de contexto que me permita mover os sizes assim como movo as associações interlineares;
+[X] - Incluir menu de contexto que me permita mover os sizes assim como movo as associações interlineares;
 [ ] - Preciso pensar num meio de escolher num select opções de sobrescrição de variação com uma opção de efeito, que substitua o espaço como remoção do pedaço e que me ajude a agrupar o 1 6 2, estou pensando em algo como um menu de contexto com estas duas opções e as quais mais forem necessárias;
 [ ] - Quando um campo está com a regra "only suffix", ao tentar mudar a regra para "in all contexts" no menu de contexto, nada acontece, não funciona;
 [ ] - Há situações onde um segmento está como sufixo por ter sido quebrado sequentes vezes como prefixo, mas nestes casos este sufixo não está manifestando o valor para "somente no contexto de sufixo", ele fica no modo de "todos os contextos" e não assume o valor que deveria, o exemplo do defeito está em Gênesis 1.28, com o termo לָהֶ֜ם, que pode ser segmentado em três letras: "para", como prefixo, artigo definido, como "o" ou "a", ainda como prefixo e então "ele" ou "dele" como terceira pessoal do singular, que está manifesto como "em todos contexto" mas só assume o valor de "ele" no contexto de sufixo, que se aplicaria nesta situação e deve se manifestar assim;  

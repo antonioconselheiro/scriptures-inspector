@@ -234,6 +234,36 @@ export class ProjectCustomTranslationService {
     this.systemService.triggerSaveCurrentBookTranslations(current);
   }
 
+  shiftWordSpans(
+    current: CurrentChapter,
+    verse: { metadata: Array<BookTranslationTargetMetadata> },
+    index: number,
+    segmentCount: number,
+    action: 'move' | 'return'
+  ): void {
+    const sizes = Array.from(
+      { length: segmentCount - index },
+      (_, offset) => verse.metadata[index + offset]?.size ?? 0
+    );
+    if (!sizes.length) {
+      return;
+    }
+
+    const shifted = action === 'move'
+      ? [sizes[0], ...sizes.slice(0, -1)]
+      : [...sizes.slice(1), 0];
+    shifted.forEach((size, offset) => {
+      const position = index + offset;
+      const metadata = verse.metadata[position];
+      if (metadata) {
+        metadata.size = size;
+      } else if (size !== 0) {
+        verse.metadata[position] = { size, value: '' };
+      }
+    });
+    this.systemService.triggerSaveCurrentBookTranslations(current);
+  }
+
   derivateAllToCustom(
     sourceBook: SourceBook,
     sourceVerse: SourceVerse,

@@ -116,6 +116,32 @@ describe('segmentation refresh in the translation editor', () => {
     await fixture.whenStable();
   }
 
+  it('opens the size menu from the rendered input and shifts only sizes', async () => {
+    const verse = host.translation.chapters[0].verses[0];
+    verse.text = 'aa bbb cccc';
+    verse.metadata = [
+      { size: 2, value: '0-a' },
+      { size: 3, value: '1-b', isWordOfGod: true },
+      { size: 4, value: '2-c' }
+    ];
+    fixture.detectChanges();
+    const input = root.querySelector<HTMLInputElement>(
+      'app-custom-translation-component input[aria-label="Word span for position 2"]'
+    );
+    expect(input).toBeTruthy();
+    input?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+    const items = Array.from(root.querySelectorAll('app-interlinear-tools-context-menu li'));
+    expect(items.length).toBe(2);
+    expect(items[0].textContent).toContain('Move one to RIGHT');
+    items[0].dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+    expect(verse.metadata.map(item => item.size)).toEqual([2, 3, 3]);
+    expect(verse.metadata.map(item => item.value)).toEqual(['0-a', '1-b', '2-c']);
+    expect(verse.metadata[1].isWordOfGod).toBeTrue();
+    expect(TestBed.inject(SystemService).triggerSaveCurrentBookTranslations).toHaveBeenCalledWith(host.current);
+  });
+
   it('creates a whole-word suffix from a selected segment and refreshes repeated lexical fields', async () => {
     host.metadata.lexical['ኩን'] = { value: 'general', suffix: 'suffix value' };
     const text = root.querySelector<HTMLElement>(
