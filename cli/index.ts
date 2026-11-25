@@ -27,6 +27,7 @@ import { isPendingLexical } from '../src/app/pages/translator/translation-editor
 import { removeLexical } from '../src/app/pages/translator/translation-editor/shared/project/remove-lexical';
 import { composeMixedVariationText, removeTranslationVariation, VariationCompositionMode, VariationSelection } from '../src/app/pages/translator/translation-editor/shared/project/translation-variations';
 import { getPresentationColor, getSerializedSegmentIndex } from '../src/app/pages/translator/translation-editor/shared/scripture-presentation-core';
+import { SegmentationChanges } from '../src/app/pages/translator/translation-editor/shared/segmentation-changes';
 
 type Kind = 'metadata' | 'interlinear' | 'translation';
 type Structure = ProjectStructureMetadata & { interlinearTarget?: string };
@@ -34,10 +35,11 @@ type Options = Record<string, string>;
 
 const dataService = new ProjectDataService();
 const systemService = new SystemService();
-const metadataService = new ProjectMetadataService(dataService, systemService);
+const segmentationChanges = new SegmentationChanges();
+const metadataService = new ProjectMetadataService(dataService, systemService, segmentationChanges);
 const translationService = new ProjectCustomTranslationService(dataService, systemService);
 const interlinearService = new ProjectInterlinearService(dataService, systemService);
-const patternService = new PatternsService();
+const patternService = new PatternsService(segmentationChanges);
 
 function parseArgs(args: string[]): { command: string; options: Options; positional: string[] } {
   const command = args.shift() ?? 'help';

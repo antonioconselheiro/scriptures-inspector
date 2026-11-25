@@ -8,6 +8,7 @@ import { SystemService } from '@shared/system/system-service';
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { BookTranslationTargetMetadata } from '@domain/book-translation-target-metadata-model';
 import { InterlinearToolsContextMenuTrigger } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu-trigger';
+import { SegmentationChanges } from '../shared/segmentation-changes';
 
 describe('CustomTranslationComponent Word of God selection', () => {
   it('updates every editable selected segment while leaving inherited metadata untouched', () => {
@@ -19,7 +20,8 @@ describe('CustomTranslationComponent Word of God selection', () => {
       jasmine.createSpyObj<ProjectDataService>('ProjectDataService', ['splitIntoMatrix']),
       jasmine.createSpyObj<ProjectMetadataService>('ProjectMetadataService', ['getScriptureMetadataWordOfGod']),
       translations,
-      jasmine.createSpyObj<ProjectInterlinearService>('ProjectInterlinearService', ['getOriginWordIndex'])
+      jasmine.createSpyObj<ProjectInterlinearService>('ProjectInterlinearService', ['getOriginWordIndex']),
+      new SegmentationChanges()
     );
     spyOn(component, 'getScriptureMetadataWordOfGodOverriding').and.callFake(index => ({
       checked: index === 1,
@@ -54,7 +56,8 @@ describe('CustomTranslationComponent Word of God selection', () => {
         dataService,
         jasmine.createSpyObj<ProjectMetadataService>('ProjectMetadataService', ['getScriptureMetadataWordOfGod']),
         translations,
-        interlinear
+        interlinear,
+        new SegmentationChanges()
       );
       menu = new InterlinearToolsContextMenu(interlinear);
       component.interlinearToolsRef = menu;

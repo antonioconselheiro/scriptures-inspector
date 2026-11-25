@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Language } from '@domain/language-model';
 import { PatternsSerialized } from '@domain/patterns-serialized-model';
+import { SegmentationChanges } from './translation-editor/shared/segmentation-changes';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PatternsService {
+  constructor(private segmentationChanges: SegmentationChanges) {}
+
   addPattern(patterns: PatternsSerialized, type: 'prefix' | 'suffix' | 'lexeme', language: Language, word: string): void {
     const normalized = language.normalizeFn ? language.normalizeFn(word) : word;
     patterns.distinct ??= {};
     if (!patterns[type].includes(normalized)) {
       patterns[type].push(normalized);
+      this.segmentationChanges.patternsChanged();
     }
   }
 
   deletePattern(patterns: PatternsSerialized, type: 'prefix' | 'suffix' | 'lexeme', index: number): void {
     patterns[type].splice(index, 1);
+    this.segmentationChanges.patternsChanged();
   }
 
   addDistinctPattern(
@@ -41,6 +46,7 @@ export class PatternsService {
     const key = existingKey ?? segment;
     patterns.distinct[key] ??= {};
     patterns.distinct[key][type] = normalizedWord;
+    this.segmentationChanges.patternsChanged();
   }
 
   deleteDistinctPattern(
@@ -58,5 +64,6 @@ export class PatternsService {
     if (Object.keys(pattern).length === 0) {
       delete distinct[segment];
     }
+    this.segmentationChanges.patternsChanged();
   }
 }

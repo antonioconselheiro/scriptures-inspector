@@ -4,11 +4,12 @@ import { SystemService } from '@shared/system/system-service';
 import { cleanUnusedLexical } from './clean-unused-lexical';
 import { ProjectDataService } from './project-data-service';
 import { ProjectMetadataService } from './project-metadata-service';
+import { SegmentationChanges } from '../segmentation-changes';
 
 describe('cleanUnusedLexical', () => {
   it('retains normalized segments used in any verse and removes unused entries', () => {
     const data = new ProjectDataService();
-    const metadataService = new ProjectMetadataService(data, new SystemService());
+    const metadataService = new ProjectMetadataService(data, new SystemService(), new SegmentationChanges());
     const language = {
       ...languageMetadataRecord.hebrew,
       normalizeFn: demassoretifierFn

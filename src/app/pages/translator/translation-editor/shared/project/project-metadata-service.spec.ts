@@ -5,6 +5,7 @@ import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { ProjectMetadataService } from './project-metadata-service';
+import { SegmentationChanges } from '../segmentation-changes';
 
 describe('ProjectMetadataService', () => {
   let dataService: jasmine.SpyObj<ProjectDataService>;
@@ -23,7 +24,7 @@ describe('ProjectMetadataService', () => {
       'SystemService',
       ['triggerSaveCurrentBookMetadata']
     );
-    metadataService = new ProjectMetadataService(dataService, systemService);
+    metadataService = new ProjectMetadataService(dataService, systemService, new SegmentationChanges());
   });
 
   it('recognizes word-of-God metadata on any segment of a word', () => {

@@ -72,9 +72,9 @@ export const languageMetadataRecord: {
     transliteration: (syriac) => transliterate(syriac),
     direction: 'rtl'
   },
-  'sogdiano': {
+  'sogdian': {
     name: 'Sogdian',
-    label: 'latim-sogdiano',
+    label: 'latim-sogdian',
     alternativeSpelling: [
       {
         name: 'Sogdian',

@@ -4,6 +4,7 @@ import { Project } from '@domain/project-model';
 import { SystemService } from '@shared/system/system-service';
 import { PatternsService } from '../patterns-service';
 import { AddPatternContextMenu } from './add-pattern-context-menu';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 describe('AddPatternContextMenu', () => {
   it('adds a valid segment-specific suffix and saves the affected metadata', () => {
@@ -24,7 +25,7 @@ describe('AddPatternContextMenu', () => {
       'SystemService',
       ['triggerSaveCurrentBookMetadata', 'triggerSaveCurrentBookInterlinear']
     );
-    const menu = new AddPatternContextMenu(new PatternsService(), systemService);
+    const menu = new AddPatternContextMenu(new PatternsService(new SegmentationChanges()), systemService);
     menu.bookTarget = patterns;
     menu.current = current;
     menu.project = project;

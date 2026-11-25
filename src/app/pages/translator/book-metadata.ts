@@ -5,7 +5,7 @@ export const bookMetadata: {
     gringo: string,
     alliance: 'antediluvian' | 'Israel' | 'global' | 'Greek' | 'Egypt' | 'Roman' | 'Persian' | 'Arabic' | 'India' | 'Tibetan' | 'Nepali' | 'Japonese' | 'Chinese' | 'Hawaii' | 'Maya Kʼicheʼ',
     type?: Array<'letter' | 'rule' | 'history' | 'sapiential' | 'poesy' | 'prophecy' | 'pesher' | 'treasure'>,
-    oldestLanguageFound?: 'aramaic' | 'hebrew' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'sogdiano' | 'english';
+    oldestLanguageFound?: 'aramaic' | 'hebrew' | 'geez' | 'syriac' | 'arabic' | 'latim' | 'greek' | 'copta' | 'sanskrit' | 'chinese' | 'avestico' | 'pahlavi' | 'sogdian' | 'english';
     language: {
       aramaic?: boolean,
       hebrew?: boolean,
@@ -21,7 +21,7 @@ export const bookMetadata: {
       uigur?: boolean,
       avestico?: boolean,
       pahlavi?: boolean,
-      sogdiano?: boolean,
+      sogdian?: boolean,
       english?: boolean
     },
     codex: {
@@ -91,7 +91,7 @@ export const bookMetadata: {
     oldestLanguageFound: 'hebrew',
     alliance: 'Persian',
     language: {
-      sogdiano: true,
+      sogdian: true,
       uigur: true
     },
     codex: {
@@ -105,10 +105,10 @@ export const bookMetadata: {
     chapters: 0,
     normal: 'Livro dos Gigantes de Mani',
     gringo: 'Mani\'s Book of Giants',
-    oldestLanguageFound: 'sogdiano',
+    oldestLanguageFound: 'sogdian',
     alliance: 'Persian',
     language: {
-      sogdiano: true,
+      sogdian: true,
       uigur: true
     },
     codex: {

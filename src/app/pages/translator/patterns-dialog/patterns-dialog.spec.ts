@@ -2,10 +2,11 @@ import { FormBuilder } from '@angular/forms';
 import { PatternsSerialized } from '@domain/patterns-serialized-model';
 import { PatternsService } from '../patterns-service';
 import { PatternsDialog } from './patterns-dialog';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 describe('PatternsDialog', () => {
   it('should populate the table patterns when its inputs change', () => {
-    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService());
+    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService(new SegmentationChanges()));
     dialog.patterns = {
       prefix: ['un'],
       suffix: ['ing'],
@@ -22,7 +23,7 @@ describe('PatternsDialog', () => {
   });
 
   it('should list and remove distinct segment definitions', () => {
-    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService());
+    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService(new SegmentationChanges()));
     dialog.patterns = {
       distinct: { careful: { suffix: 'ful' } },
       prefix: [],

@@ -10,9 +10,14 @@ import { Word } from '@domain/word-model';
 import { SystemService } from '@shared/system/system-service';
 import { AbstractInspectorDiretive } from './abstract-inspector-directive';
 import { ProjectDataService } from './project/project-data-service';
+import { SegmentationChanges } from './segmentation-changes';
 
 @Directive()
 export abstract class AbstractTranslatableDirective extends AbstractInspectorDiretive {
+
+  constructor(segmentationChanges: SegmentationChanges) {
+    super(segmentationChanges);
+  }
 
   private wordListCache?: {
     language: Language;

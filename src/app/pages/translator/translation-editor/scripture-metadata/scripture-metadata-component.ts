@@ -32,6 +32,7 @@ import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-men
 import { PinRowDirective } from '../pin-row.directive';
 import { getPresentationColor } from '../shared/scripture-presentation-core';
 import { CheckboxRangeSelectionDirective } from '../shared/checkbox-range-selection.directive';
+import { SegmentationChanges } from '../shared/segmentation-changes';
 
 @Component({
   selector: 'app-scripture-metadata-component',
@@ -119,9 +120,10 @@ export class ScriptureMetadataComponent extends AbstractTranslatableDirective {
   constructor(
     protected dataService: ProjectDataService,
     protected systemService: SystemService,
-    protected metadataService: ProjectMetadataService
+    protected metadataService: ProjectMetadataService,
+    segmentationChanges: SegmentationChanges
   ) {
-    super();
+    super(segmentationChanges);
   }
 
   getTranslationVerseIndex(translationVerses: Array<BookVerse<{ text: string; }>>): number {

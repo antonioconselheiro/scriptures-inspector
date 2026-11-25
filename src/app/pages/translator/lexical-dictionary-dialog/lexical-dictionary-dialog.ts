@@ -15,6 +15,7 @@ import { Language } from '@domain/language-model';
 import { MorphemeType } from '@domain/morpheme-type';
 import { SortField } from './sort-field-type';
 import { SortOrder } from './sort-order-type';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 @Component({
   selector: 'app-lexical-dictionary-dialog',
@@ -70,7 +71,8 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
 
   constructor(
     private dataService: ProjectDataService,
-    private metadataService: ProjectMetadataService
+    private metadataService: ProjectMetadataService,
+    private segmentationChanges: SegmentationChanges
   ) {
     super();
   }
@@ -215,6 +217,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   deleteLexical(key: string, rule: MorphemeType): void {
     if (this.bookMetadata) {
       removeLexical(this.bookMetadata, key, rule);
+      this.segmentationChanges.lexicalChanged(this.bookMetadata.lexical);
     }
 
     this.sortLexicals();
@@ -224,6 +227,7 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
     const clean = confirm('This operation will remove all unused lexicals in this book, confirm?');
     if (clean && this.bookMetadata && this.bookSource && this.language) {
       cleanUnusedLexical(this.bookMetadata, this.bookSource, this.language, this.dataService, this.metadataService);
+      this.segmentationChanges.lexicalChanged(this.bookMetadata.lexical);
       this.sortLexicals();
     }
   }

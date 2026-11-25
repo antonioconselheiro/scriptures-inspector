@@ -1,6 +1,7 @@
 @if (sourceVerse) {
   @let wordList = splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
   @let parsedBook = parseBook(projectData[structure.metadataTarget], sourceLanguage);
+  @let lexicalRevision = segmentationChanges.lexicalRevision(parsedBook.lexical);
   @let wordMatrix = splitIntoMatrix(sourceLanguage, parsedBook.patterns, sourceVerse);
 
   <app-scripture-metadata-component
@@ -64,7 +65,7 @@
         <td [colSpan]="wordList.length">
           @for (word of wordMatrix; track $index) {
             @for (segment of word.segments; track segment.index) {
-              @let lexical = segment.word | lexical : parsedBook : origin.language : segment.morpheme : pipeUpdaterController : project;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : lexicalRevision : project;
               @if (lexical.value.length) {<span [class]="'prisma'+getTranslationColor(origin.structure, segment.index)">{{lexical.value}}</span>&nbsp;}
             }
           }

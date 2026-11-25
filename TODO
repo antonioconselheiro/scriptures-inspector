@@ -12,25 +12,22 @@ TODO
 [ ] - Variação de tradução onde números transcritos são transformados em algarismos preserva espaços entre os números, ex: "E viveu Jarede 1  6  2 anos e gerou AZ Enoque.". Pensar em solução.
 [ ] - Pode ser que seja necessário criar um mecanismo que permita definir uma configuração personalizada de lexema para uma sentença para situações que envolvem nomes, como Jarede
 [ ] - Escolher entre ABS1 (LIT2677ACABt1.xml) e ABS2 (LIT2679ACAbt2.xml) como referência do Abtilis
-[ ] - Mecanismo que consegue identificar se há estruturas no texto que não tiveram um valor léxico definido
+[ ] - Mecanismo que consegue identificar se há estruturas no livro que não tiveram um valor léxico definido
 [ ] - Incluir configuração que permita o software de baixar os repositórios relacionados ao projeto para trabalhar offline, ou então incluir endereços locais alternativos para casos de 404
 [ ] - Há um defeito para incluir variações de tradução para o geez, verificar e corrigir
 [ ] - Quando o padrão é mudado na edição de metadados lexicos, as relações interlineares e de tradução personalizada são perdidas
 [ ] - Não se deve salvar target de arquivos de metadado, interlinear e tradução que não tenham source
 [ ] - Validar importação de configurações de variações entre livros e garantir CLI tenha comando para importar variação de um livro para outro
 [ ] - Pode-se incluir mecanica que narra palavra por palavra, já vi algo assim do geez;
-[ ] - Quando altero o valor de ለይኩን em ኩን para haja|exista no geez, não está replicando nos demais campos, observar Gênesis, 1:3 e Gênesis, 1:6
 [ ] - Um sufixo limitado pelo contexto não pode ser aplicado depois de já se ter aplicado um em uma mesma palavra, precisa-se ser continuamente incremental;
 [ ] - incluir confirm para deleção de lexicos nas configurações, as vezes um clique no x pega dois x e deleta dois sem nem saber qual foi;
 [ ] - Incluir menu de contexto que me permita mover os sizes assim como movo as associações interlineares;
 [ ] - Preciso pensar num meio de escolher num select opções de sobrescrição de variação com uma opção de efeito, que substitua o espaço como remoção do pedaço e que me ajude a agrupar o 1 6 2, estou pensando em algo como um menu de contexto com estas duas opções e as quais mais forem necessárias;
 [ ] - Quando se confirma a deletação de uma coluna de tradução depois de definir o size como 0, o campo que ocupa o novo lugar do deletado fica com size 0
 [ ] - Quando um campo está com a regra "only suffix", ao tentar mudar a regra para "in all contexts" no menu de contexto, nada acontece, não funciona;
-[ ] - Quando se aplica a regra de "only suffix" ou "only prefix" o campo não muda imediatamente, somente após interação, o defeito está possivelmente relacionado com uma refatoração para diminuir os ciclos de renderização; Há outro defeito relacionado, talvez até já esteja registrado entre estes TODOs, quando dois campos tem o mesmo segmento e estão em versículos diferentes e um é editado, o outro não é, a não ser que um outro campo do versículo seja editado, então o valor deste que não havia sido carregado é atualizado;
 [ ] - Há situações onde um segmento está como sufixo por ter sido quebrado sequentes vezes como prefixo, mas nestes casos este sufixo não está manifestando o valor para "somente no contexto de sufixo", ele fica no modo de "todos os contextos" e não assume o valor que deveria, o exemplo do defeito está em Gênesis 1.28, com o termo לָהֶ֜ם, que pode ser segmentado em três letras: "para", como prefixo, artigo definido, como "o" ou "a", ainda como prefixo e então "ele" ou "dele" como terceira pessoal do singular, que está manifesto como "em todos contexto" mas só assume o valor de "ele" no contexto de sufixo, que se aplicaria nesta situação e deve se manifestar assim;  
 [ ] - Validar se a estrutura de versículos e capítulos estão coerentes no hebraico, grego da septuaginta e geez, para verificar se há numeração de versículos duplicada, como ocorre no cantares de salomão capítulo 8 com dois versículos 14
 [ ] - Precisa haver uma forma de indicar que um texto não se relaciona de nenhuma maneira no interlinear com uma fonte: o texto massorético e a septuaginta/geez contém situações onde não há relação interlinear de tradução, como 2 Crônicas 35 e 36, onde há reformulações e inserções do livro de Reis
-[ ] - Fazer com que as configurações de preview do projeto sejam preservados em alguma arquivo do projeto.
 [ ] - Não está sendo possível separar o sufixo de מִמֶּ֔נּוּ os caracteres נּוּ estão sempre sendo cortados em dois mesmo que configurados como sufixo agrupado, revisar regra se um sufixo maior deve ter prioridade sobre os menores; não está sendo possível separar o lexema de ወሀበ em ወወሀበቶ em Gênesis, 3:6
 [ ] - Depois de definir um campo como sufixo, ele não está atualizando imediantamente seu aspecto, somente após sair do campo, pode ter sido causado pela correção com redução de ciclos de execução
 [ ] - Os repositórios devem ser servidos e consumidos como githubpages para evitar problemas de proxy
@@ -38,15 +35,14 @@ TODO
 [ ] - Falsear minha versão grega do novo testamento com esta: https://www.sacred-texts.com/bib/gnt/index.htm
 [ ] - Criar repositório com textos maniqueistas: em sogdiano, pahlavi, uigur, parta, copta, chines
 [ ] - (mvp fragmentator) para inserir o texto de transcrição pode ser aberto uma dialog para inserção do texto e a edição deve ser permitida somente se não houver edição do posicionamento da transcrição no vetor, se já estiver uma palavra que seja posicionada, então o texto deve ser editado pela interface de posicionamento
-[ ] - (mvp fragmentator) Incluir potrance para definir SVG mascara do fragmento (https://herrstrietzel.github.io/potrace-plus/)
 [ ] - (mvp fragmentator) incluir um método de selecionar o artefato pelo nome do arquivo num datalist e também pelo número ao qual ele está indexado, não usar o 0 como indice inicial 
-[ ] - (mvp fragmentator) componente para associar com imagem do texto original
 [ ] - (mvp fragmentator) componente para associação da transcrição com livro/capítulo 
 [ ] - (mvp fragmentator) componente para navegar imagem do texto original
 [ ] - (mvp fragmentator) criar metadado que permita identificar lacuna
 [ ] - (não mvp fragmentator) incluir meio de renomear arquivos importados
 [ ] - (não mvp) Daniel Susana e Daniel Bel e o Dragão estão faltando na versão geez, não estão disponível no repositório de literatura etiópica em geez
-[ ] - (não mvp) Livros pendentes de Beta Israel em ge'ez:
+[ ] - Incluir Literatura Testamentária: Testamento de Adão; Testamento de Jó; Palimpsesto Testamento de Moisés; Testamento de Ezequias.
+[ ] - Livros pendentes de Beta Israel em ge'ez:
  - Testamento de Abraão;
  - Testamento de Isaac;
  - Testamento de Jacó;

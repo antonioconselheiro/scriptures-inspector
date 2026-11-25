@@ -31,6 +31,7 @@ import { PinRowDirective } from '../pin-row.directive';
 import { CheckboxRangeSelectionDirective } from '../shared/checkbox-range-selection.directive';
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { applyAssociationOperation, AssociationOperation } from '../shared/association-operations';
+import { SegmentationChanges } from '../shared/segmentation-changes';
 
 @Component({
   selector: 'app-custom-translation-component',
@@ -108,9 +109,10 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
     private dataService: ProjectDataService,
     protected metadataService: ProjectMetadataService,
     private customTranslationService: ProjectCustomTranslationService,
-    private interlinearService: ProjectInterlinearService
+    private interlinearService: ProjectInterlinearService,
+    segmentationChanges: SegmentationChanges
   ) {
-    super();
+    super(segmentationChanges);
   }
 
   getTranslationIndexes(): BookIndexes {

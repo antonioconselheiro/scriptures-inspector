@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CurrentChapter } from '@domain/current-chapter-model';
 import { MorphemeType } from '@domain/morpheme-type';
 import { ParsedBookMetadata } from '@domain/parsed-book-metadata-model';
 import { SystemService } from '@shared/system/system-service';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 @Component({
   selector: 'app-define-field-morpheme-rule-context-menu',
@@ -26,7 +27,9 @@ export class DefineFieldMorphemeRuleContextMenu {
   current!: CurrentChapter;
 
   constructor(
-    private systemService: SystemService
+    private systemService: SystemService,
+    private segmentationChanges: SegmentationChanges,
+    private changeDetector: ChangeDetectorRef
   ) {}
 
   onDefineFieldRule(type: MorphemeType): void {
@@ -34,6 +37,11 @@ export class DefineFieldMorphemeRuleContextMenu {
   }
 
   private defineFieldRule(type: MorphemeType): void {
+    if (type === this.morphemeConfigured) {
+      this.visible = false;
+      this.changeDetector.markForCheck();
+      return;
+    }
     if (!this.parsedBook.lexical[this.word]) {
       this.parsedBook.lexical[this.word] = {};
     }
@@ -59,6 +67,7 @@ export class DefineFieldMorphemeRuleContextMenu {
 
         delete lexicalConfig.suffix;
       }
+      this.morphemeConfigured = 'root';
     } else if (this.morphemePosition === 'prefix' && type === 'prefix') {
       this.morphemeConfigured = type;
       lexicalConfig.prefix = '';
@@ -67,11 +76,13 @@ export class DefineFieldMorphemeRuleContextMenu {
       lexicalConfig.suffix = '';
     }
 
+    this.segmentationChanges.lexicalChanged(this.parsedBook.lexical);
     if (this.current) {
       this.systemService.triggerSaveCurrentBookMetadata(this.current);
       this.systemService.triggerSaveCurrentBookInterlinear(this.current);
     }
 
     this.visible = false;
+    this.changeDetector.markForCheck();
   }
 }

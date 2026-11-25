@@ -12,7 +12,7 @@ export const languageList: [
   'chinese',
   'avestico',
   'pahlavi',
-  'sogdiano',
+  'sogdian',
   'middle-persian',
   'old-uyghur'
 ] = [
@@ -29,7 +29,7 @@ export const languageList: [
   'chinese',
   'avestico',
   'pahlavi',
-  'sogdiano',
+  'sogdian',
   'middle-persian',
   'old-uyghur'
 ]

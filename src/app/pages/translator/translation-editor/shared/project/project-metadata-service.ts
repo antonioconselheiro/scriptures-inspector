@@ -16,6 +16,7 @@ import { SystemService } from '@shared/system/system-service';
 import { ProjectDataService } from './project-data-service';
 import { isWordOfGod } from '../scripture-presentation-core';
 import { metadataVerseMatches } from './metadata-verse-matches';
+import { SegmentationChanges } from '../segmentation-changes';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,8 @@ export class ProjectMetadataService {
 
   constructor(
     private dataService: ProjectDataService,
-    private systemService: SystemService
+    private systemService: SystemService,
+    private segmentationChanges: SegmentationChanges
   ) { }
 
   createWordMetadataIfNotExists(
@@ -189,6 +191,7 @@ export class ProjectMetadataService {
       }
     }
 
+    this.segmentationChanges.lexicalChanged(bookMetadata.lexical);
     this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 
@@ -204,6 +207,7 @@ export class ProjectMetadataService {
       });
     });
 
+    this.segmentationChanges.lexicalChanged(bookMetadata.lexical);
     this.systemService.triggerSaveCurrentBookMetadata(current);
   }
 

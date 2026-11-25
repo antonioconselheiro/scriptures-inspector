@@ -195,66 +195,9 @@
             "verse": 3,
             "originVerse": 3,
             "words": [
-              {
-                "originIndex": 0,
-                "originWord": "וַ",
-                "translationIndex": 0,
-                "translationWord": "ወ"
-              },
-              {
-                "originIndex": 1,
-                "originWord": "יֹּ֥",
-                "translationIndex": 1,
-                "translationWord": "ይ"
-              },
-              {
-                "originIndex": 2,
-                "originWord": "אמֶר",
-                "translationIndex": 2,
-                "translationWord": "ቤ"
-              },
-              {
-                "originIndex": 3,
-                "originWord": "אֱלֹהִ֖",
-                "translationIndex": 3,
-                "translationWord": "እግዚአብሔር"
-              },
-              {
-                "originIndex": 5,
-                "originWord": "יְהִ֣י",
-                "translationIndex": 4,
-                "translationWord": "ለይኩን"
-              },
-              {
-                "originIndex": 6,
-                "originWord": "א֑וֹר",
-                "translationIndex": 5,
-                "translationWord": "ብርሃን"
-              },
-              {
-                "originIndex": 7,
-                "originWord": "וַֽ",
-                "translationIndex": 6,
-                "translationWord": "ወ"
-              },
-              {
-                "originIndex": 8,
-                "originWord": "יְהִי",
-                "translationIndex": 7,
-                "translationWord": "ኮነ"
-              },
-              {
-                "originIndex": 9,
-                "originWord": "אֽוֹר",
-                "translationIndex": 8,
-                "translationWord": "ብርሃን"
-              },
-              {
-                "originIndex": 10,
-                "originWord": "׃",
-                "translationIndex": 9,
-                "translationWord": "።"
-              }
+              null,
+              null,
+              null
             ]
           },
           {
@@ -976,57 +919,7 @@
             "chapter": 1,
             "verse": 3,
             "originVerse": 3,
-            "words": [
-              {
-                "originIndex": 0,
-                "originWord": "καὶ",
-                "translationIndex": 0,
-                "translationWord": "ወ"
-              },
-              null,
-              {
-                "originIndex": 1,
-                "originWord": "εἶπεν",
-                "translationIndex": 2,
-                "translationWord": "ቤ"
-              },
-              {
-                "originIndex": 3,
-                "originWord": "θεός",
-                "translationIndex": 3,
-                "translationWord": "እግዚአብሔር"
-              },
-              {
-                "originIndex": 4,
-                "originWord": "γενηθήτω",
-                "translationIndex": 4,
-                "translationWord": "ለይኩን"
-              },
-              {
-                "originIndex": 5,
-                "originWord": "φῶς",
-                "translationIndex": 5,
-                "translationWord": "ብርሃን"
-              },
-              {
-                "originIndex": 6,
-                "originWord": "καὶ",
-                "translationIndex": 6,
-                "translationWord": "ወ"
-              },
-              {
-                "originIndex": 7,
-                "originWord": "ἐγένετο",
-                "translationIndex": 7,
-                "translationWord": "ኮነ"
-              },
-              {
-                "originIndex": 8,
-                "originWord": "φῶς",
-                "translationIndex": 8,
-                "translationWord": "ብርሃን"
-              }
-            ]
+            "words": []
           },
           {
             "originChapter": 1,

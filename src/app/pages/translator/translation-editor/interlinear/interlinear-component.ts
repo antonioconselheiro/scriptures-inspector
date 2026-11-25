@@ -31,6 +31,7 @@ import { ProjectMetadataService } from '../shared/project/project-metadata-servi
 import { InterlinearToolsContextMenu } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu';
 import { InterlinearToolsContextMenuTrigger } from '../../interlinear-tools-context-menu/interlinear-tools-context-menu-trigger';
 import { PinRowDirective } from '../pin-row.directive';
+import { SegmentationChanges } from '../shared/segmentation-changes';
 
 @Component({
   selector: 'app-interlinear-component',
@@ -113,9 +114,10 @@ export class InterlinearComponent extends AbstractTranslatableDirective {
     protected dataService: ProjectDataService,
     protected metadataService: ProjectMetadataService,
     protected systemService: SystemService,
-    private interlinearService: ProjectInterlinearService
+    private interlinearService: ProjectInterlinearService,
+    segmentationChanges: SegmentationChanges
   ) {
-    super();
+    super(segmentationChanges);
   }
 
   getTranslationColor(originStructure: ProjectStructureMetadata | ProjectStructureInterlinear, wordIndex: number): string {

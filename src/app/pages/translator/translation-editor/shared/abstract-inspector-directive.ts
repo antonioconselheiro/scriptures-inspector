@@ -10,9 +10,12 @@ import { WordSegment } from '@domain/word-segment-model';
 import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { languageMetadataRecord } from '@shared/language-metadata/language-metadata-record';
 import { ProjectMetadataService } from './project/project-metadata-service';
+import { SegmentationChanges } from './segmentation-changes';
 
 @Directive()
 export abstract class AbstractInspectorDiretive {
+
+  constructor(readonly segmentationChanges: SegmentationChanges) {}
 
   private readonly languageCache = new Map<LanguageUnionType, {
     project: Project;
@@ -73,7 +76,6 @@ export abstract class AbstractInspectorDiretive {
       const language = this.getLanguageAttributes(sourceLanguage);
     this.metadataService.updateLexical(this.current, this.bookTarget, language, segment.word, input.value, morphemeConfigured);
     input.style.width = `${this.calcFieldSize(segment.word, input.value)}px`;
-    this.pipeUpdaterController++;
   }
 
   cleanLexicalLexical(wordMatrix: Array<Word>, sourceLanguage: LanguageUnionType): void {
@@ -82,10 +84,10 @@ export abstract class AbstractInspectorDiretive {
     }
 
     this.metadataService.cleanLexical(this.current, this.bookTarget, wordMatrix, this.getLanguageAttributes(sourceLanguage));
-    this.pipeUpdaterController++;
   }
 
   parseBook(book: BookMetadataAttributes, languageName: LanguageUnionType): ParsedBookMetadata {
+    this.segmentationChanges.patternsRevision();
     const patternsSignature = JSON.stringify(book.patterns) ?? '';
     const language = this.getLanguageAttributes(languageName);
     let cached = this.parsedBookCache.get(book);

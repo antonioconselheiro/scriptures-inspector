@@ -4,6 +4,7 @@
 
   @let wordListValue = wordList || splitByLanguageWordSeparator(sourceLanguage, sourceVerse.text);
   @let parsedBook = parseBook(bookTarget, sourceLanguage);
+  @let lexicalRevision = segmentationChanges.lexicalRevision(bookTarget.lexical);
   @let wordMatrixValue = wordMatrix || splitIntoMatrix(parsedBook.patterns, sourceVerse.text);
   @let transliteration = languageMetadataRecord[sourceLanguage].transliteration;
   @let translations = getViewingTranslations();
@@ -137,7 +138,7 @@
           @for (word of wordMatrixValue; track $index) {
           <td class="fieldsLexical">
             @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController : project;
+              @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : lexicalRevision : project;
               <input type="text" [name]="'fieldLexical' + segment.index" [attr.aria-label]="'Lexical for ' + segment.word"
                 [placeholder]="segment.word" #fieldLexical
                 [appDefineFieldMorphemeRuleContextMenuTrigger]="defineMorphemeRef" [word]="segment.word" [parsedBook]="parsedBook" [project]="project"
@@ -156,7 +157,7 @@
           <td [colSpan]="wordListValue.length">
             @for (word of wordMatrixValue; track $index) {
               @for (segment of word.segments; track segment.index; let segmentIndex = $index) {
-                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : pipeUpdaterController : project;
+                @let lexical = segment.word | lexical : parsedBook : sourceLanguage : segment.morpheme : lexicalRevision : project;
                 @if (lexical.value.length) {<span [class]="'prisma'+(segment.index % 7 + 1)">{{lexical.value}}</span>&nbsp;}
               }
             }

@@ -11,6 +11,7 @@ import { Project } from '@domain/project-model';
 import { TargetMetadataDetail } from '@domain/target-metadata-detail-model';
 import { targetsLoaderFn } from '@shared/project/targets-loader-fn';
 import { Subject } from 'rxjs';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 @Component({
   selector: 'app-import-from-book-dialog',
@@ -42,7 +43,8 @@ export class ImportFromBookDialog extends ModalableDirective<{
   override response = new Subject<void>();
 
   constructor(
-    fb: FormBuilder
+    fb: FormBuilder,
+    private segmentationChanges: SegmentationChanges
   ) {
     super();
     this.form = fb.group({
@@ -234,5 +236,7 @@ export class ImportFromBookDialog extends ModalableDirective<{
         toBook.patterns.distinct[segment] = { ...pattern, ...current };
       }
     }
+    this.segmentationChanges.lexicalChanged(toBook.lexical);
+    this.segmentationChanges.patternsChanged();
   }
 }

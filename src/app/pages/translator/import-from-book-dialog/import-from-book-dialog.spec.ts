@@ -2,10 +2,11 @@ import { FormBuilder } from '@angular/forms';
 import { Book } from '@domain/book-model';
 import { BookMetadataAttributes } from '@domain/book-metadata-attributes-model';
 import { ImportFromBookDialog } from './import-from-book-dialog';
+import { SegmentationChanges } from '../translation-editor/shared/segmentation-changes';
 
 describe('ImportFromBookDialog', () => {
   it('imports distinct patterns and applies override rules per context and morpheme', () => {
-    const dialog = new ImportFromBookDialog(new FormBuilder());
+    const dialog = new ImportFromBookDialog(new FormBuilder(), new SegmentationChanges());
     const current: Book<BookMetadataAttributes> = {
       chapters: [],
       lexical: {},
