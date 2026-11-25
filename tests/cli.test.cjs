@@ -47,6 +47,40 @@ function success(...args) {
 const target = ['--target', 'hebrew-stuttgartensia', '--book', 'GEN'];
 const verse = ['--chapter', '1', '--verse', '1'];
 
+test('rejects target books not configured in their associated sources without modifying files', () => {
+  const invalidBook = 'MAT';
+  const existing = path.join(project, 'targets/hebrew-stuttgartensia-custom-portuguese-translation', `${invalidBook}.json`);
+  const original = '{"chapters":[],"variations":{}}\n';
+  fs.writeFileSync(existing, original);
+  const invalid = [
+    ['add-variations', 'Test', '--target', 'hebrew-stuttgartensia', '--book', invalidBook],
+    ['set-pattern', 'test', 'prefix', '--target', 'hebrew-stuttgartensia', '--book', invalidBook],
+    ['clean-interlinear', '--target', 'greek-septuagint-hebrew-stuttgartensia-interlinear', '--book', invalidBook,
+      '--chapter', '1', '--verse', '1', '--origin', 'hebrew-stuttgartensia']
+  ];
+  for (const args of invalid) {
+    const result = run(...args);
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /not available for target/);
+  }
+  assert.equal(fs.readFileSync(existing, 'utf8'), original);
+  for (const name of ['hebrew-stuttgartensia-portuguese-metadata', 'greek-septuagint-hebrew-stuttgartensia-interlinear']) {
+    assert.equal(fs.existsSync(path.join(project, 'targets', name, `${invalidBook}.json`)), false);
+  }
+});
+
+test('requires both interlinear sources to list the requested book', () => {
+  const file = path.join(project, 'sources/greek-septuagint/_.codex');
+  const codex = JSON.parse(fs.readFileSync(file, 'utf8'));
+  delete codex.books.GEN;
+  fs.writeFileSync(file, JSON.stringify(codex));
+  const result = run('read-interlinear', '--target', 'greek-septuagint-hebrew-stuttgartensia-interlinear',
+    '--book', 'GEN', ...verse);
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /not available for target/);
+  assert.equal(run('list-variations', ...target).status, 0);
+});
+
 function translationText(...args) {
   const lines = JSON.parse(success('read-translation', ...args));
   assert.deepEqual(lines.map(line => line.id), ['original', 'custom']);

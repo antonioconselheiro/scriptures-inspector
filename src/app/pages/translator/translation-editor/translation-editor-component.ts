@@ -213,7 +213,10 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
     LoadingObservable.startLoading('save');
     try {
       const currentBook = this.current ? { book: this.current.book } : null;
-      await this.systemService.saveProjectImmediately(project, currentBook, this.projectData);
+      if (currentBook && !this.codexMetadataRecord) {
+        throw new Error('Cannot save book because source configurations are not loaded');
+      }
+      await this.systemService.saveProjectImmediately(project, currentBook, this.projectData, this.codexMetadataRecord ?? {});
     } catch (error) {
       console.error('Unable to save all project files:', error);
       alert('Some project files could not be saved. Check the console for details.');
@@ -239,7 +242,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       .subscribe({
         next: currentBook => {
           if (this.project) {
-            this.systemService.saveCurrentBookMetadata(this.project, currentBook, this.projectData);
+            void this.systemService.saveCurrentBookMetadata(this.project, currentBook, this.projectData, this.codexMetadataRecord ?? {})
+              .catch(error => this.reportAutosaveError(error));
           }
         }
       }));
@@ -253,7 +257,8 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       .subscribe({
         next: currentBook => {
           if (this.project) {
-            this.systemService.saveCurrentBookInterlinear(this.project, this.project.structures, currentBook, this.projectData);
+            void this.systemService.saveCurrentBookInterlinear(this.project, this.project.structures, currentBook, this.projectData, this.codexMetadataRecord ?? {})
+              .catch(error => this.reportAutosaveError(error));
           }
         }
       }));
@@ -267,10 +272,16 @@ export class TranslationEditorComponent implements OnInit, OnDestroy {
       .subscribe({
         next: currentBook => {
           if (this.project) {
-            this.systemService.saveCurrentBookCustomTranslation(this.project, currentBook, this.projectData);
+            void this.systemService.saveCurrentBookCustomTranslation(this.project, currentBook, this.projectData, this.codexMetadataRecord ?? {})
+              .catch(error => this.reportAutosaveError(error));
           }
         }
       }));
+  }
+
+  private reportAutosaveError(error: unknown): void {
+    console.error('Unable to automatically save book files:', error);
+    alert('Some book files could not be saved automatically. Check the console for details.');
   }
 
   private readBookSourceFromData(project: Project, data: Data): void {

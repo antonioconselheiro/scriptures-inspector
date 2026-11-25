@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Codex } from '@domain/codex-model';
 import { CurrentBook } from '@domain/current-book-model';
 import { KeyInterlinear } from '@domain/key-interlinear-type';
 import { KeyMetadata } from '@domain/key-metadata-type';
@@ -7,6 +8,7 @@ import { ProjectData } from '@domain/project-data-model';
 import { Project } from '@domain/project-model';
 import { ProjectStructureMetadata } from '@domain/project-structure-metadata-model';
 import { readJsonFileFn } from '@shared/project/read-file-json-fn';
+import { BookTargetKind, getBookTargetAssociationsFn, getBookTargetsFn } from '@shared/project/get-book-targets-fn';
 import { setProjectFn } from '@shared/project/set-project-fn';
 import { writeJsonFileFn } from '@shared/project/write-json-file-fn';
 import { Subject } from 'rxjs';
@@ -73,28 +75,28 @@ export class SystemService {
     };
   }
 
-  async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    const targets = this.getMetadataTargets(project.structures);
+  async saveCurrentBookMetadata(project: Project, current: CurrentBook, data: ProjectData, codices: Record<string, Codex | undefined>): Promise<void> {
+    const targets = this.getBookTargets(project.structures, 'metadata', current, codices);
     await this.saveBookTargets(project, targets, current, data);
   }
 
-  async saveCurrentBookInterlinear(project: Project, structures: Array<ProjectStructureMetadata>, current: CurrentBook, data: ProjectData): Promise<void> {
-    const targets = this.getInterlinearTargets(structures);
+  async saveCurrentBookInterlinear(project: Project, structures: Array<ProjectStructureMetadata>, current: CurrentBook, data: ProjectData, codices: Record<string, Codex | undefined>): Promise<void> {
+    const targets = this.getBookTargets(structures, 'interlinear', current, codices);
     await this.saveBookTargets(project, targets, current, data);
   }
 
-  async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData): Promise<void> {
-    const targets = this.getCustomTranslationTargets(project.structures);
+  async saveCurrentBookCustomTranslation(project: Project, current: CurrentBook, data: ProjectData, codices: Record<string, Codex | undefined>): Promise<void> {
+    const targets = this.getBookTargets(project.structures, 'translation', current, codices);
     await this.saveBookTargets(project, targets, current, data);
   }
 
-  async saveProjectImmediately(project: Project, current: CurrentBook | null, data: ProjectData): Promise<void> {
+  async saveProjectImmediately(project: Project, current: CurrentBook | null, data: ProjectData, codices: Record<string, Codex | undefined>): Promise<void> {
     const saves: Promise<void>[] = [this.saveProjectConfig(project)];
     if (current) {
       saves.push(
-        this.saveCurrentBookMetadata(project, current, data),
-        this.saveCurrentBookInterlinear(project, project.structures, current, data),
-        this.saveCurrentBookCustomTranslation(project, current, data)
+        this.saveCurrentBookMetadata(project, current, data, codices),
+        this.saveCurrentBookInterlinear(project, project.structures, current, data, codices),
+        this.saveCurrentBookCustomTranslation(project, current, data, codices)
       );
     }
 
@@ -137,27 +139,11 @@ export class SystemService {
     }
   }
 
-  private getMetadataTargets(structures: Array<ProjectStructureMetadata>): KeyMetadata[] {
-    return structures.flatMap(structure => [
-      structure.metadataTarget,
-      ...this.getMetadataTargets(structure.interlinear ?? [])
-    ]);
-  }
-
-  private getInterlinearTargets(structures: Array<ProjectStructureMetadata>): KeyInterlinear[] {
-    return structures.flatMap(structure => [
-      ...(structure.interlinear ?? []).flatMap(interlinear => [
-        interlinear.interlinearTarget,
-        ...this.getInterlinearTargets([interlinear])
-      ])
-    ]);
-  }
-
-  private getCustomTranslationTargets(structures: Array<ProjectStructureMetadata>): KeyTranslation[] {
-    return structures.flatMap(structure => [
-      ...(structure.customTranslationTarget ? [structure.customTranslationTarget] : []),
-      ...this.getCustomTranslationTargets(structure.interlinear ?? [])
-    ]);
+  private getBookTargets(
+    structures: ProjectStructureMetadata[], kind: BookTargetKind, current: CurrentBook,
+    codices: Record<string, Codex | undefined>
+  ): Array<KeyMetadata | KeyInterlinear | KeyTranslation> {
+    return getBookTargetsFn(getBookTargetAssociationsFn(structures, kind), codices, current.book);
   }
 
   async saveProjectConfig(project: Project): Promise<void> {

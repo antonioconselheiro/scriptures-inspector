@@ -88,6 +88,12 @@ obtain JSON there too. Errors go to standard error and return a nonzero exit sta
 target files are treated as empty targets; malformed JSON and other I/O errors
 are reported. Unknown options, targets, books and variation IDs are errors.
 
+Book targets are saved only when the book is listed in the associated source's
+`_.codex`. Interlinear targets require the book in both directly associated
+sources. A target shared by multiple associations is available when at least
+one association supports the book. This applies to automatic and manual GUI
+saves and to CLI operations. Previously created files are not deleted.
+
 Changes are saved to target JSON files via a temporary file and rename. Avoid
 editing the same target concurrently in the GUI or another process: there is
 no cross-process locking, and a later save can overwrite an earlier one.

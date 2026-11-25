@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 import stringWidth from 'string-width';
 import { BookMetadataTarget } from '@domain/book-metadata-target-model';
 import { BookTranslationTarget } from '@domain/book-translation-target-model';
+import { Codex } from '@domain/codex-model';
 import { InterlinearTarget } from '@domain/interlinear-target-model';
 import { LanguageUnionType } from '@domain/language-union-type';
 import { languageList } from '@domain/language-list';
@@ -15,6 +16,7 @@ import { ProjectStructureMetadata } from '@domain/project-structure-metadata-mod
 import { SourceBook } from '@domain/source-book-model';
 import { getProjectLanguageFn } from '@shared/language-metadata/get-project-language-fn';
 import { getSourcePathFn } from '@shared/project/get-source-path-fn';
+import { getBookTargetAssociationsFn, getBookTargetsFn } from '@shared/project/get-book-targets-fn';
 import { SystemService } from '@shared/system/system-service';
 import { PatternsService } from '../src/app/pages/translator/patterns-service';
 import { cleanUnusedLexical } from '../src/app/pages/translator/translation-editor/shared/project/clean-unused-lexical';
@@ -409,6 +411,14 @@ async function main(): Promise<void> {
   const { target, source } = resolveTarget(project, required(options, 'target'), kind);
   const book = identifier(required(options, 'book'), 'book');
   if (!(book in project.target.books)) throw new Error(`Unknown target book: ${book}`);
+  const associations = getBookTargetAssociationsFn(project.structures, kind).filter(item => item.target === target);
+  const sourceNames = [...new Set(associations.flatMap(item => item.sources))];
+  const codices = Object.fromEntries(await Promise.all(sourceNames.map(async name =>
+    [name, await json<Codex>(sourcePath(project, name, '_.codex'))] as const
+  )));
+  if (!getBookTargetsFn(associations, codices, book).some(item => item === target)) {
+    throw new Error(`Book ${book} is not available for target ${target} in its source configurations`);
+  }
   const file = path.join(project.path, 'targets', target, `${book}.json`);
   if (kind === 'translation') {
     const translation = await loadTarget<BookTranslationTarget>(file, () => ({ chapters: [], variations: {} }));
