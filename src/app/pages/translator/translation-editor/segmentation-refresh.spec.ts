@@ -116,6 +116,83 @@ describe('segmentation refresh in the translation editor', () => {
     await fixture.whenStable();
   }
 
+  it('creates a whole-word suffix from a selected segment and refreshes repeated lexical fields', async () => {
+    host.metadata.lexical['ኩን'] = { value: 'general', suffix: 'suffix value' };
+    const text = root.querySelector<HTMLElement>(
+      'span[data-pattern-word-index="0"][title="index:1"]'
+    )?.firstChild;
+    expect(text).toBeTruthy();
+    if (!text) return;
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    text.parentElement?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
+    await fixture.whenStable();
+
+    const option = Array.from(root.querySelectorAll('app-add-pattern-context-menu li'))
+      .find(item => item.textContent?.includes('suffix for whole word ለይኩን'));
+    expect(option).toBeDefined();
+    option?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    selection?.removeAllRanges();
+    await fixture.whenStable();
+
+    expect(host.metadata.patterns.wordDistinct).toEqual({ 'ለይኩን': { suffix: 'ኩን' } });
+    expect(geezFields().map(field => [field.className, field.value]))
+      .toEqual([['suffix', 'suffix value'], ['suffix', 'suffix value']]);
+    const system = TestBed.inject(SystemService);
+    expect(system.triggerSaveCurrentBookMetadata).toHaveBeenCalledWith(host.current);
+    expect(system.triggerSaveCurrentBookInterlinear).toHaveBeenCalledWith(host.current);
+  });
+
+  it('offers whole-word prefix rules in the per-word row only at the word edge', async () => {
+    const spans = root.querySelectorAll<HTMLElement>(
+      'app-scripture-metadata-component span[data-pattern-word-index="0"][title="index:0"]'
+    );
+    const text = spans[1]?.firstChild;
+    expect(text).toBeTruthy();
+    if (!text) return;
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    text.parentElement?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
+    await fixture.whenStable();
+    expect(root.querySelector('app-add-pattern-context-menu')?.textContent)
+      .toContain('prefix for whole word ለይኩን');
+
+    range.setStart(text, 1);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    text.parentElement?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
+    await fixture.whenStable();
+    expect(root.querySelector('app-add-pattern-context-menu')?.textContent)
+      .not.toContain('prefix for whole word');
+    selection?.removeAllRanges();
+  });
+
+  it('does not offer a whole-word rule for a selection spanning different words', async () => {
+    const spans = root.querySelectorAll<HTMLElement>(
+      'app-scripture-metadata-component span[data-pattern-word-index="0"][title="index:1"]'
+    );
+    const first = spans[0]?.firstChild;
+    const otherVerse = spans[2]?.firstChild;
+    expect(first && otherVerse).toBeTruthy();
+    if (!first || !otherVerse) return;
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.setStart(first, 0);
+    range.setEnd(otherVerse, otherVerse.textContent?.length ?? 0);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+    first.parentElement?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true }));
+    await fixture.whenStable();
+    expect(root.querySelector('app-add-pattern-context-menu')?.textContent).not.toContain('for whole word');
+    selection?.removeAllRanges();
+  });
+
   it('updates repeated lexical inputs and interlinear output without another interaction', async () => {
     const parsePatterns = spyOn(TestBed.inject(ProjectMetadataService), 'parsePattern').and.callThrough();
     const splitMatrix = spyOn(TestBed.inject(ProjectDataService), 'splitIntoMatrix').and.callThrough();

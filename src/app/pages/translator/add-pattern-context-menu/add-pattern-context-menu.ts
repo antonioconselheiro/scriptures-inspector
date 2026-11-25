@@ -29,6 +29,9 @@ export class AddPatternContextMenu {
 
   selectedWord = '';
   selectedSegment = '';
+  selectedFullWord = '';
+  selectionAtWordStart = false;
+  selectionAtWordEnd = false;
   selectedText = '';
   cellContent = '';
   visible = false;
@@ -58,22 +61,28 @@ export class AddPatternContextMenu {
     this.visible = false;
   }
 
-  canDefineDistinct(type: 'prefix' | 'suffix'): boolean {
+  canDefineDistinct(type: 'prefix' | 'suffix', scope: 'segment' | 'word' = 'segment'): boolean {
     const normalize = getProjectLanguageFn(this.project, this.sourceLanguage).normalizeFn ?? ((value: string) => value);
-    const segment = normalize(this.selectedSegment);
+    const segment = normalize(scope === 'word' ? this.selectedFullWord : this.selectedSegment);
     const word = normalize(this.selectedWord);
+    const entries = scope === 'word' ? this.bookTarget.patterns.wordDistinct : this.bookTarget.patterns.distinct;
+    const existing = Object.entries(entries ?? {}).find(([key]) => normalize(key) === segment)?.[1];
+    const other = normalize(existing?.[type === 'prefix' ? 'suffix' : 'prefix'] ?? '');
     return !!word
       && word.length < segment.length
+      && word.length + other.length <= segment.length
+      && (scope === 'segment' || (type === 'prefix' ? this.selectionAtWordStart : this.selectionAtWordEnd))
       && (type === 'prefix' ? segment.startsWith(word) : segment.endsWith(word));
   }
 
-  onAddDistinctPattern(type: 'prefix' | 'suffix'): void {
+  onAddDistinctPattern(type: 'prefix' | 'suffix', scope: 'segment' | 'word' = 'segment'): void {
     this.patternsService.addDistinctPattern(
       this.bookTarget.patterns,
       type,
       getProjectLanguageFn(this.project, this.sourceLanguage),
-      this.selectedSegment,
-      this.selectedWord
+      scope === 'word' ? this.selectedFullWord : this.selectedSegment,
+      this.selectedWord,
+      scope
     );
 
     if (this.current) {

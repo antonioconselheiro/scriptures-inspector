@@ -639,6 +639,15 @@ test('distinct patterns segment only their configured Hebrew word in CLI output'
 
   success('remove-distinct-pattern', 'אֵחָבֵֽא', 'prefix', ...target);
   assert.deepEqual(JSON.parse(success('list-patterns', ...target)).distinct, {});
+
+  success('set-distinct-pattern', 'וָאֵחָבֵֽא׃', 'prefix', 'וָאֵ', '--scope', 'word', ...target);
+  assert.deepEqual(JSON.parse(success('list-patterns', ...target)).wordDistinct, {
+    'וָאֵחָבֵֽא׃': { prefix: 'וא' }
+  });
+  const wordSegments = JSON.parse(success('read-lexical', ...target, '--chapter', '3', '--verse', '10'));
+  assert.ok(wordSegments.some(segment => segment.word === 'וָאֵ' && segment.morpheme === 'prefix'));
+  success('remove-distinct-pattern', 'ואחבא׃', 'prefix', '--scope', 'word', ...target);
+  assert.deepEqual(JSON.parse(success('list-patterns', ...target)).wordDistinct, {});
 });
 
 test('clean-unused-lexical applies the shared editor rule to the entire book', () => {

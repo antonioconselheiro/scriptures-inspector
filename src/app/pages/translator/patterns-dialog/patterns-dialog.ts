@@ -42,6 +42,7 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
     pattern: string;
     index: number;
     onlyInContext?: string;
+    contextScope?: 'word';
   }> = [];
   sortBy: PatternSortField = 'insertion';
   sortOrder: PatternSortOrder = 'insertion-asc';
@@ -119,6 +120,14 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
             onlyInContext: segment
           });
         }
+        for (const [word, pattern] of Object.entries(this.patterns.wordDistinct ?? {})) {
+          for (const type of ['prefix', 'suffix'] as const) {
+            const value = pattern[type];
+            if (value) {
+              patterns.push({ type, pattern: value, index: patterns.length, onlyInContext: word, contextScope: 'word' });
+            }
+          }
+        }
       }
     }
 
@@ -165,10 +174,12 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   }
 
   deletePattern(item: typeof this.sortedPatterns[number]): void {
-    const context = item.onlyInContext ? ` in the context "${item.onlyInContext}"` : '';
+    const context = item.onlyInContext
+      ? ` in the ${item.contextScope === 'word' ? 'whole word' : 'context'} "${item.onlyInContext}"`
+      : '';
     if (!confirm(`Delete the ${item.type} pattern "${item.pattern}"${context}?`)) return;
     if (item.onlyInContext && item.type !== 'lexeme') {
-      this.patternsService.deleteDistinctPattern(this.patterns, item.onlyInContext, item.type);
+      this.patternsService.deleteDistinctPattern(this.patterns, item.onlyInContext, item.type, item.contextScope);
     } else {
       this.patternsService.deletePattern(this.patterns, item.type, item.index);
     }

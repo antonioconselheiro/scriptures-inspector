@@ -428,6 +428,55 @@ describe('ProjectDataService', () => {
     ]);
   });
 
+  it('classifies a whole-word suffix after multiple prefixes without affecting other words', () => {
+    const patterns = metadataService.parsePattern({
+      wordDistinct: { 'לָהֶ֜ם': { suffix: 'ם' } },
+      prefix: ['ל', 'ה'],
+      suffix: [],
+      lexeme: []
+    }, hebrewLanguage);
+    const result = dataService.splitIntoMatrix(hebrewLanguage, patterns, 'לָהֶ֜ם לָהֶ֜ן');
+    expect(result).toEqual([
+      { segments: [
+        { word: 'לָ', index: 0, morpheme: 'prefix' },
+        { word: 'הֶ֜', index: 1, morpheme: 'prefix' },
+        { word: 'ם', index: 2, morpheme: 'suffix' }
+      ], separator: ' ' },
+      { segments: [
+        { word: 'לָ', index: 3, morpheme: 'prefix' },
+        { word: 'הֶ֜', index: 4, morpheme: 'prefix' },
+        { word: 'ן', index: 5, morpheme: 'root' }
+      ] }
+    ]);
+    expect(dataService.getLexical({ lexical: { 'ם': { value: 'general', suffix: 'them' } } },
+      hebrewLanguage, result[0].segments[2].word, result[0].segments[2].morpheme))
+      .toEqual({ config: 'suffix', value: 'them' });
+  });
+
+  it('applies whole-word edges over existing lexeme and segment splits', () => {
+    const patterns = metadataService.parsePattern({
+      wordDistinct: { abcdef: { prefix: 'ab', suffix: 'ef' } },
+      distinct: { abcdef: { prefix: 'a', suffix: 'f' } },
+      prefix: [], suffix: [], lexeme: ['abcdef']
+    }, englishLanguage);
+    expect(dataService.splitIntoMatrix(englishLanguage, patterns, 'abcdef')).toEqual([{
+      segments: [
+        { word: 'ab', index: 0, morpheme: 'prefix' },
+        { word: 'cd', index: 1, morpheme: 'root' },
+        { word: 'ef', index: 2, morpheme: 'suffix' }
+      ]
+    }]);
+  });
+
+  it('rejects overlapping or invalid whole-word patterns', () => {
+    const patterns = metadataService.parsePattern({
+      wordDistinct: { abcd: { prefix: 'abc', suffix: 'cd' } },
+      prefix: [], suffix: [], lexeme: []
+    }, englishLanguage);
+    expect(() => dataService.splitIntoMatrix(englishLanguage, patterns, 'abcd'))
+      .toThrowError(/Invalid distinct pattern for word/);
+  });
+
   it('should respect lexemes', () => {
     const hebrewWord = 'וּרְב֗וּ';
     const hebrewPatterns: PatternsSerialized = {

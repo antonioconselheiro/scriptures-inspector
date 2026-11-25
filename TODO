@@ -19,7 +19,7 @@ TODO
 [X] - Não se deve salvar target de arquivos de metadado, interlinear e tradução que não tenham source
 [ ] - Validar importação de configurações de variações entre livros e garantir CLI tenha comando para importar variação de um livro para outro
 [ ] - Pode-se incluir mecanica que narra palavra por palavra, já vi algo assim do geez;
-[ ] - Um sufixo limitado pelo contexto não pode ser aplicado depois de já se ter aplicado um em uma mesma palavra, precisa-se ser continuamente incremental;
+[X] - Um sufixo limitado pelo contexto não pode ser aplicado depois de já se ter aplicado um em uma mesma palavra, precisa-se ser continuamente incremental;
 [X] - incluir confirm para deleção de lexicos nas configurações, as vezes um clique no x pega dois x e deleta dois sem nem saber qual foi;
 [ ] - Incluir menu de contexto que me permita mover os sizes assim como movo as associações interlineares;
 [ ] - Preciso pensar num meio de escolher num select opções de sobrescrição de variação com uma opção de efeito, que substitua o espaço como remoção do pedaço e que me ajude a agrupar o 1 6 2, estou pensando em algo como um menu de contexto com estas duas opções e as quais mais forem necessárias;

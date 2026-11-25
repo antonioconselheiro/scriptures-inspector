@@ -257,8 +257,8 @@ export class ProjectMetadataService {
     language: Language
   ): ParsedPatterns {
     const normalize = language.normalizeFn ?? ((text: string) => text);
-    const distinct = new Map(
-      Object.entries(serialized.distinct ?? {}).map(([segment, pattern]) => [
+    const parseDistinct = (entries: NonNullable<PatternsSerialized['distinct']>) => new Map(
+      Object.entries(entries).map(([segment, pattern]) => [
         normalize(segment),
         {
           ...(pattern.prefix !== undefined ? { prefix: normalize(pattern.prefix) } : {}),
@@ -266,6 +266,8 @@ export class ProjectMetadataService {
         }
       ])
     );
+    const distinct = parseDistinct(serialized.distinct ?? {});
+    const wordDistinct = parseDistinct(serialized.wordDistinct ?? {});
     const prefix = new Map<string, RegExp>(
       serialized.prefix.map(pattern => [
         pattern,
@@ -298,6 +300,7 @@ export class ProjectMetadataService {
 
     return {
       distinct,
+      wordDistinct,
       prefix,
       suffix,
       lexeme

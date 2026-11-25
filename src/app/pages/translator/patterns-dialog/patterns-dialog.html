@@ -66,7 +66,7 @@
       <tr>
         <td>{{item.type}}</td>
         <td>{{item.pattern}}</td>
-        <td [class.emptyContext]="!item.onlyInContext">{{item.onlyInContext ?? '—'}}</td>
+        <td [class.emptyContext]="!item.onlyInContext">{{item.onlyInContext ?? '—'}} @if (item.contextScope === 'word') {(whole word)}</td>
         <td><button type="button" [attr.aria-label]="'Delete ' + item.type + ' pattern ' + item.pattern"
           (click)="deletePattern(item)">×</button></td>
       </tr>

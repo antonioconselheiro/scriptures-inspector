@@ -227,13 +227,13 @@ export class ImportFromBookDialog extends ModalableDirective<{
     toBook.patterns.lexeme = [ ...new Set([ ...toBook.patterns.lexeme, ...importFromBook.patterns.lexeme ]) ];
     toBook.patterns.prefix = [ ...new Set([ ...toBook.patterns.prefix, ...importFromBook.patterns.prefix ]) ];
     toBook.patterns.suffix = [ ...new Set([ ...toBook.patterns.suffix, ...importFromBook.patterns.suffix ]) ];
-    toBook.patterns.distinct ??= {};
-    for (const [segment, pattern] of Object.entries(importFromBook.patterns.distinct ?? {})) {
-      const current = toBook.patterns.distinct[segment];
-      if (override || !current) {
-        toBook.patterns.distinct[segment] = { ...pattern };
-      } else {
-        toBook.patterns.distinct[segment] = { ...pattern, ...current };
+    for (const scope of ['distinct', 'wordDistinct'] as const) {
+      const imported = importFromBook.patterns[scope];
+      if (!imported) continue;
+      const destination = toBook.patterns[scope] ??= {};
+      for (const [segment, pattern] of Object.entries(imported)) {
+        const current = destination[segment];
+        destination[segment] = override || !current ? { ...pattern } : { ...pattern, ...current };
       }
     }
     this.segmentationChanges.lexicalChanged(toBook.lexical);

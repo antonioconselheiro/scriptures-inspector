@@ -885,14 +885,32 @@ export class ProjectDataService {
         }
       }
 
-      if (bestSegments) {
-        return applyDistinctPatterns(word, bestSegments);
+      const segments = applyDistinctPatterns(word, bestSegments ?? segmentWithoutLexeme(word));
+      const distinct = patterns.wordDistinct?.get(word.normalized);
+      if (!distinct) {
+        return segments;
       }
 
-      /**
-       * 2. Sem lexema.
-       */
-      return applyDistinctPatterns(word, segmentWithoutLexeme(word));
+      const prefix = distinct.prefix ?? '';
+      const suffix = distinct.suffix ?? '';
+      const start = prefix.length;
+      const end = word.normalized.length - suffix.length;
+      if ((!prefix && !suffix) || start > end
+        || !word.normalized.startsWith(prefix) || !word.normalized.endsWith(suffix)) {
+        throw new Error(`Invalid distinct pattern for word: ${originalWord}`);
+      }
+
+      return [
+        ...(start ? [createSegment(word, 0, start, 'prefix')] : []),
+        ...segments.flatMap(segment => {
+          const middleStart = Math.max(start, segment.normalizedStart);
+          const middleEnd = Math.min(end, segment.normalizedEnd);
+          return middleStart < middleEnd
+            ? [createSegment(word, middleStart, middleEnd, segment.morpheme)]
+            : [];
+        }),
+        ...(end < word.normalized.length ? [createSegment(word, end, word.normalized.length, 'suffix')] : [])
+      ];
     };
 
     /**

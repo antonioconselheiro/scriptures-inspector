@@ -47,7 +47,7 @@ function parseArgs(args: string[]): { command: string; options: Options; positio
   const command = args.shift() ?? 'help';
   const options: Options = {};
   const positional: string[] = [];
-  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation', 'mode', 'variation-mode']);
+  const allowed = new Set(['project', 'target', 'book', 'chapter', 'verse', 'segment', 'variations', 'segments', 'origin', 'span', 'size', 'scripture', 'variation', 'mode', 'variation-mode', 'scope']);
   while (args.length) {
     const arg = args.shift()!;
     if (!arg.startsWith('--')) {
@@ -278,8 +278,8 @@ async function main(): Promise<void> {
     'remove-variations': ['target', 'book', 'variations'],
     'read-translation': ['target', 'book', 'chapter', 'verse', 'variations', 'origin', 'mode', 'variation-mode'],
     'list-patterns': ['target', 'book'], 'set-pattern': ['target', 'book'],
-    'remove-pattern': ['target', 'book'], 'set-distinct-pattern': ['target', 'book'],
-    'remove-distinct-pattern': ['target', 'book'], 'list-lexicals': ['target', 'book'],
+    'remove-pattern': ['target', 'book'], 'set-distinct-pattern': ['target', 'book', 'scope'],
+    'remove-distinct-pattern': ['target', 'book', 'scope'], 'list-lexicals': ['target', 'book'],
     'get-lexical': ['target', 'book'], 'set-lexical': ['target', 'book'],
     'remove-lexical': ['target', 'book'], 'clean-unused-lexical': ['target', 'book'],
     'read-lexical': ['target', 'book', 'chapter', 'verse'],
@@ -323,8 +323,8 @@ async function main(): Promise<void> {
       'rename-variation': 'Rename a variation: <name>.', 'read-translation': 'Display source and translation with ordered --variations ID[:overwrite|merge],...; --mode prismatic (default) or wordOfGod; --variation-mode sets the default for IDs without a mode (overwrite by default).',
       'list-patterns': 'List morphological patterns.', 'set-pattern': 'Add a pattern: <text> <prefix|suffix|lexeme>.',
       'remove-pattern': 'Remove a pattern: <text> <prefix|suffix|lexeme>.', 'list-lexicals': 'List lexical entries.',
-      'set-distinct-pattern': 'Set a segment-specific pattern: <segment> <prefix|suffix> <text>.',
-      'remove-distinct-pattern': 'Remove a segment-specific pattern: <segment> <prefix|suffix>.',
+      'set-distinct-pattern': 'Set a contextual pattern: <context> <prefix|suffix> <text> [--scope segment|word].',
+      'remove-distinct-pattern': 'Remove a contextual pattern: <context> <prefix|suffix> [--scope segment|word].',
       'get-lexical': 'Read a lexical entry: <text>.', 'set-lexical': 'Set a lexical value: <text> <root|prefix|suffix> <value>.',
       'remove-lexical': 'Remove a lexical value: <text> <root|prefix|suffix>.',
       'clean-unused-lexical': 'Remove lexical entries unused in the book.',
@@ -359,6 +359,7 @@ async function main(): Promise<void> {
     for (const name of names) {
       const optional = name === 'read-translation' ? ['variations', 'origin', 'mode', 'variation-mode']
         : name === 'read-all-translations' ? ['origin', 'mode']
+        : name === 'set-distinct-pattern' || name === 'remove-distinct-pattern' ? ['scope']
         : name === 'next-pending-lexical' || name === 'previous-pending-lexical' ? ['verse', 'segment'] : [];
       console.log(`${name} — ${descriptions[name]}\n  Options: ${commandOptions[name].map(opt => optional.includes(opt) ? `[--${opt} VALUE]` : `--${opt} VALUE`).join(' ') || '(none)'}\n`);
     }
@@ -692,9 +693,15 @@ async function main(): Promise<void> {
         pattern[type] ? [['distinct', `${segment} (${type}: ${pattern[type]})`]] : []
       )
     );
+    const wordDistinct = Object.entries(metadata.patterns.wordDistinct ?? {}).flatMap(([word, pattern]) =>
+      (['prefix', 'suffix'] as const).flatMap(type =>
+        pattern[type] ? [['word-distinct', `${word} (${type}: ${pattern[type]})`]] : []
+      )
+    );
     outputList(metadata.patterns, ['TYPE', 'PATTERN'], [
       ...(['prefix', 'suffix', 'lexeme'] as const).flatMap(type => metadata.patterns[type].map(pattern => [type, pattern])),
-      ...distinct
+      ...distinct,
+      ...wordDistinct
     ]);
     return;
   }
@@ -791,13 +798,17 @@ async function main(): Promise<void> {
     expectPositionals(positional, command === 'set-distinct-pattern' ? 3 : 2);
     const segment = positional[0];
     const type = distinctPatternType(positional[1]);
+    const scope = options['scope'] ?? 'segment';
+    if (scope !== 'segment' && scope !== 'word') throw new Error(`Invalid pattern scope: ${scope}`);
     if (command === 'set-distinct-pattern') {
-      patternService.addDistinctPattern(metadata.patterns, type, language, segment, positional[2]);
+      patternService.addDistinctPattern(metadata.patterns, type, language, segment, positional[2], scope);
     } else {
-      if (!metadata.patterns.distinct[segment]?.[type]) {
+      const entries = scope === 'word' ? metadata.patterns.wordDistinct : metadata.patterns.distinct;
+      const key = Object.keys(entries ?? {}).find(item => normalize(item) === normalize(segment));
+      if (!key || !entries?.[key]?.[type]) {
         throw new Error(`Distinct pattern not found: ${segment} (${type})`);
       }
-      patternService.deleteDistinctPattern(metadata.patterns, segment, type);
+      patternService.deleteDistinctPattern(metadata.patterns, key, type, scope);
     }
     await save(file, metadata);
     output(metadata.patterns);

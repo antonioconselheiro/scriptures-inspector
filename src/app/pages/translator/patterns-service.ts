@@ -28,7 +28,8 @@ export class PatternsService {
     type: 'prefix' | 'suffix',
     language: Language,
     segment: string,
-    word: string
+    word: string,
+    scope: 'segment' | 'word' = 'segment'
   ): void {
     const normalize = language.normalizeFn ?? ((value: string) => value);
     const normalizedSegment = normalize(segment);
@@ -40,21 +41,29 @@ export class PatternsService {
       throw new Error(`Cannot define ${word} as a distinct ${type} for ${segment}`);
     }
 
-    patterns.distinct ??= {};
-    const existingKey = Object.keys(patterns.distinct)
+    const entries = scope === 'word'
+      ? (patterns.wordDistinct ??= {})
+      : (patterns.distinct ??= {});
+    const existingKey = Object.keys(entries)
       .find(key => normalize(key) === normalizedSegment);
     const key = existingKey ?? segment;
-    patterns.distinct[key] ??= {};
-    patterns.distinct[key][type] = normalizedWord;
+    const otherType = type === 'prefix' ? 'suffix' : 'prefix';
+    const other = normalize(entries[key]?.[otherType] ?? '');
+    if (other.length + normalizedWord.length > normalizedSegment.length) {
+      throw new Error(`Overlapping distinct patterns for ${segment}`);
+    }
+    entries[key] ??= {};
+    entries[key][type] = normalizedWord;
     this.segmentationChanges.patternsChanged();
   }
 
   deleteDistinctPattern(
     patterns: PatternsSerialized,
     segment: string,
-    type: 'prefix' | 'suffix'
+    type: 'prefix' | 'suffix',
+    scope: 'segment' | 'word' = 'segment'
   ): void {
-    const distinct = patterns.distinct;
+    const distinct = scope === 'word' ? patterns.wordDistinct : patterns.distinct;
     const pattern = distinct?.[segment];
     if (!pattern) {
       return;

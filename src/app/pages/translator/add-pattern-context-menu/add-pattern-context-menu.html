@@ -13,6 +13,12 @@
       @if (canDefineDistinct('suffix')) {
         <li (click)="onAddDistinctPattern('suffix')">Define {{ selectedWord }} as suffix for {{ selectedSegment }}</li>
       }
+      @if (canDefineDistinct('prefix', 'word')) {
+        <li (click)="onAddDistinctPattern('prefix', 'word')">Define {{ selectedWord }} as prefix for whole word {{ selectedFullWord }}</li>
+      }
+      @if (canDefineDistinct('suffix', 'word')) {
+        <li (click)="onAddDistinctPattern('suffix', 'word')">Define {{ selectedWord }} as suffix for whole word {{ selectedFullWord }}</li>
+      }
       <li role="separator"></li>
       <li (click)="onCopySelection()">Copy</li>
       <li (click)="onCopyCell()">Copy all</li>

@@ -55,13 +55,14 @@
           }
 
           <td [colSpan]="wordListValue.length" [appAddPatternContextMenuTrigger]="addPatternMenuRef"
-            [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget"
+            [sourceLanguage]="sourceLanguage" [bookTarget]="bookTarget" [patternWordMatrix]="wordMatrixValue"
             [attr.lang]="languageMetadataRecord[sourceLanguage].label">
-            @for (word of wordMatrixValue; track $index) {
+            @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
                   <span
                     [attr.title]="'index:' + segment.index"
+                    [attr.data-pattern-word-index]="wordIndex"
                     [class]="'prisma'+getColor(segment.index)"
                   >{{segment.word}}</span>
                 }
@@ -78,14 +79,16 @@
           [appAddPatternContextMenuTrigger]="addPatternMenuRef"
           [sourceLanguage]="sourceLanguage"
           [bookTarget]="bookTarget"
+          [patternWordMatrix]="wordMatrixValue"
           [attr.lang]="languageMetadataRecord[sourceLanguage].label">
 
-          @for (word of wordMatrixValue; track $index) {
+          @for (word of wordMatrixValue; track $index; let wordIndex = $index) {
             <td>
               @for (segment of word.segments; track segment.index) {
                 @if (segment.word.length) {
                   <span
                     [attr.title]="'index:' + segment.index"
+                    [attr.data-pattern-word-index]="wordIndex"
                     [class]="'prisma'+getColor(segment.index)"
                   >{{segment.word}}</span>
                 }

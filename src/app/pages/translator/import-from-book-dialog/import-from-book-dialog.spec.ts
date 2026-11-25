@@ -14,6 +14,7 @@ describe('ImportFromBookDialog', () => {
         distinct: {
           word: { prefix: 'pre', suffix: 'ing' }
         },
+        wordDistinct: { word: { suffix: 'ing' } },
         prefix: [],
         suffix: [],
         lexeme: []
@@ -27,6 +28,7 @@ describe('ImportFromBookDialog', () => {
           word: { prefix: 're' },
           other: { suffix: 'ed' }
         },
+        wordDistinct: { word: { prefix: 're' }, other: { suffix: 'ed' } },
         prefix: [],
         suffix: [],
         lexeme: []
@@ -43,11 +45,17 @@ describe('ImportFromBookDialog', () => {
       word: { prefix: 'pre', suffix: 'ing' },
       other: { suffix: 'ed' }
     });
+    expect(current.patterns.wordDistinct).toEqual({
+      word: { prefix: 're', suffix: 'ing' }, other: { suffix: 'ed' }
+    });
 
     importConfigs.call(dialog, current, imported, true);
     expect(current.patterns.distinct).toEqual({
       word: { prefix: 're' },
       other: { suffix: 'ed' }
+    });
+    expect(current.patterns.wordDistinct).toEqual({
+      word: { prefix: 're' }, other: { suffix: 'ed' }
     });
   });
 });

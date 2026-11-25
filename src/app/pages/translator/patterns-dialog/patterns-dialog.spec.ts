@@ -67,4 +67,21 @@ describe('PatternsDialog', () => {
     dialog.deletePattern(dialog.sortedPatterns[0]);
     expect(dialog.patterns.prefix).toEqual(['re']);
   });
+
+  it('lists and deletes whole-word rules without deleting segment rules', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService(new SegmentationChanges()));
+    dialog.patterns = {
+      distinct: { careful: { suffix: 'ful' } },
+      wordDistinct: { careful: { suffix: 'ful' } },
+      prefix: [], suffix: [], lexeme: []
+    };
+    dialog.ngOnChanges();
+    const wordRule = dialog.sortedPatterns.find(item => item.contextScope === 'word');
+    expect(wordRule).toBeDefined();
+    if (!wordRule) return;
+    dialog.deletePattern(wordRule);
+    expect(dialog.patterns.wordDistinct).toEqual({});
+    expect(dialog.patterns.distinct).toEqual({ careful: { suffix: 'ful' } });
+  });
 });

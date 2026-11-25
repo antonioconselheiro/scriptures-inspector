@@ -547,6 +547,13 @@ after global patterns, so they do not classify the same morpheme in other
 words. Lexical types are `root`, `prefix` and `suffix`. Matching uses the
 project's language normalization.
 
+Whole-word contextual patterns (`wordDistinct`) match the exact normalized
+word and classify the selected edge as a prefix or suffix even when global or
+segment-specific rules have already split the word. Other words are unaffected.
+In the translator, select text at the beginning or end of a word and choose
+the **for whole word** action; the existing actions remain segment-specific.
+Both scopes can be viewed and deleted in the patterns dialog.
+
 List the book's global and distinct patterns:
 
 ```sh
@@ -584,6 +591,14 @@ scriptures-inspector remove-distinct-pattern "אֵחָבֵֽא" prefix \
 The equivalent context-menu action is **Define אֵ as prefix for אֵחָבֵֽא**.
 The suffix variant uses `suffix` in the CLI and the corresponding context-menu
 action. `list-patterns` includes distinct definitions in its JSON output.
+To create or remove a whole-word rule instead, add `--scope word`:
+
+```sh
+scriptures-inspector set-distinct-pattern "לָהֶ֜ם" suffix "ם" \
+  --scope word --project . --target hebrew-stuttgartensia --book GEN
+scriptures-inspector remove-distinct-pattern "לָהֶ֜ם" suffix \
+  --scope word --project . --target hebrew-stuttgartensia --book GEN
+```
 
 List all lexical entries for the book:
 
