@@ -506,6 +506,12 @@ describe('HolyViewerComponent', () => {
     expect(component.pieceText(line, { text: 'Base', variations: { a: 'Deus', b: '', c: '' } }))
       .toBe('Base (Deus)');
     component.openSettings();
+    const confirmation = spyOn(window, 'confirm').and.returnValue(false);
+    component.removeVariation(options[2]);
+    expect(confirmation).toHaveBeenCalledWith('Remove "c" from the selected variations for "target"?');
+    expect(component.draftCodexConfig('Source').selectedVariations['target']).toContain('c');
+    expect(component.draftCodexConfig('Source').variationModes?.['target']?.['c']).toBe('merge');
+    confirmation.and.returnValue(true);
     component.removeVariation(options[2]);
     component.saveSettings();
     expect(component.config.codices['Source'].variationModes?.['target']?.['c']).toBeUndefined();

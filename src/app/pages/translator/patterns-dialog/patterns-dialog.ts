@@ -165,6 +165,8 @@ export class PatternsDialog extends ModalableDirective<{ language: string, patte
   }
 
   deletePattern(item: typeof this.sortedPatterns[number]): void {
+    const context = item.onlyInContext ? ` in the context "${item.onlyInContext}"` : '';
+    if (!confirm(`Delete the ${item.type} pattern "${item.pattern}"${context}?`)) return;
     if (item.onlyInContext && item.type !== 'lexeme') {
       this.patternsService.deleteDistinctPattern(this.patterns, item.onlyInContext, item.type);
     } else {

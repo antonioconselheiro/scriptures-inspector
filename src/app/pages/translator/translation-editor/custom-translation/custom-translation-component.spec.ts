@@ -87,6 +87,19 @@ describe('CustomTranslationComponent Word of God selection', () => {
       expect([menu.visible, menu.x, menu.y]).toEqual([true, 20, 30]);
     }
 
+    it('confirms before clearing all custom translation interlinear links', () => {
+      const confirmation = spyOn(window, 'confirm').and.returnValue(false);
+      component.cleanInterlinear();
+      expect(confirmation).toHaveBeenCalledWith('Clear custom translation interlinear links for this verse?');
+      expect(metadata.map(item => item.value)).toEqual(['0-a', '1-b', '2-c', '3-d']);
+      expect(component.pipeUpdaterController).toBe(0);
+      confirmation.and.returnValue(true);
+      component.cleanInterlinear();
+      expect(metadata.map(item => item.value)).toEqual(['', '', '', '']);
+      expect(metadata.map(item => item.size)).toEqual([2, 3, 4, 5]);
+      expect(component.pipeUpdaterController).toBe(1);
+    });
+
     it('clears only the selected association without prompting or changing sizes', () => {
       const confirmation = spyOn(window, 'confirm');
       component.onChangeCustomTranslationInterlinearMetadata('', 1);

@@ -215,11 +215,9 @@ export class LexicalDictionaryDialog extends ModalableDirective<{
   }
 
   deleteLexical(key: string, rule: MorphemeType): void {
-    if (this.bookMetadata) {
-      removeLexical(this.bookMetadata, key, rule);
-      this.segmentationChanges.lexicalChanged(this.bookMetadata.lexical);
-    }
-
+    if (!this.bookMetadata || !confirm(`Delete the ${rule} lexical entry for "${key}"?`)) return;
+    removeLexical(this.bookMetadata, key, rule);
+    this.segmentationChanges.lexicalChanged(this.bookMetadata.lexical);
     this.sortLexicals();
   }
 

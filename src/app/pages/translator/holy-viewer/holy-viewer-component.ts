@@ -212,6 +212,7 @@ export class HolyViewerComponent {
   }
 
   removeVariation(option: HolyViewerVariationOption): void {
+    if (!confirm(`Remove "${option.name}" from the selected variations for "${option.target}"?`)) return;
     this.setVariation(option, false);
   }
 

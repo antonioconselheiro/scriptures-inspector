@@ -23,6 +23,7 @@ describe('PatternsDialog', () => {
   });
 
   it('should list and remove distinct segment definitions', () => {
+    const confirmation = spyOn(window, 'confirm').and.returnValue(false);
     const dialog = new PatternsDialog(new FormBuilder(), new PatternsService(new SegmentationChanges()));
     dialog.patterns = {
       distinct: { careful: { suffix: 'ful' } },
@@ -46,6 +47,24 @@ describe('PatternsDialog', () => {
     dialog.sortPatterns();
     expect(dialog.sortedPatterns[0].type).toBe('suffix');
     dialog.deletePattern(dialog.sortedPatterns[0]);
+    expect(confirmation).toHaveBeenCalledWith('Delete the suffix pattern "ful" in the context "careful"?');
+    expect(dialog.patterns.distinct).toEqual({ careful: { suffix: 'ful' } });
+    expect(dialog.sortedPatterns.length).toBe(1);
+    confirmation.and.returnValue(true);
+    dialog.deletePattern(dialog.sortedPatterns[0]);
     expect(dialog.patterns.distinct).toEqual({});
+  });
+
+  it('only removes a regular pattern after confirmation', () => {
+    const confirmation = spyOn(window, 'confirm').and.returnValue(false);
+    const dialog = new PatternsDialog(new FormBuilder(), new PatternsService(new SegmentationChanges()));
+    dialog.patterns = { prefix: ['un', 're'], suffix: [], lexeme: [] };
+    dialog.ngOnChanges();
+    dialog.deletePattern(dialog.sortedPatterns[0]);
+    expect(confirmation).toHaveBeenCalledWith('Delete the prefix pattern "un"?');
+    expect(dialog.patterns.prefix).toEqual(['un', 're']);
+    confirmation.and.returnValue(true);
+    dialog.deletePattern(dialog.sortedPatterns[0]);
+    expect(dialog.patterns.prefix).toEqual(['re']);
   });
 });

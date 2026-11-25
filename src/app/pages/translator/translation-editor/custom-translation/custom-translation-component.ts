@@ -468,6 +468,7 @@ export class CustomTranslationComponent extends AbstractInspectorDiretive {
   }
 
   cleanInterlinear(): void {
+    if (!confirm('Clear custom translation interlinear links for this verse?')) return;
     this.customTranslationService.cleanInterlinear(this.sourceBook, this.customTranslation, this.current, this.sourceVerse);
     this.pipeUpdaterController++;
   }
